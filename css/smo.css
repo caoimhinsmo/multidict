@@ -1,0 +1,89 @@
+@charset "UTF-8";
+
+body { background-color:#fff; color:#000; padding:0; margin:0; border-top:1px solid white; font-family:Verdana,Tahoma,sans-serif; }
+div.smo-body-indent { clear:both; margin:0 0.25%; padding:0 0.25% 6px 0.25%; border-top:1px solid white; clear: both; }
+
+/* ------------ Ceanglaichean ---------------------------------------------------------------------------------------- */
+a         { text-decoration:none; }
+a:link    { color: #00f; }
+a:visited { color: #909; }
+a:hover   { color: #ff0; background-color:blue; text-decoration:none; }
+a:hover[href^="mailto"]         { background-color:red;  }
+a:hover[href^="#"]              { background-color:#008; }
+a:hover[href*=".pdf"]            { color:#fb0; }
+a:hover[href*=".doc"]            { color:#fb0; }
+a img:hover                     { background-color:#ccf; }
+
+
+img { border:0; }
+
+h1.smo { font-size:160%; margin-top:0; padding-top:0.5em; }
+
+div.smo-latha { clear: both; font-size:70%; font-family:Arial,Helvetica,sans-serif; color:gray; margin-left:1em; }
+
+span.fann     { color:#777; }
+span.pdf      { font-size:80%; }
+span.rabhadh  { color:red; font-size:80%; }
+a.briste:link { color:red; }
+span.briste   { color:red; font-size:80%; }
+span.briste a:link    { color:red; }
+span.briste a:visited { color:red; }
+
+
+p.tiotal { margin-bottom:1px; font-weight:bold; }
+ul.dluth { margin-top:0px; }
+
+
+/* ------------ Navbars ---------------------------------------------------------------------------------------------- */
+ul.smo-navlist { padding:0; margin:0 0 1px 0; list-style-type:none; float:left; width:100%; color:#ffa; background-color:#36c;
+                 font-family:Verdana,Tahoma,Arial,Helvetica,sans-serif; white-space:nowrap; font-size:19px; clear:both; }
+
+ul.smo-navlist li { display:inline; }
+
+ul.smo-navlist li a { float:left; padding:1px 2px 0px 5px; border-top:1px solid #039; border-bottom:1px solid #039;
+                      border-right:1px solid white; background-color:#039; color:#ff0; text-decoration:none; }
+
+ul.smo-navlist li.deas a { float:right; border-left:1px solid white; border-right:0; }
+
+ul.smo-navlist a:visited { color:#ffc; text-decoration:none; }
+
+ul.smo-navlist a:hover,
+ul.smo-navlist a:active,
+ul.smo-navlist a:focus   { color:#039; text-decoration:none; border-top-color:red; border-bottom-color:red; background-color:#ff0; }
+
+ul.smo-navlist li a:before             { content:"⇨ "; font-weight:normal; font-size:80%; vertical-align:middle; }
+ul.smo-navlist li:first-child a:before { content:url(/icons-smo/favicon.gif); margin-right:3px; }
+ul.smo-navlist li.deas a:after         { content:""; }
+
+ul.smo-navlist2 { background-color:#9cf; }
+
+
+/* ------------ Formaichean ------------------------------------------------------------------------------------------ */
+input:focus, checkbox:focus  { background-color:#dfd; color:blue; }
+input[type="password"]:focus { background-color:#fdd; }
+
+/* ------------ Putanan airson foirmichean --------------------------------------------------------------------------- */
+button[class~=smo]       { padding:0 2px; margin:2px; font-size:90%; border:2px solid; background-color:#ccc; 
+                           border-top-color:#eee; border-left-color:#eee; border-bottom-color:#999; border-right-color:#999; }
+button[class~=smo]:hover,
+button[class~=smo]:focus { border-top-color:#999; border-left-color:#999; border-bottom-color:#eee; border-right-color:#eee; }
+button[class~=smo] img { border:0; margin:0; }
+
+button[class~=smo][type=reset]        { color:#999; background-color:#ddd; padding:0 1px;
+                                        border-top-color:#eee; border-left-color:#eee; border-bottom-color:#aaa; border-right-color:#aaa; }
+button[class~=smo][type=reset]:hover,
+button[class~=smo][type=reset]:focus  { color:#888;
+                                        border-top-color:#aaa; border-left-color:#aaa; border-bottom-color:#eee; border-right-color:#eee; }
+button[class~=smo][type=reset]:before { content:url("http://www.smo.uhi.ac.uk/icons-smo/fam/silk/arrow_undo.png");
+                                        width:16px; height:16px; margin:0; border:0; }
+button[class~=smo][type=submit] { font-weight:bold; color:#430; background-color:#9d9; padding:0 6px;
+                                        border-top-color:#dfd; border-left-color:#dfd; border-bottom-color:#7a7; border-right-color:#7a7; }
+button[class~=smo][type=submit]:hover,
+button[class~=smo][type=submit]:focus { color:#fb8; background-color:#1a3;
+                                        border-top-color:#575; border-left-color:#575; border-bottom-color:#ded; border-right-color:#ded; }
+button[class~=smo][type=submit][class~=lorg]:before,
+button[class~=smo][type=submit][value=lorg]:before,
+button[class~=smo][type=submit][value=Lorg]:before
+                           { content:url("http://www.smo.uhi.ac.uk/icons-smo/fam/silk/zoom.png"); width:16px; height:16px; margin:0; border:0; }
+button[class~=smo][type=submit][class~=iuchair]:before
+                           { content:url("http://www.smo.uhi.ac.uk/icons-smo/fam/silk/key.png");  width:16px; height:16px; margin:0; border:0; }

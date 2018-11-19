@@ -1,0 +1,131 @@
+body {margin-left: 10%; margin-right: 10%;}
+
+div.intro, div.dictionary {margin-top: 4em; margin-bottom: 4em;}
+
+hr {width: 80%; margin-top: 1em; margin-bottom: 1em; text-align: center;}
+hr.mid {width: 40%;}
+hr.tiny {width: 20%;}
+
+sup {font-size: 75%; line-height: 50%;}
+
+b.entry {font-size: 108%; line-height: 1.1em;}
+
+a.tag {text-decoration: none; vertical-align: .3em; font-size: 80%;
+padding-left: .25em; line-height: .1em;}
+a.plain {text-decoration: none;}
+div.dictionary a, div.mynote a, div.contents a {text-decoration: none;}
+div.dictionary a.external {text-decoration: underline;}
+
+h1, h2, h3, h4, h5, h6 {text-align: center; font-style: normal;
+font-weight: normal; line-height: 1.5; margin-top: .5em;
+margin-bottom: .5em;}
+
+h1 {font-size: 200%;}
+h2 {font-size: 175%;}
+h3 {font-size: 150%;}
+h3.extended {letter-spacing: .33em; padding-right: .33em;}
+h4 {font-size: 120%;}
+div.intro h4 {margin-top: 1.5em;}
+div.mynote h4, div.endnote h4 {font-weight: bold;}
+
+h5 {font-size: 100%;}
+div.mynote h5, div.endnote h5 {font-weight: bold; font-size: 105%;
+margin-top: 1em;}
+h5.letterhead {font-size: 133%; margin-top: 1em; font-weight: bold;}
+
+h6 {font-size: 85%;}
+div.titlepage h6 {margin-bottom: 0; margin-top: 0;}
+h6.right {text-align: right; margin-right: 2em;}
+div.titlepage h6.right + h6 {margin-top: 1em;}
+div.dictionary h6 {line-height: 1.2; margin: 1em; font-size: 92%;}
+
+p {margin-top: .5em; margin-bottom: 0em; line-height: 1.2;}
+
+p.illustration {text-align: center; margin-top: 1em;
+margin-bottom: 1em;}
+
+p.inset, div.inset {margin-right: 2em; margin-left: 2em;}
+div.hanging p {margin-right: 1em; text-indent: -1em;}
+
+p.title, div.title p {font-size: 93%; margin-left: 3em;
+text-indent: -3em;}
+div.title {margin: 1em;}
+div.title p {margin-top: .2em;}
+
+p.summary {font-size: 86%; margin-left: 2em; margin-right: 1em;}
+
+p.center, div.dictionary p.center {text-align: center; margin-left: 0;
+text-indent: 0;}
+p.right {text-align: right;}
+
+/* in dictionary */
+
+div.dictionary p {margin-left: 1em; text-indent: -1em; margin-top: .2em;
+clear: right;}
+
+div.dictionary p.mynote {text-indent: 0; margin-top: .5em;
+padding: .5em;}
+
+div.dictionary p.notation {text-indent: 0; font-size: 92%;}
+div.dictionary p.addition {padding: .2em .2em .2em 1.25em;
+margin-left: -.25em; border: 1px solid #666;}
+div.dictionary p.addition.notation {padding-left: .25em;
+margin-left: .75em;}
+
+span.addition {padding: 0 .1em; border: 1px solid #666;}
+
+
+/* footnotes */
+
+p.footnote {margin: 1em 2em; font-size: 95%;}
+
+
+/* no tables in this document */
+
+
+/* text formatting */
+
+span.firstword {font-variant: small-caps;}
+
+span.greek {border-bottom: 1px dotted #EEE;}
+span.hyphen {border-bottom: 1px solid #AAA;}
+
+.smallroman {font-size: 80%;}
+.smallcaps {font-variant: small-caps;}
+.smaller {font-size: 88%;}
+.extended {letter-spacing: 0.2em;}
+
+.cursive {font-family: cursive;}
+
+/* greek original or translit */
+
+/* correction popup */
+
+ins.correction {text-decoration: none; border-bottom: thin dotted red;}
+ins.edcorr {text-decoration: none; border-bottom: thin dotted blue;}
+ins.mycorr {text-decoration: none; border-bottom: thin dotted red;}
+
+/* page number */
+
+span.pagenum {position: absolute; right: 2%; font-size: 95%;
+font-weight: normal; font-style: normal; text-align: right;
+text-indent: 0em;}
+
+/* Transcriber's Note */
+
+.mynote {background-color: #DDE; color: #000;
+font-family: sans-serif; font-size: 90%;}
+
+div.mynote {margin: 1em 5%; padding: .5em 1em 1em;}
+p.mynote {margin: 1em 5%; padding: 1em;}
+div.dictionary p.mynote {text-indent: 0;}
+
+span.mynote {float: right; padding: .25em .25em .25em 2em;}
+
+div.endnote {padding: .5em 1em 1em; margin: 1em 0;
+border: 3px ridge #A9F; font-family: sans-serif; font-size: 90%;}
+
+div.contents {font-family: sans-serif; font-size: 95%; margin: 4em 2em;
+padding: .5em 1em 1em; border: 3px ridge #A9F;}
+div.contents p {margin-left: 1.5em; text-indent: -1.5em;}
+

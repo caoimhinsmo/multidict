@@ -1,0 +1,766 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta NAME="keywords" CONTENT="Hyperlinked text based on a text engine developed by Kent Andersen">
+<title>Hyperlinked text based on a text engine developed by Kent Andersen</title>
+<style TYPE="text/css"><!--
+A:link    {text-decoration: none; color: "blue"} 
+A:visited {text-decoration: none; color: "blue"}
+A:active  {text-decoration: none; color: "blue"}
+body {
+	background-color: #FFFFCC;
+	margin: 40px 40px 10px 70px;
+	color: black;
+}
+
+
+h1 {
+	color: #990000;
+	font-family: arial, verdana, sans-serif;
+
+}
+
+h2 {
+	color: #990000;
+	font-family: arial, verdana, sans-serif;
+}
+
+h3 {
+	color: #990000;
+	font-family: arial, verdana, sans-serif;
+}
+
+p {
+	font-family: arial, verdana, sans-serif;
+}
+
+a {
+	font-family: arial, verdana, sans-serif;
+	color: blue;
+}
+a:visited {
+	color: blue;
+}
+a:hover {
+	color: red;
+    text-decoration: underline
+}
+
+img {
+max-width:400px;
+/* IE Image max-width */
+width: expression(this.width > 400 ? 400: true);
+}
+
+
+td {
+	font-family: arial, verdana, sans-serif;
+}
+//--></style>
+
+<script LANGUAGE="JavaScript"><!--
+var dhtml = '', no = 0;
+if (navigator.appVersion.charAt(0) == "4") {
+    if (navigator.appVersion.indexOf("MSIE") != -1)
+        dhtml = 'IE';
+    else
+        dhtml = 'NN';
+}       
+
+function mover(object) {
+    if (dhtml == 'IE') {
+        eval(object + '.style.color = "black"');
+        eval(object + '.style.fontSize = "100%"');
+    }
+    else if (dhtml == 'NN') {
+        eval('document.layers["' + object + 'b"].moveBelow(document.layers["' + object + 'a"])');
+        eval('document.layers["' + object + 'b"].visibility="hide"');
+        eval('document.layers["' + object + 'a"].visibility="show"');
+    }
+}
+
+function mout(object) {
+    if (dhtml == 'IE') {
+        eval(object + '.style.color = "blue"');
+        eval(object + '.style.fontSize = "100%"');
+    }
+    else if (dhtml == 'NN') {
+        eval('document.layers["' + object + 'a"].moveBelow(document.layers["' + object + 'b"])');
+        eval('document.layers["' + object + 'a"].visibility="hide"');
+        eval('document.layers["' + object + 'b"].visibility="show"');
+    }
+}
+
+function dLink(href,text) {
+    href = encodeURIComponent(href);
+    if (dhtml == 'IE')
+        document.write('<A HREF="http://multidict.net/multidict/?sl=ga&tl=&word='+href+'" charset="UTF-8" target="dictframe" onMouseOut="mout(\'link'+no+'\')" onMouseOver="mover(\'link'+no+'\')" ID="link'+no+'">'+text+'<\/A>');
+    else if (dhtml == 'NN')
+        document.write('<LAYER NAME="link'+no+'a" VISIBILITY="hide"><A HREF="http://multidict.net/multidict/?sl=ga&tl=&word='+href+'" charset="UTF-8" target="dictframe" onMouseOut="mout(\'link'+no+'\')" CLASS="different">'+text+'<\/A><\/LAYER><LAYER NAME="link'+no+'b"><A HREF="'+href+'" onMouseOver="mover(\'link'+no+'\')" CLASS="normal">'+text+'<\/A><\/LAYER>');
+    else
+        document.write('<A HREF="http://multidict.net/multidict/?sl=ga&tl=&word='+href+'" charset="UTF-8" target="dictframe">'+text+'<\/A>');
+    document.write(' ');
+    no+=1;
+}
+
+
+//--></script>
+
+<link rel="stylesheet" type="text/css" href="style.css">
+
+</head>
+
+<body BGCOLOR="#FFFFFF" BACKGROUND TOPMARGIN="0" LEFTMARGIN="0" MARGINHEIGHT="0" MARGINWIDTH="0" LINK="#FF0000" ALINK="#FF0000">
+<div align="left"><!--    if ( navigator.appName == "Netscape" )    {        //-- This next line ensures that any plugins just installed are updated in the Browser        //-- without quitting the browser.        navigator.plugins.refresh();        // We don't need the APPLET within IE        // ***Please note that if you do not need to script events, you can safely remove the next two lines        document.write("\x3C" + "applet MAYSCRIPT Code=NPDS.npDSEvtObsProxy.class")        document.writeln(" width=5 height=5 name=appObs\x3E \x3C/applet\x3E")    }//-->
+<!--webbot bot="HTMLMarkup" TAG="XBOT" startspan --></SCRIPT><!--webbot bot="HTMLMarkup" endspan -->
+<!-- Set ShowControls, ShowDisplay, ShowStatusBar to value 0 to not display the corresponding thing under the video window -->
+
+<table id="table1" style="border-collapse: collapse" borderColor="#111111" cellSpacing="0" cellPadding="0" width="100%" border="0">
+<tr>
+<td width="87%"> <h2> Féach ar an fhíseán seo faoi amhránaíocht ar an sean-nós </h2> <embed name="RAOCXplayer" src="amhranaiocht_ar_an_sean-nos.wmv" type="application/x-mplayer2" width="400" height="302" ShowC."1" 
+ShowStatusBar="1" AutoSize="true" EnableC."0" DisplaySize="0" pluginspage="http://www.microsoft.com/Windows/Downloads/Contents/ 
+Products/MediaPlayer/"></embed> <p> Cliceáil ar na focail atá aibhsíthe chun teacht ar an fhocal i do rogha foclóra. </p> <H> </td>		
+</tr>
+</table>
+<table border="0" width="100%" cellspacing="0" cellpadding="0">
+  <tr>
+    <td width="4%">&nbsp;</td>
+    <td width="96%">
+<hr> <B>Téipscript</B>
+<br>
+<script>
+</script>
+<br>
+<script>
+</script>
+<br>
+<script>
+dLink('Cad','Cad'); 
+dLink('atá','atá'); 
+dLink('i','i'); 
+dLink('gceist','gceist'); 
+dLink('leis','leis'); 
+dLink('an','an'); 
+dLink('téarma','téarma'); 
+dLink('sin','sin'); 
+dLink('‘sean-nós’','‘sean-nós’'); 
+dLink('nó','nó'); 
+dLink('cén','cén'); 
+dLink('dearcadh','dearcadh'); 
+dLink('atá','atá'); 
+dLink('ag','ag'); 
+dLink('daoine','daoine'); 
+dLink('faoin','faoin'); 
+dLink('sean-nós','sean-nós?'); 
+</script>
+<br>
+<script>
+</script>
+<br>
+<script>
+dLink('Bhuel','Bhuel'); 
+dLink('sin','sin'); 
+dLink('ceist','ceist'); 
+dLink('shuimiúil','shuimiúil.'); 
+dLink('Go','Go'); 
+dLink('minic','minic'); 
+dLink('nuair','nuair'); 
+dLink('a','a'); 
+dLink('smaoiníonn','smaoiníonn'); 
+dLink('daoine','daoine'); 
+dLink('ar','ar'); 
+dLink('an','an'); 
+dLink('téarma','téarma'); 
+dLink('nó','nó'); 
+dLink('ar','ar'); 
+dLink('an','an'); 
+dLink('fhocal','fhocal'); 
+dLink('‘sean-nós’','‘sean-nós’'); 
+dLink('bíonn','bíonn'); 
+dLink('siad','siad'); 
+dLink('ag','ag'); 
+dLink('déanamh','déanamh'); 
+dLink('go','go'); 
+dLink('mbaineann','mbaineann'); 
+dLink('sé','sé'); 
+dLink('le','le'); 
+dLink('seandaoine','seandaoine'); 
+dLink('nó','nó'); 
+dLink('na','na'); 
+dLink('seanleaids','seanleaids'); 
+dLink('agus','agus'); 
+dLink('caipíní','caipíní'); 
+dLink('orthu','orthu'); 
+dLink('agus','agus'); 
+dLink('iad','iad'); 
+dLink('ina','ina'); 
+dLink('suí','suí'); 
+dLink('cois','cois'); 
+dLink('teallaigh','teallaigh'); 
+dLink('agus','agus'); 
+dLink('ag','ag'); 
+dLink('canadh','canadh'); 
+dLink('amhráin','amhráin.'); 
+dLink('Ach','Ach'); 
+dLink('feictear','feictear'); 
+dLink('domsa','domsa'); 
+dLink('anois','anois'); 
+dLink('go','go'); 
+dLink('mbíonn','mbíonn'); 
+dLink('go','go'); 
+dLink('leor','leor'); 
+dLink('daoine','daoine'); 
+dLink('óga','óga'); 
+dLink('ag','ag'); 
+dLink('freastal','freastal'); 
+dLink('ar','ar'); 
+dLink('an','an'); 
+dLink('Oireachtas','Oireachtas'); 
+dLink('chuile','chuile'); 
+dLink('bhliain','bhliain'); 
+dLink('agus','agus'); 
+dLink('tá','tá'); 
+dLink('níos','níos'); 
+dLink('mó','mó'); 
+dLink('suime','suime'); 
+dLink('ag','ag'); 
+dLink('daoine','daoine'); 
+dLink('óga','óga'); 
+dLink('san','san'); 
+dLink('amhránaíocht','amhránaíocht,'); 
+dLink('sa','sa'); 
+dLink('damhsa','damhsa'); 
+dLink('ar','ar'); 
+dLink('an','an'); 
+dLink('tsean-nós','tsean-nós,'); 
+dLink('agus','agus'); 
+dLink('tugann','tugann'); 
+dLink('sé','sé'); 
+dLink('cuid','cuid'); 
+dLink('mhór','mhór'); 
+dLink('dóchais','dóchais'); 
+dLink('domsa','domsa'); 
+dLink('nuair','nuair'); 
+dLink('a','a'); 
+dLink('fheicim','fheicim'); 
+dLink('na','na'); 
+dLink('daoine','daoine'); 
+dLink('óga','óga'); 
+dLink('seo','seo'); 
+dLink('ag','ag'); 
+dLink('teacht','teacht'); 
+dLink('chuig','chuig'); 
+dLink('an','an'); 
+dLink('Oireachtas','Oireachtas'); 
+dLink('bliain','bliain'); 
+dLink('i','i'); 
+dLink('ndiaidh','ndiaidh'); 
+dLink('bliana','bliana,'); 
+dLink('go','go'); 
+dLink('bhfuil','bhfuil'); 
+dLink('fás','fás'); 
+dLink('mór','mór'); 
+dLink('ag','ag'); 
+dLink('teacht','teacht'); 
+dLink('air','air'); 
+dLink('agus','agus'); 
+dLink('go','go'); 
+dLink('bhfuil','bhfuil'); 
+dLink('suim','suim'); 
+dLink('mhór','mhór'); 
+dLink('ag','ag'); 
+dLink('daoine','daoine'); 
+dLink('óga','óga'); 
+dLink('sa','sa'); 
+dLink('sean-nós','sean-nós'); 
+dLink('sa','sa'); 
+dLink('lá','lá'); 
+dLink('atá','atá'); 
+dLink('inniu','inniu'); 
+dLink('ann','ann.'); 
+</script>
+<br>
+<script>
+</script>
+<br>
+<script>
+dLink('Bhíteá','Bhíteá'); 
+dLink('féin','féin'); 
+dLink('ag','ag'); 
+dLink('ceol','ceol'); 
+dLink('nuair','nuair'); 
+dLink('a','a'); 
+dLink('bhí','bhí'); 
+dLink('tú','tú'); 
+dLink('i','i'); 
+dLink('do','do'); 
+dLink('mhac','mhac'); 
+dLink('léinn','léinn'); 
+dLink('Ollscoile','Ollscoile.'); 
+dLink('Agus','Agus'); 
+dLink('céard','céard'); 
+dLink('a','a'); 
+dLink('cheap','cheap'); 
+dLink('do','do'); 
+dLink('chairde','chairde'); 
+dLink('agus','agus'); 
+dLink('do','do'); 
+dLink('chomrádaithe','chomrádaithe'); 
+dLink('an','an'); 
+dLink('uair','uair'); 
+dLink('sin','sin?'); 
+</script>
+<br>
+<script>
+</script>
+<br>
+<script>
+dLink('Bhí','Bhí'); 
+dLink('siad','siad'); 
+dLink('iontach','iontach'); 
+dLink('maith','maith.'); 
+dLink('Thug','Thug'); 
+dLink('siad','siad'); 
+dLink('i','i'); 
+dLink('gcónaí','gcónaí'); 
+dLink('tacaíocht','tacaíocht'); 
+dLink('dom','dom'); 
+dLink('dá','dá'); 
+dLink('mbeinn','mbeinn'); 
+dLink('ag','ag'); 
+dLink('ceol','ceol'); 
+dLink('i','i'); 
+dLink('lár','lár'); 
+dLink('na','na'); 
+dLink('cathrach','cathrach'); 
+dLink('áit','áit'); 
+dLink('ar','ar'); 
+dLink('bith','bith,'); 
+dLink('b’fhéidir','b’fhéidir'); 
+dLink('ag','ag'); 
+dLink('Sean-Nós','Sean-Nós'); 
+dLink('Cois','Cois'); 
+dLink('Life','Life'); 
+dLink('bhí','bhí'); 
+dLink('siad','siad'); 
+dLink('go','go'); 
+dLink('maith','maith.'); 
+dLink('Thiocfadh','Thiocfadh'); 
+dLink('cuid','cuid'); 
+dLink('acu','acu'); 
+dLink('liom','liom,'); 
+dLink('agus','agus'); 
+dLink('tharla','tharla'); 
+dLink('sé','sé'); 
+dLink('gur','gur'); 
+dLink('bhuaigh','bhuaigh'); 
+dLink('mé','mé'); 
+dLink('duais','duais'); 
+dLink('Oireachtais','Oireachtais'); 
+dLink('nuair','nuair'); 
+dLink('a','a'); 
+dLink('bhí','bhí'); 
+dLink('mé','mé'); 
+dLink('i','i'); 
+dLink('gColáiste','gColáiste'); 
+dLink('Phádraig','Phádraig'); 
+dLink('mar','mar'); 
+dLink('mhac','mhac'); 
+dLink('léinn','léinn'); 
+dLink('agus','agus'); 
+dLink('bhí','bhí'); 
+dLink('siad','siad'); 
+dLink('millteanach','millteanach'); 
+dLink('maith','maith'); 
+dLink('dom','dom'); 
+dLink('agus','agus'); 
+dLink('thug','thug'); 
+dLink('siad','siad'); 
+dLink('go','go'); 
+dLink('leor','leor'); 
+dLink('tacaíochta','tacaíochta'); 
+dLink('dom','dom'); 
+dLink('agus','agus'); 
+dLink('bhí','bhí'); 
+dLink('siad','siad'); 
+dLink('bródúil','bródúil'); 
+dLink('asam','asam'); 
+dLink('agus','agus'); 
+dLink('bhí','bhí'); 
+dLink('sin','sin'); 
+dLink('go','go'); 
+dLink('deas','deas,'); 
+dLink('an','an'); 
+dLink('tacaíocht','tacaíocht'); 
+dLink('sin','sin'); 
+dLink('a','a'); 
+dLink('fháil','fháil.'); 
+</script>
+<br>
+<script>
+</script>
+<br>
+<script>
+dLink('Bhí','Bhí'); 
+dLink('tú','tú'); 
+dLink('ag','ag'); 
+dLink('ceol','ceol'); 
+dLink('thar','thar'); 
+dLink('lear','lear'); 
+dLink('freisin','freisin'); 
+dLink('in','in'); 
+dLink('áiteanna','áiteanna'); 
+dLink('éagsúla','éagsúla'); 
+dLink('cén','cén'); 
+dLink('dearcadh','dearcadh'); 
+dLink('atá','atá'); 
+dLink('ag','ag'); 
+dLink('an','an'); 
+dLink('bpobal','bpobal'); 
+dLink('idirnáisiúnta','idirnáisiúnta'); 
+dLink('ar','ar'); 
+dLink('an','an'); 
+dLink('amhránaíocht','amhránaíocht?'); 
+</script>
+<br>
+<script>
+</script>
+<br>
+<script>
+dLink('Bhuel','Bhuel'); 
+dLink('chaith','chaith'); 
+dLink('mé','mé'); 
+dLink('cúig','cúig'); 
+dLink('seachtaine','seachtaine'); 
+dLink('nó','nó'); 
+dLink('mar','mar'); 
+dLink('sin','sin'); 
+dLink('i','i'); 
+dLink('Meiriceá','Meiriceá'); 
+dLink('i','i'); 
+dLink('rith','rith'); 
+dLink('an','an'); 
+dLink('tsamhraidh','tsamhraidh'); 
+dLink('i','i'); 
+dLink('mbliana','mbliana'); 
+dLink('agus','agus'); 
+dLink('bhí','bhí'); 
+dLink('mé','mé'); 
+dLink('i','i'); 
+dLink('Chicago','Chicago'); 
+dLink('ar','ar'); 
+dLink('feadh','feadh'); 
+dLink('trí','trí'); 
+dLink('seachtainí','seachtainí'); 
+dLink('agus','agus'); 
+dLink('bhínn','bhínn'); 
+dLink('ag','ag'); 
+dLink('ceol','ceol'); 
+dLink('ansin','ansin'); 
+dLink('sna','sna'); 
+dLink('tithe','tithe'); 
+dLink('tábhairne','tábhairne'); 
+dLink('agus','agus'); 
+dLink('tá','tá'); 
+dLink('pobal','pobal'); 
+dLink('mór','mór'); 
+dLink('ansin','ansin'); 
+dLink('a','a'); 
+dLink('bhfuil','bhfuil'); 
+dLink('suim','suim'); 
+dLink('acu','acu'); 
+dLink('sa','sa'); 
+dLink('cheol','cheol'); 
+dLink('traidisiúnta','traidisiúnta'); 
+dLink('agus','agus'); 
+dLink('bhí','bhí'); 
+dLink('siad','siad'); 
+dLink('iontach','iontach'); 
+dLink('tógtha','tógtha'); 
+dLink('leis','leis.'); 
+dLink('Ní','Ní'); 
+dLink('raibh','raibh'); 
+dLink('siad','siad'); 
+dLink('ag','ag'); 
+dLink('iarraidh','iarraidh'); 
+dLink('ormsa','ormsa'); 
+dLink('amhrán','amhrán'); 
+dLink('ar','ar'); 
+dLink('bith','bith'); 
+dLink('a','a'); 
+dLink('cheol','cheol'); 
+dLink('i','i'); 
+dLink('mBéarla','mBéarla'); 
+dLink('deireadh','deireadh'); 
+dLink('siad','siad'); 
+dLink('liom','liom'); 
+dLink('‘no','‘no,'); 
+dLink('ceol','ceol'); 
+dLink('amhrán','amhrán'); 
+dLink('i','i'); 
+dLink('nGaeilge','nGaeilge,'); 
+dLink('amhrán','amhrán'); 
+dLink('i','i'); 
+dLink('nGaeilge’','nGaeilge’.'); 
+dLink('Agus','Agus'); 
+dLink('bhí','bhí'); 
+dLink('an-an-suim','an-an-suim'); 
+dLink('acu','acu.'); 
+dLink('Agus','Agus'); 
+dLink('bhí','bhí'); 
+dLink('mé','mé'); 
+dLink('ag','ag'); 
+dLink('ceol','ceol'); 
+dLink('ar','ar'); 
+dLink('Oileán','Oileán'); 
+dLink('Mhanann','Mhanann'); 
+dLink('anuraidh','anuraidh'); 
+dLink('agus','agus'); 
+dLink('bhí','bhí'); 
+dLink('an-suim','an-suim'); 
+dLink('ag','ag'); 
+dLink('na','na'); 
+dLink('daoine','daoine'); 
+dLink('ansin','ansin'); 
+dLink('ann','ann'); 
+dLink('fosta','fosta,'); 
+dLink('tá','tá'); 
+dLink('siad','siad'); 
+dLink('ag','ag'); 
+dLink('iarraidh','iarraidh'); 
+dLink('an','an'); 
+dLink('teanga…cineál...athbheochan','teanga…cineál...athbheochan'); 
+dLink('a','a'); 
+dLink('dhéanamh','dhéanamh'); 
+dLink('ar','ar'); 
+dLink('an','an'); 
+dLink('teanga','teanga'); 
+dLink('ansin','ansin'); 
+dLink('agus','agus'); 
+dLink('bhain','bhain'); 
+dLink('siad','siad'); 
+dLink('an-an-suim','an-an-suim'); 
+dLink('as','as'); 
+dLink('mo','mo'); 
+dLink('chuid','chuid'); 
+dLink('amhránaíochta','amhránaíochta'); 
+dLink('fosta','fosta.'); 
+</script>
+<br>
+<script>
+</script>
+<br>
+<script>
+dLink('An','An'); 
+dLink('gceapann','gceapann'); 
+dLink('tú','tú'); 
+dLink('gur','gur'); 
+dLink('féidir','féidir'); 
+dLink('an','an'); 
+dLink('sean-nós','sean-nós'); 
+dLink('a','a'); 
+dLink('mhúineadh','mhúineadh?'); 
+</script>
+<br>
+<script>
+</script>
+<br>
+<script>
+dLink('Sílim','Sílim'); 
+dLink('gur','gur'); 
+dLink('féidir','féidir.'); 
+dLink('Bhí','Bhí'); 
+dLink('mise','mise'); 
+dLink('ag','ag'); 
+dLink('múineadh','múineadh'); 
+dLink('sean-nóis','sean-nóis'); 
+dLink('ansin','ansin'); 
+dLink('sna','sna'); 
+dLink('scoileanna','scoileanna,'); 
+dLink('bhí','bhí'); 
+dLink('mé','mé'); 
+dLink('ag','ag'); 
+dLink('obair','obair'); 
+dLink('i','i'); 
+dLink('Scoil','Scoil'); 
+dLink('Lorcáin','Lorcáin'); 
+dLink('agus','agus'); 
+dLink('i','i'); 
+dLink('nGaelscoil','nGaelscoil'); 
+dLink('Chnoc','Chnoc'); 
+dLink('na','na'); 
+dLink('Ré','Ré'); 
+dLink('i','i'); 
+dLink('Sligeach','Sligeach'); 
+dLink('agus','agus'); 
+dLink('bhíodh','bhíodh'); 
+dLink('ranganna','ranganna'); 
+dLink('sean-nóis','sean-nóis'); 
+dLink('agam','agam'); 
+dLink('i','i'); 
+dLink('gcónaí','gcónaí'); 
+dLink('leis','leis'); 
+dLink('na','na'); 
+dLink('páistí','páistí'); 
+dLink('agus','agus'); 
+dLink('théadh*','théadh*'); 
+dLink('siad','siad'); 
+dLink('sna','sna'); 
+dLink('comórtais','comórtais'); 
+dLink('fleadh','fleadh'); 
+dLink('an','an'); 
+dLink('chontae','chontae'); 
+dLink('agus','agus'); 
+dLink('chuig','chuig'); 
+dLink('an','an'); 
+dLink('Oireachtas','Oireachtas'); 
+dLink('agus','agus'); 
+dLink('d’éirigh','d’éirigh'); 
+dLink('go','go'); 
+dLink('breá','breá'); 
+dLink('leo','leo'); 
+dLink('agus','agus'); 
+dLink('fuair','fuair'); 
+dLink('siad','siad'); 
+dLink('duaiseanna','duaiseanna'); 
+dLink('agus','agus'); 
+dLink('bhíodh','bhíodh'); 
+dLink('siad','siad'); 
+dLink('ag','ag'); 
+dLink('canadh','canadh'); 
+dLink('le','le'); 
+dLink('cineál','cineál'); 
+dLink('stíl','stíl'); 
+dLink('Chonallach','Chonallach'); 
+dLink('agus','agus'); 
+dLink('bhíodh','bhíodh'); 
+dLink('an','an'); 
+dLink('fhoghraíocht','fhoghraíocht'); 
+dLink('acu','acu'); 
+dLink('agus','agus'); 
+dLink('achan','achan'); 
+dLink('rud','rud.'); 
+dLink('Is','Is'); 
+dLink('cuimhin','cuimhin'); 
+dLink('liom','liom'); 
+dLink('bhí','bhí'); 
+dLink('Meaití','Meaití'); 
+dLink('Joe','Joe'); 
+dLink('Shéamais','Shéamais'); 
+dLink('ag','ag'); 
+dLink('déanamh','déanamh'); 
+dLink('moltóireachta','moltóireachta'); 
+dLink('ar','ar'); 
+dLink('chailín','chailín'); 
+dLink('amháin','amháin'); 
+dLink('de','de'); 
+dLink('mo','mo'); 
+dLink('chuid','chuid,'); 
+dLink('Éabha','Éabha'); 
+dLink('Nic','Nic'); 
+dLink('Mhathúna','Mhathúna,'); 
+dLink('agus','agus'); 
+dLink('bhuaigh','bhuaigh'); 
+dLink('sí','sí'); 
+dLink('an','an'); 
+dLink('comórtas','comórtas'); 
+dLink('faoi','faoi'); 
+dLink('chúig','chúig'); 
+dLink('bliana','bliana'); 
+dLink('déag','déag'); 
+dLink('ar','ar'); 
+dLink('an','an'); 
+dLink('tsean-nós','tsean-nós.'); 
+dLink('Agus','Agus'); 
+dLink('seo','seo'); 
+dLink('cailín','cailín'); 
+dLink('as','as'); 
+dLink('Baile','Baile'); 
+dLink('Átha','Átha'); 
+dLink('Cliath','Cliath'); 
+dLink('agus','agus'); 
+dLink('bhí','bhí'); 
+dLink('Meaití','Meaití'); 
+dLink('ag','ag'); 
+dLink('cur','cur'); 
+dLink('ceiste','ceiste'); 
+dLink('uirthi','uirthi,'); 
+dLink('tá','tá'); 
+dLink('a','a'); 
+dLink('fhios','fhios'); 
+dLink('agat','agat,'); 
+dLink('‘Cén','‘Cén'); 
+dLink('áit','áit'); 
+dLink('ar','ar'); 
+dLink('fhoghlaim','fhoghlaim'); 
+dLink('tú','tú'); 
+dLink('do','do'); 
+dLink('chuid','chuid'); 
+dLink('amhrán','amhrán?,'); 
+dLink('tá','tá'); 
+dLink('stíl','stíl'); 
+dLink('Chonallach','Chonallach'); 
+dLink('agat’','agat’'); 
+dLink('agus','agus'); 
+dLink('bhí','bhí,'); 
+dLink('ar','ar'); 
+dLink('ndóigh','ndóigh'); 
+dLink('agus','agus'); 
+dLink('d’éirigh','d’éirigh'); 
+dLink('go','go'); 
+dLink('maith','maith'); 
+dLink('léi','léi'); 
+dLink('tháinig','tháinig'); 
+dLink('sé','sé'); 
+dLink('léi','léi'); 
+dLink('go','go'); 
+dLink('nádúrtha','nádúrtha'); 
+dLink('agus','agus'); 
+dLink('d’fhoghlaim','d’fhoghlaim'); 
+dLink('sí','sí'); 
+dLink('sin','sin.'); 
+</script>
+<br>
+<script>
+</script>
+<br>
+<script>
+dLink('Ar','Ar'); 
+dLink('mhaith','mhaith'); 
+dLink('leat','leat'); 
+dLink('véarsa','véarsa'); 
+dLink('beag','beag'); 
+dLink('a','a'); 
+dLink('chasadh','chasadh'); 
+dLink('dúinn','dúinn?'); 
+</script>
+<br>
+<script>
+</script>
+<br>
+<script>
+dLink('Maith','Maith'); 
+dLink('go','go'); 
+dLink('leor','leor.'); 
+dLink('Ceolfaidh','Ceolfaidh'); 
+dLink('mé','mé'); 
+dLink('véarsa','véarsa'); 
+dLink('den','den'); 
+dLink('tSeanbhean','tSeanbhean'); 
+dLink('Bhocht','Bhocht'); 
+dLink('b’fhéidir','b’fhéidir.'); 
+</script>
+<br> <br><br>
+<input type=button value="Back" onClick="history.go(-1)"> <input type="button" value="Next" onclick="window.open ('https://sites.google.com/site/nagaeilgi/')">
+<br>
+<hr>
+
+  <br><br>
+   <font face="Arial">Hyperlinked word script engine developed 2010 by Kent Andersen ka@sde.dk as part of the POOLS-T project www.languages.dk</font><br><p> </p>
+</td>
+</tr>
+</table>
+</div>
+<img src="http://counter.digits.com/wc/-d/4/tb" width="0" height="0">
+</body>
+</html>

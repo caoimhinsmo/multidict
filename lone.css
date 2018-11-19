@@ -1,0 +1,135 @@
+@charset "utf-8";
+#master {
+	height: 470px;
+	width: 550px;
+	margin-right: auto;
+	margin-left: auto;
+	position: relative;
+	top: 20px;
+	border: 1px solid #1D6935;
+	box-shadow: 3px 3px 6px 3px #999999;
+	border-radius: 6px;
+	background-color: #FFFFFF;
+}
+#multihjem {
+	background-color: #FF6600;
+	position: absolute;
+	height: 10px;
+	width: 10px;
+	right: 10px;
+	bottom: 22px;
+}
+
+#clilstore {
+	position: absolute;
+	height: 165px;
+	width: 521px;
+	left: 26px;
+	top: 17px;
+	z-index: 1;
+}
+#wordlink {
+	position: absolute;
+	height: 93px;
+	width: 521px;
+	left: 26px;
+	top: 162px;
+}
+#multidict {
+	position: absolute;
+	height: 125px;
+	width: 519px;
+	left: 27px;
+	top: 255px;
+}
+#cliltext {
+	position: absolute;
+	height: 69px;
+	width: 515px;
+	left: 0px;
+	top: 67px;
+}
+body {
+	font-family: Tahoma, Geneva, sans-serif;
+	font-size: 11px;
+	line-height: 13px;
+	color: #555555;
+	background-image: url(lonelogo/blad3.gif);
+	background-repeat: no-repeat;
+	background-position: right top;
+}
+#rule1 {
+	background-color: #002C79;
+	height: 1px;
+	/* [disabled]width: 400px; */
+	position: absolute;
+	left: 51px;
+	top: 89px;
+}
+
+
+.luft {
+
+}
+
+#wordtext {
+	position: absolute;
+	height: 22px;
+	width: 522px;
+	left: 0px;
+	top: 65px;
+}
+* {
+	margin: 0px;
+	padding: 0px;
+}
+#multitext {
+	position: absolute;
+	height: 24px;
+	width: 521px;
+	left: 0px;
+	top: 95px;
+}
+
+.redbord {
+	border: 1px solid #a20d20;
+	border-radius: 6px;
+}
+#disclaimer {
+	position: absolute;
+	height: 61px;
+	width: 200px;
+	left: 5px;
+	bottom: 10px;
+	border-top-width: 1px;
+	border-bottom-width: 1px;
+	border-left-width: 1px;
+	border-top-style: solid;
+	border-bottom-style: solid;
+	border-left-style: solid;
+	border-top-color: #4B97CC;
+	border-bottom-color: #4B97CC;
+	border-left-color: #4B97CC;
+}
+#distekst {
+	background-color: #E6E6E6;
+	position: absolute;
+	height: 55px;
+	width: 325px;
+	right: 6px;
+	bottom: 10px;
+	color: #000000;
+	padding-top: 3px;
+	padding-right: 3px;
+	padding-bottom: 3px;
+	padding-left: 10px;
+	border-top-width: 1px;
+	border-right-width: 1px;
+	border-bottom-width: 1px;
+	border-top-style: solid;
+	border-right-style: solid;
+	border-bottom-style: solid;
+	border-top-color: #007DC3;
+	border-right-color: #007DC3;
+	border-bottom-color: #007DC3;
+}
