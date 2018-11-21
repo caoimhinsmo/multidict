@@ -342,10 +342,11 @@ END_LS;
         $remainder = $matches[3];
         preg_match('|^<\s*([\/\w]*)|ius',$tag,$matches);
         $tagType = strtolower($matches[1]);
-        if ( ($tagType=='a') && (  preg_match('|\"/wordlink.*url|'      ,$tag)
-                                 ||preg_match('|smo.uhi.ac.uk/wordlink|',$tag)
-                                 ||preg_match('|multidict.net/wl|',      $tag) //Can hopefully delete this particular line again after we get a clean bill of health from Google Safe Browsing review
-                                 ||preg_match('|multidict.net/wordlink|',$tag) ) ) {   //If this happens to be a link to Wordlink itself then
+        if ( ($tagType=='a') && (   preg_match('|\"/wordlink.*url|'       ,$tag)
+                                 || preg_match('|smo.uhi.ac.uk/wordlink|' ,$tag)
+                                 || preg_match('|multidict.net/wl|',      $tag) //Can hopefully delete this particular line again after we get a clean bill of health from Google Safe Browsing review
+                                 || preg_match('|multidict.info/wordlink|',$tag)
+                                 || preg_match('|multidict.net/wordlink|' ,$tag) ) ) {  //If this happens to be a link to Wordlink itself then
             $tag = '<a class="opaque">';                                               //zap it and make it invisible to avoid to avoid recursion
         } elseif ($tagType=='input') {
             $tag = str_ireplace('<input','<input readonly placeholder="Disabled in Wordlink"',$tag);
