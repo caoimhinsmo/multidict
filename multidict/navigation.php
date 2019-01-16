@@ -18,20 +18,110 @@
   $mode= $wlSession->mode;
 
   $robots = ( empty($wlSession->word) ? 'index,follow' : 'noindex,nofollow' );
-?>
+
+  try {
+  $cookieIcon = ( isset($_COOKIE['SM_wlUser'])
+                ? '<img src="/favicons/cookie.png" alt="" title="You have cookies enabled - Good!"/>'
+                : ( time()%5==0
+                  ? '<div style="background-color:yellow;padding:0 0 1px 1px"><a href="cookies.html" target="MD$sid">Enable cookies</a><br>'
+                   .'<span font-size="80%">for best results</span></div>'
+                  : '<a href="cookies.html" target="MD$sid"><img src="/icons-smo/bronach.gif" alt="" title="No cookies? Click for advice!"/></a>'
+                  )
+                );
+  $nbSlHtml = $wlSession->nbSlHtml();
+  $wordformArr = explode('|',$wlSession->wfs);
+  if (sizeof($wordformArr)<2) { $wordformHtmlFull = ''; }
+  else {
+      foreach ($wordformArr as $key=>&$wf) {
+          if ($wf==$word) { $wf = '<span class="lemmaword">' . $wf . '</span>';}
+          if ($key==0)    { $wf = '<span class="lemma0">' . $wf . '</span>'; }
+          if ($key<>0)    { $wf = "<a href=\"/multidict/?sid=$sid&amp;word=$word&amp;rot=$key\" target=\"MD$sid\" class=\"lemmalink\">$wf</a>"; }
+      }
+      $wordformHtml = implode(' <span dir="ltr">←</span> ',$wordformArr);
+      $wordformHtmlFull = <<<EODWFFH
+<div class="formItem" style="margin:0 0 0 0.5%px;width:63%">
+<div class="label" style="padding:4px 0 1px 0;overflow:hidden">Multidict will try these wordforms in rotation (on reclick)</div>
+<div style="font-size:85%;color:brown">$wordformHtml ↩</div>
+</div>
+EODWFFH;
+  }
+  $dictClass = $wlSession->dictClass();
+  if (substr($dictClass,0,1)=='p') { $pageNav = <<<EODpageNav
+<input type="submit" name="go" value="<" formtarget="MD$sid" style="padding:0 3px;margin-left:1.2em" title="Page back">
+<input type="submit" name="go" value=">" formtarget="MD$sid" style="padding:0 3px" title="Page forward">
+EODpageNav;
+  } else { $pageNav = ''; }
+
+  $slOptionsHtml = $tlSelectHtml = $formItems = '';
+
+  $slArr = SM_WlSession::slArr();
+  foreach ($slArr as $lang=>$langInfo) { $slArray[$lang] = $langInfo['endonym']; }
+  setlocale(LC_ALL,'en_GB.UTF-8');
+  uasort($slArray,'strcoll');
+  $slArray = array_merge(array(''=>'-Choose-'),$slArray);
+  foreach ($slArray as $code=>$name) {
+      $selectHtml = ( $sl==$code ? ' selected="selected"' : '');
+      $slOptionsHtml .= "  <option value=\"$code\"$selectHtml>$name</option>\n";
+  }
+
+  if (!empty($sl)) {
+      $tlArray = $wlSession->tlArr();
+      setlocale(LC_ALL,'en_GB.UTF-8');
+      uasort($tlArray,'strcoll');
+      foreach ($tlArray as $code=>$name) {
+          $selectedHtml = ( $tl==$code ? ' selected="selected"' : '');
+          $tlSelectHtml .= "  <option value=\"$code\"$selectedHtml>$name</option>\n";
+      }
+      $dictSelectHtml = $wlSession->dictSelectHtml();
+      $dictIconsHtml  = $wlSession->dictIconsHtml();
+      $dictIconHtml   = $wlSession->dictIconHtml();
+      $nbTlHtml       = $wlSession->nbTlHtml();
+      $formItems = <<<EOD3
+<div id="tlSelectOn" style="display:block">
+<div class="formItem" style="min-width:95px;max-width:28%"><div class="label">To <a onclick="selectOff('tl')" title="hide selection">Ⓧ</a></div>
+<select name="tl" id="tl" title="Choose a target language" onchange="submitForm('tl');">
+  <option value="">-Choose-</option>
+$tlSelectHtml
+</select>$nbTlHtml
+</div>
+</div>
+<div id="tlSelectOff" class="formItem" style="display:none;width:2em" onclick="selectOn('tl')" title="Click to reselect To language">
+<div class="label">To</div>
+<b onmouseover="selectOn('tl')">$tl</b>
+</div>
+<div id="dictSelectOn" style="display:block">
+<div class="formItem" style="min-width:110px;max-width:40%;overflow:visible"><div class="label">Dictionary <a onclick="selectOff('dict')" title="hide selection">Ⓧ</a> $dictIconHtml</div>
+<select id="dict" name="dict" onchange="submitForm();" title="Choose a dictionary (but reselect target language first if need be)">
+  <option value="">-Choose-</option>
+$dictSelectHtml
+</select><br>
+<div id="dictIcons">$dictIconsHtml</div>
+</div>
+</div>
+<div id="dictSelectOff" class="formItem" style="display:none" onclick="selectOn('dict')" title="click to reselect dictionary">
+<div class="label">Dictionary</div>
+<b onmouseover="selectOn('dict')">$dict</b>
+</div>
+<div id="noJSinfo" style="position:absolute;bottom:4px;left:6px;font-size:55%;color:green;white-space:normal">
+If JavaScript is disabled you must click Go after each language change</div>
+EOD3;
+  }
+
+  echo <<<EOD4
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
     <title>Multidict navigation frame</title>
-    <meta name="robots" content="<?php echo $robots; ?>"/>
-    <style type="text/css">
+    <meta name="robots" content="$robots">
+    <style>
         body { height:132px; margin:1px; border:3px solid orange; padding:0px; background-color:#e3ffe3; font-family:Tahoma,sans-serif; font-size:12pt; }
-        input { padding:1px 4px; }
+        input { padding:0px 4px; height:1.2em; line-height:1em; }
+        select { margin-bottom:1px !important; height:1.3em; line-height:1em; }
+        option { height:1.8em; padding:0; margin:0; }
         /*--- for stupid Internet Explorer ---*/
         * {margin-top:0    !important;}
         * {margin-bottom:0 !important;}
-        select { margin-bottom:1px !important;}
         /*------------------------------------*/
         ul.dluth { margin:0; }
         div.label  { font-size:80%; color:#777; }
@@ -42,12 +132,15 @@
         a         { text-decoration:none; }
         a:link    { color: #00f; }
         a:visited { color: #909; }
-        a:hover   { color: #ff0; background-color:blue; }
+        a:hover, input[type=submit]:hover, span.clickable:hover { color: #ff0; background-color:blue; }
         a.lemmalink:link,
         a.lemmalink:visited { color:brown; }
         a.lemmalink:hover   {color:#ff0; }
         a.about { display:inline-block; margin-left:0.8em; padding:0 4px; border-radius:4px; background-color:#75c8fb; color:white; font-size:90%; }
         a.about:hover { background-color:blue; color:white; }
+        div#slSelectOff:hover,
+        div#tlSelectOff:hover,
+        div#dictSelectOff:hover { background-color:#ddf; }
         span.lemma0 { font-weight:bold; text-decoration:underline; color:#bb2020; }
         span.lemmaword { font-style:italic; }
         a#esc span { border:1px solid grey; border-radius:3px; padding: 0 2px; color:grey; background-color:white; }
@@ -67,9 +160,10 @@
         div#dictIcons img.pg  { padding:0 0 1px 0; border-bottom:2px solid red; }      /* Google Books */
         div#dictIcons img.s   { padding:0 0 1px 0; border-bottom:2px dotted black; }   /* Special */
     </style>
-    <script type="text/javascript">
+    <script>
 <!--
     function bodyLoad() {
+        if (window.parent != window.top) { selectOff('sl'); }
         document.getElementById('noJSinfo').style.display = 'none';
         document.getElementById('dictIcons').style.display = 'block';
         document.getElementById('swop').style.display = 'block';
@@ -104,45 +198,18 @@
         document.getElementById('tl').value = lang;
         submitForm();
     }
+    function selectOff(item) {
+        document.getElementById(item+'SelectOn').style.display = 'none';
+        document.getElementById(item+'SelectOff').style.display = 'block';
+    }
+    function selectOn(item) {
+        document.getElementById(item+'SelectOn').style.display = 'block';
+        document.getElementById(item+'SelectOff').style.display = 'none';
+    }
 //-->
     </script>
 </head>
 <body onload="bodyLoad();">
-
-<?php
-  try {
-  $cookieIcon = ( isset($_COOKIE['SM_wlUser'])
-                ? '<img src="/favicons/cookie.png" alt="" title="You have cookies enabled - Good!"/>'
-                : ( time()%5==0
-                  ? '<div style="background-color:yellow;padding:0 0 1px 1px"><a href="cookies.html" target="MD$sid">Enable cookies</a><br>'
-                   .'<span font-size="80%">for best results</span></div>'
-                  : '<a href="cookies.html" target="MD$sid"><img src="/icons-smo/bronach.gif" alt="" title="No cookies? Click for advice!"/></a>'
-                  )
-                );
-  $nbSlHtml = $wlSession->nbSlHtml();
-  $wordformArr = explode('|',$wlSession->wfs);
-  if (sizeof($wordformArr)<2) { $wordformHtmlFull = ''; }
-  else {
-      foreach ($wordformArr as $key=>&$wf) {
-          if ($wf==$word) { $wf = '<span class="lemmaword">' . $wf . '</span>';}
-          if ($key==0)    { $wf = '<span class="lemma0">' . $wf . '</span>'; }
-          if ($key<>0)    { $wf = "<a href=\"/multidict/?sid=$sid&amp;word=$word&amp;rot=$key\" target=\"MD$sid\" class=\"lemmalink\">$wf</a>"; }
-      }
-      $wordformHtml = implode(' <span dir="ltr">←</span> ',$wordformArr);
-      $wordformHtmlFull = <<<EODWFFH
-<div class="formItem" style="margin:0 0 0 0.5%px;width:63%">
-<div class="label" style="padding:4px 0 1px 0;overflow:hidden">Multidict will try these wordforms in rotation (on reclick)</div>
-<div style="font-size:85%;color:brown">$wordformHtml ↩</div>
-</div>
-EODWFFH;
-  }
-  $dictClass = $wlSession->dictClass();
-  if (substr($dictClass,0,1)=='p') { $pageNav = <<<EODpageNav
-<input type="submit" name="go" value="<" formtarget="MD$sid" style="padding:0 3px;margin-left:1.2em" title="Page back">
-<input type="submit" name="go" value=">" formtarget="MD$sid" style="padding:0 3px" title="Page forward">
-EODpageNav;
-  } else { $pageNav = ''; }
-  echo <<<EOD1
 <div style="float:right;padding:1px">$cookieIcon</div>
 <p style="margin:0 0 1px 0">
 <span style="background-color:orange;color:white;padding:1px 1px"><span style="font-weight:bold;color:#bfb">Multidict</span> navigation frame</span>
@@ -152,7 +219,7 @@ EODpageNav;
 <form id="mdForm" action="./" target="MD$sid" style="margin:0 0 0 2px;padding-top:1px">
 <div style="width:100%;padding-top:1px">
 <div class="formItem" style="width:35%;max-width:300px"><input type="hidden" name="sid" value="$sid">
-<div class="label">Word &nbsp;<input type="submit" name="go" value="Go" formtarget="MD$sid" style="padding:0 3px">
+<div class="label">Word &nbsp;<input type="submit" name="go" value="Go" formtarget="MD$sid" style="padding:0 3px;height:1.5em;line-height:1em">
 $pageNav</div>
 <input type="text" name="word" value="$word" title="The word to lookup in the dictionary" placeholder="Word to translate" style="width:94%">
 </div>
@@ -160,56 +227,21 @@ $wordformHtmlFull
 </div>
 <div class="formItem" style="clear:both;min-width:95px;max-width:28%">
 <div id="swop" class="label" style="float:right;padding-right:1.5em;font-weight:bold;display:none" title="swop" onclick="swopLangs();"><a>&#x2194;</a></div>
-<div class="label">From</div>
+<div id="slSelectOn" style="display:block">
+<div class="label">From <a onclick="selectOff('sl')" title="hide selection">Ⓧ</a></div>
 <select name="sl" id="sl" title="Source language" onchange="submitForm('sl');">
-EOD1;
-
-  $slArr = SM_WlSession::slArr();
-  foreach ($slArr as $lang=>$langInfo) { $slArray[$lang] = $langInfo['endonym']; }
-  setlocale(LC_ALL,'en_GB.UTF-8');
-  uasort($slArray,'strcoll');
-  $slArray = array_merge(array(''=>'-Choose-'),$slArray);
-  foreach ($slArray as $code=>$name) {
-      $selectHtml = ( $sl==$code ? ' selected="selected"' : '');
-      echo "  <option value=\"$code\"$selectHtml>$name</option>\n";
-  }
-  echo <<<EOD2
+$slOptionsHtml
 </select>$nbSlHtml
 </div>
-EOD2;
-
-  $tlSelectHtml = '';
-  $tlArray = $wlSession->tlArr();
-  setlocale(LC_ALL,'en_GB.UTF-8');
-  uasort($tlArray,'strcoll');
-  foreach ($tlArray as $code=>$name) {
-      $selectedHtml = ( $tl==$code ? ' selected="selected"' : '');
-      $tlSelectHtml .= "  <option value=\"$code\"$selectedHtml>$name</option>\n";
-  }
-  $dictSelectHtml = $wlSession->dictSelectHtml();
-  $dictIconsHtml  = $wlSession->dictIconsHtml();
-  $dictIconHtml   = $wlSession->dictIconHtml();
-  $nbTlHtml       = $wlSession->nbTlHtml();
-  $formItems = <<<EOD3
-<div class="formItem" style="min-width:95px;max-width:28%"><div class="label">To</div>
-<select name="tl" id="tl" title="Choose a target language" onchange="submitForm('tl');">
-  <option value="">-Choose-</option>
-$tlSelectHtml
-</select>$nbTlHtml
+<div id="slSelectOff" style="display:none" onclick="selectOn('sl')" title="Click to reselect From language">
+<div class="label">From</div>
+<b onmouseover="selectOn('sl')">$sl</b>
 </div>
-<div class="formItem" style="min-width:110px;max-width:40%;overflow:visible"><div class="label">Dictionary $dictIconHtml</div>
-<select id="dict" name="dict" onchange="submitForm();" title="Choose a dictionary (but reselect target language first if need be)">
-  <option value="">-Choose-</option>
-$dictSelectHtml
-</select><br>
-<div id="dictIcons">$dictIconsHtml</div>
 </div>
-<div id="noJSinfo" style="position:absolute;bottom:4px;left:6px;font-size:55%;color:green;white-space:normal">
-If JavaScript is disabled you must click Go after each language change</div>
-EOD3;
-  if (!empty($sl)) { echo $formItems; }
-?>
+$formItems;
 </form>
+EOD4;
+?>
 
 <?php
   } catch (exception $e) { echo $e; }
