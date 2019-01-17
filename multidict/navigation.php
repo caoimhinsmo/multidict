@@ -225,8 +225,8 @@ $pageNav</div>
 </div>
 $wordformHtmlFull
 </div>
-<div class="formItem" style="clear:both;min-width:95px;max-width:28%">
-<div id="swop" class="label" style="float:right;padding-right:1.5em;font-weight:bold;display:none" title="swop" onclick="swopLangs();"><a>&#x2194;</a></div>
+<div class="formItem" style="clear:both;min-width:60px;max-width:28%">
+<div id="swop" class="label" style="float:right;padding-right:0.7em;font-weight:bold;display:none" title="swop" onclick="swopLangs();"><a>&#x2194;</a></div>
 <div id="slSelectOn" style="display:block">
 <div class="label">From <a onclick="selectOff('sl')" title="hide selection">Ⓧ</a></div>
 <select name="sl" id="sl" title="Source language" onchange="submitForm('sl');">
