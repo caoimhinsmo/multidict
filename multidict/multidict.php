@@ -96,7 +96,7 @@ FORMHTML;
       return $html;
   }
 
-  function createClick($url) {
+  function createClick($url,$message,$sid) {
       // This will create a form to click to open the dictionary results in a new window
       $fieldsHtml = '';
       $bits = explode('?',$url);
@@ -118,11 +118,12 @@ FORMHTML;
 </head>
 <body>
 <p>Click “Submit” to look up the word in the dictionary</p>
-<form id="lookupForm" name="lookupForm" action="$urlLom" target="_blank">
+<form id="lookupForm" name="lookupForm" action="$urlLom" target="dictab$sid">
 $fieldsHtml
 <input name="cuir" type="submit" value="Submit">
 </form>
-<p>The results will be opened in a new tab</p>
+<p>The results will be opened in a new tab<br>
+<span style="color:red">N.B. $message</span></p>
 </body>
 </html>
 CLICKHTML;
@@ -151,7 +152,7 @@ CLICKHTML;
     if (empty($sl))   { throw new SM_MDexception("You need to choose a source language"); }
     if (empty($tl))   { throw new SM_MDexception("No target language specified"); }
 
-    $query = "SELECT sl,url,urlc,pparams,encoding,charextra,handling FROM dictParam "
+    $query = "SELECT sl,url,urlc,pparams,encoding,charextra,handling,message FROM dictParam "
            . " WHERE (dict LIKE ? AND sl LIKE ? and tl LIKE ?)"
            .    " OR (dict LIKE ? AND sl LIKE '¤')"
            . " ORDER BY quality DESC";
@@ -170,6 +171,7 @@ CLICKHTML;
     $paramEncoding= $row->encoding;
     $charExtra    = $row->charextra;
     $handling     = $row->handling;
+    $message      = $row->message;
     $stmt = null;
 
     SM_WlSession::updateCalls($sl,$tl,$dict);
@@ -235,7 +237,7 @@ $hl = 'ENG';
     }
     
     if ($handling=='click') {
-        $html = createClick($url);
+        $html = createClick($url,$message,$sid);
         goto echohtml;
     }
     
