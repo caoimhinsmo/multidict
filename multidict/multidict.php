@@ -123,7 +123,7 @@ $fieldsHtml
 <input name="cuir" type="submit" value="Submit">
 </form>
 <p>The results will be opened in a new tab<br>
-<span style="color:red">N.B. $message</span></p>
+<span style="color:red">$message</span></p>
 </body>
 </html>
 CLICKHTML;
