@@ -73,7 +73,7 @@ class SM_csSess {
 
 
   public function __construct() {
-     // If the cookie csSession is found, then retrieve the Clilstore session id $csid from it, and check for a Clilstore session record in the database.
+     // If the cookie csSessionId is found, then retrieve the Clilstore session id $csid from it, and check for a Clilstore session record in the database.
      // Otherwise, create a new session record, setting $csid to the next available number, and give the session the default values for everything.
      // In any case, (re)set the cookie and retrieve session information from the database to populate the class variables.
 
@@ -81,8 +81,8 @@ class SM_csSess {
 
       $this->newSession = 1;  // Assume a new session will be needed until proved otherwise
       $DbMultidict = SM_DbMultidictPDO::singleton('rw');
-      if (isset($_COOKIE['csSession'])) {
-          $this->csSession->csid = $csid = $_COOKIE['csSession'];
+      if (isset($_COOKIE['csSessionId'])) {
+          $this->csSession->csid = $csid = $_COOKIE['csSessionId'];
           if ($this->fetchCsSession()) { $this->newSession = 0; }
       }
       
@@ -114,13 +114,14 @@ class SM_csSess {
       $stmt4->bindParam(':csid',$csid,PDO::PARAM_INT);
       $stmt4->execute();
 
-      setcookie('csSession',
+//Temporary lines, to delete any old-style cookies (containing a domain parameter)
+setcookie('csSession','',1,'/clilstore/',$_SERVER['SERVER_NAME']);
+setcookie('csSession','',1,'/clilstore/','multidict.net');
+
+      setcookie('csSessionId',
                 $csid,
                 time()+31556926,  // expires in 1 year (So sessions with timestamps older than a year can be deleted from the database)
-                '/clilstore/',
-                $_SERVER['SERVER_NAME'],
-                0,                //$secure = false
-                1                 //$httponly = true
+                '/clilstore/'
                );
 
       $this->csFilter = array();

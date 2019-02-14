@@ -96,17 +96,18 @@ FORMHTML;
       return $html;
   }
 
-  function createClick($url) {
+  function createClick($url,$message,$sid) {
       // This will create a form to click to open the dictionary results in a new window
       $fieldsHtml = '';
       $bits = explode('?',$url);
       $urlLom = $bits[0];
-      $params = $bits[1];
+      $params = $bits[1] ?? '';
       $bits = explode('&',$params);
       foreach ($bits as $bit) {
           $paramBits = explode('=',$bit);
           $param = $paramBits[0];
-          $value = $paramBits[1];
+          $value = $paramBits[1] ?? '';
+          if ($message) { $message = "<br>\n<span style=color:red>$message</span>"; }
           $fieldsHtml .= "<input type='hidden' name='$param' value='$value'>";
       }
       $html = <<<CLICKHTML
@@ -118,11 +119,11 @@ FORMHTML;
 </head>
 <body>
 <p>Click “Submit” to look up the word in the dictionary</p>
-<form id="lookupForm" name="lookupForm" action="$urlLom" target="_blank">
+<form id="lookupForm" name="lookupForm" action="$urlLom" target="dictab$sid">
 $fieldsHtml
 <input name="cuir" type="submit" value="Submit">
 </form>
-<p>The results will be opened in a new tab</p>
+<p>The results will be opened in a new tab$message</p>
 </body>
 </html>
 CLICKHTML;
@@ -151,7 +152,7 @@ CLICKHTML;
     if (empty($sl))   { throw new SM_MDexception("You need to choose a source language"); }
     if (empty($tl))   { throw new SM_MDexception("No target language specified"); }
 
-    $query = "SELECT sl,url,urlc,pparams,encoding,charextra,handling FROM dictParam "
+    $query = "SELECT sl,url,urlc,pparams,encoding,charextra,handling,message FROM dictParam "
            . " WHERE (dict LIKE ? AND sl LIKE ? and tl LIKE ?)"
            .    " OR (dict LIKE ? AND sl LIKE '¤')"
            . " ORDER BY quality DESC";
@@ -170,6 +171,7 @@ CLICKHTML;
     $paramEncoding= $row->encoding;
     $charExtra    = $row->charextra;
     $handling     = $row->handling;
+    $message      = $row->message;
     $stmt = null;
 
     SM_WlSession::updateCalls($sl,$tl,$dict);
@@ -235,14 +237,15 @@ $hl = 'ENG';
     }
     
     if ($handling=='click') {
-        $html = createClick($url);
+        $html = createClick($url,$message,$sid);
         goto echohtml;
     }
     
+    $servername = $_SERVER['SERVER_NAME'];
     $scheme = ( empty($_SERVER['HTTPS']) ? 'http' : 'https' );
+    $server = "$scheme://$servername";
     if (strpos($url,'dictpage')>0) {
-        $servername = $_SERVER['SERVER_NAME'];
-        $url = "$scheme://$servername$url&inc=$inc";
+        $url = "$server$url&inc=$inc";
     } else {
         if ($scheme=='http'  && substr($url,0,8)=='https://') { $url = 'http'.substr($url,4); }  //Change $url to use http
         if ($scheme=='https' && substr($url,0,7)=='http://' && $handling=='redirect' )  { $handling = ''; }  //redirect is not possible
@@ -257,7 +260,7 @@ $hl = 'ENG';
 //    $req->setConfig('proxy_port',8080);
     if ($dict=='IATE') { $req->setConfig('protocol_version','1.0'); } //Hack for IATE because ->getBody() suddenly started giving a gzinflate() error for IATE, failing to decompress the body returned by IATE under HTTP 1.1 -- 2014-08-01
     $req->setConfig('timeout',20);
-    $req->setHeader('Referer','http://multidict.net/multidict/');
+    $req->setHeader('Referer',"$server/multidict/");
 
     if (!empty($pparams)) {
         $pparams_arr = explode('&',$pparams);

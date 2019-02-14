@@ -8,7 +8,7 @@
 <body>
 
 <ul class="smo-navlist">
-<li><a href="/" title="Multidict, Wordlink, and Clilstore">multidict.net</a></li>
+<li><a href="/" title="Multidict, Wordlink, and Clilstore"><?php echo $_SERVER['SERVER_NAME']; ?></a></li>
 <li><a href="./" title="Wordlink - a flexible system to search multiple dictionaries">Multidict</a></li>
 </ul>
 <div class="smo-body-indent">
@@ -17,9 +17,9 @@
 <h1 class="smo">About Multidict</h1>
 
 <p><a href="./">Multidict</a> is a multiple dictionary lookup facility.  It was developed by <a href="http://www.smo.uhi.ac.uk/~caoimhin/">Caoimhín Ó Donnaíle</a>
-at <a href="http://www.smo.uhi.ac.uk/">Sabhal Mòr Ostaig</a> to work in conjuction with <a href="/wordlink/about.html">Wordlink</a> and with Kent Andersen’s
-<a href="http://www.languages.dk/tools/index.htm#The_Web_Page_Text_Blender">TextBlender</a>, 
-as part of the European funded <a href="http://www.languages.dk/pools-t/">POOLS-T</a> project (2008-2010), and development is being continued as part of the European funded <a href="http://www.languages.dk/tools/">TOOLS</a> project (2012-2014).</p>
+at <a href="http://www.smo.uhi.ac.uk/">Sabhal Mòr Ostaig</a> to work in conjuction with <a href="/wordlink/about.html">Wordlink</a> (and historically with Kent Andersen’s
+<a href="http://www.languages.dk/tools/index.htm#The_Web_Page_Text_Blender">TextBlender</a>), 
+as part of the European funded <a href="http://www.languages.dk/pools-t/">POOLS-T</a> project (2008-2010). Development continued as part of the European funded <a href="http://www.languages.dk/tools/">TOOLS</a> project (2012-2014).  It is now being further developed as part of the European funded <a href="http://www.languages.dk/cool/">COOL</a> project (2018-2021).</p>
 
 <p>Multidict allows the user to select easily from a choice of online dictionaries.  Built into it is a large database of dictionaries
 with information on the languages they cater for and the parameters they require.  Multidict attempts to remember the user’s previous
@@ -41,7 +41,7 @@ This project has been funded with support from the EC
 
 </div>
 <ul class="smo-navlist">
-<li><a href="/" title="Multidict, Wordlink, and Clilstore">multidict.net</a></li>
+<li><a href="/" title="Multidict, Wordlink, and Clilstore"><?php echo $_SERVER['SERVER_NAME']; ?></a></li>
 <li><a href="./" title="Wordlink - a flexible system to search multiple dictionaries">Multidict</a></li>
 </ul>
 

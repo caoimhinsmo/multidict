@@ -72,13 +72,13 @@
     </script>
 </head>
 <body>
-<div style="width:16px;height:16px;float:right;padding:1px"><a href="about.html" target="_top"><img src="/favicons/eu.png" alt="" title="This project has been funded with support from the EC"/></a></div>
+<div style="width:16px;height:16px;float:right;padding:1px"><a href="about.php" target="_top"><img src="/favicons/eu.png" alt="" title="This project has been funded with support from the EC"/></a></div>
 
 <div>
 <p style="margin:0">
 <span style="background-color:orange;color:white;padding:1px 2px"><span style="font-weight:bold;color:#bfb">Wordlink</span> navigation frame</span>
 <a class="about" href="help.html" target="WLmainframe$sid">Help</a>
-<a class="about" href="about.html" target="_top">About Wordlink</a>
+<a class="about" href="about.php" target="_top">About Wordlink</a>
 <a class="about" href="examples.php" target="_top">Example pages</a>
 </p>
 

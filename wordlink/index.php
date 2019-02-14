@@ -14,7 +14,6 @@
     $qs = str_replace('&mode=ss','',$qs);
     $qs = str_replace('&upload=0','',$qs);
     $qs = str_replace('&go=Go','',$qs);
-//  $qs = urldecode(substr($qs,1)); -- Converted to following line - CPD 2013-01-12
     $qs = substr($qs,1);
     if ($qs<>$qs0) {
         $cleaned_location = 'http://' . $_SERVER['SERVER_NAME']

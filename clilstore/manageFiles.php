@@ -187,7 +187,7 @@ $happyMessage
 And give them sensible “computer-friendly” names such as “<b>Exercise1.html</b>” rather than the likes of like “<b>Exercise écrit, N°1. - Très important!.html</b>”, which would very likely give the computer indigestion.</p>
 
 <p class="info">If you have an attached file called “<b>Exercise.pdf</b>”, for example, you can link to it from one of the link buttons on the unit by writing “<b>file:Exercise.pdf</b>”.<br>
-If you have an attached picture called “<b>photo.jpg</b>?”, you can incorporate it within the unit via the url “<b>http://multidict.net/cs/<i>nnnn</i>/photo.jpg</b>”, where <i>nnnn</i> is the unit number.</p>
+If you have an attached picture called “<b>photo.jpg</b>?”, you can incorporate it within the unit via the link address “<b>/cs/<i>nnnn</i>/photo.jpg</b>”, where <i>nnnn</i> is the unit number.</p>
 </div>
 
 <fieldset style="background-color:#eef;border:8px solid #55a8eb;border-radius:10px">

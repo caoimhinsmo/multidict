@@ -4,6 +4,7 @@
 
   header('P3P: CP="CAO PSA OUR"');
 
+  $document_root = $_SERVER['DOCUMENT_ROOT'];
   $servername = $_SERVER['SERVER_NAME'];
   $scheme = ( empty($_SERVER['HTTPS']) ? 'http' : 'https' );
   $server = "$scheme://$servername";
@@ -162,7 +163,7 @@ END_COMPOSE;
     if ($url=='{upload}') {
         $uploadName = "wordlinkUpload$sid";
         if (empty($_FILES[$uploadName])) { header("Location:$server/wordlink/upload.php?sid=$sid"); }
-        $uploadedFilename = "/srv/WWW/$servername/htdocs/wordlink/uploads/$sid";
+        $uploadedFilename = "$document_root/wordlink/uploads/$sid";
         move_uploaded_file ($_FILES[$uploadName]['tmp_name'], $uploadedFilename);
         $html = file_get_contents($uploadedFilename);
         $encoding = $_POST['encoding'];
@@ -343,11 +344,10 @@ END_LS;
         preg_match('|^<\s*([\/\w]*)|ius',$tag,$matches);
         $tagType = strtolower($matches[1]);
         if ( ($tagType=='a') && (   preg_match('|\"/wordlink.*url|'       ,$tag)
-                                 || preg_match('|smo.uhi.ac.uk/wordlink|' ,$tag)
-                                 || preg_match('|multidict.net/wl|',      $tag) //Can hopefully delete this particular line again after we get a clean bill of health from Google Safe Browsing review
+                                 || preg_match('|smo.uhi.ac.uk/wordlink|' ,$tag)  //Old - this line can be deleted sometime
                                  || preg_match('|multidict.info/wordlink|',$tag)
                                  || preg_match('|multidict.net/wordlink|' ,$tag) ) ) {  //If this happens to be a link to Wordlink itself then
-            $tag = '<a class="opaque">';                                               //zap it and make it invisible to avoid to avoid recursion
+            $tag = '<a class="opaque">';                                                //zap it and make it invisible to avoid to avoid recursion
         } elseif ($tagType=='input') {
             $tag = str_ireplace('<input','<input readonly placeholder="Disabled in Wordlink"',$tag);
         } elseif ($rmLi) {
@@ -387,7 +387,7 @@ END_BLANKPAGE;
     <title>Wordlink: Fatal error</title>
 </head>
 <body style="background-color:#fbb;color:red;font-size:140%">
-<h1>Fatal error <img src="http://multidict.net/icons-smo/bronach.gif"/></h1>
+<h1>Fatal error <img src="$server/icons-smo/bronach.gif"/></h1>
 <p>$message</p>
 </body>
 </html>

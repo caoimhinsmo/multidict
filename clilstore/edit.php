@@ -66,7 +66,10 @@
           '|(.*)://(.*)\.m4a$|u'
                            => '<audio controls="controls" style="width:100%;max-height:70px" title="Listen to audio (MP4 - may not work in all browsers and platforms)"> <source src="$1://$2.m4a" type="audio/mp4"/>  <span style="color:red;font-size:90%">[No <audio> element support - You need to update your browser]</span> </audio>',
           '|(.*)://(.*)\.ogg$|u'
-                           => '<audio controls="controls" style="width:100%;max-height:70px" title="Listen to audio (.ogg - may not work in all browsers and platforms)"> <source src="$1://$2.ogg" type="audio/ogg"/>  <span style="color:red;font-size:90%">[No <audio> element support - You need to update your browser]</span> </audio>'
+                           => '<audio controls="controls" style="width:100%;max-height:70px" title="Listen to audio (.ogg - may not work in all browsers and platforms)"> <source src="$1://$2.ogg" type="audio/ogg"/>  <span style="color:red;font-size:90%">[No <audio> element support - You need to update your browser]</span> </audio>',
+          '|(.*)://(.*)\.jpg$|u'  => '<img src="$1://$2.jpg" style="width:500px" alt="">',
+          '|(.*)://(.*)\.jpeg$|u' => '<img src="$1://$2.jpeg" style="width:500px" alt="">',
+          '|(.*)://(.*)\.gif$|u'  => '<img src="$1://$2.gif" style="width:500px" alt="">'
       );
       foreach ($embedcodeArr as $pattern=>$embedcode) {
           $medembed = preg_replace($pattern,$embedcode,$medembed,-1,$count);
