@@ -1,6 +1,7 @@
 <?php
   if (!include('autoload.inc.php'))
     header("Location:http://claran.smo.uhi.ac.uk/mearachd/include_a_dhith/?faidhle=autoload.inc.php");
+  $servername = $_SERVER['SERVER_NAME'];
 ?>
 <!DOCTYPE html>
 <html>
@@ -27,7 +28,7 @@
 <body>
 
 <ul class="smo-navlist">
-<li><a href="/">multidict.net</a></li>
+<li><a href="/"><?php echo $servername; ?></a></li>
 <li><a href="./" title="Wordlink - a facility to link web pages automatically word-by-word to online dictionaries">Wordlink</a></li>
 </ul>
 <div class="smo-body-indent">
@@ -78,7 +79,7 @@
 
 </div>
 <ul class="smo-navlist">
-<li><a href="/">multidict.net</a>
+<li><a href="/"><?php echo $servername ?></a>
 <li><a href="./" title="Wordlink - a facility to link web pages automatically word-by-word to online dictionaries">Wordlink</a>
 </ul>
 

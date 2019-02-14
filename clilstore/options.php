@@ -91,14 +91,14 @@ EOD_BARR;
         $trOwner = $tr->owner;
         $trTitle = $tr->title;
         $transferHtml .= "<tr>"
-                       . "<td><a href=\"/cs/$trId\">$trId</a></td>"
-                       . "<td><a href=\"http://test.multidict.net/clilstore/userinfo.php?user=$trOwner\">$trOwner</a></td>"
-                       . "<td><a href=\"/cs/$trId\">$trTitle</a></td>"
-                       . "<td><form method=\"POST\" class=\"transfer\">"
-                          . " <input type=\"hidden\" name=\"trId\" value=\"$trId\">"
-                          . " <input type=\"hidden\" name=\"user\" value=\"$user\">"
-                          . " <input type=\"submit\" name=\"trResponse\" value=\"Accept\" title=\"Accept ownership of unit $trId\">"
-                          . " <input type=\"submit\" name=\"trResponse\" value=\"Reject\" title=\"Reject the offer\">"
+                       . "<td><a href='/cs/$trId'>$trId</a></td>"
+                       . "<td><a href='userinfo.php?user=$trOwner'>$trOwner</a></td>"
+                       . "<td><a href='/cs/$trId'>$trTitle</a></td>"
+                       . "<td><form method='POST' class='transfer'>"
+                          . " <input type='hidden' name='trId' value='$trId'>"
+                          . " <input type='hidden' name='user' value='$user'>"
+                          . " <input type='submit' name='trResponse' value='Accept' title='Accept ownership of unit $trId'>"
+                          . " <input type='submit' name='trResponse' value='Reject' title='Reject the offer'>"
                           . "</form></td>"
                        . "</tr>\n";
     }
@@ -127,7 +127,7 @@ EODtransferHtml;
         $htmlArr = array();
         foreach ($valueOptArr as $value=>$option) {
             $selected = ( $value==$selectedValue ? ' selected' : '' );
-            $htmlArr[] = "<option value=\"$value\"$selected>$option</option>\n";
+            $htmlArr[] = "<option value='$value'$selected>$option</option>\n";
         }
         return implode("\r",$htmlArr);
     }

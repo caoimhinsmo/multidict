@@ -118,29 +118,17 @@ class SM_myCLIL {
       $myCLIL_nonce = 'C2iI0l[*';
       $message = (time()+$uine)."&".$smid."&".$feartan."&".time();
       $hash = md5($myCLIL_nonce.$message);
-      $cookieDomain = $_SERVER['SERVER_NAME'];
-      if (preg_match('|www\d*\.(.*)|',$cookieDomain,$matches)) { $cookieDomain = $matches[1]; }   // Remove www., www2., etc: www2.smo.uhi.ac.uk->smo.uhi.ac.uk
-      if ($cookieDomain=='test.multidict.net'  ||
-          $cookieDomain=='test2.multidict.net' ||
-          $cookieDomain=='test3.multidict.net')   { $cookieDomain = 'multidict.net'; }
+//Temporary lines, to make sure old-style cookies (containing a domain parameter) are deleted
+setcookie($cookie_name,'',1,'/',$_SERVER['SERVER_NAME']);
+setcookie($cookie_name,'',1,'/','multidict.net');
       setcookie($cookie_name,
                 $hash."&".$message,
-                $cookie_expire,
-                '/',
-                $cookieDomain,
-                0,                    //secure=FALSE (Théid e tro http a bharrachd air https)
-                1                     //httponly=TRUE, gus am bi an cookie nas dorra r'a ghoid
+                $cookie_expire
                );
   }
 
   public static function logout() {
-      $cookieDomain = $_SERVER['SERVER_NAME'];
-      if (preg_match('|www\d*\.(.*)|',$cookieDomain,$matches)) { $cookieDomain = $matches[1]; }   // Remove www., www2., etc: www2.smo.uhi.ac.uk->smo.uhi.ac.uk
-      if ($cookieDomain=='test.multidict.net') { $cookieDomain = 'multidict.net'; }
-      setcookie('myCLIL_authenticator','',time()-3600,'/',$cookieDomain,
-                0,                    //secure=FALSE (Théid e tro http a bharrachd air https)
-                1                     //httponly=TRUE, gus am bi an cookie nas dorra r'a ghoid
-               );
+      setcookie('myCLIL_authenticator','',1);  //unset cookie
   }
 
   public function fullname($user='') {
