@@ -163,7 +163,6 @@ Replace the following sometime with flexbox - Option 3 at https://stackoverflow.
         select { max-height:1.8em; margin-bottom:2px; margin-top:1px; }
         select[name="sl"],select[name="tl"] { width:100%; }
         select[name="dict"] { width:100%; }
-        option { max-height:1.5em; }
         div#dictIcons         { height:18px; display:block; }
         div#dictIcons img     { width:16px; height:16px; margin:1px; border:none; padding:0 0 3px 0; border:none; }
         div#dictIcons img.sel { border-left: 3px solid red; border-right:3px solid red; }
