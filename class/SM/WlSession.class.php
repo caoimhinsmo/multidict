@@ -13,12 +13,12 @@ class SM_WlSession {
       // In any case, then retrieve session information from the database to populate the class variables
 
       // Overwrite the class variables with any values from the GET parameters in the HTTP request.
-      // Store "user id", $uid in the permanent cookie SM_wlUser
+      // Store "user id", $uid in the permanent cookie wlUser
       $DbMultidict = SM_DbMultidictPDO::singleton('rw');
 
-      // Set and log uid (user id - stored in a permanent cookie called SM_wlUser)
-      if (isset($_COOKIE['SM_wlUser'])) {
-          $uid = $_COOKIE['SM_wlUser'];
+      // Set and log uid (user id - stored in a permanent cookie called wlUser)
+      if (isset($_COOKIE['wlUser'])) {
+          $uid = $_COOKIE['wlUser'];
       } else {  // No uid so create a new one
           $stmt = $DbMultidict->prepare("SELECT MAX(uid) AS uidMax FROM wlUser");
           $stmt->execute();
@@ -48,9 +48,14 @@ class SM_WlSession {
       $stmt->execute();
       $stmt = null;
 
-      $cookieDomain = $_SERVER['SERVER_NAME'];
-      if (preg_match('|www\d*\.(.*)|',$cookieDomain,$matches)) { $cookieDomain = $matches[1]; }   // Remove www., www2., etc: www2.smo.uhi.ac.uk->smo.uhi.ac.uk
-      setcookie ('SM_wlUser', $uid, 2123456789, '/', ".$cookieDomain");
+
+//Temporary lines to delete any old-style cookies which contained a domainname parameter
+setcookie ('SM_wlUser', '', 1, '/', $_SERVER['SERVER_NAME']);
+setcookie ('SM_wlUser', '', 1, '',  $_SERVER['SERVER_NAME']);
+setcookie ('SM_wlUser', '', 1, '/', 'multidict.net' );
+setcookie ('SM_wlUser', '', 1, '',  'multidict.net' );
+
+      setcookie ('wlUser', $uid, time()+31556926 );  //Store cookie for up to a year
 
       if (is_null($sid)) {  // No sid so create a new one
           $stmt = $DbMultidict->prepare("SELECT MAX(sid) AS sidMax FROM wlSession");
@@ -122,7 +127,7 @@ class SM_WlSession {
       }
 
       // If sl or tl or dict are missing, fill them in from the user's most recent choices (provided uid can be found in a cookie)
-      if (isset($_COOKIE['SM_wlUser'])) {
+      if (isset($_COOKIE['wlUser'])) {
           if (empty($sl)) {
               $stmt = $DbMultidict->prepare("SELECT sl,tl,dict FROM wlUserSlTl WHERE uid=:uid ORDER BY utime DESC LIMIT 1");
               $stmt->bindParam(':uid',$uid,PDO::PARAM_INT);
@@ -374,6 +379,7 @@ class SM_WlSession {
               $moreBits = explode(',', $bits[1]);
               $wordArr[] = $moreBits[6];
           }
+/* Commented out 2019-02-08, CPD. Not sure what this was for.
 //Temporary section for testing-------------
           if ($_SERVER['SERVER_NAME']=='test.multidict.net') {
               $command = "echo '{$wordform}' | mecab --all-morphs";
@@ -389,6 +395,7 @@ class SM_WlSession {
               }
           }
 //------------------------------------------
+*/
           return $wordArr;
       }
       if ($word==$wordform)  return array();
@@ -398,7 +405,8 @@ class SM_WlSession {
 
   private function arroot ($wordform) {
     // Obtains the root of an Arabic word using the ISRIStemmer in nltk
-      $root = shell_exec("python3 /srv/WWW/multidict.net/htdocs/multidict/arroot.py $wordform");
+      $document_root = $_SERVER['DOCUMENT_ROOT'];
+      $root = shell_exec("python3 $document_root/multidict/arroot.py $wordform");
       return array($root);
   }
 
@@ -830,9 +838,19 @@ EOD;
       $unitid = $matches[3];
       $DbMultidict = SM_DbMultidictPDO::singleton('rw');
       $stmt = $DbMultidict->prepare('UPDATE clilstore SET clicks=clicks+1 WHERE id=:id');
-      $stmt->bindParam(':id',$unitid);
-      $stmt->execute();
-      $stmt = null;
+      $stmt->execute([':id'=>$unitid]);
+
+      $myCLIL = SM_myCLIL::singleton();
+      $myCLIL->dearbhaich();
+error_log('After myCLIL');
+      $csuser = $myCLIL->id;
+error_log("\$csuser=$csuser");
+      self::csUpdateVocab($csuser,$unitid,$this->word);
+  }
+
+  public static function csUpdateVocab($csuser,$unitid,$word) {
+      //Updates the vocabulary for the Clilstore user
+error_log("In csUpdateVocab \$csuser=$csuser; \$unitid=$unitid; \$word=$word");
   }
 
   public static function getDictIcon($dict,&$icon,&$mimetype) {

@@ -19,6 +19,8 @@
     $abuseParams = $ownerHtml = $offerMess = $errorMessage = '';
 
     $servername = $_SERVER['SERVER_NAME'];
+    $scheme = ( empty($_SERVER['HTTPS']) ? 'http' : 'https' );
+    $server = "$scheme://$servername";
     $DbMultidict = SM_DbMultidictPDO::singleton('rw');
 
     if (isset($_REQUEST['offerSubmit'])) {
@@ -192,7 +194,7 @@ $errorMessage
 </table>
 
 <p><a href="page.php?id=$id">Raw unit</a> <i>(unwordlinked)</i>
-⇒ <a href="http://translate.google.com/translate?sl=$sl&amp;tl=$tl&amp;u=http://multidict.net/clilstore/page.php%3Fid=$id">Google translated</a>
+⇒ <a href="http://translate.google.com/translate?sl=$sl&amp;tl=$tl&amp;u=$server/clilstore/page.php%3Fid=$id">Google translated</a>
 </p>
 
 $ownerHtml

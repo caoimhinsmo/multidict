@@ -1,3 +1,6 @@
+<?php
+  $servername = $_SERVER['SERVER_NAME'];
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -9,7 +12,7 @@
 <body>
 
 <ul class="smo-navlist">
-<li><a href="/" title="Multidict, Wordlink, and Clilstore">multidict.net</a></li>
+<li><a href="/" title="Multidict, Wordlink, and Clilstore"><?php echo $servername; ?></a></li>
 <li><a href="./" title="Wordlink - a facility to link web pages automatically word-by-word to online dictionaries">Wordlink</a></li>
 </ul>
 <div class="smo-body-indent">
@@ -34,7 +37,7 @@ This project has been funded with support from the EC
 
 </div>
 <ul class="smo-navlist">
-<li><a href="/" title="Multidict, Wordlink, and Clilstore">multidict.net</a></li>
+<li><a href="/" title="Multidict, Wordlink, and Clilstore"><?php echo $servername ?></a></li>
 <li><a href="./" title="Wordlink - a facility to link web pages automatically word-by-word to online dictionaries">Wordlink</a></li>
 </ul>
 
