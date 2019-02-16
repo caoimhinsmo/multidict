@@ -13,10 +13,10 @@
     if (substr($result,0,18)=='GSB lookup failure') { throw new SM_MDexception("<p>Wordlink always checks URLs with the Google Safe Browsing database before processing them, but was unable to do this for some reason - perhaps because we have reached our daily quota.  This should not happen, so it would be good to let us know quickly if possible.  The error code was:</p><p style='margin-left:3em'>$result</p>"); }
 
     if (preg_match('/malware/i',$result)) { $errorMess = <<<EOD_MALWARE
-<p style="margin-top:0.5em"><b>Warning — Visiting this web site may harm your computer.</b> This page appears to contain malicious code that could be downloaded to your computer without your consent. You can learn more about harmful web content including viruses and other malicious code and how to protect your computer at: <a href="http://www.stopbadware.org/">StopBadware.org</a></p>
+<p style="margin-top:0.5em"><b>Warning — Visiting this web site may harm your computer.</b> This page appears to contain malicious code that could be downloaded to your computer without your consent. You can learn more about harmful web content including viruses and other malicious code and how to protect your computer at: <a href="https://www.stopbadware.org/">StopBadware.org</a></p>
 EOD_MALWARE;
     } else { $errorMess = <<<EOD_PHISHING
-<p style="margin-top:0.5em"><b>Warning—Suspected phishing page.</b> This page may be a forgery or imitation of another website, designed to trick users into sharing personal or financial information. Entering any personal information on this page may result in identity theft or other abuse. You can find out more about phishing from: <a href="http://www.antiphishing.org/">www.antiphishing.org</a></p>
+<p style="margin-top:0.5em"><b>Warning—Suspected phishing page.</b> This page may be a forgery or imitation of another website, designed to trick users into sharing personal or financial information. Entering any personal information on this page may result in identity theft or other abuse. You can find out more about phishing from: <a href="https://www.antiphishing.org/">www.antiphishing.org</a></p>
 EOD_PHISHING;
     }
 
@@ -36,7 +36,7 @@ To protect both you and itself, Wordlink checks the url against a Google databas
 
 <div style="margin:1.5em 0.5em 0 0.5em;padding:0.5em 0.8em;border:2px solid white;border-radius:0.5em">
 $errorMess
-<p style="font-size:85%"><b><a href="http://code.google.com/apis/safebrowsing/safebrowsing_faq.html#whyAdvisory">Advisory provided by Google</a></b> - Database check returned: <b>$result</b><br>
+<p style="font-size:85%"><b><a href="https://code.google.com/apis/safebrowsing/safebrowsing_faq.html#whyAdvisory">Advisory provided by Google</a></b> - Database check returned: <b>$result</b><br>
 Google works to provide the most accurate and up-to-date phishing and malware information. However, Google cannot guarantee that its information is comprehensive and error-free: some risky sites may not be identified, and some safe sites may be identified in error.</p>
 </div>
 
