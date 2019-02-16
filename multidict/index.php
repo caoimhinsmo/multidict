@@ -29,14 +29,6 @@ $wlSession->wfs = $wfs = $stmt->fetch()['wfs'];
   $robots = ( empty($wlSession->word) ? 'index,follow' : 'noindex,nofollow' );
 
   try {
-  $cookieIcon = ( isset($_COOKIE['wlUser'])
-                ? '<img src="/favicons/cookie.png" alt="" title="You have cookies enabled - Good!"/>'
-                : ( time()%5==0
-                  ? '<div style="background-color:yellow;padding:0 0 1px 1px"><a href="cookies.html" target="MDiframe$sid">Enable cookies</a><br>'
-                   .'<span font-size="80%">for best results</span></div>'
-                  : '<a href="cookies.html" target="MDiframe$sid"><img src="/icons-smo/bronach.gif" alt="" title="No cookies? Click for advice!"/></a>'
-                  )
-                );
   $nbSlHtml = $wlSession->nbSlHtml();
   $wordformArr = explode('|',$wlSession->wfs);
   if (sizeof($wordformArr)<2) { $wordformHtmlFull = ''; }
@@ -245,7 +237,6 @@ Replace the following sometime with flexbox - Option 3 at https://stackoverflow.
 <body onload="bodyLoad();">
 <div id="framcontainer">
 <div id="navigation"><div id="navigation-content">
-<div style="float:right;padding:1px">$cookieIcon</div>
 $schemeSwopHtml
 <p style="margin:0 0 1px 0">
 <span style="background-color:orange;color:white;padding:1px 1px"><span style="font-weight:bold;color:#bfb">Multidict</span> navigation frame</span>
