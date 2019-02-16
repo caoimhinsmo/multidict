@@ -7,6 +7,7 @@
     $myCLIL = SM_myCLIL::singleton();
     $csSess = SM_csSess::singleton();
     $DbMultidict = SM_DbMultidictPDO::singleton('rw');
+    $scheme = ( empty($_SERVER['HTTPS']) ? 'http' : 'https' );
     $servername = $_SERVER['SERVER_NAME'];
 
     $formRequired = TRUE;
@@ -42,7 +43,7 @@ if ($password=='' && strlen($passwordAsTyped)>3) {
 <p style="margin-left:1em">⇨ Go to <a href="./" style="font-weight:bold">Clilstore</a></p>
 ENDsuccess;
             $formRequired = FALSE;
-            $refreshHeader =  "<meta http-equiv=\"refresh\" content=\"1; url=http://$servername/clilstore/\">";
+            $refreshHeader =  "<meta http-equiv=\"refresh\" content=\"1; url=$scheme://$servername/clilstore/\">";
         } elseif (!isset($_GET['user'])) {
             $successMessage = <<<ENDfailure
 <p style="color:red">Userid or password incorrect</p>

@@ -16,6 +16,7 @@
   $word= $wlSession->word;
   $wfs = $wlSession->wfs;
   $mode= $wlSession->mode;
+  $url = $wlSession->url;
 
 // The following lines are ad-hoc, to cure in a hurry a problem with the display of dictionary headword suggestions after converting Multidict from frames to iframe.
 // They should be replaced with clean logic!!
@@ -28,14 +29,6 @@ $wlSession->wfs = $wfs = $stmt->fetch()['wfs'];
   $robots = ( empty($wlSession->word) ? 'index,follow' : 'noindex,nofollow' );
 
   try {
-  $cookieIcon = ( isset($_COOKIE['wlUser'])
-                ? '<img src="/favicons/cookie.png" alt="" title="You have cookies enabled - Good!"/>'
-                : ( time()%5==0
-                  ? '<div style="background-color:yellow;padding:0 0 1px 1px"><a href="cookies.html" target="MDiframe$sid">Enable cookies</a><br>'
-                   .'<span font-size="80%">for best results</span></div>'
-                  : '<a href="cookies.html" target="MDiframe$sid"><img src="/icons-smo/bronach.gif" alt="" title="No cookies? Click for advice!"/></a>'
-                  )
-                );
   $nbSlHtml = $wlSession->nbSlHtml();
   $wordformArr = explode('|',$wlSession->wfs);
   if (sizeof($wordformArr)<2) { $wordformHtmlFull = ''; }
@@ -113,6 +106,26 @@ $dictSelectHtml
 <div id="noJSinfo" style="position:absolute;bottom:4px;left:6px;font-size:55%;color:green;white-space:normal">
 If JavaScript is disabled you must click Go after each language change</div>
 EOD3;
+  }
+
+  if (!empty($url)) {    //Don’t use with Wordlink because doesn’t work in a frame
+      $schemeSwopHtml = '';
+  } else {               //Only use with standalone Multidict
+      $scheme = ( empty($_SERVER['HTTPS']) ? 'http' : 'https' );
+      $server_name = $_SERVER['SERVER_NAME'];
+      $php_self = $_SERVER['PHP_SELF'];
+      $schemeValue = ( $scheme=='https' ? 1 : 0 );
+      $schemeSwopRange = "<input type=range min=0 max=1 step=1 value=$schemeValue style=width:2.5em;margin:0;padding:0>";
+      if ($scheme=='https') {
+          $schemeSwopHtml = 'http' . $schemeSwopRange . '<b>https</b>';
+          $schemeSwopLocation = 'http';
+      } else {
+          $schemeSwopHtml = '<b>http</b>' . $schemeSwopRange . 'https';
+          $schemeSwopLocation = 'https';
+      }
+      $schemeSwopLocation .= "://$server_name$php_self";
+      if (!empty($_GET)) { $schemeSwopLocation .= '?' . $_SERVER['QUERY_STRING']; }
+      $schemeSwopHtml = "<div style='float:right;padding-right:4px;font-size:65%' onclick=window.location.replace('$schemeSwopLocation');>$schemeSwopHtml</div>";
   }
 
   echo <<<EOD4
@@ -224,7 +237,7 @@ Replace the following sometime with flexbox - Option 3 at https://stackoverflow.
 <body onload="bodyLoad();">
 <div id="framcontainer">
 <div id="navigation"><div id="navigation-content">
-<div style="float:right;padding:1px">$cookieIcon</div>
+$schemeSwopHtml
 <p style="margin:0 0 1px 0">
 <span style="background-color:orange;color:white;padding:1px 1px"><span style="font-weight:bold;color:#bfb">Multidict</span> navigation frame</span>
 <a class="about" href="help.php" target="MDiframe$sid">Help</a>
