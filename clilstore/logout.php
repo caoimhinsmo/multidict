@@ -7,6 +7,7 @@
   try {
     $myCLIL = SM_myCLIL::singleton();
     $myCLIL::logout();
+    $scheme = ( empty($_SERVER['HTTPS']) ? 'http' : 'https' );
     $servername = $_SERVER['SERVER_NAME'];
 
     echo <<<EOD1
@@ -15,7 +16,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Logout from Clilstore</title>
-    <meta http-equiv="refresh" content="2; url=http://$servername/clilstore/">
+    <meta http-equiv="refresh" content="2; url=$scheme://$servername/clilstore/">
     <link rel="icon" type="image/png" href="/favicons/clilstore.png">
 </head>
 <body>
