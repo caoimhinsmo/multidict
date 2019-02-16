@@ -114,8 +114,9 @@ EOD3;
       $scheme = ( empty($_SERVER['HTTPS']) ? 'http' : 'https' );
       $server_name = $_SERVER['SERVER_NAME'];
       $php_self = $_SERVER['PHP_SELF'];
+      $php_self = str_replace('index.php','',$php_self);
       $schemeValue = ( $scheme=='https' ? 1 : 0 );
-      $schemeSwopRange = "<input type=range min=0 max=1 step=1 value=$schemeValue style=width:2.5em;margin:0;padding:0>";
+      $schemeSwopRange = "<input type=range min=0 max=1 step=1 value=$schemeValue style=width:3em;margin:0;padding:0>";
       if ($scheme=='https') {
           $schemeSwopHtml = 'http' . $schemeSwopRange . '<b>https</b>';
           $schemeSwopLocation = 'http';
@@ -125,7 +126,7 @@ EOD3;
       }
       $schemeSwopLocation .= "://$server_name$php_self";
       if (!empty($_GET)) { $schemeSwopLocation .= '?' . $_SERVER['QUERY_STRING']; }
-      $schemeSwopHtml = "<div style='float:right;padding-right:4px;font-size:65%' onclick=window.location.replace('$schemeSwopLocation');>$schemeSwopHtml</div>";
+      $schemeSwopHtml = "<div style='float:right;padding-right:4px;font-size:70%' onclick=window.location.replace('$schemeSwopLocation');>$schemeSwopHtml</div>";
   }
 
   echo <<<EOD4
