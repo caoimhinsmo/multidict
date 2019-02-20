@@ -16,7 +16,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Change user options on Clilstore</title>
+    <title>User vocabulary on Clilstore</title>
     <link rel="stylesheet" href="/css/smo.css" type="text/css">
     <link rel="stylesheet" href="style.css?version=2014-04-15">
     <link rel="icon" type="image/png" href="/favicons/clilstore.png">
@@ -52,18 +52,19 @@ EOD_BARR;
     $errorMessage = $successMessage = $transferHtml = '';
 
     if (!empty($_REQUEST['save'])) {
-        $highlightRow = $_REQUEST['highlightRow'];
         $unitLang     = $_REQUEST['unitLang'];
+        $highlightRow = $_REQUEST['highlightRow'];
+        $record       = $_REQUEST['record'];
         $stmt0 = $DbMultidict->prepare('SELECT id FROM lang WHERE id=:id');
         $stmt0->execute(array('id'=>$unitLang));
         if (!($stmt0->fetch()) && !empty($unitLang)) {
             $unitLangSC = htmlspecialchars($unitLang);
             $errorMessage = "Clilstore does not recognise language code “<b>$unitLangSC</b>”";
         } else {
-            $stmt1 = $DbMultidict->prepare('UPDATE users SET unitLang=:unitLang, highlightRow=:highlightRow WHERE user=:user');
-            if (!$stmt1->execute(array('unitLang'=>$unitLang,'highlightRow'=>$highlightRow,'user'=>$user))) { throw new SM_MDexception('Failed to update database'); }
+            $stmt1 = $DbMultidict->prepare('UPDATE users SET unitLang=:unitLang, highlightRow=:highlightRow, record=:record WHERE user=:user');
+            if (!$stmt1->execute(array('unitLang'=>$unitLang,'highlightRow'=>$highlightRow,':record'=>$record,'user'=>$user))) { throw new SM_MDexception('Failed to update database'); }
             $successMessage = 'Changes saved';
-            SM_csSess::logWrite($user,'options',"Changed options to unitLang=$unitLang, highlightRow=$highlightRow");
+//            SM_csSess::logWrite($user,'options',"Changed options to unitLang=$unitLang, highlightRow=$highlightRow");  //Delete sometime
         }
     }
 
@@ -116,17 +117,19 @@ $transferHtml
 EODtransferHtml;
     }
 
-    $stmt2 = $DbMultidict->prepare('SELECT unitLang,highlightRow FROM users WHERE user=:user');
+    $stmt2 = $DbMultidict->prepare('SELECT unitLang,highlightRow,record FROM users WHERE user=:user');
     $stmt2->execute(array('user'=>$user));
-    if (!($row = $stmt2->fetch(PDO::FETCH_OBJ))) { throw new SM_MDexception("Failed to fetch information on user $userSC"); }
-    $unitLang     = $row->unitLang;
-    $highlightRow = $row->highlightRow;
+    if (!($row = $stmt2->fetch(PDO::FETCH_ASSOC))) { throw new SM_MDexception("Failed to fetch information on user $userSC"); }
+    extract($row);
+//    $unitLang     = $row->unitLang;
+//    $highlightRow = $row->highlightRow;
+    
 
     function optionsHtml($valueOptArr,$selectedValue) {
      //Creates the options html for a select in a form, based on value=>text array and the value to be selected
         $htmlArr = array();
         foreach ($valueOptArr as $value=>$option) {
-            $selected = ( $value==$selectedValue ? ' selected' : '' );
+            $selected = ( $value==$selectedValue ? ' selected=selected' : '' );
             $htmlArr[] = "<option value='$value'$selected>$option</option>\n";
         }
         return implode("\r",$htmlArr);
@@ -145,6 +148,10 @@ EODtransferHtml;
          '0' => 'Only in “Author page - more options”',
          '1' => 'Always'); 
     $highlightRowHtml = optionsHtml($highlightRowArr,$highlightRow);
+    $recordArr = array(
+         '0' => 'No',
+         '1' => 'Yes');
+    $recordHtml = optionsHtml($recordArr,$record);
 
     $errorMessage   = ( empty($errorMessage)   ? '' : '<div class="message" style="color:red">' . $errorMessage   . '<br>No changes saved</div>' );
     $successMessage = ( empty($successMessage) ? '' : '<div class="message" style="color:green"><span style="font-size:200%">✔</span> ' . $successMessage . '</div>' );
@@ -171,11 +178,18 @@ $unitLangHtml
 $highlightRowHtml
 </select>
 </td></tr>
+<tr><td>Add words you click to your vocabulary list?</td><td>
+<select name="record">
+$recordHtml
+</select>
+</td></tr>
 <tr><td><input type ="hidden" name="user" value="$userSC">
 </td><td><input type="submit" name="save" value="Save" style="font-size:120%"></td></tr>
 </table>
 </fieldset>
 </form>
+
+<p style="margin:1.7em 0"><a class="button" href="vocab.php?user=$user">My vocabulary…</a>
 
 $transferHtml
 ENDform;

@@ -55,7 +55,7 @@ setcookie ('SM_wlUser', '', 1, '',  $_SERVER['SERVER_NAME']);
 setcookie ('SM_wlUser', '', 1, '/', 'multidict.net' );
 setcookie ('SM_wlUser', '', 1, '',  'multidict.net' );
 
-      setcookie ('wlUser', $uid, time()+31556926 );  //Store cookie for up to a year
+      setcookie ('wlUser', $uid, time()+31556926, '/' );  //Store cookie for up to a year
 
       if (is_null($sid)) {  // No sid so create a new one
           $stmt = $DbMultidict->prepare("SELECT MAX(sid) AS sidMax FROM wlSession");
@@ -832,6 +832,7 @@ EOD;
 
   public function csClickCounter() {
       //If it looks like Multidict is being called from a Clilstore unit, add 1 to the click count for that unit
+      //And if a user is logged in, update the vocabulary tables for this user
       $url = $this->url;
       if (!preg_match('|//(.*)multidict\.(.*)/clilstore/page\.php\?id=(\d+)|',$url,$matches)) return;  //Not a Clilstore unit
       if ( !isset($_GET['sid']) || !isset($_GET['word']) || isset($_GET['tl']) )             return;  //Not a click from Wordlink
@@ -840,18 +841,31 @@ EOD;
       $stmt = $DbMultidict->prepare('UPDATE clilstore SET clicks=clicks+1 WHERE id=:id');
       $stmt->execute([':id'=>$unitid]);
 
+      //Update the vocabulary for the Clilstore user
       $myCLIL = SM_myCLIL::singleton();
-      $myCLIL->dearbhaich();
-error_log('After myCLIL');
       $csuser = $myCLIL->id;
-error_log("\$csuser=$csuser");
-      self::csUpdateVocab($csuser,$unitid,$this->word);
+      if ($csuser) {
+          $stmt = $DbMultidict->prepare('SELECT record FROM users WHERE user=:user');
+          $stmt->execute([':user'=>$csuser]);
+          $row = $stmt->fetch(PDO::FETCH_ASSOC);
+          extract($row);
+          if ($record) {
+              $word = $this->word;
+              $sl   = $this->sl;
+              $queryVU = "INSERT INTO csVocabUnit (user,unit,word,calls,sl)"
+                        ." VALUES (?,?,?,1,?)"
+                        ." ON DUPLICATE KEY UPDATE calls=calls+1";
+              $stmtVU = $DbMultidict->prepare($queryVU);
+              $stmtVU->execute(array($csuser,$unitid,$word,$sl));
+              $queryV = "INSERT INTO csVocab (user,sl,word,calls)"
+                       ." VALUES (?,?,?,1)"
+                       ." ON DUPLICATE KEY UPDATE calls=calls+1";
+              $stmtV = $DbMultidict->prepare($queryV);
+              $stmtV->execute(array($csuser,$sl,$word));
+          }
+      }
   }
 
-  public static function csUpdateVocab($csuser,$unitid,$word) {
-      //Updates the vocabulary for the Clilstore user
-error_log("In csUpdateVocab \$csuser=$csuser; \$unitid=$unitid; \$word=$word");
-  }
 
   public static function getDictIcon($dict,&$icon,&$mimetype) {
       $DbMultidict = SM_DbMultidictPDO::singleton('rw');

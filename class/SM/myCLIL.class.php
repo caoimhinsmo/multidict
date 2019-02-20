@@ -6,10 +6,10 @@ class SM_myCLIL {
   public $toradh, $id, $expiry, $toiseach, $feart;
 
   private function __construct() {
-      if (!isset($_COOKIE['myCLIL_authenticator'])) { $this->toradh=''; return; }
-      list($hash,$message) = explode('&',$_COOKIE['myCLIL_authenticator'],2);
+      if (!isset($_COOKIE['myCLIL_authentication'])) { $this->toradh=''; return; }
+      list($hash,$message) = explode('&',$_COOKIE['myCLIL_authentication'],2);
       $myCLIL_nonce = 'C2iI0l[*';
-      if (md5($myCLIL_nonce.$message)!=$hash) { $this->toradh='sgrios|The cookie myCLIL_authenticator is invalid'; return; }
+      if (md5($myCLIL_nonce.$message)!=$hash) { $this->toradh='sgrios|The cookie myCLIL_authentication is invalid'; return; }
       list($expiry,$id,$_feartan,$toiseach) = explode('&',$message);
       if ($expiry<time()) { $toradh=''; return; }
       $this->id       = $id;
@@ -21,9 +21,9 @@ class SM_myCLIL {
          }
       }
       $this->id3 = $id;
-      if (!empty($_COOKIE['myCLIL_authenticator2'])) {
-          list($hash2,$message2) = explode('&',$_COOKIE['myCLIL_authenticator2'],2);
-          if (md5($myCLIL_nonce.$message2)!=$hash2) { $this->toradh='sgrios|The cookie myCLIL_authenticatory2 is invalid'; return; }
+      if (!empty($_COOKIE['myCLIL_authentication2'])) {
+          list($hash2,$message2) = explode('&',$_COOKIE['myCLIL_authentication2'],2);
+          if (md5($myCLIL_nonce.$message2)!=$hash2) { $this->toradh='sgrios|The cookie myCLIL_authentication2 is invalid'; return; }
           list($expiry2,$id2,$_feartan2,$toiseach2) = explode('&',$message2);
           foreach (explode(':',$_feartan2) as $feart_str) {
              if (preg_match('/^(\w+?)(\d+?)$/',$feart_str,$matches)) { 
@@ -118,17 +118,15 @@ class SM_myCLIL {
       $myCLIL_nonce = 'C2iI0l[*';
       $message = (time()+$uine)."&".$smid."&".$feartan."&".time();
       $hash = md5($myCLIL_nonce.$message);
-//Temporary lines, to make sure old-style cookies (containing a domain parameter) are deleted
-setcookie($cookie_name,'',1,'/',$_SERVER['SERVER_NAME']);
-setcookie($cookie_name,'',1,'/','multidict.net');
       setcookie($cookie_name,
                 $hash."&".$message,
-                $cookie_expire
+                $cookie_expire,
+                '/'
                );
   }
 
   public static function logout() {
-      setcookie('myCLIL_authenticator','',1);  //unset cookie
+      setcookie('myCLIL_authentication','',1,'/');  //unset cookie
   }
 
   public function fullname($user='') {

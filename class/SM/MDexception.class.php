@@ -24,7 +24,7 @@ class SM_MDexception extends Exception {
        } elseif ($fath=="diultadhCS") {
           $html .= "<div style=\"border:solid 1px red;margin:0.5em;padding:0.4em;color:red\">\n";
           $html .= "<p style=\"font-size:110%;margin:0\">Refused: $brath2</p>\n";
-          $login_uri = "https://www2.smo.uhi.ac.uk/clilstore/login.php?till_gu=https://".$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI'];
+          $login_uri = "/clilstore/login.php?till_gu=https://".$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI'];
           $html .= "<p style=\"float:left;padding:0.3em;border:solid 2px green;background-color:#cff;font-size:160%\"><a href=\"$login_uri\">Login to Clilstore</a></p>\n";
        } elseif ($fath=="bog") {
           $html .= "<div style=\"border:solid 1px #f20;margin:0.5em;padding:0.5em;background-color:#fdd;color:#f20;font-weight:bold\">\n";
