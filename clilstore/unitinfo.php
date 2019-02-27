@@ -77,7 +77,7 @@
     $summary   = htmlspecialchars($summary);
     $langnotes = htmlspecialchars($langnotes);
     $words = ( isset($words) ? $words : '');
-    $clicksMessage = ( $created>1395188407 ? '' : ' <span style="color:grey;font-size:80%">(since 2014-03-18)</span' ) ;
+    $clicksMessage = ( $created>1395188407 ? '' : ' <span style="color:grey;font-size:80%">(since 2014-03-18)</span>' ) ;
 
     if      ($level<0)  { $cefr = '';   }
      elseif ($level<10) { $cefr = 'A1'; }
@@ -154,7 +154,7 @@ EODowner;
     <link rel="icon" type="image/png" href="/favicons/clilstore.png">
     <link rel="StyleSheet" href="/css/smo.css" type="text/css">
     <link rel="StyleSheet" href="style.css?version=2014-04-15" type="text/css">
-    <style type="text/css">
+    <style>
         div.body-indent { clear:both; margin:0 0.25%; padding:0 0.25% 6px 0.25%; border-top:1px solid white; }
         table#priomh    { border-collapse:collapse; }
         table#priomh td { padding:7px 4px; }
@@ -190,7 +190,7 @@ $errorMessage
 <tr><td>Changed:</td><td>$changedDateTime UT</td></tr>
 <tr><td>Licence:</td><td>Creative Commons $licence</td></tr>
 <tr><td>Views:</td><td>$views</td></tr>
-<tr><td>Clicks on words:</td><td>$clicks$clicksMessage</td></tr>
+<tr><td>Clicks on words:</td><td>$clicks$clicksMessage - <a href='unitwordclicks.php?id=$id'>List of clicked words</a></td></tr>
 </table>
 
 <p><a href="page.php?id=$id">Raw unit</a> <i>(unwordlinked)</i>

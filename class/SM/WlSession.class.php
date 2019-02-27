@@ -834,14 +834,24 @@ EOD;
       //If it looks like Multidict is being called from a Clilstore unit, add 1 to the click count for that unit
       //And if a user is logged in, update the vocabulary tables for this user
       $url = $this->url;
-      if (!preg_match('|//(.*)multidict\.(.*)/clilstore/page\.php\?id=(\d+)|',$url,$matches)) return;  //Not a Clilstore unit
-      if ( !isset($_GET['sid']) || !isset($_GET['word']) || isset($_GET['tl']) )             return;  //Not a click from Wordlink
+      if (!preg_match('|//(.*)multidict\.(.*)/clilstore/page\.php\?id=(\d+)|',$url,$matches)) return; //Not a Clilstore unit
+      if ( !isset($_GET['sid']) || !isset($_GET['word']) || isset($_GET['tl']) )              return; //Not a click from Wordlink
       $unitid = $matches[3];
       $DbMultidict = SM_DbMultidictPDO::singleton('rw');
       $stmt = $DbMultidict->prepare('UPDATE clilstore SET clicks=clicks+1 WHERE id=:id');
       $stmt->execute([':id'=>$unitid]);
+      $word  = $this->word;
+      $sl    = $this->sl;
+      $utime = time();
 
-      //Update the vocabulary for the Clilstore user
+      //Record the word clicked for that unit
+      $queryWC = "INSERT INTO csWclick (unit,word,clicks,utime)"
+                ." VALUES (:unit,:word,1,:utime)"
+                ." ON DUPLICATE KEY UPDATE clicks=clicks+1,utime=:utime";
+      $stmtWC = $DbMultidict->prepare($queryWC);
+      $stmtWC->execute([':unit'=>$unitid,':word'=>$word,':utime'=>$utime]);
+
+      //Update the vocabulary for the Clilstore user, if the user has record set to on
       $myCLIL = SM_myCLIL::singleton();
       $csuser = $myCLIL->id;
       if ($csuser) {
@@ -850,8 +860,6 @@ EOD;
           $row = $stmt->fetch(PDO::FETCH_ASSOC);
           extract($row);
           if ($record) {
-              $word = $this->word;
-              $sl   = $this->sl;
               $queryVU = "INSERT INTO csVocabUnit (user,unit,word,calls,sl)"
                         ." VALUES (?,?,?,1,?)"
                         ." ON DUPLICATE KEY UPDATE calls=calls+1";

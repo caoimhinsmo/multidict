@@ -186,7 +186,7 @@ EODtinyMCE;
 
     $DbMultidict = SM_DbMultidictPDO::singleton('rw');
     //Initialisations
-    $errorMessage = $warningMessage = $cruth = '';
+    $errorMessage = $warningMessage = $cruth = $cloneHtml = '';
     $refreshTime = 1;
     $formRequired = 1;
     $scriptingMessage = 'Scripting (PHP, Javascript, etc) is not allowed. You appear to have %s in the %s.';
@@ -361,7 +361,7 @@ EOD2;
                 $level = -1;
                 $medfloat = 'scroll';
                 $licence = 'BY-SA';
-                $legend = 'New Clilstore unit';
+                $legend = 'Creating a new Clilstore unit';
                //See if the user has a default language set for new units
                 $stmt = $DbMultidict->prepare('SELECT unitLang FROM users WHERE user=:user');
                 $stmt->execute(array('user'=>$user));
@@ -380,7 +380,7 @@ EOD2;
                 while ($r = $stmt->fetch(PDO::FETCH_OBJ)) { $buttons[] = new button($r->ord,$r->but,$r->wl,$r->new,$r->link); }
                 $text = str_replace('&','&amp;',$text);
                 $permis = 'checked';
-                $legend = "Edit Clilstore unit $id";
+                $legend = "Editing Clilstore unit $id";
                 $cruth  = 'html'; 
             }
             if (count($buttons)<8) { $buttons[] = new button(count($buttons)); } // Always create at least one blank button, up to a maximum of 8 buttons
@@ -396,6 +396,7 @@ EOD2;
         $medlenHtml = SM_csSess::secs2minsecs($medlen);  if ($medlenHtml=='?:??') { $medlenHtml = ''; }
 
         $medembedHtml = htmlspecialchars($medembed);
+        if ($id>0) { $cloneHtml = "<input type=checkbox name=clone id=clone $clonech> <label for=clone>Clone as a new unit</label>"; }
         if ($editor=='new') {
             $textAdvice = '(If you find your browser refuses to paste text into here, try drag-and-drop instead, or use the old html editor, or try another browser)';
         } else {
@@ -601,11 +602,11 @@ $editorsMessage
 <form method="post" name="mainForm">
 
 <fieldset style="background-color:#eef;border:8px solid #55a8eb;border-radius:10px">
-<legend style="background-color:#7cf;color:white;padding:2px 4px;border:4px solid #55a8eb;border-radius:8px">$legend</legend>
+<legend style="width:auto;margin-left:auto;margin-right:auto;background-color:#55a8eb;color:white;padding:1px 3em">$legend</legend>
 <div style="float:right;padding:3px;font-size:75%;color#333" title="Copy this unit and create a new unit with a new unit number - not something you would do very often">
-<input type="checkbox" name="clone" id="clone" $clonech> <label for="clone">Clone as a new unit</label></div>
+$cloneHtml</div>
 <div>Title<br>
-<input name="title" value="$titleSC" required pattern=".{4,120}" title="Title (between 4 and 120 characters long)" style="width:100%"></div>
+<input name="title" value="$titleSC" required pattern=".{4,120}" title="Title (between 4 and 120 characters long)" style="width:99%"></div>
 <div style="margin-top:6px">Embed code for media or picture (if any) <span style="font-size:80%;padding-left:3em">Float or scroll
 <select name="medfloat" style="width:7em" title="Choose the placement on the page">
   <option value="none"$floatnone> </option>
@@ -614,7 +615,7 @@ $editorsMessage
   <option value="scroll"$floatscroll>scroll text</option>
 </select>
 </span>
-<input name="medembed" value="$medembedHtml" style="width:100%"></div>
+<input name="medembed" value="$medembedHtml" style="width:99%"></div>
 <div style="margin-top:6px">
 Text <span class="info" style="padding-left:2em">$textAdvice</span><br>
 <textarea name="text" id="text" placeholder="The text for the students to read (minimum length 100 characters)" style="width:100%;height:400px">$text</textarea></div>
