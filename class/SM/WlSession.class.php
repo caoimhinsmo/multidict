@@ -845,9 +845,9 @@ EOD;
       $utime = time();
 
       //Record the word clicked for that unit
-      $queryWC = "INSERT INTO csWclick (unit,word,clicks,utime)"
-                ." VALUES (:unit,:word,1,:utime)"
-                ." ON DUPLICATE KEY UPDATE clicks=clicks+1,utime=:utime";
+      $queryWC = "INSERT INTO csWclick (unit,word,clicks,newclicks,utime)"
+                ." VALUES (:unit,:word,1,1,:utime)"
+                ." ON DUPLICATE KEY UPDATE clicks=clicks+1,newclicks=newclicks+1,utime=:utime";
       $stmtWC = $DbMultidict->prepare($queryWC);
       $stmtWC->execute([':unit'=>$unitid,':word'=>$word,':utime'=>$utime]);
 
