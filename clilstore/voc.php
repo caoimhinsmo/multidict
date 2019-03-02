@@ -24,7 +24,7 @@
     <link rel="icon" type="image/png" href="/favicons/clilstore.png">
     <style type="text/css">
         span.callcount { font-size:75%; color:grey; }
-        table#vocab { border-collapse:collapse; border:1px solid grey; }
+        table#vocab { border-collapse:collapse; border:1px solid grey; margin-bottom:0.5em; }
         table#vocab tr#vocabhead { background-color:grey; color:white; font-weight:bold; }
         table#vocab tr:nth-child(odd)  { background-color:#ddf; }
         table#vocab tr:nth-child(even) { background-color:#fff; }
@@ -38,23 +38,23 @@
         a.langbutton.live:hover { background-color:blue; }
     </style>
     <script>
-        function deleteVocabWord(user,sl,word) {
-            var url = '$clilstoreUrl/ajax/deleteVocabWord.php?user=' + user + '&sl=' + sl + '&word=' + word;
+        function deleteVocWord(vocid) {
+            var url = '$clilstoreUrl/ajax/deleteVocWord.php?vocid=' + vocid;
             var xmlhttp = new XMLHttpRequest();
             xmlhttp.open('GET', url, false);
             xmlhttp.send();
             var resp = xmlhttp.responseText;
-            if (resp!='OK') { alert('Error in sguabFbhoD: ' + resp); }
+            if (resp!='OK') { alert('Error in deleteVocWord: ' + resp); }
             location.reload();
         }
-        function changeMeaning(user,sl,word,meaning) {
-            var url = '$clilstoreUrl/ajax/changeMeaning.php?user=' + user + '&sl=' + sl + '&word=' + word + '&meaning=' + encodeURI(meaning);
+        function changeMeaning(vocid,meaning) {
+            var url = '$clilstoreUrl/ajax/changeMeaning.php?vocid=' + vocid + '&meaning=' + encodeURI(meaning);
             var xmlhttp = new XMLHttpRequest();
             xmlhttp.open('GET', url, false);
             xmlhttp.send();
             var resp = xmlhttp.responseText;
-            if (resp!='OK') { alert('Error in sguabFbhoD: ' + resp); }
-            location.reload();
+            if (resp!='OK') { alert('Error in changeMeaning: ' + resp); }
+//            location.reload();  Not really needed I think
         }
     </script>
 </head>
@@ -77,9 +77,9 @@ EOD_BARR;
 //                                 . "You are logged in as $loggedinUser and have attempted to change the options for $userSC"); }
 
     $DbMultidict = SM_DbMultidictPDO::singleton('rw');
-    $vocabHtml = $langButHtml = '';
+    $vocHtml = $langButHtml = '';
 
-    $stmt = $DbMultidict->prepare('SELECT sl, SUM(calls) AS slSum FROM csVocab WHERE user=:user GROUP BY sl ORDER BY slSum DESC, sl');
+    $stmt = $DbMultidict->prepare('SELECT sl, SUM(calls) AS slSum FROM csVoc WHERE user=:user GROUP BY sl ORDER BY slSum DESC, sl');
     $stmt->execute([':user'=>$user]);
     $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
     $slLorg = $_GET['sl'] ?: $rows[0]['sl'];
@@ -88,20 +88,20 @@ EOD_BARR;
             extract($row);
             if ($sl==$slLorg) { $class = 'langbutton selected'; }
              else             { $class = 'langbutton live';     }
-            $langButArray[] = "<a href=vocab.php?user=$userSC&amp;sl=$sl class='$class'>$sl</a>";
+            $langButArray[] = "<a href=voc.php?user=$userSC&amp;sl=$sl class='$class'>$sl</a>";
         }
         $langButHtml = implode(' ',$langButArray);
         $langButHtml = "<p>$langButHtml</p>";
     }
 
-    $stmt = $DbMultidict->prepare('SELECT word,calls,meaning FROM csVocab WHERE user=:user AND sl=:sl');
+    $stmt = $DbMultidict->prepare('SELECT vocid,word,calls,head,meaning FROM csVoc WHERE user=:user AND sl=:sl');
     $stmt->execute([':user'=>$user,':sl'=>$slLorg]);
     $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
     foreach ($rows as $row) {
         extract($row);
-        $queryVU = 'SELECT unit, calls AS callsVU, title FROM csVocabUnit, clilstore WHERE user=:user AND clilstore.sl=:sl AND word=:word AND unit=id ORDER BY unit';
+        $queryVU = 'SELECT unit, calls AS callsVU, title FROM csVocUnit, clilstore WHERE vocid=:vocid AND clilstore.id=unit ORDER BY unit';
         $stmtVU = $DbMultidict->prepare($queryVU);
-        $stmtVU->execute([':user'=>$user,':sl'=>$slLorg,':word'=>$word]);
+        $stmtVU->execute([':vocid'=>$vocid]);
         $rowsVU = $stmtVU->fetchAll(PDO::FETCH_ASSOC);
         $unitHtmlArr = [];
         foreach ($rowsVU as $rowVU) {
@@ -111,12 +111,11 @@ EOD_BARR;
             $unitHtmlArr[] = "<a href='/cs/$unit' title='$title'>$unit</a>$callsVUhtml";
         }
         $unitsHtml = implode(' ',$unitHtmlArr);
-        $wordEnc = urlencode($word);
-        $deleteVocabWordHtml = "<img src='/icons-smo/curAs.png' alt='Delete' style='padding:0 0.5em' title='Delete instantaneously' onclick=\"deleteVocabWord('$user','$slLorg','$wordEnc')\">";
+        $deleteVocWordHtml = "<img src='/icons-smo/curAs.png' alt='Delete' style='padding:0 0.5em' title='Delete instantaneously' onclick=\"deleteVocWord('$vocid')\">";
         $meaningSC  = htmlspecialchars($meaning);
-        $meaningHtml = "<input value='$meaningSC' style='width:95%' onchange=\"changeMeaning('$user','$slLorg','$wordEnc',this.value);\">";
+        $meaningHtml = "<input value='$meaningSC' style='width:95%' onchange=\"changeMeaning('$vocid',this.value);\">";
         $multidictHtml = "<a href='/multidict/?sl=$slLorg&amp;word=$word'><img src=/favicons/multidict.png alt=''></a>";
-        $vocabHtml .= "<tr><td>$deleteVocabWordHtml</td><td>$multidictHtml $word</td><td class=meaning>$meaningHtml</td><td>$unitsHtml</td></tr>\n";
+        $vocHtml .= "<tr><td>$deleteVocWordHtml</td><td>$multidictHtml $word</td><td class=meaning>$meaningHtml</td><td>$unitsHtml</td></tr>\n";
     }
 
     function optionsHtml($valueOptArr,$selectedValue) {
@@ -129,21 +128,13 @@ EOD_BARR;
         return implode("\r",$htmlArr);
     }
 
-    $langArr[''] = '';
-    $stmt3 = $DbMultidict->prepare("SELECT id,endonym FROM lang WHERE id<>'¤' AND id<>'x' ORDER BY endonym,id");
-    $stmt3->execute();
-    $stmt3->bindColumn(1,$id);
-    $stmt3->bindColumn(2,$endonym);
-    while ($stmt3->fetch()) { $langArr[$id] = "$endonym ($id)"; }
-    $unitLangHtml = optionsHtml($langArr,$unitLang);
-
     echo <<<ENDform
 <h1 class="smo">Vocabulary list for user <span style="color:brown">$user</span></h1>
 
 $langButHtml
 <table id=vocab>
 <tr id=vocabhead><td></td><td>Word</td><td>Meaning</td><td>Clicked in units</td></tr>
-$vocabHtml
+$vocHtml
 </table>
 ENDform;
 

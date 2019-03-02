@@ -189,7 +189,7 @@ $recordHtml
 </fieldset>
 </form>
 
-<p style="margin:1.7em 0"><a class="button" href="vocab.php?user=$user">My vocabulary…</a>
+<p style="margin:1.7em 0"><a class="button" href="voc.php?user=$user">My vocabulary…</a>
 
 $transferHtml
 ENDform;

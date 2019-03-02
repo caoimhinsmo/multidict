@@ -102,7 +102,7 @@ $HTML
 <tr><td>$totClicks</td><td>$totNewclicks</td><td>·Total·</td><td>$timeDateTime</td></tr>
 </table>
 
-<p style="font-size:90%;color:#0b0">The ‘New’ column shows the number of clicks since the ‘new’ counter was last reset by the owner of the unit$resetMessage$resetButton</p>
+<p style="font-size:85%;color:#0b0">The ‘New’ column shows the number of clicks since the ‘new’ counter was last reset by the owner of the unit$resetMessage$resetButton</p>
 EOD_PT;
     } else {
         $HTML = "<p>No words clicked yet in this unit</p>\n";

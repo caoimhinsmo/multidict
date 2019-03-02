@@ -860,16 +860,17 @@ EOD;
           $row = $stmt->fetch(PDO::FETCH_ASSOC);
           extract($row);
           if ($record) {
-              $queryVU = "INSERT INTO csVocabUnit (user,unit,word,calls,sl)"
-                        ." VALUES (?,?,?,1,?)"
-                        ." ON DUPLICATE KEY UPDATE calls=calls+1";
-              $stmtVU = $DbMultidict->prepare($queryVU);
-              $stmtVU->execute(array($csuser,$unitid,$word,$sl));
-              $queryV = "INSERT INTO csVocab (user,sl,word,calls)"
-                       ." VALUES (?,?,?,1)"
+              $DbMultidict->beginTransaction();
+              $queryV = "INSERT INTO csVoc (user,sl,word,calls) VALUES (:user,:sl,:word,1)"
                        ." ON DUPLICATE KEY UPDATE calls=calls+1";
               $stmtV = $DbMultidict->prepare($queryV);
-              $stmtV->execute(array($csuser,$sl,$word));
+              $stmtV->execute([':user'=>$csuser,':sl'=>$sl,':word'=>$word]);
+              $vocid = $DbMultidict->lastInsertId();
+              $queryVU = "INSERT INTO csVocUnit (vocid,unit,calls) VALUES (:vocid,:unit,1)"
+                        ." ON DUPLICATE KEY UPDATE calls=calls+1";
+              $stmtVU = $DbMultidict->prepare($queryVU);
+              $stmtVU->execute([':vocid'=>$vocid,':unit'=>$unitid]);
+              $DbMultidict->commit();
           }
       }
   }
