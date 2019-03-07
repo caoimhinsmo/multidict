@@ -17,7 +17,7 @@
     $id = $_GET['id'];
     if (!is_numeric($id)) { throw new SM_MDexception('id parameter is not numeric'); }
 
-    $servername = $_SERVER['SERVER_NAME'];
+    $serverUrl = ( $_SERVER['HTTPS'] ? 'https' : 'http' ) . '://' . $_SERVER['SERVER_NAME'];
     $DbMultidict = SM_DbMultidictPDO::singleton('rw');
     $stmt = $DbMultidict->prepare('SELECT sl,owner,title,text,medembed,medfloat FROM clilstore WHERE id=:id');
     $stmt->bindParam(':id', $id, PDO::PARAM_INT);
@@ -36,7 +36,7 @@
 
     //Prepare media (or picture)
     if ($medfloat=='') { $medfloat = 'none'; }
-    $scroll = '';
+    $scroll = $recordVocHtml = '';
     if ($medfloat=='scroll') { $medfloat = 'none'; $scroll='scroll'; }
     $medembedHtml = ( empty($medembed) ? '' : "<div class=\"$medfloat\">$medembed</div>" );
 
@@ -61,17 +61,28 @@
     }
     $buttonedit = ( $user<>$owner && $user<>'admin'
                   ? ''
-                  : "<li class=\"right\"><a href=\"edit.php?id=$id&amp;view\" class=\"nowordlink\" target=\"_top\"><img src=\"/icons-smo/peann.png\" alt=\"Edit\" title=\"Edit this unit\"></a></li>"
+                  : "<li class=right><a href=\"edit.php?id=$id&amp;view\" class=\"nowordlink\" target=\"_top\"><img src=\"/icons-smo/peann.png\" alt=\"Edit\" title=\"Edit this unit\"></a></li>"
                   );
+    $stmt = $DbMultidict->prepare('SELECT record FROM users WHERE user=:user');
+    $stmt->execute([':user'=>$user]);
+    if (!empty($user)) {
+        $record = $stmt->fetch(PDO::FETCH_COLUMN);
+        $vocClass = ( $record ? 'vocOn' : 'vocOff');
+        $recordVocHtml = "<li class=right><span class=$vocClass onclick='vocClicked(this.className);'>"
+                        ."<img src='/favicons/recordOff.png' alt='VocOff' title='Vocabulary recording is currently disabled - Click to enable'>"
+                        ."<img src='/favicons/recordOn.png' alt='VocOn' title='Vocabulary recording is currently enabled - Click to disable'>"
+                        ."</span></li>";
+    }
     $linkbuttons = <<<EOBUT
 <ul class="linkbuts" title="Navigate to other pages (Right-click to open in a new browser tab or window)">
 <li><a href="./" class="nowordlink" target="_top" title="Clilstore index page">Clilstore</a></li>
 $buttonsHtml
-<li><a href="http://$servername/wordlink/?navsize=1&amp;sl=$sl&amp;url=referer"
+<li><a href="$serverUrl/wordlink/?navsize=1&amp;sl=$sl&amp;url=referer"
     title="Wordlink this page (link it word by word to dictionaries)">Wordlink</a></li>
 <li class="right"><a href="unitinfo.php?id=$id" class="nowordlink" target="_top"
     title="Summary and other details on this unit">Unit info</a></li>
 $buttonedit
+$recordVocHtml
 </ul>
 EOBUT;
 
@@ -108,8 +119,26 @@ EOBUT;
         a.csinfo:link    { color:#00f; }
         a.csinfo:visited { color:#909; }
         a.csinfo:hover   { color:#ff0; background-color:blue; text-decoration:underline; }
+        span.vocOff img:nth-child(1) { display:inline; }
+        span.vocOff img:nth-child(2) { display:none; }
+        span.vocOn  img:nth-child(1) { display:none; }
+        span.vocOn  img:nth-child(2) { display:inline; }
     </style>
     <script>
+        function vocClicked(cl) {
+            var clnew, i;
+            if (cl=='vocOff') { clnew = 'vocOn';  }
+                         else { clnew = 'vocOff'; }
+            var url = '$serverUrl/clilstore/ajax/setVocRecord.php?vocRecord=' + clnew;
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.open('GET', url, false);
+            xmlhttp.send();
+            var resp = xmlhttp.responseText;
+            if (resp!='OK') { alert('Error in vocClicked: ' + resp); }
+            var vocEls = document.getElementsByClassName(cl);
+            while (vocEls.length>0) { vocEls[0].className = clnew; }
+        }
+
         function sizeTextDiv() {
             if (document.getElementById('textDiv').className.indexOf('scroll')==-1) { return; } //No need to do anything if non-scrolling
             var winH = 460;
@@ -159,8 +188,8 @@ EOBUT;
 $linkbuttons
 <div class="body-indent">
 <wordlink noshow><p class="noshow" style="direction:ltr"><span class="csinfo">  <!--class="noshow" is for stupid IE7. Delete when IE7 is dead-->
-This is a <a href="http://$servername/clilstore" class="csinfo">Clilstore</a> unit.
-You can <span class="csbutton"><a href="http://$servername/cs/$id" class="csinfo">link all words to dictionaries</a></span>.
+This is a <a href="$serverUrl/clilstore" class="csinfo">Clilstore</a> unit.
+You can <span class="csbutton"><a href="$serverUrl/cs/$id" class="csinfo">link all words to dictionaries</a></span>.
 </span></p></wordlink>
 
 <h1 style="margin:3px 0">$title</h1>
@@ -172,7 +201,7 @@ $text
 
 </div>
 $linkbuttons
-<p style="clear:both;font-size:70%;margin:0;text-align:center">Short url:&nbsp;&nbsp; http://$servername/cs/$id</p>
+<p style="clear:both;font-size:70%;margin:0;text-align:center">Short url:&nbsp;&nbsp; $serverUrl/cs/$id</p>
 </body>
 </html>
 EOD1;
