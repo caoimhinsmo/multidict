@@ -71,7 +71,8 @@
         $recordVocHtml = "<li class=right><span class=$vocClass onclick='vocClicked(this.className);'>"
                         ."<img src='/favicons/recordOff.png' alt='VocOff' title='Vocabulary recording is currently disabled - Click to enable'>"
                         ."<img src='/favicons/recordOn.png' alt='VocOn' title='Vocabulary recording is currently enabled - Click to disable'>"
-                        ."</span></li>";
+                        ."</span></li>"
+                        ."<li class=right><a class=$vocClass href='voc.php?user=$user&amp;sl=$sl' nowordlink target=voctab title='Open your vocabulary list in a separate tab'>V</a>";
     }
     $linkbuttons = <<<EOBUT
 <ul class="linkbuts" title="Navigate to other pages (Right-click to open in a new browser tab or window)">
@@ -123,6 +124,7 @@ EOBUT;
         span.vocOff img:nth-child(2) { display:none; }
         span.vocOn  img:nth-child(1) { display:none; }
         span.vocOn  img:nth-child(2) { display:inline; }
+        a.vocOff { display:none; }
     </style>
     <script>
         function vocClicked(cl) {
