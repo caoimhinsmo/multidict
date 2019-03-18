@@ -30,6 +30,7 @@
         table#vocab tr:nth-child(even) { background-color:#fff; }
         table#vocab tr:nth-child(odd):hover  { background-color:#fe6; }
         table#vocab tr:nth-child(even):hover { background-color:#fe6; }
+        table#vocab td.vocword a:hover { color:white; background-color:black; }
         table#vocab td.meaning { min-width:40em; }
         table#vocab td { padding:1px 3px; }
         table#vocab tr + tr > td { border-left:1px solid #aaa; }
@@ -114,8 +115,9 @@ EOD_BARR;
         $deleteVocWordHtml = "<img src='/icons-smo/curAs.png' alt='Delete' style='padding:0 0.5em' title='Delete instantaneously' onclick=\"deleteVocWord('$vocid')\">";
         $meaningSC  = htmlspecialchars($meaning);
         $meaningHtml = "<input value='$meaningSC' style='width:95%' onchange=\"changeMeaning('$vocid',this.value);\">";
-        $multidictHtml = "<a href='/multidict/?sl=$slLorg&amp;word=$word'><img src=/favicons/multidict.png alt=''></a>";
-        $vocHtml .= "<tr><td>$deleteVocWordHtml</td><td>$multidictHtml $word</td><td class=meaning>$meaningHtml</td><td>$unitsHtml</td></tr>\n";
+        $multidictHtml = "<a href='/multidict/?sl=$slLorg&amp;word=$word' target=vocmdtab><img src=/favicons/multidict.png alt=''></a>";
+        $wordHtml      = "<a href='/multidict/?sl=$slLorg&amp;word=$word' target=vocmdtab>$word</a>";
+        $vocHtml .= "<tr><td>$deleteVocWordHtml</td><td class=vocword>$multidictHtml $wordHtml</td><td class=meaning>$meaningHtml</td><td>$unitsHtml</td></tr>\n";
     }
 
     function optionsHtml($valueOptArr,$selectedValue) {
