@@ -11,7 +11,7 @@
       $myCLIL->toradh = $e->getMessage();
   }
 
-  $clilstoreUrl = ( $_SERVER['HTTPS'] ? 'https' : 'http' ) . '://' . $_SERVER['SERVER_NAME'] . '/clilstore/';
+  $clilstoreUrl = ( empty($_SERVER['HTTPS']) ? 'https' : 'http' ) . '://' . $_SERVER['SERVER_NAME'] . '/clilstore/';
 
   echo <<<EOD_BARR
 <!DOCTYPE html>
@@ -74,8 +74,6 @@ EOD_BARR;
     $user = @$_REQUEST['user'] ?:null;
     $userSC = htmlspecialchars($user);
     if (empty($user)) { throw new SM_MDexception('Parameter ‘user=’ is missing'); }
-//    if ($loggedinUser<>$user && $loggedinUser<>'admin') { throw new SM_MDexception('sgrios|bog|Attempt to change another user’s options<br>'
-//                                 . "You are logged in as $loggedinUser and have attempted to change the options for $userSC"); }
 
     $DbMultidict = SM_DbMultidictPDO::singleton('rw');
     $vocHtml = $langButHtml = '';
@@ -83,7 +81,7 @@ EOD_BARR;
     $stmt = $DbMultidict->prepare('SELECT sl, SUM(calls) AS slSum FROM csVoc WHERE user=:user GROUP BY sl ORDER BY slSum DESC, sl');
     $stmt->execute([':user'=>$user]);
     $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    $slLorg = $_GET['sl'] ?: $rows[0]['sl'];
+    $slLorg = ( empty($_GET['sl']) ? $rows[0]['sl'] : $_GET[sl] );
     if (count($rows)>1) {
         foreach ($rows as $row) {
             extract($row);

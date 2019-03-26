@@ -17,7 +17,7 @@
     $id = $_GET['id'];
     if (!is_numeric($id)) { throw new SM_MDexception('id parameter is not numeric'); }
 
-    $serverUrl = ( $_SERVER['HTTPS'] ? 'https' : 'http' ) . '://' . $_SERVER['SERVER_NAME'];
+    $serverUrl = ( empty($_SERVER['HTTPS']) ? 'https' : 'http' ) . '://' . $_SERVER['SERVER_NAME'];
     $DbMultidict = SM_DbMultidictPDO::singleton('rw');
     $stmt = $DbMultidict->prepare('SELECT sl,owner,title,text,medembed,medfloat FROM clilstore WHERE id=:id');
     $stmt->bindParam(':id', $id, PDO::PARAM_INT);
