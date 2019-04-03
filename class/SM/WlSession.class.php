@@ -30,7 +30,7 @@ class SM_WlSession {
           $crTime = time();
           $crHost = gethostbyaddr($crIP);
           $crReferer = ( isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '');
-          $stmt = $DbMultidict->prepare("INSERT INTO wlUser (uid,crIP,crTime,crHost,crReferer) VALUES (:uid,:crIP,:crTime,:crHost,:crReferer)");
+          $stmt = $DbMultidict->prepare("INSERT INTO wlUser (uid,IP,crIP,utime,crTime,crHost,crReferer) VALUES (:uid,:crIP,:crIP,:crTime,:crTime,:crHost,:crReferer)");
           $stmt->bindParam(':uid',$uid,PDO::PARAM_INT);
           $stmt->bindParam(':crIP',$crIP);
           $stmt->bindParam(':crTime',$crTime,PDO::PARAM_INT);

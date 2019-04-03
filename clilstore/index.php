@@ -26,12 +26,12 @@
     }
 
     $mode    = $csSess->getCsSession()->mode;
+    
     $incTest = $csSess->getCsSession()->incTest;
-
-    $mode0selected = ( $mode==0 ? 'selected' : '');
-    $mode1selected = ( $mode==1 ? 'selected' : '');
-    $mode2selected = ( $mode==2 ? 'selected' : '');
-    $mode3selected = ( $mode==3 ? 'selected' : '');
+    $mode0selected = ( $mode==0 ? 'selected=selected' : '');
+    $mode1selected = ( $mode==1 ? 'selected=selected' : '');
+    $mode2selected = ( $mode==2 ? 'selected=selected' : '');
+    $mode3selected = ( $mode==3 ? 'selected=selected' : '');
     $addColHtml = $csSess->addColHtml();
     $symbolRowHtml = $csSess->symbolRowHtml();
 
@@ -179,8 +179,9 @@ USER2;
 //        $f['titleFil']   =
 //        $f['textFil']    =
         '';
-        if (empty($f['slFil'])) { $csSess->csFilter['sl']['m0'] = 1; }
-         else                   { $csSess->csFilter['sl']['m0'] = 0; }  // No need to display Language if it is being filtered for
+//        if (empty($f['slFil'])) { $csSess->csFilter['sl']['m0'] = 1; }
+//         else                   { $csSess->csFilter['sl']['m0'] = 0; }  // No need to display Language if it is being filtered for
+        $csSess->csFilter['sl']['m0'] = 0;  // No need to display Language because it is always filtered for in mode 0
        // Set up checked values for level radio buttons
         $level = $csSess->csFilter['level']['val1'];
         if ($level==='') {
@@ -259,6 +260,7 @@ USER2;
     if ($incTest==0)          { $whereClauses['test']       = ( empty($user)
                                                               ? 'test=0'
                                                               : "(test=0 OR owner='$user')" ); }
+    if ($mode==0 && $f['slFil']=='') { $whereClauses['zap'] = '0'; } //Zap everything and select no units if no language selected in mode 0
 
     $whereClause = implode(' AND ',$whereClauses);
 
@@ -404,13 +406,18 @@ ENDtabletopChoices;
         $hoverColorEven = '#fe6';
     }
 
+    if ($user) { $logInOut = "<li class=deas><a href=logout.php title='Logout from Clilstore'>Logout</a>"; }
+     else      { $logInOut = "<li class=deas><a href=login.php title='Login/register to get the full range of Clilstore facilities'>Login</a>"; }
+    if ($user) { $logInOutBut = "<a href=logout.php class=button title='Logout from Clilstore'>Logout</a>"; }
+     else      { $logInOutBut = "<a href=login.php class=button title='Login/register to get the full range of Clilstore facilities'>Login</a>"; }
+
     echo <<<EOD1
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Clilstore - Teaching units for content and language integrated learning</title>
-    <link rel="StyleSheet" href="/css/smo.css" type="text/css">
+    <link rel="StyleSheet" href="/css/smo.css">
     <link rel="StyleSheet" href="style.css">
     <link rel="icon" type="image/png" href="/favicons/clilstore.png">
     <style type="text/css">
@@ -488,8 +495,7 @@ a.mybutton:hover { background-color:blue; }
         p.noUnits { color:red; background-color:yellow; }
         span.fann { color:grey; font-size:65%; }
     </style>
-    <script type="text/javascript">
-<!--
+    <script>
         function clearFields () {
             var el,elType;
             form = document.getElementById('filterForm');
@@ -513,21 +519,33 @@ a.mybutton:hover { background-color:blue; }
         function submitFForm () {
             document.getElementById('filterForm').submit();
         }
-//-->
-    </script>
+
+        function newbie() {
+            alert('Clilstore cookies will be deleted (so you will be logged out if you were logged in),\\n'
+	        + 'and you will see the site as would a new user, a fresh arrival.\\n\\n'
+		+ '(This is mostly used for tesing purposes.)');
+	    document.cookie = "myCLIL_authentication=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+	    document.cookie = "csSessionId=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/clilstore/;";
+	    document.cookie = "wlUser=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+            window.location = window.location.href;
+        }
+</script>
 </head>
 <body onload="history.pushState('','',location.pathname);">
 
 <ul class="smo-navlist">
-<li><a href="/" title="Multidict, Wordlink, and Clilstore">$servername</a></li>
+<li><a href="/" title="Multidict, Wordlink, and Clilstore">$servername</a>
+$logInOut
 </ul>
 <div class="smo-body-indent">
+<a><img src=/favicons/restart.png style="float:right" alt="Restart" title="See Clilstore site as would a new arrival (For testing)" onclick="newbie();"></a>
 <!--<span style="font-size:50%;color:red;background-color:yellow">News: Service will be down on 20 February 2016 during communications upgrade</span>-->
 
 <h1 style="float:left;margin:10px 12px 0 0"><img src="/icons-smo/clilstore-blue45.png" alt="Clilstore" style="width:184px;height:45px"></h1>
 <p style="margin:22px 0 0 0;font-size:90%;float:left">Teaching units<br>for Content and Language Integrated Learning</p>
 <a href="help.html" class="button">Help</a>
 <a href="about.html" class="button">About</a>
+$logInOutBut
 $photo
 
 <div style="width:100%;min-height:1px;clear:both">
@@ -777,9 +795,14 @@ EOD1;
     }
     $stmt = null;
     $DbMultidict = null;
-    if ($nunits==0)     { $noUnitsMessage = "<p style=\"color:red;background-color:yellow\">No units match this filter.  You need to revise or Clear the filter.</p>\n"; }
-     elseif ($nunits<2) { $noUnitsMessage = ''; }
-     else { //Calculate and display statistics
+    if ($nunits==0) {
+        $noUnitsMessage = ( $mode==0 && $f['slFil']==''
+                          ? 'First you need to choose a language'
+                          : 'No units match this filter.  You need to revise or Clear the filter.' );
+        $noUnitsMessage = "<p><span style='color:red;background-color:yellow'>$noUnitsMessage</span></p>\n";
+    } elseif ($nunits<2) {
+        $noUnitsMessage = '';
+    } else { //Calculate and display statistics
          $noUnitsMessage  = "<p style=\"margin-top:0;color:grey;font-size:70%\">$nunits units found</p>";
          if ($mode>1) {
              $avgLevel  = ( $cnt['level']==0  ? '' : sprintf('%.1f',$tot['level']/$cnt['level']) );
@@ -864,6 +887,7 @@ This publication reflects the views only of the author, and the Commission canno
 </div>
 <ul class="smo-navlist" style="clear:both">
 <li><a href="/" title="Multidict, Wordlink, and Clilstore">$servername</a></li>
+$logInOut
 </ul>
 
 </body>

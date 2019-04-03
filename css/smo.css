@@ -24,11 +24,6 @@ div.smo-latha { clear: both; font-size:70%; font-family:Arial,Helvetica,sans-ser
 span.fann     { color:#777; }
 span.pdf      { font-size:80%; }
 span.rabhadh  { color:red; font-size:80%; }
-a.briste:link { color:red; }
-span.briste   { color:red; font-size:80%; }
-span.briste a:link    { color:red; }
-span.briste a:visited { color:red; }
-
 
 p.tiotal { margin-bottom:1px; font-weight:bold; }
 ul.dluth { margin-top:0px; }
@@ -51,12 +46,7 @@ ul.smo-navlist a:hover,
 ul.smo-navlist a:active,
 ul.smo-navlist a:focus   { color:#039; text-decoration:none; border-top-color:red; border-bottom-color:red; background-color:#ff0; }
 
-ul.smo-navlist li a:before             { content:"⇨ "; font-weight:normal; font-size:80%; vertical-align:middle; }
-ul.smo-navlist li:first-child a:before { content:url(/icons-smo/favicon.gif); margin-right:3px; }
 ul.smo-navlist li.deas a:after         { content:""; }
-
-ul.smo-navlist2 { background-color:#9cf; }
-
 
 /* ------------ Formaichean ------------------------------------------------------------------------------------------ */
 input:focus, checkbox:focus  { background-color:#dfd; color:blue; }

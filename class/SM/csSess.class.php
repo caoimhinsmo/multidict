@@ -2,7 +2,7 @@
 class SM_csSess {
 
   private $csSession;
-  public $csFields, $csFilter, $newSession;
+  public $csFields, $csFilter, $newSession, $servername, $server, $clilstoreUrl;
 
   public function getCsSession() {
      // $csSession itself kept private for security, but this function returns a read-only copy
@@ -132,7 +132,7 @@ setcookie('csSession','',1,'/clilstore/','multidict.net');
 
      // Read and act on information from GET and POST parameters
 
-      $mode = $this->csSession->mode;
+      $mode = $this->csSession->mode ?: 0;
       if (isset($_GET['mode'])) {
           $mode = $this->csSession->mode = $_GET['mode'];
           if ($mode==0) {
