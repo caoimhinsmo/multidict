@@ -274,8 +274,8 @@ setcookie('csSession','',1,'/clilstore/','multidict.net');
           } else {
               $symbolinfo = '<span style="font-size:65%">⇐ Click <span style="color:#55a8eb">▵</span> to sort column, '
                            .'<span style="color:red">×</span> to hide '
-                           ."[<a href=\"$hrefSelf?restoreCols=restore\" title=\"Restore default columns and sorting\" style=\"font-size:110%\">Restore</a>]</span>";
-              $symbolHtml['title'] = "<td class=\"title\" colspan=2 style=\"vertical-align:bottom\"><a href=\"$hrefSelf?sortCol=title\" title=\"sort column\">$sym</a><div style=\"float:right\">$symbolinfo</div></td>";
+                           ."[<a href='$hrefSelf?restoreCols=restore' title='Restore default columns and sorting' style='font-size:110%'>Restore</a>]</span>";
+              $symbolHtml['title'] = "<td class=title colspan=2 style='vertical-align:bottom'><div style='float:right'>$symbolinfo</div><a href='$hrefSelf?sortCol=title' title='sort column'>$sym</a></td>";
           }
       }
       $symbolHtml_id = $symbolHtml['id'];

@@ -47,13 +47,16 @@
         $incTestChecked = ( $incTest ? 'checked' : '' );
         $wideChecked    = ( $mode==3 ? 'checked' : '' );
         $checkboxesHtml = <<<CHECKBOXES
-<div style="color:grey;font-size:90%;margin-left:1em">
 <input type="checkbox" name="incTest" id="incTest" $incTestChecked tabindex=2 title="include test units" onclick="submitFForm()">
 <label for="incTest" style="padding-right:2em">$incTestLabel</label>
 <input type="checkbox" name="wide" id="wide" $wideChecked tabindex=4 title="include all columns" onclick="submitFForm()">
 <label for="wide">More options</label>
-</div>
 CHECKBOXES;
+        $checkboxesHtml = <<<CHECKBOXES2
+<div style="color:grey;font-size:90%;margin-left:1em">
+$checkboxesHtml
+</div>
+CHECKBOXES2;
     }
 
     if ($mode<=1) {
@@ -427,7 +430,7 @@ ENDtabletopChoices;
         table#priomh tr.row1 td { background-color:#888; color:white; border-bottom:2px solid #888; }
         table#priomh tr.row2 td { background-color:#e2e2e2; padding-top:6px; }
         table#priomh tr.row1 td a { color:white; }
-        table#priomh tr.row4 td {  background-color:#e2e2e2;padding-bottom:1px; border-bottom:1px solid #888; font-size:120%; }
+        table#priomh tr.row4 td { background-color:#e2e2e2;padding-bottom:1px; border-bottom:1px solid #888; font-size:120%; }
         table#priomh tr.row4 td a:visited { color:#61abac; }
 
         table#priomh         td.id      { text-align:right; display:$idDisplay; }
