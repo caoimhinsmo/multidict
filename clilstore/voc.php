@@ -2,7 +2,8 @@
   if (!include('autoload.inc.php'))
     header("Location:http://claran.smo.uhi.ac.uk/mearachd/include_a_dhith/?faidhle=autoload.inc.php");
 
-  header("Cache-Control:max-age=0");
+  header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+  header("Pragma: no-cache");
 
   try {
       $myCLIL = SM_myCLIL::singleton();
@@ -10,8 +11,6 @@
   } catch (Exception $e) {
       $myCLIL->toradh = $e->getMessage();
   }
-
-  $clilstoreUrl = ( empty($_SERVER['HTTPS']) ? 'https' : 'http' ) . '://' . $_SERVER['SERVER_NAME'] . '/clilstore/';
 
   echo <<<EOD_BARR
 <!DOCTYPE html>
@@ -34,28 +33,27 @@
         table#vocab td.meaning { min-width:40em; }
         table#vocab td { padding:1px 3px; }
         table#vocab tr + tr > td { border-left:1px solid #aaa; }
+        table#vocab tr.deleted { display:none; }
         a.langbutton { margin:1px 7px; background-color:#55a8eb; color:white; font-weight:bold; padding:2px 8px; border:1px solid white; border-radius:8px; }
         a.langbutton.selected { border-color:#55a8eb; background-color:yellow; color:#55a8eb; }
         a.langbutton.live:hover { background-color:blue; }
     </style>
     <script>
         function deleteVocWord(vocid) {
-            var url = '$clilstoreUrl/ajax/deleteVocWord.php?vocid=' + vocid;
             var xmlhttp = new XMLHttpRequest();
-            xmlhttp.open('GET', url, false);
+            xmlhttp.onload = function() {
+                if (this.status!=200) { alert('Error in deleteVocWord:'+this.status); return }
+                var el = document.getElementById('row'+vocid);
+                el.classList.add('deleted');
+            }
+            xmlhttp.open('GET', 'ajax/deleteVocWord.php?vocid=' + vocid);
             xmlhttp.send();
-            var resp = xmlhttp.responseText;
-            if (resp!='OK') { alert('Error in deleteVocWord: ' + resp); }
-            location.reload();
         }
         function changeMeaning(vocid,meaning) {
-            var url = '$clilstoreUrl/ajax/changeMeaning.php?vocid=' + vocid + '&meaning=' + encodeURI(meaning);
             var xmlhttp = new XMLHttpRequest();
-            xmlhttp.open('GET', url, false);
+            xmlhttp.onload = function() { if (this.status!=200) { alert('Error in changeMeaning:'+this.status); } } 
+            xmlhttp.open('GET', 'ajax/changeMeaning.php?vocid=' + vocid + '&meaning=' + encodeURI(meaning));
             xmlhttp.send();
-            var resp = xmlhttp.responseText;
-            if (resp!='OK') { alert('Error in changeMeaning: ' + resp); }
-//            location.reload();  Not really needed I think
         }
     </script>
 </head>
@@ -76,12 +74,13 @@ EOD_BARR;
     if (empty($user)) { throw new SM_MDexception('Parameter ‘user=’ is missing'); }
 
     $DbMultidict = SM_DbMultidictPDO::singleton('rw');
-    $vocHtml = $langButHtml = '';
+    $vocHtml = $langButHtml = $slLorg = '';
 
     $stmt = $DbMultidict->prepare('SELECT sl, SUM(calls) AS slSum FROM csVoc WHERE user=:user GROUP BY sl ORDER BY slSum DESC, sl');
     $stmt->execute([':user'=>$user]);
     $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    $slLorg = ( empty($_GET['sl']) ? $rows[0]['sl'] : $_GET[sl] );
+    if (!empty($_GET['sl'])) { $slLorg = $_GET['sl']; }
+    else if (!empty($rows))  { $slLorg = $rows[0]['sl']; }
     if (count($rows)>1) {
         foreach ($rows as $row) {
             extract($row);
@@ -115,7 +114,7 @@ EOD_BARR;
         $meaningHtml = "<input value='$meaningSC' style='width:95%' onchange=\"changeMeaning('$vocid',this.value);\">";
         $multidictHtml = "<a href='/multidict/?sl=$slLorg&amp;word=$word' target=vocmdtab><img src=/favicons/multidict.png alt=''></a>";
         $wordHtml      = "<a href='/multidict/?sl=$slLorg&amp;word=$word' target=vocmdtab>$word</a>";
-        $vocHtml .= "<tr><td>$deleteVocWordHtml</td><td class=vocword>$multidictHtml $wordHtml</td><td class=meaning>$meaningHtml</td><td>$unitsHtml</td></tr>\n";
+        $vocHtml .= "<tr id=row$vocid><td>$deleteVocWordHtml</td><td class=vocword>$multidictHtml $wordHtml</td><td class=meaning>$meaningHtml</td><td>$unitsHtml</td></tr>\n";
     }
 
     function optionsHtml($valueOptArr,$selectedValue) {
@@ -128,15 +127,28 @@ EOD_BARR;
         return implode("\r",$htmlArr);
     }
 
-    echo <<<ENDform
-<h1 class="smo">Vocabulary list for user <span style="color:brown">$user</span></h1>
-
-$langButHtml
+    if (!empty($vocHtml)) { $vocTableHtml = <<<EOD_vocTable
 <table id=vocab>
 <tr id=vocabhead><td></td><td>Word</td><td>Meaning</td><td>Clicked in units</td></tr>
 $vocHtml
 </table>
-ENDform;
+EOD_vocTable;
+    } else { $vocTableHtml = <<<EOD_noVocTable
+<p>There are no words in the vocabulary list</p>
+
+<p>You can add words to your vocabulary list by clicking on them in a Clilstore unit (with <i>Vocabulary record</i> switched on).</p>
+EOD_noVocTable;
+    }
+
+    $slLorgShow = ( $slLorg=='' ? 'any' : $slLorg );
+    echo <<<EOD
+<h1 style="font-size:160%;margin:0;padding-top:0.5em">Vocabulary list for user <span style="color:brown">$user</span></h1>
+<p style="font-size:85%;color:grey;margin:0 0 1em 0">Language: $slLorgShow</p>
+
+$langButHtml
+
+$vocTableHtml
+EOD;
 
   } catch (Exception $e) { echo $e; }
 

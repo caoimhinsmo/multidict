@@ -17,7 +17,7 @@
     $id = $_GET['id'];
     if (!is_numeric($id)) { throw new SM_MDexception('id parameter is not numeric'); }
 
-    $serverUrl = ( empty($_SERVER['HTTPS']) ? 'https' : 'http' ) . '://' . $_SERVER['SERVER_NAME'];
+    $serverUrl = ( empty($_SERVER['HTTPS']) ? 'http' : 'https' ) . '://' . $_SERVER['SERVER_NAME'];
     $DbMultidict = SM_DbMultidictPDO::singleton('rw');
     $stmt = $DbMultidict->prepare('SELECT sl,owner,title,text,medembed,medfloat FROM clilstore WHERE id=:id');
     $stmt->bindParam(':id', $id, PDO::PARAM_INT);
@@ -131,14 +131,14 @@ EOBUT;
             var clnew, i;
             if (cl=='vocOff') { clnew = 'vocOn';  }
                          else { clnew = 'vocOff'; }
-            var url = '$serverUrl/clilstore/ajax/setVocRecord.php?vocRecord=' + clnew;
-            var xmlhttp = new XMLHttpRequest();
-            xmlhttp.open('GET', url, false);
-            xmlhttp.send();
-            var resp = xmlhttp.responseText;
-            if (resp!='OK') { alert('Error in vocClicked: ' + resp); }
-            var vocEls = document.getElementsByClassName(cl);
-            while (vocEls.length>0) { vocEls[0].className = clnew; }
+            var vocTogReq = new XMLHttpRequest();
+            vocTogReq.onload = function() {
+                if (this.status!=200) { alert('Error in vocClicked:'+this.status); return; }
+                var vocEls = document.getElementsByClassName(cl);
+                while (vocEls.length>0) { vocEls[0].className = clnew; }
+            }
+            vocTogReq.open('GET', '/clilstore/ajax/setVocRecord.php?vocRecord=' + clnew);
+            vocTogReq.send();
         }
 
         function sizeTextDiv() {
@@ -186,7 +186,7 @@ EOBUT;
 
     </script>
 </head>
-<body lang="$sl" onload2="loadAlert();">
+<body lang="$sl">
 $linkbuttons
 <div class="body-indent">
 <wordlink noshow><p class="noshow" style="direction:ltr"><span class="csinfo">  <!--class="noshow" is for stupid IE7. Delete when IE7 is dead-->

@@ -861,7 +861,7 @@ EOD;
           extract($row);
           if ($record) {
               $DbMultidict->beginTransaction();
-              $queryV = "INSERT INTO csVoc (user,sl,word,calls) VALUES (:user,:sl,:word,1)"
+              $queryV = "INSERT INTO csVoc (user,sl,word,meaning,head,calls) VALUES (:user,:sl,:word,'','',1)"
                        ." ON DUPLICATE KEY UPDATE calls=calls+1";
               $stmtV = $DbMultidict->prepare($queryV);
               $stmtV->execute([':user'=>$csuser,':sl'=>$sl,':word'=>$word]);

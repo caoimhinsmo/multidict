@@ -135,13 +135,11 @@ EOD_PT;
     </style>
     <script>
       function resetNewclicks(unit) {
-        var url = '/clilstore/ajax/resetNewclicks.php?unit=' + unit;
         var xmlhttp = new XMLHttpRequest();
-        xmlhttp.open('GET', url, false);
+        xmlhttp.onload = function() { if (this.status!=200) { alert('Error in resetNewclicks:'+this.status); } } 
+        xmlhttp.open('GET', 'ajax/resetNewclicks.php?unit=' + unit);
         xmlhttp.send();
-        var resp = xmlhttp.responseText;
-        if (resp!='OK') { alert('Error in resetNewclicks: ' + resp); }
-        location.reload();
+        window.location.href = window.location.href;
       }
     </script>
 </head>
