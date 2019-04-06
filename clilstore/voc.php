@@ -37,12 +37,16 @@
         a.langbutton { margin:1px 7px; background-color:#55a8eb; color:white; font-weight:bold; padding:2px 8px; border:1px solid white; border-radius:8px; }
         a.langbutton.selected { border-color:#55a8eb; background-color:yellow; color:#55a8eb; }
         a.langbutton.live:hover { background-color:blue; }
+        a#emptyBut { border:0; padding:1px 3px; border-radius:6px; background-color:#27b; color:white; text-decoration:none; }
+        a#emptyBut:hover,
+        a#emptyBut:active,
+        a#emptyBut:focus  { background-color:#f00; color:white; }
     </style>
     <script>
         function deleteVocWord(vocid) {
             var xmlhttp = new XMLHttpRequest();
             xmlhttp.onload = function() {
-                if (this.status!=200) { alert('Error in deleteVocWord:'+this.status); return }
+                if (this.status!=200) { alert('Error in deleteVocWord:'+this.status); return; }
                 var el = document.getElementById('row'+vocid);
                 el.classList.add('deleted');
             }
@@ -54,6 +58,16 @@
             xmlhttp.onload = function() { if (this.status!=200) { alert('Error in changeMeaning:'+this.status); } } 
             xmlhttp.open('GET', 'ajax/changeMeaning.php?vocid=' + vocid + '&meaning=' + encodeURI(meaning));
             xmlhttp.send();
+        }
+        function emptyVocList(user,sl) {
+            var r = confirm("Do you really want to delete every word from this vocabulary list?");
+            if (r==true) {
+                var xmlhttp = new XMLHttpRequest();
+                xmlhttp.onload = function() { if (this.status!=200) { alert('Error in emptyVocList:'+this.status); return; } }
+                xmlhttp.open('GET', 'ajax/emptyVocList.php?user='+user+'&sl=' +sl);
+                xmlhttp.send();
+                window.location.href = window.location.href;
+            }
         }
     </script>
 </head>
@@ -132,6 +146,8 @@ EOD_BARR;
 <tr id=vocabhead><td></td><td>Word</td><td>Meaning</td><td>Clicked in units</td></tr>
 $vocHtml
 </table>
+
+<p style="margin:3.5em 0 0 0;font-size:85%">If you you really want to, you can <a id=emptyBut onclick="emptyVocList('$user','$slLorg')">empty</a> the list to delete every single word in this vocabulary list.</p>
 EOD_vocTable;
     } else { $vocTableHtml = <<<EOD_noVocTable
 <p>There are no words in the vocabulary list</p>
