@@ -489,8 +489,8 @@ ENDtabletopChoices;
         img.favicon { width:16px; height:16px; border:0; margin:2px; }
         a.button { display:block; float:left; margin:1px 7px; background-color:#55a8eb; color:white; font-weight:bold; padding:3px 10px; border:0; border-radius:8px; }
         a.button:hover { background-color:blue; }
-a.mybutton { background-color:#55a8eb; color:white; padding:1px 8px; border-radius:8px; white-space:nowrap; }
-a.mybutton:hover { background-color:blue; }
+        a.mybutton { background-color:#55a8eb; color:white; padding:1px 8px; border-radius:8px; white-space:nowrap; }
+        a.mybutton:hover { background-color:blue; }
         a.levelbutton { margin:1px 7px; background-color:#55a8eb; color:white; font-weight:bold; padding:2px 8px; border:1px solid white; border-radius:8px; }
         a.levelbutton.selected { border-color:#55a8eb; background-color:yellow; color:#55a8eb; }
         a.levelbutton.grey { background-color:#ccc; }
