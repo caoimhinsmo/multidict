@@ -510,7 +510,7 @@ END_addColHtml;
       $buttonC1  = $button[4];
       $buttonC2  = $button[5];
       $html = <<<ENDHTML
-<p>Level
+<p style="padding:2px;"><span style="background-color:#def;padding:5px 5px">Level
 $buttonAny
 <span style="color:green;font-size:80%;padding-left:3em">Basic</span>
 $buttonA1
@@ -519,7 +519,7 @@ $buttonB1
 $buttonB2
 $buttonC1
 $buttonC2
-<span style="color:green;font-size:80%">Advanced</span>&nbsp;</p>
+<span style="color:green;font-size:80%">Advanced</span></span></p>
 ENDHTML;
       return $html;
   }
