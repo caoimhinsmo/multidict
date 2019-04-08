@@ -327,7 +327,7 @@ setcookie('csSession','',1,'/clilstore/','multidict.net');
 
 
   public function addCol($fd) {
-  // Adds a column to display in the current mode by by setting its display value to 1
+  // Add a column to display in the current mode by by setting its display value to 1
       $csid = $this->csSession->csid;
       $mode = $this->csSession->mode;
       $modecol = "m$mode";
@@ -362,15 +362,13 @@ setcookie('csSession','',1,'/clilstore/','multidict.net');
       }
       if (empty($opts)) { return ''; }
       $options = implode("\r",$opts);
-      $form = <<<ENDFORM
-<form id="addColForm" method="get" style="float:left;padding:10px 0 10px 20px">
-<select name="addCol" style="background-color:white" onchange="document.getElementById('addColForm').submit();" title="Add a column to the table">
+      $selectHtml = <<<END_addColHtml
+<select name="addCol" style="background-color:white" onchange="addColChange(this.value)" title="Add a column to the table to see more information on the units">
 <option value="">Add a column</option>
 $options
 </select>
-</form>
-ENDFORM;
-      return $form;
+END_addColHtml;
+      return $selectHtml;
   }
 
 

@@ -40,7 +40,7 @@
     if ($mode==1) { $photo = '<img src="http://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/Headphones-Sennheiser-HD555.jpg/320px-Headphones-Sennheiser-HD555.jpg" '
                                 . 'style="float:left;padding-left:20px;width:80px;height:60px" alt="">'; }
 
-    if ($mode<=1) { $checkboxesHtml = ''; } else {
+    if ($mode<=1) { $checkboxesHtml = '<span style="color:green;font-size:80%">You can add columns to the table to show more information about the units</span>'; } else {
         $incTestLabel = ( empty($user)
                         ? 'Include test units'
                         : 'Include test units by other authors' );
@@ -52,12 +52,13 @@
 <input type="checkbox" name="wide" id="wide" $wideChecked tabindex=4 title="include all columns" onclick="submitFForm()">
 <label for="wide">More options</label>
 CHECKBOXES;
-        $checkboxesHtml = <<<CHECKBOXES2
-<div style="color:grey;font-size:90%;margin-left:1em">
+    }
+    $checkboxesHtml = <<<CHECKBOXES2
+<div style="color:grey;font-size:90%;margin-left:0.6em">
+$addColHtml &nbsp
 $checkboxesHtml
 </div>
 CHECKBOXES2;
-    }
 
     if ($mode<=1) {
         $userHtml = '<br><p style="clear:both;font-size:80%">Select the language you are learning and your level to see the available units.</p>';
@@ -523,6 +524,16 @@ a.mybutton:hover { background-color:blue; }
             document.getElementById('filterForm').submit();
         }
 
+        function addColChange(fd) {
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.onload = function() {
+                if (this.status!=200) { alert('Error in addColChange:'+this.status); return; }
+                window.location.href = window.location.href;
+            }
+            xmlhttp.open('GET', 'ajax/addCol.php?fd=' + fd);
+            xmlhttp.send();
+        }
+
         function newbie() {
             alert('Clilstore cookies will be deleted (so you will be logged out if you were logged in),\\n'
 	        + 'and you will see the site as would a new user, a fresh arrival.\\n\\n'
@@ -562,13 +573,11 @@ $photo
 </select>
 </form>
 
-$addColHtml
-
 $userHtml
 
 $tabletopChoices
 
-<form id="filterForm" method="post" onreset="clearFields();">
+<form id="filterForm" method="post" onreset="clearFields();"">
 <input type="hidden" name="filterForm" value="1">
 
 <datalist id="levelList">
@@ -638,8 +647,8 @@ $slOptionsHtml
 <td class="delete"></td>
 <td class="edit"></td>
 <td class="nowl"></td>
-<td class="title"><input name="title" type="text" $titleVal placeholder="contains" title="Part of the title" tabindex=72 style="width:17em" onchange="submitFForm()"></td>
-<td class="title"><input name="text" type="text" $textVal placeholder="contains" title="Part of the text or summary" tabindex=74 style="min-width:10em;width:95%" onchange="submitFForm()"></td>
+<td class="title"><input name="title" type="text" $titleVal placeholder="contains 🔍" title="Part of the title" tabindex=72 style="width:17em" onchange="submitFForm()"></td>
+<td class="title"><input name="text" type="text" $textVal placeholder="contains 🔍" title="Part of the text or summary" tabindex=74 style="min-width:10em;width:95%" onchange="submitFForm()"></td>
 </tr>
 <tr class="row3" style="background-color:#e2e2e2">
 <td class="id"></td>
@@ -802,7 +811,7 @@ EOD1;
         $noUnitsMessage = ( $mode==0 && $f['slFil']==''
                           ? 'First you need to choose a language'
                           : 'No units match this filter.  You need to revise or Clear the filter.' );
-        $noUnitsMessage = "<p><span style='color:red;background-color:yellow'>$noUnitsMessage</span></p>\n";
+        $noUnitsMessage = "<p><span style='color:red'>$noUnitsMessage</span></p>\n";
     } elseif ($nunits<2) {
         $noUnitsMessage = '';
     } else { //Calculate and display statistics
