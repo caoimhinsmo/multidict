@@ -18,11 +18,12 @@
     if (!empty($_REQUEST['user'])) {
         $userAsTyped     = trim($_REQUEST['user']);
         $passwordAsTyped = $_POST['password'];
-        $stmt1 = $DbMultidict->prepare('SELECT user,password FROM users WHERE user=:user OR email=:email');
+        $stmt1 = $DbMultidict->prepare('SELECT user,password,csid FROM users WHERE user=:user OR email=:email');
         $stmt1->bindParam(':user',$userAsTyped);
         $stmt1->bindParam(':email',$userAsTyped);
         $stmt1->bindColumn(1,$user);
         $stmt1->bindColumn(2,$password);
+        $stmt1->bindColumn(3,$csid);
         if  ($stmt1->execute()
           && $stmt1->fetch()
           && (crypt($passwordAsTyped,$password)==$password || $password=='')) {
@@ -32,7 +33,18 @@ if ($password=='' && strlen($passwordAsTyped)>3) {
     $stmt2 = $DbMultidict->prepare('UPDATE users SET password=:password WHERE user=:user');
     $stmt2->execute([':password'=>$passwordCrypt,':user'=>$user]);
 }
-            //Create cookie
+           //Copy filter parameters from the most recent previous Clilstore session for this user
+            $newCsid = $_COOKIE['csSessionId'];
+            $stmt2 = $DbMultidict->prepare('REPLACE INTO csFilter(csid,fd,m0,m1,m2,m3,sortpri,sortord,val1,val2)'
+                                                    . ' SELECT :newCsid,fd,m0,m1,m2,m3,sortpri,sortord,val1,val2 FROM csFilter WHERE csid=:csid');
+            $stmt2->execute([':newCsid'=>$newCsid,':csid'=>$csid]);
+            $stmt3 = $DbMultidict->prepare('SELECT mode from csSession WHERE csid=:csid');
+            $stmt3->execute([':csid'=>$csid]);
+            $oldMode = $stmt3->fetchColumn();
+            $csSess->setmode($oldMode);
+            $stmt4 = $DbMultidict->prepare('UPDATE users SET csid=:csid WHERE user=:user');
+            $stmt4->execute([':csid'=>$newCsid,':user'=>$user]);
+           //Create cookie
             $cookieDomain = $_SERVER['SERVER_NAME'];
             if (preg_match('|www\d*\.(.*)|',$cookieDomain,$matches)) { $cookieDomain = $matches[1]; }   // Remove www., www2., etc. e.g. www2.smo.uhi.ac.uk->smo.uhi.ac.uk
             $myCLIL::cuirCookie('myCLIL_authentication',$user,0,108000); //Cookie expires at session end, or max 30 hours
@@ -68,8 +80,8 @@ ENDfailure;
 <p style="margin-top:3em">(Or else <a href="register.php">register</a> a new userid)</p>
 ENDform;
     }
-
-    echo <<<EOD
+ 
+   echo <<<EOD
 <!DOCTYPE html>
 <html lang="en">
 <head>
