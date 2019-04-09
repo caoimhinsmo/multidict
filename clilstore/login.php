@@ -33,17 +33,19 @@ if ($password=='' && strlen($passwordAsTyped)>3) {
     $stmt2 = $DbMultidict->prepare('UPDATE users SET password=:password WHERE user=:user');
     $stmt2->execute([':password'=>$passwordCrypt,':user'=>$user]);
 }
-           //Copy filter parameters from the most recent previous Clilstore session for this user
+           //Copy filter parameters from the most recent previous Clilstore session (if any) for this user. Remember the new csid.
             $newCsid = $_COOKIE['csSessionId'];
-            $stmt2 = $DbMultidict->prepare('REPLACE INTO csFilter(csid,fd,m0,m1,m2,m3,sortpri,sortord,val1,val2)'
-                                                    . ' SELECT :newCsid,fd,m0,m1,m2,m3,sortpri,sortord,val1,val2 FROM csFilter WHERE csid=:csid');
-            $stmt2->execute([':newCsid'=>$newCsid,':csid'=>$csid]);
-            $stmt3 = $DbMultidict->prepare('SELECT mode from csSession WHERE csid=:csid');
-            $stmt3->execute([':csid'=>$csid]);
-            $oldMode = $stmt3->fetchColumn();
-            $csSess->setmode($oldMode);
-            $stmt4 = $DbMultidict->prepare('UPDATE users SET csid=:csid WHERE user=:user');
-            $stmt4->execute([':csid'=>$newCsid,':user'=>$user]);
+            if (!empty($csid)) {
+                $stmt2 = $DbMultidict->prepare('REPLACE INTO csFilter(csid,fd,m0,m1,m2,m3,sortpri,sortord,val1,val2)'
+                                                        . ' SELECT :newCsid,fd,m0,m1,m2,m3,sortpri,sortord,val1,val2 FROM csFilter WHERE csid=:csid');
+                $stmt2->execute([':newCsid'=>$newCsid,':csid'=>$csid]);
+                $stmt3 = $DbMultidict->prepare('SELECT mode from csSession WHERE csid=:csid');
+                $stmt3->execute([':csid'=>$csid]);
+                $oldMode = $stmt3->fetchColumn();
+                $csSess->setmode($oldMode);
+            }
+            $stmt4 = $DbMultidict->prepare('UPDATE users SET csid=:newCsid WHERE user=:user');
+            $stmt4->execute([':newCsid'=>$newCsid,':user'=>$user]);
            //Create cookie
             $cookieDomain = $_SERVER['SERVER_NAME'];
             if (preg_match('|www\d*\.(.*)|',$cookieDomain,$matches)) { $cookieDomain = $matches[1]; }   // Remove www., www2., etc. e.g. www2.smo.uhi.ac.uk->smo.uhi.ac.uk
