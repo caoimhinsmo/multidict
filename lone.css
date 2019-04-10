@@ -98,7 +98,7 @@ body {
 #disclaimer {
 	position: absolute;
 	height: 61px;
-	width: 200px;
+	width: 278px;
 	left: 5px;
 	bottom: 10px;
 	border-top-width: 1px;
@@ -115,7 +115,7 @@ body {
 	background-color: #E6E6E6;
 	position: absolute;
 	height: 55px;
-	width: 325px;
+	width: 247px;
 	right: 6px;
 	bottom: 10px;
 	color: #000000;
@@ -132,4 +132,7 @@ body {
 	border-top-color: #007DC3;
 	border-right-color: #007DC3;
 	border-bottom-color: #007DC3;
+        color: #1e4d9f;
+        font-size: 90%;
+        line-height: 90%;
 }

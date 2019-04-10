@@ -87,7 +87,7 @@ $mybuttons
 </div><br style="clear:both">
 END_USER2;
     }
-    if ($mode<=1) { $userHtml .= '<p style="clear:both">Select the language you are learning and your level to see the available units.</p>'; }
+    if ($mode<=1) { $userHtml .= '<p style="clear:both">Select the language you are learning and then your level to see the available units.</p>'; }
 
     function wildChars (&$s,&$sVis,$con) {
      //Standardises wildcard characters to SQL format (% and _), removing duplicates
@@ -896,14 +896,12 @@ $userHtml
 $tabletopChoices
 $tableHtml
 
-<div style="min-height:65px;max-width:1000px;border:2px solid #47d;margin:8em 0 0.5em 0;border-radius:4px;color:#47d;font-size:95%">
+<div style="min-height:65px;max-width:840px;border:2px solid #47d;margin:8em 0 0.5em 0;border-radius:4px;color:#47d;font-size:95%">
 <div style="float:left;margin-right:1.5em">
 <a href="http://eacea.ec.europa.eu/llp/index_en.php"><img src="/EUlogo.png" alt="" style="margin:3px"></a>
 </div>
 <div style="min-height:59px">
-<p style="margin:1px 0 0 0">This project has been funded with support from the European Commission.</p>
-<p style="margin:8px 0 0 0;color:#47d;font-size:75%">Disclaimer:
-This publication reflects the views only of the author, and the Commission cannot be held responsible for any use which may be made of the information contained therein.</p>
+<p style="margin:0.3em 0;color:#1e4d9f;font-size:75%">Disclaimer: The European Commission support for the production of this publication does not constitute an endorsement of the contents which reflects the views only of the authors, and the Commission cannot be held responsible for any use which may be made of the information contained therein.</p>
 </div>
 </div>
 </div>
