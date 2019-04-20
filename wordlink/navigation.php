@@ -27,23 +27,24 @@
   $nbSlHtml = $wlSession->nbSlHtml();
 
   $robots = ( empty($wlSession->url) ? 'index,follow' : 'noindex,nofollow' );
+  $servername = $_SERVER['SERVER_NAME'];
   echo <<<EOD1
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Wordlink navigation frame</title>
+    <title>Wordlink <span navigation frame</title>
     <meta name="robots" content="$robots">
     <link rel="icon" type="image/png" href="/favicons/wordlink.png">
-    <style type="text/css">
+    <style>
         body { height:132px; margin:1px; border:3px solid orange; padding:0px; background-color:#ffd; font-family:Verdana,Tahoma,sans-serif; font-size:12pt; }
         ul.dluth { margin:0; }
         a         { text-decoration:none; }
         a:link    { color: #00f; }
         a:visited { color: #909; }
         a:hover   { color: #ff0; background-color:blue;  }
-        a.about { display:inline-block; margin-left:0.8em; padding:0 4px; border-radius:4px; background-color:#75c8fb; color:white; font-size:90%; }
-        a.about:hover { background-color:blue; color:white; }
+        a.button { display:inline-block; margin-left:0.8em; padding:0 4px; border-radius:4px; background-color:#75c8fb; color:white; font-size:90%; }
+        a.button:hover { background-color:blue; color:white; }
         div.formitem { float:left; margin:3px 2px; }
         select { max-height:1.6em; }
         option { max-height:1.5em; }
@@ -52,23 +53,21 @@
         div.nbLang a.box { margin:0 2px; border:1px solid #aaa; padding:0 1px; background-color:white; }
         div.nbLang a:hover { background-color:blue; }
     </style>
-    <script type="text/javascript">
-<!--
-    function escapeAmpersands() {
-        document.getElementById('url').value = document.getElementById('url').value.replace('&','{and}');
-        return;
-    }
-    function submitForm() {
-        document.getElementById('wlForm').submit();
-    }
-    function slChange(lang) {
-        document.getElementById('sl').value = lang;
-        submitForm();
-    }
-    function escapeWL() {
-        window.top.location = document.getElementById('url').value;
-    }
-//-->
+        <script>
+        function escapeAmpersands() {
+            document.getElementById('url').value = document.getElementById('url').value.replace('&','{and}');
+            return;
+        }
+        function submitForm() {
+            document.getElementById('wlForm').submit();
+        }
+        function slChange(lang) {
+            document.getElementById('sl').value = lang;
+            submitForm();
+        }
+        function escapeWL() {
+            window.top.location = document.getElementById('url').value;
+        }
     </script>
 </head>
 <body>
@@ -76,10 +75,11 @@
 
 <div>
 <p style="margin:0">
-<span style="background-color:orange;color:white;padding:1px 2px"><span style="font-weight:bold;color:#bfb">Wordlink</span> navigation frame</span>
-<a class="about" href="help.html" target="WLmainframe$sid">Help</a>
-<a class="about" href="about.php" target="_top">About Wordlink</a>
-<a class="about" href="examples.php" target="_top">Example pages</a>
+<a class="button" style="float:left;margin:0 1px 0 0;border-radius:0;padding:1px 2px;font-size:80%" href="/" target="_top">$servername</a>
+<span style="background-color:orange;color:#bfb;padding:1px 2px;font-weight:bold">Wordlink</span>
+<a class="button" href="help.html" target="WLmainframe$sid">Help</a>
+<a class="button" href="about.php" target="_top">About Wordlink</a>
+<a class="button" href="examples.php" target="_top">Example pages</a>
 </p>
 
 <form id="wlForm" action="./" target="_top" style="margin:0 0 0 2px" onsubmit="escapeAmpersands('testing');">

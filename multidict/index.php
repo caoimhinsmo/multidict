@@ -18,6 +18,18 @@
   $mode= $wlSession->mode;
   $url = $wlSession->url;
 
+  $standalone = empty($url);
+  if ($standalone) {
+      $servername = $_SERVER['SERVER_NAME'];
+      $serverlink = "<a class=button style='float:left;margin:0 1px 0 0;border-radius:0;padding:1px 2px;font-size:80%' href='/' target='_top'>$servername</a>";
+      $slSelectOnInit  = 'block';
+      $slSelectOffInit = 'none';
+  } else {
+      $serverlink = '';
+      $slSelectOnInit  = 'none';
+      $slSelectOffInit = 'block';
+  }
+
 // The following lines are ad-hoc, to cure in a hurry a problem with the display of dictionary headword suggestions after converting Multidict from frames to iframe.
 // They should be replaced with clean logic!!
 $DbMultidict = SM_DbMultidictPDO::singleton('rw');
@@ -163,8 +175,8 @@ Replace the following sometime with flexbox - Option 3 at https://stackoverflow.
         a.lemmalink:link,
         a.lemmalink:visited { color:brown; }
         a.lemmalink:hover   {color:#ff0; }
-        a.about { display:inline-block; margin-left:0.8em; padding:0 4px; border-radius:4px; background-color:#75c8fb; color:white; font-size:90%; }
-        a.about:hover { background-color:blue; color:white; }
+        a.button { display:inline-block; margin-left:0.8em; padding:0 4px; border-radius:4px; background-color:#75c8fb; color:white; font-size:90%; }
+        a.button:hover { background-color:blue; color:white; }
         div#slSelectOff:hover,
         div#tlSelectOff:hover,
         div#dictSelectOff:hover { background-color:#ddf; }
@@ -187,52 +199,49 @@ Replace the following sometime with flexbox - Option 3 at https://stackoverflow.
         div#dictIcons img.s   { padding:0 0 1px 0; border-bottom:2px dotted black; }   /* Special */
     </style>
     <script>
-<!--
-    function bodyLoad() {
-        if (window != window.top) { selectOff('sl'); }
-        document.getElementById('noJSinfo').style.display = 'none';
-        document.getElementById('dictIcons').style.display = 'block';
-        document.getElementById('swop').style.display = 'block';
-    }
-    function submitForm(langChanged) {
-        if (langChanged=='sl') { document.getElementById('tl').value   = ''; }
-        if (langChanged>'')    { document.getElementById('dict').value = ''; }
-        document.getElementById('mdForm').submit();
-    }
-    function changeDict(dict) {
-        document.getElementById('dict').value = dict;
-        submitForm();
-    }
-    function swopLangs() {
-        var slSelect = document.getElementById('sl');
-        var tlSelect = document.getElementById('tl');
-        var sl = slSelect.value;
-        var tl = tlSelect.value;
-        opt = document.createElement('option'); //Cruthaich option ùr airson sl, gus a bhith cinnteach gu bheil e sa liosta airson tl
-        opt.setAttribute('value',sl);
-        opt.appendChild(document.createTextNode(sl));
-        tlSelect.appendChild(opt);
-        slSelect.value = tl;
-        tlSelect.value = sl;
-        submitForm();
-    }
-    function slChange(lang) {
-        document.getElementById('sl').value = lang;
-        submitForm();
-    }
-    function tlChange(lang) {
-        document.getElementById('tl').value = lang;
-        submitForm();
-    }
-    function selectOff(item) {
-        document.getElementById(item+'SelectOn').style.display = 'none';
-        document.getElementById(item+'SelectOff').style.display = 'block';
-    }
-    function selectOn(item) {
-        document.getElementById(item+'SelectOn').style.display = 'block';
-        document.getElementById(item+'SelectOff').style.display = 'none';
-    }
-//-->
+        function bodyLoad() {
+            document.getElementById('noJSinfo').style.display = 'none';
+            document.getElementById('dictIcons').style.display = 'block';
+            document.getElementById('swop').style.display = 'block';
+        }
+        function submitForm(langChanged) {
+            if (langChanged=='sl') { document.getElementById('tl').value   = ''; }
+            if (langChanged>'')    { document.getElementById('dict').value = ''; }
+            document.getElementById('mdForm').submit();
+        }
+        function changeDict(dict) {
+            document.getElementById('dict').value = dict;
+            submitForm();
+        }
+        function swopLangs() {
+            var slSelect = document.getElementById('sl');
+            var tlSelect = document.getElementById('tl');
+            var sl = slSelect.value;
+            var tl = tlSelect.value;
+            opt = document.createElement('option'); //Cruthaich option ùr airson sl, gus a bhith cinnteach gu bheil e sa liosta airson tl
+            opt.setAttribute('value',sl);
+            opt.appendChild(document.createTextNode(sl));
+            tlSelect.appendChild(opt);
+            slSelect.value = tl;
+            tlSelect.value = sl;
+            submitForm();
+        }
+        function slChange(lang) {
+            document.getElementById('sl').value = lang;
+            submitForm();
+        }
+        function tlChange(lang) {
+            document.getElementById('tl').value = lang;
+            submitForm();
+        }
+        function selectOff(item) {
+            document.getElementById(item+'SelectOn').style.display = 'none';
+            document.getElementById(item+'SelectOff').style.display = 'block';
+        }
+        function selectOn(item) {
+            document.getElementById(item+'SelectOn').style.display = 'block';
+            document.getElementById(item+'SelectOff').style.display = 'none';
+        }
     </script>
 </head>
 <body onload="bodyLoad();">
@@ -240,9 +249,10 @@ Replace the following sometime with flexbox - Option 3 at https://stackoverflow.
 <div id="navigation"><div id="navigation-content">
 $schemeSwopHtml
 <p style="margin:0 0 1px 0">
-<span style="background-color:orange;color:white;padding:1px 1px"><span style="font-weight:bold;color:#bfb">Multidict</span> navigation frame</span>
-<a class="about" href="help.php" target="MDiframe$sid">Help</a>
-<a class="about" href="about.php" target="MDiframe$sid">About</a></p>
+$serverlink
+<span style="background-color:orange;color:#bfb;padding:1px 2px;font-weight:bold">Multidict</span>
+<a class="button" href="help.php" target="MDiframe$sid">Help</a>
+<a class="button" href="about.php" target="MDiframe$sid">About</a></p>
 
 <form id="mdForm" action="./" style="margin:0 0 0 2px;padding-top:1px">
 <div style="width:100%;padding-top:1px;">
@@ -255,13 +265,13 @@ $wordformHtmlFull
 </div>
 <div class="formItem" style="clear:both;min-width:60px;max-width:28%">
 <div id="swop" class="label" style="float:right;padding-right:0.7em;font-weight:bold;display:none" title="swop" onclick="swopLangs();"><a>&#x2194;</a></div>
-<div id="slSelectOn" style="display:block">
+<div id="slSelectOn" style="display:$slSelectOnInit">
 <div class="label">From <a onclick="selectOff('sl')" title="hide selection">Ⓧ</a></div>
 <select name="sl" id="sl" title="Source language" onchange="submitForm('sl');">
 $slOptionsHtml
 </select>$nbSlHtml
 </div>
-<div id="slSelectOff" style="display:none" onclick="selectOn('sl')" title="Click to reselect From language">
+<div id="slSelectOff" style="display:$slSelectOffInit" onclick="selectOn('sl')" title="Click to reselect From language">
 <div class="label">From</div>
 <b onmouseover="selectOn('sl')">$sl</b>
 </div>
