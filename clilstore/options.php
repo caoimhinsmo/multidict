@@ -20,7 +20,7 @@
     <link rel="stylesheet" href="/css/smo.css" type="text/css">
     <link rel="stylesheet" href="style.css?version=2014-04-15">
     <link rel="icon" type="image/png" href="/favicons/clilstore.png">
-    <style type="text/css">
+    <style>
         div.message { margin:0.5em 0; font-weight:bold; }
         fieldset.opts { border:2px solid #61abec; border-radius:6px; padding:6px; margin-bottom:2em; }
         fieldset.opts legend { border:2px solid #61abec; border-radius:4px; padding:1px 4px; background-color:#eef; color:#55a8eb; font-weight:bold; }
@@ -28,7 +28,23 @@
         table#opttab tr td:first-child { text-align:right; }
         table#transferTable { border-collapse:collapse; }
         table#transferTable td { padding:5px; }
+       span.change { opacity:0; color:white; }
+       span.change.changed { color:green; animation:appearFade 5s; }
+       @keyframes appearFade { from { opacity:1; background-color:yellow; } 20% { opacity:0.8; background-color:white; to { opacity:0; } }
     </style>
+    <script>
+        function changeUserOption(user,option,value) {
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.onload = function() {
+                if (this.status!=200 || this.responseText!='OK') { alert('Error in changeUserOption: '+this.responseText); return; }
+                var el = document.getElementById(option+'Changed');
+                el.classList.remove('changed'); //Remove the class (if required) and add again after a tiny delay, to restart the animation
+                setTimeout(function(){el.classList.add('changed');},50);
+            }
+            xmlhttp.open('GET', 'ajax/changeUserOption.php?user=' + user + '&option=' + option + '&value=' + value);
+            xmlhttp.send();
+        }
+    </script>
 </head>
 <body>
 
@@ -169,19 +185,22 @@ $successMessage
 <legend>Options</legend>
 <table id="opttab">
 <tr><td>Default language code for units you create:</td><td>
-<select name="unitLang">
+<select name="unitLang" onchange="changeUserOption('$user','unitLang',this.value)">
 $unitLangHtml
 </select>
+<span id=unitLangChanged class="change">✔ changed<span>
 </td></tr>
 <tr><td>Highlight row of Clilstore index on mouse hover?</td><td>
-<select name="highlightRow">
+<select name="highlightRow" onchange="changeUserOption('$user','highlightRow',this.value)">
 $highlightRowHtml
 </select>
+<span id=highlightRowChanged class="change">✔ changed<span>
 </td></tr>
 <tr><td>Add words you click to your vocabulary list?</td><td>
-<select name="record">
+<select name="record" onchange="changeUserOption('$user','record',this.value)">
 $recordHtml
 </select>
+<span id=recordChanged class="change">✔ changed<span>
 </td></tr>
 <tr><td><input type ="hidden" name="user" value="$userSC">
 </td><td><input type="submit" name="save" value="Save" style="font-size:120%"></td></tr>

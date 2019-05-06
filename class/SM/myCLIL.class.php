@@ -66,8 +66,8 @@ class SM_myCLIL {
            elseif (substr($deas,0,1)=='&') { return self::ceadid($cli,$id)&&self::ceadid(substr($deas,1),$id); }
            else                            { throw new SM_MDexception('Mearachd air an duilleig - a thaobh cheadan'); }
       }
-      if (preg_match('/^(.*?)\|(.*)$/u',$ceadaichte,$matches)) { return self::ceadid($matches[1],$id) || self::ceadid($matches[2],$id); }
-      if (preg_match('/^(.*?)\&(.*)$/u',$ceadaichte,$matches)) { return self::ceadid($matches[1],$id) && self::ceadid($matches[2],$id); }
+      if (preg_match('/^(.*?)\|(.*)$/u',$ceadaichte,$matches)) { return self::ceadid($matches[1],$id,$feart) || self::ceadid($matches[2],$id,$feart); }
+      if (preg_match('/^(.*?)\&(.*)$/u',$ceadaichte,$matches)) { return self::ceadid($matches[1],$id,$feart) && self::ceadid($matches[2],$id,$feart); }
       if ($ceadaichte=='{logged-in}') {
           if (!isset($id))       { return 0; }
            elseif ($id=='{www}') { return 0; }
