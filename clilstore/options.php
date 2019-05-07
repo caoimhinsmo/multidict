@@ -16,7 +16,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>User vocabulary on Clilstore</title>
+    <title>Clilstore options for user</title>
     <link rel="stylesheet" href="/css/smo.css" type="text/css">
     <link rel="stylesheet" href="style.css?version=2014-04-15">
     <link rel="icon" type="image/png" href="/favicons/clilstore.png">
@@ -34,6 +34,8 @@
     </style>
     <script>
         function changeUserOption(user,option,value) {
+            if (option=='fullname' && value.length<8) { alert('Not changed. Invalid: Not long enough'); return; }
+            if (option=='email' && !/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/.test(value)) { alert('Not changed. This is not a valid email address'); return; }
             var xmlhttp = new XMLHttpRequest();
             xmlhttp.onload = function() {
                 if (this.status!=200 || this.responseText!='OK') { alert('Error in changeUserOption: '+this.responseText); return; }
@@ -66,23 +68,6 @@ EOD_BARR;
 
     $DbMultidict = SM_DbMultidictPDO::singleton('rw');
     $errorMessage = $successMessage = $transferHtml = '';
-
-    if (!empty($_REQUEST['save'])) {
-        $unitLang     = $_REQUEST['unitLang'];
-        $highlightRow = $_REQUEST['highlightRow'];
-        $record       = $_REQUEST['record'];
-        $stmt0 = $DbMultidict->prepare('SELECT id FROM lang WHERE id=:id');
-        $stmt0->execute(array('id'=>$unitLang));
-        if (!($stmt0->fetch()) && !empty($unitLang)) {
-            $unitLangSC = htmlspecialchars($unitLang);
-            $errorMessage = "Clilstore does not recognise language code “<b>$unitLangSC</b>”";
-        } else {
-            $stmt1 = $DbMultidict->prepare('UPDATE users SET unitLang=:unitLang, highlightRow=:highlightRow, record=:record WHERE user=:user');
-            if (!$stmt1->execute(array('unitLang'=>$unitLang,'highlightRow'=>$highlightRow,':record'=>$record,'user'=>$user))) { throw new SM_MDexception('Failed to update database'); }
-            $successMessage = 'Changes saved';
-//            SM_csSess::logWrite($user,'options',"Changed options to unitLang=$unitLang, highlightRow=$highlightRow");  //Delete sometime
-        }
-    }
 
     if (!empty($_REQUEST['trResponse'])) {
         if (!empty($_REQUEST['trId'])) { $trId = $_REQUEST['trId']; } else { throw new SM_MDexception('Missid parameter trId'); }
@@ -133,13 +118,12 @@ $transferHtml
 EODtransferHtml;
     }
 
-    $stmt2 = $DbMultidict->prepare('SELECT unitLang,highlightRow,record FROM users WHERE user=:user');
-    $stmt2->execute(array('user'=>$user));
-    if (!($row = $stmt2->fetch(PDO::FETCH_ASSOC))) { throw new SM_MDexception("Failed to fetch information on user $userSC"); }
+    $stmt = $DbMultidict->prepare('SELECT fullname,email,emailVerUtime,unitLang,highlightRow,record FROM users WHERE user=:user');
+    $stmt->execute(array('user'=>$user));
+    if (!($row = $stmt->fetch(PDO::FETCH_ASSOC))) { throw new SM_MDexception("Failed to fetch information on user $userSC"); }
     extract($row);
-//    $unitLang     = $row->unitLang;
-//    $highlightRow = $row->highlightRow;
-    
+    $fullnameSC = htmlspecialchars($fullname);
+    $emailSC    = htmlspecialchars($email);
 
     function optionsHtml($valueOptArr,$selectedValue) {
      //Creates the options html for a select in a form, based on value=>text array and the value to be selected
@@ -178,13 +162,16 @@ EODtransferHtml;
 $errorMessage
 $successMessage
 
-<p style="margin:1.7em 0"><a class="button" href="changePassword.php?user=$user">Change password…</a>
+<p style="margin:1.7em 0">
+<a class="button" href="voc.php?user=$user" style="margin:1em 3em 1em 1.5em">My vocabulary…</a>
+<a class="button" href="changePassword.php?user=$user">Change password…</a>
+</p>
 
-<form method="POST">
+<form method="POST" id=optForm>
 <fieldset class="opts">
 <legend>Options</legend>
 <table id="opttab">
-<tr><td>Default language code for units you create:</td><td>
+<tr><td>Default language code for units you create</td><td>
 <select name="unitLang" onchange="changeUserOption('$user','unitLang',this.value)">
 $unitLangHtml
 </select>
@@ -202,13 +189,15 @@ $recordHtml
 </select>
 <span id=recordChanged class="change">✔ changed<span>
 </td></tr>
-<tr><td><input type ="hidden" name="user" value="$userSC">
-</td><td><input type="submit" name="save" value="Save" style="font-size:120%"></td></tr>
+<tr><td>Full name</td><td><input value="$fullnameSC" pattern=".{8,}" title="Your real name (visible to other users)"  style="width:22em" onchange="changeUserOption('$user','fullname',this.value)">
+<span id=fullnameChanged class="change">✔ changed<span>
+</td></tr>
+<tr><td>Email address</td><td><input value="$emailSC" style="width:22em" pattern="^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" onchange="changeUserOption('$user','email',this.value)">
+<span id=emailChanged class="change">✔ changed<span>
+</td></tr>
 </table>
 </fieldset>
 </form>
-
-<p style="margin:1.7em 0"><a class="button" href="voc.php?user=$user">My vocabulary…</a>
 
 $transferHtml
 ENDform;
