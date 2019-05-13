@@ -19,7 +19,8 @@ img { border:0; }
 
 h1.smo { font-size:160%; margin-top:0; padding-top:0.5em; }
 
-div.smo-latha { clear: both; font-size:70%; font-family:Arial,Helvetica,sans-serif; color:gray; margin-left:1em; }
+div.smo-latha { clear:both; font-size:70%; font-family:Arial,Helvetica,sans-serif; color:gray; margin-left:1em; }
+div.exception { clear:both; margin:1em 0.5em; padding:1em; border:3px solid red; border-radius:0.2em; background-color:#fee; color:red; }
 
 span.fann     { color:#777; }
 span.pdf      { font-size:80%; }

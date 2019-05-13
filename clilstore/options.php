@@ -25,12 +25,12 @@
         fieldset.opts { border:2px solid #61abec; border-radius:6px; padding:6px; margin-bottom:2em; }
         fieldset.opts legend { border:2px solid #61abec; border-radius:4px; padding:1px 4px; background-color:#eef; color:#55a8eb; font-weight:bold; }
         span.info { color:green; font-size:70%; }
-        table#opttab tr td:first-child { text-align:right; }
+        table#opttab tr td:first-child { text-align:right; vertical-align:top; }
         table#transferTable { border-collapse:collapse; }
         table#transferTable td { padding:5px; }
-       span.change { opacity:0; color:white; }
-       span.change.changed { color:green; animation:appearFade 5s; }
-       @keyframes appearFade { from { opacity:1; background-color:yellow; } 20% { opacity:0.8; background-color:white; to { opacity:0; } }
+        span.change { opacity:0; color:white; }
+        span.change.changed { color:green; animation:appearFade 5s; }
+        @keyframes appearFade { from { opacity:1; background-color:yellow; } 20% { opacity:0.8; background-color:white; to { opacity:0; } }
     </style>
     <script>
         function changeUserOption(user,option,value) {
@@ -45,6 +45,16 @@
             }
             xmlhttp.open('GET', 'ajax/changeUserOption.php?user=' + user + '&option=' + option + '&value=' + value);
             xmlhttp.send();
+        }
+        function verifyEmail(email) {
+            var emailEnc = encodeURIComponent(email);
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.onload = function() {
+                if (this.status!=200 || this.responseText!='OK') { alert('Error in verifyEmail: '+this.responseText); return; }
+            }
+            xmlhttp.open('GET', 'ajax/verifyEmail.php?email=' + emailEnc);
+            xmlhttp.send();
+            alert('An email has been sent to ' + email + ' to request confirmation of the address');
         }
     </script>
 </head>
@@ -124,6 +134,18 @@ EODtransferHtml;
     extract($row);
     $fullnameSC = htmlspecialchars($fullname);
     $emailSC    = htmlspecialchars($email);
+    if ($emailVerUtime==0) {
+        $verMessage = "<span style='color:red'>Unverified</span>";
+        $verLink = 'Verify now';
+    } else {
+        date_default_timezone_set('UTC');
+        $verTimeObj = new DateTime("@$emailVerUtime");
+        $verDateTime = date_format($verTimeObj, 'Y-m-d H:i:s');
+        $verMessage = "<span title='Verified at $verDateTime UT'><span style='color:green'>✓</span> Verified</span>";
+        $verLink = 'Reverify';
+    }
+    $verLink = "<a class=button style='padding:0 10px;margin-left:0.5em;font-weight:normal' onclick=verifyEmail('$email')>$verLink</a>";
+    $verMessage = "<span style='font-size:80%;padding-left:0.8em'>$verMessage $verLink</span>";
 
     function optionsHtml($valueOptArr,$selectedValue) {
      //Creates the options html for a select in a form, based on value=>text array and the value to be selected
@@ -181,19 +203,20 @@ $unitLangHtml
 <select name="highlightRow" onchange="changeUserOption('$user','highlightRow',this.value)">
 $highlightRowHtml
 </select>
-<span id=highlightRowChanged class="change">✔ changed<span>
+<span id=highlightRowChanged class="change">✔ changed</span>
 </td></tr>
 <tr><td>Add words you click to your vocabulary list?</td><td>
 <select name="record" onchange="changeUserOption('$user','record',this.value)">
 $recordHtml
 </select>
-<span id=recordChanged class="change">✔ changed<span>
+<span id=recordChanged class="change">✔ changed</span>
 </td></tr>
 <tr><td>Full name</td><td><input value="$fullnameSC" pattern=".{8,}" title="Your real name (visible to other users)"  style="width:22em" onchange="changeUserOption('$user','fullname',this.value)">
-<span id=fullnameChanged class="change">✔ changed<span>
+<span id=fullnameChanged class="change">✔ changed</span>
 </td></tr>
 <tr><td>Email address</td><td><input value="$emailSC" style="width:22em" pattern="^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" onchange="changeUserOption('$user','email',this.value)">
-<span id=emailChanged class="change">✔ changed<span>
+<span id=emailChanged class="change">✔ changed</span>
+<br>$verMessage
 </td></tr>
 </table>
 </fieldset>
