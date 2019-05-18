@@ -38,7 +38,17 @@
             if (option=='email' && !/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/.test(value)) { alert('Not changed. This is not a valid email address'); return; }
             var xmlhttp = new XMLHttpRequest();
             xmlhttp.onload = function() {
-                if (this.status!=200 || this.responseText!='OK') { alert('Error in changeUserOption: '+this.responseText); return; }
+                if (this.status!=200 || this.responseText.substring(0,2)!='OK') { alert('Error in changeUserOption: '+this.responseText); return; }
+                if (this.responseText=='OK-null') { return; }
+                if (option=='email') {
+                    vmEl = document.getElementById('verMess');
+                    newEl = document.createElement('span');
+                    newEl.appendChild(document.createTextNode("Unverified"));
+                    newEl.style.color = 'red';
+                    vmEl.parentNode.replaceChild(newEl,vmEl);
+                    alert('Your have changed your email address.  You will need to reverify it.');
+                    location.reload();
+                }
                 var el = document.getElementById(option+'Changed');
                 el.classList.remove('changed'); //Remove the class (if required) and add again after a tiny delay, to restart the animation
                 setTimeout(function(){el.classList.add('changed');},50);
@@ -54,7 +64,7 @@
             }
             xmlhttp.open('GET', 'ajax/verifyEmail.php?email=' + emailEnc);
             xmlhttp.send();
-            alert('An email has been sent to ' + email + ' to request confirmation of the address');
+            alert('An email has been sent to ' + email + ' to request confirmation of the address.  Remember to check for it in your spam folder too.');
         }
     </script>
 </head>
@@ -135,13 +145,13 @@ EODtransferHtml;
     $fullnameSC = htmlspecialchars($fullname);
     $emailSC    = htmlspecialchars($email);
     if ($emailVerUtime==0) {
-        $verMessage = "<span style='color:red'>Unverified</span>";
+        $verMessage = "<span id=verMess style='color:red'>Unverified</span>";
         $verLink = 'Verify now';
     } else {
         date_default_timezone_set('UTC');
         $verTimeObj = new DateTime("@$emailVerUtime");
         $verDateTime = date_format($verTimeObj, 'Y-m-d H:i:s');
-        $verMessage = "<span title='Verified at $verDateTime UT'><span style='color:green'>✓</span> Verified</span>";
+        $verMessage = "<span id=verMess title='Verified at $verDateTime UT'><span style='color:green'>✓</span> Verified</span>";
         $verLink = 'Reverify';
     }
     $verLink = "<a class=button style='padding:0 10px;margin-left:0.5em;font-weight:normal' onclick=verifyEmail('$email')>$verLink</a>";

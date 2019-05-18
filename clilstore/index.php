@@ -81,7 +81,7 @@ END_MYBUTTONSteach;
 <div style="clear:both;float:left;margin:0.5em 0 1.8em 0;padding:2px 4px;background-color:#def">
 <p style="margin:2px 3px">Logged in as <b>$user</b>
 <a href="logout.php" title="Logout from Clilstore" class="mybutton" style="margin-right:5px">Logout <img src="/icons-smo/logout.png" alt=""></a>
-<a href="options.php?user=$user" title="Change your Clilstore options or password" class="mybutton" style="margin-right:2.5em">Options</a>
+<a href="options.php?user=$user" title="Change your Clilstore options or password" class="mybutton" style="margin-right:2.5em">My options</a>
 $mybuttons
 </p>
 </div><br style="clear:both">
