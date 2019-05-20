@@ -6,13 +6,22 @@
   header("Cache-Control:max-age=0");
 
   try {
+    $tableHtml = $cookieMessage = '';
+    if (!isset($_COOKIE['csSessionId'])) $cookieMessage = <<<EOD_cookieMessage
+<div id=cookieMessage>
+<p>First visit to Clilstore?</p>
+<p>Clilstore, like virtually all other interactive sites, needs to use cookies to work properly &nbsp;
+<a id=gotitButton style='float:none' onclick=location.reload()>Got it</a></p>
+<p style='font-size:80%;margin-top:2em'>If this message persists when you click “Got it”, then your browser must be refusing cookies, or have Javascript disabled.<br></p>
+<p style='font-size:80%'>Clilstore is a well-behaved, responsible website. See our very short <a href="privacy_policy.php">privacy policy</a>.</p>
+</div>
+EOD_cookieMessage;
+
     $myCLIL = SM_myCLIL::singleton();
     $user = ( isset($myCLIL->id) ? $myCLIL->id : '' );
     $csSess   = SM_csSess::singleton();
     $DbMultidict = SM_DbMultidictPDO::singleton('rw');
     $servername = $_SERVER['SERVER_NAME'];
-
-    $tableHtml = '';
 
 //    if (isset($_GET['mode']))         { $csSess->setMode($_GET['mode']            ); }
     if (!empty($_GET['sortCol']))     { $csSess->sortCol($_GET['sortCol']         ); }
@@ -809,6 +818,10 @@ END_tableHtmlBun;
         a.levelbutton.selected { border-color:#55a8eb; background-color:yellow; color:#55a8eb; }
         a.levelbutton.grey { background-color:#ccc; }
         a.levelbutton.live:hover { background-color:blue; }
+        div#cookieMessage { clear:both; margin-bottom:0.7em; border:1px solid brown; background-color:#fdd; padding:0.4em }
+        div#cookieMessage p { margin:0.5em 0; }
+        a#gotitButton { background-color:#55a8eb; color:white; font-weight:bold; padding:3px 10px; border:0; border-radius:8px; }
+        a.gotitButtonn:hover { background-color:blue; }
 
         select.con { border:0; text-align:center; }
         input[type=text][value] { background-color:yellow; }
@@ -870,6 +883,7 @@ END_tableHtmlBun;
 <li><a href="/" title="Multidict, Wordlink, and Clilstore">$servername</a>
 $logInOut
 </ul>
+$cookieMessage
 <div class="smo-body-indent">
 <a><img src=/favicons/restart.png style="float:right" alt="Restart" title="See Clilstore site as would a new arrival (For testing)" onclick="newbie();"></a>
 <!--<span style="font-size:50%;color:red;background-color:yellow">News: Service will be down on 20 February 2016 during communications upgrade</span>-->
