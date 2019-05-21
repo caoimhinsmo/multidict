@@ -16,11 +16,11 @@
 
 <h1 class="smo">Clilstore privacy policy</h1>
 
-<p>Any user data collected by Clilstore and multidict.net is solely for use within the project, for the benefit of users.</p>
+<p>Any user data collected by Clilstore and multidict.net is solely for use within the project and for the benefit of users.</p>
 
 <p>Clilstore and multidict.net will not sell or give personal data to any third parties.</p>
 
-<p>Clilstore and multidict.net do not use any third-party cookies.</p>
+<p>Clilstore and multidict.net do not use any third-party cookies.  We use only our own cookies, to make the system work, and these contain no personal information.</p>
 
 </div>
 <ul class="smo-navlist">

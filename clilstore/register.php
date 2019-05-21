@@ -133,7 +133,7 @@ ENDform;
     }
 
     echo <<<EOD2
-<p style="margin:5em 0 0 0;font-size:85%"><a href="privacyPolicy.html">⇒ Privacy policy</a></p>
+<p style="margin:5em 0 0 0;font-size:85%"><a href="privacyPolicy.php">⇒ Privacy policy</a></p>
 </div>
 <ul class="smo-navlist">
 <li><a href="./">Clilstore</a></li>
