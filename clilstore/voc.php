@@ -64,9 +64,10 @@
             if (r==true) {
                 var xmlhttp = new XMLHttpRequest();
                 xmlhttp.onload = function() { if (this.status!=200) { alert('Error in emptyVocList:'+this.status); return; } }
-                xmlhttp.open('GET', 'ajax/emptyVocList.php?user='+user+'&sl=' +sl);
+                xmlhttp.open('GET', 'ajax/emptyVocList.php?user='+user+'&sl=' +sl,true);
                 xmlhttp.send();
-                window.location.href = window.location.href;
+                location.reload();
+                return false;
             }
         }
     </script>
