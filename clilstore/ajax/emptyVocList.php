@@ -9,5 +9,4 @@
   $stmtDEL = $DbMultidict->prepare('DELETE FROM csVoc WHERE user=:user AND sl=:sl');
   $stmtDEL->execute([':user'=>$user,':sl'=>$sl]);
   echo 'OK';
-
 ?>

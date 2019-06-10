@@ -13,7 +13,7 @@
 <p>Clilstore, like virtually all other interactive sites, needs to use cookies to work properly &nbsp;
 <a id=gotitButton style='float:none' onclick=location.reload()>Got it</a></p>
 <p style='font-size:80%;margin-top:2em'>If this message persists when you click “Got it”, then your browser must be refusing cookies, or have Javascript disabled.<br></p>
-<p style='font-size:80%'>Clilstore is a well-behaved, responsible website. See our very short <a href="privacy_policy.php">privacy policy</a>.</p>
+<p style='font-size:80%'>Clilstore is a well-behaved, responsible website. See our very short <a href="privacyPolicy.php">privacy policy</a>.</p>
 </div>
 EOD_cookieMessage;
 
