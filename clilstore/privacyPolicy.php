@@ -22,6 +22,8 @@
 
 <p>Clilstore and multidict.net do not use any third-party cookies.  We use only our own cookies, to make the system work, and these contain no personal information.</p>
 
+<p><a href="GDPRpolicy.odt">⇒ GDPR policy statement</a></p>
+
 </div>
 <ul class="smo-navlist">
 <li><a href="./" title="Clilstore - create and store Wordlinked pages for use by students">Clilstore</a></li>
