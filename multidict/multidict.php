@@ -97,34 +97,23 @@ FORMHTML;
   }
 
   function createClick($url,$message,$sid) {
-      // This will create a form to click to open the dictionary results in a new window
-      $fieldsHtml = '';
-      $bits = explode('?',$url);
-      $urlLom = $bits[0];
-      $params = $bits[1] ?? '';
-      $bits = explode('&',$params);
-      foreach ($bits as $bit) {
-          $paramBits = explode('=',$bit);
-          $param = $paramBits[0];
-          $value = $paramBits[1] ?? '';
-          if ($message) { $message = "<br>\n<span style=color:red>$message</span>"; }
-          $fieldsHtml .= "<input type='hidden' name='$param' value='$value'>";
-      }
+      // This will create a button to click to open the dictionary results in a new tab
+      if ($message) { $message = "<br>\n<span style=color:red>$message</span>"; }
       $html = <<<CLICKHTML
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
     <title>Form to click lookup word in dictionary</title>
+    <style>
+        a.button { display:inline-block; margin-left:0.8em; padding:0 4px; border-radius:4px; background-color:#75c8fb; color:white; text-decoration:none; }
+        a.button:hover { background-color:blue; color:white; }
+    </style>
 </head>
 <body>
 <p>Click “Submit” to look up the word in the dictionary</p>
-<form id="lookupForm" name="lookupForm" action="$urlLom" target="dictab$sid">
-$fieldsHtml
-<input name="cuir" type="submit" value="Submit">
-</form>
-<p>The results will be opened in a new tab<br>
-<span style="color:red">$message</span></p>
+<p><a href='$url' target='dictab$sid' class=button>Submit</a></p>
+<p>The results will be opened in a new tab$message</p>
 </body>
 </html>
 CLICKHTML;
