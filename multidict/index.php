@@ -9,29 +9,27 @@
   $wlSession = new SM_WlSession($sid);
   $wlSession->bestDict();
   $wlSession->storeVars();
-  $sid  = $wlSession->sid;
-  $sl   = $wlSession->sl;
-  $tl   = $wlSession->tl;
-  $dict = $wlSession->dict;
-  $word = $wlSession->word;
-  $wfs  = $wlSession->wfs;
-  $mode = $wlSession->mode;
-  $url  = $wlSession->url;
+  $sid = $wlSession->sid;
+  $sl  = $wlSession->sl;
+  $tl  = $wlSession->tl;
+  $dict= $wlSession->dict;
+  $word= $wlSession->word;
+  $wfs = $wlSession->wfs;
+  $mode= $wlSession->mode;
+  $url = $wlSession->url;
 
-  $servername = $_SERVER['SERVER_NAME'];
-  $standalone = ( empty($url) ? 1 : 0 );
+  $standalone = empty($url);
   if ($standalone) {
+      $mdAdvClass = 'advanced';
+      $servername = $_SERVER['SERVER_NAME'];
       $serverlink = "<a class=button style='float:left;margin:0 1px 0 0;border-radius:0;padding:1px 2px;font-size:80%' href='/' target='_top'>$servername</a>";
       $slSelectOnInit  = 'block';
       $slSelectOffInit = 'none';
-      $advClass = 'advanced';
-      $advOnlyFrom = '';
   } else {
+      $mdAdvClass = 'compact';
       $serverlink = '';
       $slSelectOnInit  = 'none';
       $slSelectOffInit = 'block';
-      $advClass = 'compact';
-      $advOnlyFrom = 'advOnly';
   }
 
 // The following lines are ad-hoc, to cure in a hurry a problem with the display of dictionary headword suggestions after converting Multidict from frames to iframe.
@@ -124,11 +122,9 @@ If JavaScript is disabled you must click Go after each language change</div>
 EOD3;
   }
 
-  $advToggleHtml = "<div class=compOnly><b>compact</b><input type=range min=0 max=0 value=0>advanced</div>"
-                  ."<div class=advOnly>compact<input type=range min=0 max=1 value=1><b>advanced</b></div>";
-  $advToggleHtml = "<div id=advToggle onclick='advToggle()'>$advToggleHtml</div>";
+  $standalone = empty($url);
 
-  if (!$standalone) {    //Don’t use with Wordlink because doesn’t work in a frame
+  if (!$standalone) {    //Don’t use schemeSwop with Wordlink because doesn’t work in a frame
       $schemeSwopHtml = '';
   } else {               //Only use with standalone Multidict
       $scheme = ( empty($_SERVER['HTTPS']) ? 'http' : 'https' );
@@ -146,12 +142,17 @@ EOD3;
       }
       $schemeSwopLocation .= "://$server_name$php_self";
       if (!empty($_GET)) { $schemeSwopLocation .= '?' . $_SERVER['QUERY_STRING']; }
-      $schemeSwopHtml = "<div style='float:right;padding:0 3px;margin-left:1em;font-size:70%;background-color:#bfb' onclick=window.location.replace('$schemeSwopLocation');>$schemeSwopHtml</div>";
+      $schemeSwopHtml = "<div style='float:right;padding-right:4px;font-size:70%' onclick=window.location.replace('$schemeSwopLocation');>$schemeSwopHtml</div>";
   }
+
+  $advSwopHtml = "<div class=compOnly><b>compact</b><input type=range min=0 max=1 step=1 value=0 style=width:3em;margin:0;padding:0>advanced</div>"
+                ."<div class=advOnly>compact<input type=range min=0 max=1 step=1 value=1 style=width:3em;margin:0;padding:0><b>advanced</b></div>";
+
+  $advSwopHtml = "<div style='float:right;margin-right:2em;font-size:70%'>$advSwopHtml</div>";
 
   echo <<<EOD4
 <!DOCTYPE html>
-<html id='MD$sid'>
+<html>
 <head>
     <meta charset="UTF-8">
     <title>Multidict</title>
@@ -162,11 +163,11 @@ EOD3;
 Replace the following sometime with flexbox - Option 3 at https://stackoverflow.com/questions/325273/make-iframe-to-fit-100-of-containers-remaining-height
 (Currently using Option 2, which works in older browsers)
 */
-        div#framcontainer { display: table; empty-cells: show; border-collapse:collapse; width:100%; height:100%; }
-        div#navigation { display:table-row; overflow:auto; }
+        div#framcontainer {display: table; empty-cells: show; border-collapse:collapse; width:100%; height:100%;}
+        div#navigation {display:table-row; overflow:auto; }
         div#navigation-content { overflow:auto; border:3px solid orange; background-color:#e3ffe3; font-family:Tahoma,sans-serif; }
-        div#dictionary { display:table-row; height:100%; background-color:#fee; overflow:hidden }
-        div#dictionary iframe { width:100%; height:100%; border:none; margin:0; padding:0; display:block; }
+        div#dictionary {display:table-row; height:100%; background-color:#fee; overflow:hidden }
+        div#dictionary iframe {width:100%; height:100%; border:none; margin:0; padding:0; display:block;}
 
         input { padding:0px 4px; }
         select { margin-bottom:1px; }
@@ -197,7 +198,7 @@ Replace the following sometime with flexbox - Option 3 at https://stackoverflow.
         select { max-height:1.8em; margin-bottom:2px; margin-top:1px; }
         select[name="sl"],select[name="tl"] { width:100%; }
         select[name="dict"] { width:100%; }
-        div#dictIcons         { height:18px; }
+        div#dictIcons         { height:18px; display:block; }
         div#dictIcons img     { width:16px; height:16px; margin:1px; border:none; padding:0 0 3px 0; border:none; }
         div#dictIcons img.sel { border-left: 3px solid red; border-right:3px solid red; }
         div#dictIcons img.m   { padding:1px 0 0 0; border-top:2px solid red; }         /* mini */
@@ -205,36 +206,12 @@ Replace the following sometime with flexbox - Option 3 at https://stackoverflow.
         div#dictIcons img.pw  { padding:0 0 1px 0; border-bottom:2px solid green; }    /* Web Archive */
         div#dictIcons img.pg  { padding:0 0 1px 0; border-bottom:2px solid red; }      /* Google Books */
         div#dictIcons img.s   { padding:0 0 1px 0; border-bottom:2px dotted black; }   /* Special */
-        div#advToggle       { float:right; padding:0 3px; margin-right:1em; font-size:70%; background-color:#bfb }
-        div#advToggle input { width:3em; margin:0; padding:0; }
         div.advanced div.compOnly { display:none; }
         div.compact  div.advOnly  { display:none; }
         div.compact  span.advOnly { display:none; }
     </style>
     <script>
-        var standalone = $standalone;
-        var mdAdv;
-
         function bodyLoad() {
-            var mdAdvLoc, mdAdvSess;
-            if (standalone) {
-                mdAdv = 'advanced';
-                mdAdvLoc  = localStorage.getItem('mdSaAdv');
-                mdAdvSess = sessionStorage.getItem('mdSaAdv');
-            } else {
-                mdAdv = 'compact';
-                mdAdvLoc  = localStorage.getItem('mdWlAdv');
-                mdAdvSess = sessionStorage.getItem('mdWlAdv');
-            }
-            if (mdAdvSess!==null) {
-                mdAdv = mdAdvSess; }
-            } else if ( mdAdvLoc!==null) {
-                mdAdv = mdAdvLoc;
-                if (standalone) { sessionStorage.setItem('mdSaAdv',mdAdv); }
-                 else           { sessionStorage.setItem('mdWcAdv',mdAdv); }
-            }
-            document.getElementById('navigation-content').className = mdAdv;
-
             document.getElementById('noJSinfo').style.display = 'none';
             document.getElementById('dictIcons').style.display = 'block';
             document.getElementById('swop').style.display = 'block';
@@ -277,29 +254,14 @@ Replace the following sometime with flexbox - Option 3 at https://stackoverflow.
             document.getElementById(item+'SelectOn').style.display = 'block';
             document.getElementById(item+'SelectOff').style.display = 'none';
         }
-        function advToggle() {
-            if (mdAdv=='compact') { mdAdv = 'advanced'; }
-             else                 { mdAdv = 'compact'; }
-//alert('advToggle: mdAdv=' + mdAdv);
-            document.getElementById('navigation-content').className = mdAdv;
-            // Sàbhail dhan ath thuras
-            if (standalone) {
-                localStorage.setItem('mdSaAdv',mdAdv);
-                sessionStorage.setItem('mdSaAdv',mdAdv);
-//var tmp1 = sessionStorage.getItem('mdSaAdv');
-//alert('tmp1='+tmp1);
-            } else {
-                localStorage.setItem('mdWlAdv',mdAdv);
-                sessionStorage.setItem('mdWlAdv',mdAdv);
-            }
-        }
     </script>
 </head>
 <body onload="bodyLoad();">
 <div id="framcontainer">
-<div id="navigation"><div id="navigation-content" class=$advClass>
+<div id="navigation"><div id="navigation-content">
+<div class=$mdAdvClass>
 $schemeSwopHtml
-$advToggleHtml
+$advSwopHtml
 <p style="margin:0 0 1px 0">
 $serverlink
 <span style="background-color:orange;color:#bfb;padding:1px 2px;font-weight:bold">Multidict</span>
@@ -308,16 +270,16 @@ $serverlink
 
 <form id="mdForm" action="./" style="margin:0 0 0 2px;padding-top:1px">
 <div style="width:100%;padding-top:1px;">
-<div class="formItem" style="width:35%;max-width:300px;border2:1px solid red"><input type="hidden" name="sid" value="$sid">
+<div class="formItem" style="width:35%;max-width:300px"><input type="hidden" name="sid" value="$sid">
 <div class="label">Word &nbsp;<input type="submit" name="go" value="Go" style="padding:0 3px;height:1.5em;line-height:1em">
 $pageNav</div>
 <input type="text" name="word" value="$word" title="The word to lookup in the dictionary" placeholder="Word to translate" style="width:94%">
 </div>
 $wordformHtmlFull
 </div>
-<div style="clear:both"></div>
-<div class=$advOnlyFrom>
-<div class="formItem" style="clear2:both;min-width:60px;max-width:28%">
+<br style="clear:both">
+<div class=advOnly>
+<div class="formItem" style="min-width:60px;max-width:28%">
 <div id="swop" class="label" style="float:right;padding-right:0.7em;font-weight:bold;display:none" title="swop" onclick="swopLangs();"><a>&#x2194;</a></div>
 <div id="slSelectOn" style="display:$slSelectOnInit">
 <div class="label">From <a onclick="selectOff('sl')" title="hide selection">Ⓧ</a></div>
@@ -334,7 +296,7 @@ $slOptionsHtml
 $formItems
 </form><br>
 <div style="clear:both;font-size:30%">&nbsp;</div>
-</div></div>
+</div></div></div>
 
 <div id="dictionary">
 <iframe src="/multidict/multidict.php?sid=$sid" name="MDiframe$sid">
