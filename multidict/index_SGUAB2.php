@@ -25,13 +25,11 @@
       $slSelectOnInit  = 'block';
       $slSelectOffInit = 'none';
       $advClass = 'advanced';
-      $advOnlyFrom = '';
   } else {
       $serverlink = '';
       $slSelectOnInit  = 'none';
       $slSelectOffInit = 'block';
       $advClass = 'compact';
-      $advOnlyFrom = 'advOnly';
   }
 
 // The following lines are ad-hoc, to cure in a hurry a problem with the display of dictionary headword suggestions after converting Multidict from frames to iframe.
@@ -99,7 +97,7 @@ EODpageNav;
 <select name="tl" id="tl" title="Choose a target language" onchange="submitForm('tl');">
   <option value="">-Choose-</option>
 $tlSelectHtml
-</select><span class=advOnly>$nbTlHtml</span>
+</select>$nbTlHtml
 </div>
 </div>
 <div id="tlSelectOff" class="formItem" style="display:none;width:2em" onclick="selectOn('tl')" title="Click to reselect To language">
@@ -112,7 +110,7 @@ $tlSelectHtml
   <option value="">-Choose-</option>
 $dictSelectHtml
 </select><br>
-<div class=advOnly><div id="dictIcons">$dictIconsHtml</div></div>
+<div id="dictIcons">$dictIconsHtml</div>
 </div>
 </div>
 <div id="dictSelectOff" class="formItem" style="display:none" onclick="selectOn('dict')" title="click to reselect dictionary">
@@ -197,7 +195,7 @@ Replace the following sometime with flexbox - Option 3 at https://stackoverflow.
         select { max-height:1.8em; margin-bottom:2px; margin-top:1px; }
         select[name="sl"],select[name="tl"] { width:100%; }
         select[name="dict"] { width:100%; }
-        div#dictIcons         { height:18px; }
+        div#dictIcons         { height:18px; display:block; }
         div#dictIcons img     { width:16px; height:16px; margin:1px; border:none; padding:0 0 3px 0; border:none; }
         div#dictIcons img.sel { border-left: 3px solid red; border-right:3px solid red; }
         div#dictIcons img.m   { padding:1px 0 0 0; border-top:2px solid red; }         /* mini */
@@ -209,136 +207,54 @@ Replace the following sometime with flexbox - Option 3 at https://stackoverflow.
         div#advToggle input { width:3em; margin:0; padding:0; }
         div.advanced div.compOnly { display:none; }
         div.compact  div.advOnly  { display:none; }
-        div.compact  span.advOnly { display:none; }
     </style>
     <script>
         var standalone = $standalone;
-        var mdAdv;
+        var mdAdv = standalone;
 
         function bodyLoad() {
-            var mdAdvLoc, mdAdvSess;
-            if (standalone) {
-                mdAdv = 'advanced';
-                mdAdvLoc  = localStorage.getItem('mdSaAdv');
-                mdAdvSess = sessionStorage.getItem('mdSaAdv');
+            if (standalone==1) {
+                var mdSaAdvLocal   = localStorage.getItem('mdSaAdv');
+                var mdSaAdvSession = sessionStorage.getItem('mdSaAdv');
+                if (mdSaAdvLocal   === 0) { mdAdv = 0; }
+                if (mdSaAdvSession === 1) { mdAdv = 0; }
             } else {
-                mdAdv = 'compact';
-                mdAdvLoc  = localStorage.getItem('mdWlAdv');
-                mdAdvSess = sessionStorage.getItem('mdWlAdv');
+                var mdWlAdvLocal   = localStorage.getItem('mdWlAdv');
+                var mdWlAdvSession = sessionStorage.getItem('mdWlAdv');
+                if (mdWlAdvLocal   === 0) { mdAdv = 0; }
+                if (mdWlAdvSession === 1) { mdAdv = 0; }
             }
-            if (mdAdvSess!==null) {
-                mdAdv = mdAdvSess; }
-            } else if ( mdAdvLoc!==null) {
-                mdAdv = mdAdvLoc;
-                if (standalone) { sessionStorage.setItem('mdSaAdv',mdAdv); }
-                 else           { sessionStorage.setItem('mdWcAdv',mdAdv); }
-            }
-            document.getElementById('navigation-content').className = mdAdv;
 
             document.getElementById('noJSinfo').style.display = 'none';
             document.getElementById('dictIcons').style.display = 'block';
             document.getElementById('swop').style.display = 'block';
-        }
-        function submitForm(langChanged) {
-            if (langChanged=='sl') { document.getElementById('tl').value   = ''; }
-            if (langChanged>'')    { document.getElementById('dict').value = ''; }
-            document.getElementById('mdForm').submit();
-        }
-        function changeDict(dict) {
-            document.getElementById('dict').value = dict;
-            submitForm();
-        }
-        function swopLangs() {
-            var slSelect = document.getElementById('sl');
-            var tlSelect = document.getElementById('tl');
-            var sl = slSelect.value;
-            var tl = tlSelect.value;
-            opt = document.createElement('option'); //Cruthaich option ùr airson sl, gus a bhith cinnteach gu bheil e sa liosta airson tl
-            opt.setAttribute('value',sl);
-            opt.appendChild(document.createTextNode(sl));
-            tlSelect.appendChild(opt);
-            slSelect.value = tl;
-            tlSelect.value = sl;
-            submitForm();
-        }
-        function slChange(lang) {
-            document.getElementById('sl').value = lang;
-            submitForm();
-        }
-        function tlChange(lang) {
-            document.getElementById('tl').value = lang;
-            submitForm();
-        }
-        function selectOff(item) {
-            document.getElementById(item+'SelectOn').style.display = 'none';
-            document.getElementById(item+'SelectOff').style.display = 'block';
-        }
-        function selectOn(item) {
-            document.getElementById(item+'SelectOn').style.display = 'block';
-            document.getElementById(item+'SelectOff').style.display = 'none';
+if (!mdAdv) { document.getElementById('dictIcons').style.display = 'none'; }
         }
         function advToggle() {
-            if (mdAdv=='compact') { mdAdv = 'advanced'; }
-             else                 { mdAdv = 'compact'; }
-//alert('advToggle: mdAdv=' + mdAdv);
-            document.getElementById('navigation-content').className = mdAdv;
-            // Sàbhail dhan ath thuras
-            if (standalone) {
-                localStorage.setItem('mdSaAdv',mdAdv);
-                sessionStorage.setItem('mdSaAdv',mdAdv);
-//var tmp1 = sessionStorage.getItem('mdSaAdv');
-//alert('tmp1='+tmp1);
-            } else {
-                localStorage.setItem('mdWlAdv',mdAdv);
-                sessionStorage.setItem('mdWlAdv',mdAdv);
-            }
+            var el = document.getElementById('navigation-content');
+            if (mdAdv) { el.class = 'advanced'; }
+             else      { el.class = 'compact';  }
+        }
+        function advToggleSGUAB() {
+            var mdadv = 1 - document.getElementById('advTog').value;
+            var servername = '$servername';
+            var url = 'https://'+servername+'/multidict/ajax/setMDadv.php?sid=' + sid + '&mdadv=' + mdadv;
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.open('GET', url, false);
+            xmlhttp.send();
+            var resp = xmlhttp.responseText;
+            if (resp!='OK') { alert('Error in setMDadv: ' + resp); }
+            var loc = window.location;
+            window.location = loc;
         }
     </script>
 </head>
 <body onload="bodyLoad();">
 <div id="framcontainer">
 <div id="navigation"><div id="navigation-content" class=$advClass>
-$schemeSwopHtml
-$advToggleHtml
-<p style="margin:0 0 1px 0">
-$serverlink
-<span style="background-color:orange;color:#bfb;padding:1px 2px;font-weight:bold">Multidict</span>
-<a class="button" href="help.php" target="MDiframe$sid">Help</a>
-<a class="button" href="about.php" target="MDiframe$sid">About</a></p>
 
-<form id="mdForm" action="./" style="margin:0 0 0 2px;padding-top:1px">
-<div style="width:100%;padding-top:1px;">
-<div class="formItem" style="width:35%;max-width:300px;border2:1px solid red"><input type="hidden" name="sid" value="$sid">
-<div class="label">Word &nbsp;<input type="submit" name="go" value="Go" style="padding:0 3px;height:1.5em;line-height:1em">
-$pageNav</div>
-<input type="text" name="word" value="$word" title="The word to lookup in the dictionary" placeholder="Word to translate" style="width:94%">
+TEST
 </div>
-$wordformHtmlFull
-</div>
-<div style="clear:both"></div>
-<div class=$advOnlyFrom>
-<div class="formItem" style="clear2:both;min-width:60px;max-width:28%">
-<div id="swop" class="label" style="float:right;padding-right:0.7em;font-weight:bold;display:none" title="swop" onclick="swopLangs();"><a>&#x2194;</a></div>
-<div id="slSelectOn" style="display:$slSelectOnInit">
-<div class="label">From <a onclick="selectOff('sl')" title="hide selection">Ⓧ</a></div>
-<select name="sl" id="sl" title="Source language" onchange="submitForm('sl');">
-$slOptionsHtml
-</select><span class=advOnly>$nbSlHtml</span>
-</div>
-<div id="slSelectOff" style="display:$slSelectOffInit" onclick="selectOn('sl')" title="Click to reselect From language">
-<div class="label">From</div>
-<b onmouseover="selectOn('sl')">$sl</b>
-</div>
-</div>
-</div>
-$formItems
-</form><br>
-<div style="clear:both;font-size:30%">&nbsp;</div>
-</div></div>
-
-<div id="dictionary">
-<iframe src="/multidict/multidict.php?sid=$sid" name="MDiframe$sid">
-</iframe>
 </div>
 </div>
 EOD4;

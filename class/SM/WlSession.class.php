@@ -1,7 +1,7 @@
 <?php
 class SM_WlSession {
 
-  public $uid, $sid, $sl, $tl, $dict, $url, $word, $wfs, $inc, $rmLi, $mode, $navsize, $tlRanks, $dictRanks, $tlArr;
+  public $uid, $sid, $sl, $tl, $dict, $url, $word, $wfs, $inc, $rmLi, $mode, $navsize, $mdadv, $tlRanks, $dictRanks, $tlArr;
 
   private $slPrev, $tlPrev, $dictPrev, $wfRot, $ind;
 
@@ -71,12 +71,13 @@ setcookie ('SM_wlUser', '', 1, '',  'multidict.net' );
           $stmt->execute();
           $stmt = null;
       }
-      $stmt = $DbMultidict->prepare("SELECT sl,tl,dict,url,word,wfs,inc,rmLi,mode,navsize,utime FROM wlSession WHERE sid=:sid");
+      $stmt = $DbMultidict->prepare("SELECT sl,tl,dict,url,word,wfs,inc,rmLi,mode,navsize,mdadv,utime FROM wlSession WHERE sid=:sid");
       $stmt->bindParam(':sid',$sid,PDO::PARAM_INT);
       $stmt->execute();
       $r = $stmt->fetch(PDO::FETCH_ASSOC);
       extract($r);
       $stmt = null;
+      $mdadv = ( empty($url) ? 1 : 0 );
       if (empty($mode)) { $mode = 'ss'; }
       if (empty($wfs)) { $wfs = $word; }
       $this->slPrev   = $sl;
@@ -177,6 +178,7 @@ setcookie ('SM_wlUser', '', 1, '',  'multidict.net' );
       $this->rmLi   = $rmLi;
       $this->mode   = $mode;
       $this->navsize= $navsize;
+      $this->mdadv  = $mdadv;
       $this->wordpreg=$wordpreg;
 
   }
@@ -194,6 +196,7 @@ setcookie ('SM_wlUser', '', 1, '',  'multidict.net' );
       $rmLi   = $this->rmLi;
       $mode   = $this->mode;
       $navsize= $this->navsize;
+      $mdadv  = $this->mdadv;
       $utime  = time();
 
       if ($this->wfRot<>'') {
@@ -211,7 +214,7 @@ setcookie ('SM_wlUser', '', 1, '',  'multidict.net' );
           }
       }
       $DbMultidict = SM_DbMultidictPDO::singleton('rw');
-      $query = "UPDATE wlSession SET sl=:sl,tl=:tl,dict=:dict,url=:url,word=:word,wfs=:wfs,inc=:inc,rmLi=:rmLi, mode=:mode, navsize=:navsize, utime=:utime WHERE sid=:sid";
+      $query = "UPDATE wlSession SET sl=:sl,tl=:tl,dict=:dict,url=:url,word=:word,wfs=:wfs,inc=:inc,rmLi=:rmLi, mode=:mode, navsize=:navsize, mdadv=:mdadv, utime=:utime WHERE sid=:sid";
       $stmt = $DbMultidict->prepare($query);
       $stmt->bindParam(':sl',$sl);
       $stmt->bindParam(':tl',$tl);
@@ -223,6 +226,7 @@ setcookie ('SM_wlUser', '', 1, '',  'multidict.net' );
       $stmt->bindParam(':rmLi',$rmLi,PDO::PARAM_INT);
       $stmt->bindParam(':mode',$mode);
       $stmt->bindParam(':navsize',$navsize);
+      $stmt->bindParam(':mdadv',$mdadv);
       $stmt->bindParam(':utime',$utime,PDO::PARAM_INT);
       $stmt->bindParam(':sid',$sid,PDO::PARAM_INT);
       $stmt->execute();
