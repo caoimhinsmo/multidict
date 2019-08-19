@@ -18,7 +18,7 @@
   $mode= $wlSession->mode;
   $url = $wlSession->url;
 
-  $standalone = empty($url);
+  $standalone = ( empty($url) ? 1 : 0 );
   if ($standalone) {
       $mdAdvClass = 'advanced';
       $servername = $_SERVER['SERVER_NAME'];
@@ -122,8 +122,6 @@ If JavaScript is disabled you must click Go after each language change</div>
 EOD3;
   }
 
-  $standalone = empty($url);
-
   if (!$standalone) {    //Don’t use schemeSwop with Wordlink because doesn’t work in a frame
       $schemeSwopHtml = '';
   } else {               //Only use with standalone Multidict
@@ -145,10 +143,10 @@ EOD3;
       $schemeSwopHtml = "<div style='float:right;padding-right:4px;font-size:70%' onclick=window.location.replace('$schemeSwopLocation');>$schemeSwopHtml</div>";
   }
 
-  $advSwopHtml = "<div class=compOnly><b>compact</b><input type=range min=0 max=1 step=1 value=0 style=width:3em;margin:0;padding:0>advanced</div>"
-                ."<div class=advOnly>compact<input type=range min=0 max=1 step=1 value=1 style=width:3em;margin:0;padding:0><b>advanced</b></div>";
+  $advSwopHtml = "<div class=compOnly><b>compact</b><input type=range id=compRange min=0 max=1 step=1 value=0 style=width:3em;margin:0;padding:0>advanced</div>"
+                ."<div class=advOnly>compact<input type=range id=advRange min=0 max=1 step=1 value=1 style=width:3em;margin:0;padding:0><b>advanced</b></div>";
 
-  $advSwopHtml = "<div style='float:right;margin-right:2em;font-size:70%'>$advSwopHtml</div>";
+  $advSwopHtml = "<div style='float:right;margin-right:2em;font-size:70%' onclick='mdAdvSet(1-mdAdv)'>$advSwopHtml</div>";
 
   echo <<<EOD4
 <!DOCTYPE html>
@@ -211,10 +209,41 @@ Replace the following sometime with flexbox - Option 3 at https://stackoverflow.
         div.compact  span.advOnly { display:none; }
     </style>
     <script>
+        var standalone, mdAdv, mdAdvClass;
         function bodyLoad() {
+            mdAdv = standalone = $standalone;
+            if (standalone==1) {
+                mdAdvSes = sessionStorage.getItem('mdAdvSa');
+                mdAdvLoc = localStorage.getItem('mdAdvSa');
+            } else {
+                mdAdvSes = sessionStorage.getItem('mdAdvWl');
+                mdAdvLoc = localStorage.getItem('mdAdvWl');
+            }
+            if       (mdAdvSes!==null) { mdAdv = mdAdvSes; }
+             else if (mdAdvLoc!==null) { mdAdv = mdAdvLoc; }
+            mdAdvSet(mdAdv);
+
             document.getElementById('noJSinfo').style.display = 'none';
             document.getElementById('dictIcons').style.display = 'block';
             document.getElementById('swop').style.display = 'block';
+        }
+        function mdAdvSet(val) {
+            mdAdv = val;
+            if (mdAdv==1) {
+                mdAdvClass = 'advanced';
+            } else {
+                mdAdvClass = 'compact';
+            }
+            document.getElementById('mdAdvDiv').className = mdAdvClass;
+            document.getElementById('compRange').value = mdAdv;
+            document.getElementById('advRange').value  = mdAdv;
+            if (standalone==1) {
+                sessionStorage.setItem('mdAdvSa',mdAdv);
+                localStorage.setItem('mdAdvSa',mdAdv);
+            } else {
+                sessionStorage.setItem('mdAdvWl',mdAdv);
+                localStorage.setItem('mdAdvWl',mdAdv);
+            }
         }
         function submitForm(langChanged) {
             if (langChanged=='sl') { document.getElementById('tl').value   = ''; }
@@ -259,7 +288,7 @@ Replace the following sometime with flexbox - Option 3 at https://stackoverflow.
 <body onload="bodyLoad();">
 <div id="framcontainer">
 <div id="navigation"><div id="navigation-content">
-<div class=$mdAdvClass>
+<div id=mdAdvDiv class=$mdAdvClass>
 $schemeSwopHtml
 $advSwopHtml
 <p style="margin:0 0 1px 0">
