@@ -118,7 +118,7 @@ $dictSelectHtml
 <b onmouseover="selectOn('dict')">$dict</b>
 </div>
 <div id="noJSinfo" style="position:absolute;bottom:4px;left:6px;font-size:55%;color:green;white-space:normal">
-If JavaScript is disabled you must click Go after each language change</div>
+If JavaScript is disabled you must click Search after each language change</div>
 EOD3;
   }
 
@@ -300,7 +300,7 @@ $serverlink
 <form id="mdForm" action="./" style="margin:0 0 0 2px;padding-top:1px">
 <div style="width:100%;padding-top:1px;">
 <div class="formItem" style="width:35%;max-width:300px"><input type="hidden" name="sid" value="$sid">
-<div class="label">Word &nbsp;<input type="submit" name="go" value="Go" style="padding:0 3px;height:1.5em;line-height:1em">
+<div class="label">Word &nbsp;<input type="submit" name="go" value="Search" style="padding:0 3px;height:1.5em;line-height:1em">
 $pageNav</div>
 <input type="text" name="word" value="$word" title="The word to lookup in the dictionary" placeholder="Word to translate" style="width:94%">
 </div>
