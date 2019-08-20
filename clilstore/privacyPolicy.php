@@ -22,7 +22,7 @@
 
 <p>Clilstore and multidict.net do not use any third-party cookies.  We use only our own cookies, to make the system work, and these contain no personal information.</p>
 
-<p style="margin:1.5em 0 0.5em 0"><a href="GDPRpolicy.odt">⇒ GDPR policy statement</a></p>
+<p style="margin:1.5em 0 0.5em 0"><a href="GDPR_policy.pdf">⇒ GDPR policy statement</a></p>
 
 </div>
 <ul class="smo-navlist">
