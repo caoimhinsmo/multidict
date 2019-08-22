@@ -148,7 +148,7 @@ EOD_BARR;
 $vocHtml
 </table>
 
-<p style="margin:3.5em 0 0 0;font-size:85%">If you you really want to, you can <a id=emptyBut onclick="emptyVocList('$user','$slLorg')">empty</a> the list to delete every single word in this vocabulary list.</p>
+<p style="margin:3.5em 0 0 0;font-size:85%">If you really want to, you can <a id=emptyBut onclick="emptyVocList('$user','$slLorg')">empty</a> the list to delete every single word in this vocabulary list.</p>
 EOD_vocTable;
     } else { $vocTableHtml = <<<EOD_noVocTable
 <p>There are no words in the vocabulary list</p>

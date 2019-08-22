@@ -660,14 +660,14 @@ setcookie ('SM_wlUser', '', 1, '',  'multidict.net' );
       $stmt->execute();
       $stmt->fetch();
       $html = '';
+//The following dictionary icon used to be included in the next statement, but I have removed it (despite the name of the function) -- CPD 2019-08-22
+//<img src="icon.php?dict=$dict" alt="" style="border:none;margin-top:-5px;vertical-align:bottom">
       if (!empty($icon)) { $html = <<<EOD
 <a href="$url" target="_top" title="Click to escape Multidict and go to the dictionary’s own homepage" id="esc">
-<img src="icon.php?dict=$dict" alt="" style="border:none;margin-top:-5px;vertical-align:bottom">
 <span>Esc</span>
 </a>
 EOD;
       }
-//throw new SM_MDexception("\$message=$message");
       $html .= (empty($message) ? '' : "<span style=\"color:red\" title=\"$message\">⚠</span>" . $message);
       return $html;
   }

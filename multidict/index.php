@@ -25,11 +25,13 @@
       $serverlink = "<a class=button style='float:left;margin:0 1px 0 0;border-radius:0;padding:1px 2px;font-size:80%' href='/' target='_top'>$servername</a>";
       $slSelectOnInit  = 'block';
       $slSelectOffInit = 'none';
+      $fromClass = '';
   } else {
-      $mdAdvClass = 'compact';
+      $mdAdvClass = 'basic';
       $serverlink = '';
       $slSelectOnInit  = 'none';
       $slSelectOffInit = 'block';
+      $fromClass = ' class=advOnly';
   }
 
 // The following lines are ad-hoc, to cure in a hurry a problem with the display of dictionary headword suggestions after converting Multidict from frames to iframe.
@@ -132,10 +134,10 @@ EOD3;
       $schemeValue = ( $scheme=='https' ? 1 : 0 );
       $schemeSwopRange = "<input type=range min=0 max=1 step=1 value=$schemeValue style=width:3em;margin:0;padding:0>";
       if ($scheme=='https') {
-          $schemeSwopHtml = 'http' . $schemeSwopRange . '<b>https</b>';
+          $schemeSwopHtml = '<a>http</a>' . $schemeSwopRange . '<b>https</b>';
           $schemeSwopLocation = 'http';
       } else {
-          $schemeSwopHtml = '<b>http</b>' . $schemeSwopRange . 'https';
+          $schemeSwopHtml = '<b>http</b>' . $schemeSwopRange . '<a>https</a>';
           $schemeSwopLocation = 'https';
       }
       $schemeSwopLocation .= "://$server_name$php_self";
@@ -143,10 +145,10 @@ EOD3;
       $schemeSwopHtml = "<div style='float:right;padding-right:4px;font-size:70%' onclick=window.location.replace('$schemeSwopLocation');>$schemeSwopHtml</div>";
   }
 
-  $advSwopHtml = "<div class=compOnly><b>compact</b><input type=range id=compRange min=0 max=1 step=1 value=0 style=width:3em;margin:0;padding:0>advanced</div>"
-                ."<div class=advOnly>compact<input type=range id=advRange min=0 max=1 step=1 value=1 style=width:3em;margin:0;padding:0><b>advanced</b></div>";
+  $advSwopHtml = "<div class=basOnly><b>basic</b><input type=range id=basRange min=0 max=1 step=1 value=0 style=width:3em;margin:0;padding:0><a>advanced</a></div>"
+                ."<div class=advOnly><a>basic</a><input type=range id=advRange min=0 max=1 step=1 value=1 style=width:3em;margin:0;padding:0><b>advanced</b></div>";
 
-  $advSwopHtml = "<div style='float:right;margin-right:2em;font-size:70%' onclick='mdAdvSet(1-mdAdv)'>$advSwopHtml</div>";
+  $advSwopHtml = "<div style='float:right;margin-right:2em;font-size:70%' title='Swop between basic and advanced interface' onclick='mdAdvSet(1-mdAdv)'>$advSwopHtml</div>";
 
   echo <<<EOD4
 <!DOCTYPE html>
@@ -204,9 +206,9 @@ Replace the following sometime with flexbox - Option 3 at https://stackoverflow.
         div#dictIcons img.pw  { padding:0 0 1px 0; border-bottom:2px solid green; }    /* Web Archive */
         div#dictIcons img.pg  { padding:0 0 1px 0; border-bottom:2px solid red; }      /* Google Books */
         div#dictIcons img.s   { padding:0 0 1px 0; border-bottom:2px dotted black; }   /* Special */
-        div.advanced div.compOnly { display:none; }
-        div.compact  div.advOnly  { display:none; }
-        div.compact  span.advOnly { display:none; }
+        div.advanced div.basOnly  { display:none; }
+        div.basic    div.advOnly  { display:none; }
+        div.basic    span.advOnly { display:none; }
     </style>
     <script>
         var standalone, mdAdv, mdAdvClass;
@@ -232,11 +234,11 @@ Replace the following sometime with flexbox - Option 3 at https://stackoverflow.
             if (mdAdv==1) {
                 mdAdvClass = 'advanced';
             } else {
-                mdAdvClass = 'compact';
+                mdAdvClass = 'basic';
             }
             document.getElementById('mdAdvDiv').className = mdAdvClass;
-            document.getElementById('compRange').value = mdAdv;
-            document.getElementById('advRange').value  = mdAdv;
+            document.getElementById('basRange').value = mdAdv;
+            document.getElementById('advRange').value = mdAdv;
             if (standalone==1) {
                 sessionStorage.setItem('mdAdvSa',mdAdv);
                 localStorage.setItem('mdAdvSa',mdAdv);
@@ -285,7 +287,7 @@ Replace the following sometime with flexbox - Option 3 at https://stackoverflow.
         }
     </script>
 </head>
-<body onload="bodyLoad();">
+<body>
 <div id="framcontainer">
 <div id="navigation"><div id="navigation-content">
 <div id=mdAdvDiv class=$mdAdvClass>
@@ -307,7 +309,7 @@ $pageNav</div>
 $wordformHtmlFull
 </div>
 <br style="clear:both">
-<div class=advOnly>
+<div$fromClass>
 <div class="formItem" style="min-width:60px;max-width:28%">
 <div id="swop" class="label" style="float:right;padding-right:0.7em;font-weight:bold;display:none" title="swop" onclick="swopLangs();"><a>&#x2194;</a></div>
 <div id="slSelectOn" style="display:$slSelectOnInit">
@@ -340,4 +342,8 @@ EOD4;
 ?>
 
 </body>
+<script>
+ //Placed here (instead of <body onload...>) so it doesn’t wait for the dictionary iframe to be loaded
+    bodyLoad();
+</script>
 </html>
