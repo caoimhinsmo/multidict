@@ -23,14 +23,14 @@
       $mdAdvClass = 'advanced';
       $servername = $_SERVER['SERVER_NAME'];
       $serverlink = "<a class=button style='float:left;margin:0 1px 0 0;border-radius:0;padding:1px 2px;font-size:80%' href='/' target='_top'>$servername</a>";
-      $slSelectOnInit  = 'block';
-      $slSelectOffInit = 'none';
+      $slSelectOnDisplay  = 'block';
+      $slSelectOffDisplay = 'none';
       $fromClass = '';
   } else {
       $mdAdvClass = 'basic';
       $serverlink = '';
-      $slSelectOnInit  = 'none';
-      $slSelectOffInit = 'block';
+      $slSelectOnDisplay  = 'none';
+      $slSelectOffDisplay = 'block';
       $fromClass = ' class=advOnly';
   }
 
@@ -94,30 +94,18 @@ EODpageNav;
       $dictIconHtml   = $wlSession->dictIconHtml();
       $nbTlHtml       = $wlSession->nbTlHtml();
       $formItems = <<<EOD3
-<div id="tlSelectOn" style="display:block">
-<div class="formItem" style="min-width:95px;max-width:28%"><div class="label">To <a onclick="selectOff('tl')" title="hide selection">Ⓧ</a></div>
+<div class="formItem" style="min-width:95px;max-width:28%"><div class="label">To</div>
 <select name="tl" id="tl" title="Choose a target language" onchange="submitForm('tl');">
   <option value="">-Choose-</option>
 $tlSelectHtml
 </select><span class=advOnly>$nbTlHtml</span>
 </div>
-</div>
-<div id="tlSelectOff" class="formItem" style="display:none;width:2em" onclick="selectOn('tl')" title="Click to reselect To language">
-<div class="label">To</div>
-<b onmouseover="selectOn('tl')">$tl</b>
-</div>
-<div id="dictSelectOn" style="display:block">
-<div class="formItem" style="min-width:110px;max-width:40%;overflow:visible"><div class="label">Dictionary <a onclick="selectOff('dict')" title="hide selection">Ⓧ</a> $dictIconHtml</div>
+<div class="formItem" style="min-width:110px;max-width:40%;overflow:visible"><div class="label">Dictionary $dictIconHtml</div>
 <select id="dict" name="dict" onchange="submitForm();" title="Choose a dictionary (but reselect target language first if need be)">
   <option value="">-Choose-</option>
 $dictSelectHtml
 </select><br>
 <div class=advOnly><div id="dictIcons">$dictIconsHtml</div></div>
-</div>
-</div>
-<div id="dictSelectOff" class="formItem" style="display:none" onclick="selectOn('dict')" title="click to reselect dictionary">
-<div class="label">Dictionary</div>
-<b onmouseover="selectOn('dict')">$dict</b>
 </div>
 <div id="noJSinfo" style="position:absolute;bottom:4px;left:6px;font-size:55%;color:green;white-space:normal">
 If JavaScript is disabled you must click Search after each language change</div>
@@ -277,14 +265,6 @@ Replace the following sometime with flexbox - Option 3 at https://stackoverflow.
             document.getElementById('tl').value = lang;
             submitForm();
         }
-        function selectOff(item) {
-            document.getElementById(item+'SelectOn').style.display = 'none';
-            document.getElementById(item+'SelectOff').style.display = 'block';
-        }
-        function selectOn(item) {
-            document.getElementById(item+'SelectOn').style.display = 'block';
-            document.getElementById(item+'SelectOff').style.display = 'none';
-        }
     </script>
 </head>
 <body>
@@ -312,15 +292,15 @@ $wordformHtmlFull
 <div$fromClass>
 <div class="formItem" style="min-width:60px;max-width:28%">
 <div id="swop" class="label" style="float:right;padding-right:0.7em;font-weight:bold;display:none" title="swop" onclick="swopLangs();"><a>&#x2194;</a></div>
-<div id="slSelectOn" style="display:$slSelectOnInit">
-<div class="label">From <a onclick="selectOff('sl')" title="hide selection">Ⓧ</a></div>
+<div style="display:$slSelectOnDisplay">
+<div class="label">From</div>
 <select name="sl" id="sl" title="Source language" onchange="submitForm('sl');">
 $slOptionsHtml
 </select><span class=advOnly>$nbSlHtml</span>
 </div>
-<div id="slSelectOff" style="display:$slSelectOffInit" onclick="selectOn('sl')" title="Click to reselect From language">
+<div style="display:$slSelectOffDisplay">
 <div class="label">From</div>
-<b onmouseover="selectOn('sl')">$sl</b>
+<b>$sl</b>
 </div>
 </div>
 </div>
