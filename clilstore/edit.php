@@ -91,14 +91,6 @@
               && substr($link,0,5)<>'file:'
               && !is_numeric($link)
              ) { $link = "http://$link"; }  //Add http:// on the assumption that it is missing
-          if (  preg_match('|^file:.+\.([A-Za-z0-9]+)$|', $link,$matches)
-             || preg_match('|^http[s]?://.+/.+\.([A-Za-z0-0]+)$|',$link,$matches) ) {
-              $ext = $matches[1];
-              $DbMultidict = SM_DbMultidictPDO::singleton('rw');
-              $stmtSELext = $DbMultidict->prepare('SELECT * FROM mimetypes WHERE ext=:ext');
-              $stmtSELext->execute(array(':ext'=>$ext));
-              if ($stmtSELext->fetch() && $ext<>'html' && $ext<>'htm' && $ext<>'xml') { $wl = 0; }  // No wordlinking of non HTML file extensions
-          }
           $this->ord  = $ord;
           $this->but  = $but;
           $this->wl   = $wl;
@@ -216,7 +208,28 @@ EODtinyMCE;
         $linkArr = $_POST['link'];
         $buttons = array();  foreach ($butArr as $i=>$but) { $buttons[$i] = new button( $i, $butArr[$i], 0, 0, $linkArr[$i] ); }
         if (isset($_POST['wl'])) {
-            foreach ($_POST['wl'] as $ord) { $buttons[$ord]->wl  = 1; }
+            foreach ($_POST['wl'] as $ord) {
+                $buttons[$ord]->wl  = 1;
+               //But check the link extension and do not wordlink pdfs, doc files and other unsuitable mime types
+                $link = $linkArr[$ord];
+                if (  preg_match('|^file:.+\.([A-Za-z0-9]+)$|', $link,$matches)
+                   || preg_match('|^http[s]?://.+/.+\.([A-Za-z0-9]+)$|',$link,$matches) ) {
+                    $ext = $matches[1];
+                    if (in_array($ext,['pdf','jpg','jpeg','gif','png','doc','docx','xls','xlsx','ppt','pptx','odt','ods'])) { //Check for the most common culprits
+                        $buttons[$ord]->wl = 0;
+                    } else { //Check for other image, audio and video mimetypes
+                        $DbMultidict = SM_DbMultidictPDO::singleton('rw');
+                        $stmtSELext = $DbMultidict->prepare('SELECT mime FROM mimetypes WHERE ext=:ext');
+                        $stmtSELext->execute(array(':ext'=>$ext));
+                        $r = $stmtSELext->fetch(PDO::FETCH_ASSOC);
+                        if ($r) {
+                            extract($r);
+                            $mime0 = explode('/',$mime)[0];
+                            if (in_array($mime0,['image','audio','video'])) { $buttons[$ord]->wl = 0; }
+                        }
+                    }
+                }
+            }
         }
         if (isset($_POST['new'])) {
             foreach ($_POST['new'] as $ord) { $buttons[$ord]->new = 1; }
