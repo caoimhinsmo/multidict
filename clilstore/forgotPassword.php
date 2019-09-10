@@ -47,7 +47,7 @@ EOD_barr;
             $email= $row['email'];
             $utime = time();
             $md5 = md5("moSgudal$user$utime");
-            $servername = $_SERVER['SERVER_NAME'];
+            $servername = SM_myCLIL::servername();
             $link = "http://$servername/clilstore/changePassword.php?user=$user&t=$utime&md5=$md5";
             mail($email,'Clilstore - link to reset password (valid for 24 hours)',$link,"From:no-reply@multidict.net\r\n");
             echo '<p style="color:green"><span style="font-size:200%">✔</span> A link allowing you to reset your password has been sent to your e-mail address. This will be valid for 24 hours.</p>' ."\n";

@@ -21,7 +21,8 @@ EOD_cookieMessage;
     $user = ( isset($myCLIL->id) ? $myCLIL->id : '' );
     $csSess   = SM_csSess::singleton();
     $DbMultidict = SM_DbMultidictPDO::singleton('rw');
-    $servername = $_SERVER['SERVER_NAME'];
+    $servername = SM_myCLIL::servername();
+    $serverhome = SM_myCLIL::serverhome();
 
 //    if (isset($_GET['mode']))         { $csSess->setMode($_GET['mode']            ); }
     if (!empty($_GET['sortCol']))     { $csSess->sortCol($_GET['sortCol']         ); }
@@ -78,12 +79,45 @@ CHECKBOXES2;
 <p style="clear:both;padding:1em 0"><a href="login.php" class=mybutton>Login</a> or <a href="register.php">register</a> $loginReason.</p>
 END_USER1;
     } else {
+        $stmtIncUnit = $DbMultidict->prepare('SELECT id AS incUnit, created AS incCreated FROM clilstore WHERE test=2 and owner=:user'); //Check whether the user has any incomplete units
+        $stmtIncUnit->execute([':user'=>$user]);
+        $row = $stmtIncUnit->fetch(PDO::FETCH_ASSOC);
+        if ($row) {
+            extract($row);
+            $secondsToLive = $incCreated + 86400 - time(); //Delete automatically after 1 day
+            if ($secondsToLive<=0) {
+                header("Location:$serverhome/clilstore/delete.php?id=$incUnit&delete");
+            } elseif ($secondsToLive<100) {
+                $deleteTimeMess = "$secondsToLive seconds";
+            } else {
+                $minutesToLive = round($secondsToLive/60);
+                if ($minutesToLive<100) {
+                    $deleteTimeMess = "$minutesToLive minutes";
+                } else {
+                    $hoursToLive = round($minutesToLive/60);
+                    $deleteTimeMess = "$hoursToLive hours";
+                }
+            }
+            $stmtIncUnitFcount = $DbMultidict->prepare('SELECT COUNT(1) As cnt FROM csFiles WHERE id=:id');
+            $stmtIncUnitFcount->execute([':id'=>$incUnit]);
+            $incUnitFcount = $stmtIncUnitFcount->fetchColumn();
+            $fcountMessage = ( $incUnitFcount ? " (including $incUnitFcount attached files)" : '' );
+            $incUnitMessage = <<< EODincUnit
+<p style='margin:0;padding:0.5em;background-color:red;color:white'>You have an incomplete unit$fcountMessage which you started and have not yet saved.<br>
+You need to either <a href='edit.php?id=$incUnit' class=mybutton>complete</a> and save it, or else <a href='delete.php?id=$incUnit' class=mybutton>delete</a> it.<br>
+Otherwise it will be deleted automatically $deleteTimeMess from now.</p>
+EODincUnit;
+            $createButton = '';
+        } else {
+            $incUnitMessage = '';
+            $createButton = "<a href='edit.php?id=0' class=mybutton style='margin-right:2px'>Create a unit…</a>";
+        }
         if ($mode<=1) { $mybuttons = <<<END_MYBUTTONSstud
 <a href="voc.php?user=$user" class="mybutton" style="margin-left:0;margin-right:1px">My vocabulary</a>
 END_MYBUTTONSstud;
         } else { $mybuttons = <<<END_MYBUTTONSteach
 <a href="./?owner=$user" class="mybutton" style="margin-left:0;margin-right:1px">My units</a>
-<a href="edit.php?id=0" class="mybutton" style="margin-right:2px">Create a unit…</a>
+$createButton
 END_MYBUTTONSteach;
         }
         $userHtml = <<<END_USER2
@@ -93,6 +127,7 @@ END_MYBUTTONSteach;
 <a href="options.php?user=$user" title="Change your Clilstore options or password" class="mybutton" style="margin-right:2.5em">My options</a>
 $mybuttons
 </p>
+$incUnitMessage
 </div><br style="clear:both">
 END_USER2;
     }
@@ -282,7 +317,7 @@ END_USER2;
     if ($f['textFil']<>'')    { $whereClauses['text']       = '(text LIKE ? OR summary LIKE ?)';  }
     if ($incTest==0)          { $whereClauses['test']       = ( empty($user)
                                                               ? 'test=0'
-                                                              : "(test=0 OR owner='$user')" ); }
+                                                              : "(test=0 OR (test=1 AND owner='$user'))" ); }
     if ($mode==0 && $f['slFil']=='') { $whereClauses['zap'] = '0'; } //Zap everything and select no units if no language selected in mode 0
 
     $whereClause = implode(' AND ',$whereClauses);
@@ -912,7 +947,7 @@ $tableHtml
 
 <div style="min-height:65px;max-width:840px;border:2px solid #47d;margin:8em 0 0.5em 0;border-radius:4px;color:#47d;font-size:95%">
 <div style="float:left;margin-right:1.5em">
-<a href="http://eacea.ec.europa.eu/llp/index_en.php"><img src="/EUlogo.png" alt="" style="margin:3px"></a>
+<a href="https://eacea.ec.europa.eu/erasmus-plus_en"><img src="/EUlogo.png" alt="" style="margin:3px"></a>
 </div>
 <div style="min-height:59px">
 <p style="margin:0.3em 0;color:#1e4d9f;font-size:75%">Disclaimer: The European Commission support for the production of this publication does not constitute an endorsement of the contents which reflects the views only of the authors, and the Commission cannot be held responsible for any use which may be made of the information contained therein.</p>

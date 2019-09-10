@@ -7,9 +7,8 @@
     $token = $_GET['token'];
 
     $refresh = '';
-    $scheme = ( $_SERVER['HTTPS'] ? 'https' : 'http' );
-    $servername = $_SERVER['SERVER_NAME'];
-    $nextpage = "$scheme://$servername/clilstore/options.php";
+    $serverhome = SM_myCLIL::serverhome();
+    $nextpage = "$serverhome/clilstore/options.php";
 
     $DbMultidict = SM_DbMultidictPDO::singleton('rw');
     $utime = time();

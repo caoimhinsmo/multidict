@@ -332,9 +332,10 @@ EODtinyMCE;
             $stmt = $DbMultidict->prepare('UPDATE clilstore SET buttons=:buttons WHERE id=:id');
             $stmt->execute(array(':buttons'=>$nbuttons,':id'=>$id)); //Update in clilstore the count of the number of buttons which the unit has
             $stmt = null;
-            $servername= $_SERVER['SERVER_NAME'];
-            if ( isset($_GET['view']) ) { $happyRefresh = "http://$servername/cs/$id";     }
-                                   else { $happyRefresh = "http://$servername/clilstore/"; }
+            $servername = SM_myCLIL::servername();
+            $serverhome = SM_myCLIL::serverhome();
+            if ( isset($_GET['view']) ) { $happyRefresh = "$serverhome/cs/$id";     }
+                                   else { $happyRefresh = "$serverhome/clilstore/"; }
             if (!empty($warningMessage)) {
                 $refreshTime = 4;
                 $warningMessage = "<p style=\"color:#d70;font-weight:bold\">Warning: $warningMessage</p>";
@@ -477,6 +478,7 @@ EODfilesButton;
     <link rel="stylesheet" href="/css/smo.css" type="text/css">
     <link rel="stylesheet" href="style.css?version=2014-05-15">
     <link rel="icon" type="image/png" href="/favicons/clilstore.png">
+    <meta name="robots" content="noindex">
     <style type="text/css">
         table#editlinkbuts { margin-bottom:0.5em; }
         table#editlinkbuts td:nth-child(1) input { width:12em; text-align:center; background-color:#bfb; color:black; 
@@ -579,7 +581,7 @@ EODfilesButton;
                 case 'BY-NC'   : licName = 'Attribution-NonCommercial';            break;
                 case 'BY-NC-ND': licName = 'Attribution-NonCommercial-NoDerivs';   break;
             }
-            licNameLink = '<a href="http://creativecommons.org/licenses/' + licence.toLowerCase() + '/4.0/">' + licName + '</a>';
+            licNameLink = '<a href="//creativecommons.org/licenses/' + licence.toLowerCase() + '/4.0/">' + licName + '</a>';
             var message = { 'BY':'Anyone sharing a copy or derivative of this unit must acknowledge the original author. (A link to the original unit will do)',
                             'SA':'Any new products based on this unit may only be shared under this same ' + licence  + ' licence.',
                             'ND':'Identical copies of this unit may be shared, but products derived from it may not.',
@@ -656,7 +658,7 @@ $slOptionHtml
 
 <div style="margin:12px 0;padding:4px;border:0">
 Learner level
-(<a href="http://en.wikipedia.org/wiki/Common_European_Framework_of_Reference_for_Languages#Common_reference_levels" title="Common European Framework of Reference for Languages">CEFR</a>)&nbsp;
+(<a href="//en.wikipedia.org/wiki/Common_European_Framework_of_Reference_for_Languages#Common_reference_levels" title="Common European Framework of Reference for Languages">CEFR</a>)&nbsp;
 
 <label for="un" class="rad">
  <input type="radio" name="cefr" value="-1" id="un" onclick="radClick(-1);"><span style="color:grey;font-size:75%;vertical-align:middle">Unspecified</span></label>&nbsp;
@@ -710,7 +712,7 @@ Owner: <span style="padding:1px 3px;border:1px solid">$owner</span>
 </div>
 
 <div style="margin-left2:5em" id="ccdiv">
-I grant use of this unit under the following <a href="http://creativecommons.org/licenses/">Creative Commons</a> licence
+I grant use of this unit under the following <a href="//creativecommons.org/licenses/">Creative Commons</a> licence
 <table id="licTable" class="licence">
 <tr>
    <td id="td-BY-SA">

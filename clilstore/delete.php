@@ -14,9 +14,10 @@
   try {
     $myCLIL->dearbhaich();
     $user = $myCLIL->id;
-    $servername = $_SERVER['SERVER_NAME'];
+    $servername = SM_myCLIL::servername();
+    $serverhome = SM_myCLIL::serverhome();
 
-    if (isset($_GET['cancel'])) { header("Location:http://$servername/clilstore/"); }
+    if (isset($_GET['cancel'])) { header("Location:$serverhome/clilstore/"); }
 
     if (empty($_GET['id'])) { throw new SM_MDexception('No id parameter'); }
     $id = $_GET['id'];
@@ -110,7 +111,7 @@ EOD1;
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta http-equiv="refresh" content="2; url=http://$servername/clilstore/">
+    <meta http-equiv="refresh" content="2; url=$serverhome/clilstore/">
     <title>Delete a clilstore page - result</title>
     <link rel="icon" type="image/png" href="/favicons/clilstore.png">
 </head>

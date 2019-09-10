@@ -23,7 +23,6 @@
         return $dateTime;
     }
 
-    $servername = $_SERVER['SERVER_NAME'];
     $DbMultidict = SM_DbMultidictPDO::singleton('rw');
     $csSess   = SM_csSess::singleton();
     $mode    = $csSess->getCsSession()->mode;
@@ -116,7 +115,7 @@
         $totClicks = $r->totClicks;
         $unitsInfo .= "<br>$totViews views; $totClicks clicks<span style=\"font-size:65%;color:grey\"> since 2013-04-18</span>";
     }
-    $stmt = $DbMultidict->prepare($query);
+    $stmt = $DbMultidict->prepare($query. ' AND test<2');
     $stmt->execute(array(':user'=>$user));
     $r = $stmt->fetch(PDO::FETCH_OBJ);
     $stmt = null;

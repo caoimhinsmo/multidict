@@ -18,9 +18,8 @@
 
     $abuseParams = $ownerHtml = $offerMess = $errorMessage = '';
 
-    $servername = $_SERVER['SERVER_NAME'];
-    $scheme = ( empty($_SERVER['HTTPS']) ? 'http' : 'https' );
-    $server = "$scheme://$servername";
+    $servername = SM_myCLIL::servername();
+    $serverhome = SM_myCLIL::serverhome();
     $DbMultidict = SM_DbMultidictPDO::singleton('rw');
 
     if (isset($_REQUEST['offerSubmit'])) {
@@ -179,7 +178,7 @@ $errorMessage
 <table id="priomh">
 <tr><td>Title:</td><td style="font-weight:bold;font-size:130%">$title</td></tr>
 <tr><td>Owner:</td><td><a href="./userinfo.php?user=$owner" title="$fullname">$owner</a></td></tr>
-<tr><td>Short&nbsp;URL:</td><td><a href="http://$servername/cs/$id">http://$servername/cs/$id</a>
+<tr><td>Short&nbsp;URL:</td><td><a href="/cs/$id">$serverhome/cs/$id</a>
 <tr><td style="vertical-align:top">Summary:</td><td>$summary</td></tr>
 <tr><td style="vertical-align:top">Language notes:</td><td>$langnotes</td></tr>
 <tr><td>Language:</td><td><a href="./?sl=$sl">$sl</a></td></tr>
@@ -194,13 +193,13 @@ $errorMessage
 </table>
 
 <p><a href="page.php?id=$id">Raw unit</a> <i>(unwordlinked)</i>
-⇒ <a href="http://translate.google.com/translate?sl=$sl&amp;tl=$tl&amp;u=$server/clilstore/page.php%3Fid=$id">Google translated</a>
+⇒ <a href="http://translate.google.com/translate?sl=$sl&amp;tl=$tl&amp;u=$serverhome/clilstore/page.php%3Fid=$id">Google translated</a>
 </p>
 
 $ownerHtml
 
 <p style="margin-top:3em;border-top:1px solid red;padding-top:12px">
-<a href="http://www.languages.dk/abuse.php?subject=http://$servername/cs/$id$abuseParams" id="abuse">Report abuse</a> Tell us if you think this unit contains copyright or inappropriate material and should be removed</p>
+<a href="http://www.languages.dk/abuse.php?subject=$serverhome/cs/$id$abuseParams" id="abuse">Report abuse</a> Tell us if you think this unit contains copyright or inappropriate material and should be removed</p>
 
 </div>
 $linkbuttons

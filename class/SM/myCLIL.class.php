@@ -129,6 +129,13 @@ class SM_myCLIL {
       setcookie('myCLIL_authentication','',1,'/');  //unset cookie
   }
 
+  public static function servername() {
+      return $_SERVER['SERVER_NAME'];
+  }
+  public static function serverhome() {
+      return ( $_SERVER['HTTPS'] ? 'https' : 'http' ) . '://' . $_SERVER['SERVER_NAME'];
+  }
+
   public function fullname($user='') {
       if (empty($user)) { $user = $this->id; }
       $DbMultidict = SM_DbMultidictPDO::singleton('r');

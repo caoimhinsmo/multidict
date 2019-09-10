@@ -156,7 +156,7 @@ EODmainForm;
         div.box { border:1px solid black; padding:4px; border-radius:4px; background-color:#ffd; }
         div.errorMessage { margin:0.5em 0; color:red;   font-weight:bold; }
         div.happyMessage { margin:0.5em 0; color:green; font-weight:bold; }
-        input[type=submit], a.button { font-size:112%; background-color:#55a8eb; color:white; font-weight:bold; padding:3px 10px; border:0; border-radius:8px; }
+        input[type=submit], a.button { font-size:112%; background-color:#55a8eb; color:white; font-weight:bold; padding:3px 10px; border:0; border-radius:12px; }
         input[type=submit]:hover, a.button:hover { background-color:blue; }
         .info { color:green; font-size:80%; }
     </style>
@@ -184,14 +184,14 @@ $happyMessage
 
 <div style="margin:0.5em 2em;padding:0 0.5em;border:1px solid green;border-radius:0.5em">
 <p class="info">You can upload files which will be attached to this unit.  Make sure that you name them with the correct filename extension: <b>.html</b> or <b>.docx</b> or <b>.pdf</b> or whatever, as appropriate to their file type.<br>
-And give them sensible “computer-friendly” names such as “<b>Exercise1.html</b>” rather than the likes of like “<b>Exercise écrit, N°1. - Très important!.html</b>”, which would very likely give the computer indigestion.</p>
+And give them short, sensible “computer-friendly” names such as “<b>Exercise1.html</b>” rather than the likes of like “<b>Exercise écrit, N°1. - Très important!.html</b>”, which would very likely give the computer indigestion.</p>
 
 <p class="info">If you have an attached file called “<b>Exercise.pdf</b>”, for example, you can link to it from one of the link buttons on the unit by writing “<b>file:Exercise.pdf</b>”.<br>
 If you have an attached picture called “<b>photo.jpg</b>?”, you can incorporate it within the unit via the link address “<b>/cs/<i>nnnn</i>/photo.jpg</b>”, where <i>nnnn</i> is the unit number.</p>
 </div>
 
 <fieldset style="background-color:#eef;border:8px solid #55a8eb;border-radius:10px">
-<legend style="background-color:#55a8eb;color:white;padding:2px 4px;border:0;border-radius:4px">$legend</legend>
+<legend style="background-color:#55a8eb;color:white;padding:2px 4px;border:0">$legend</legend>
 
 $mainForm
 

@@ -17,7 +17,7 @@
     $id = $_GET['id'];
     if (!is_numeric($id)) { throw new SM_MDexception('id parameter is not numeric'); }
 
-    $serverUrl = ( empty($_SERVER['HTTPS']) ? 'http' : 'https' ) . '://' . $_SERVER['SERVER_NAME'];
+    $serverhome = SM_myCLIL::serverhome();
     $DbMultidict = SM_DbMultidictPDO::singleton('rw');
     $stmt = $DbMultidict->prepare('SELECT sl,owner,title,text,medembed,medfloat FROM clilstore WHERE id=:id');
     $stmt->bindParam(':id', $id, PDO::PARAM_INT);
@@ -78,8 +78,10 @@
 <ul class="linkbuts" title="Navigate to other pages (Right-click to open in a new browser tab or window)">
 <li><a href="./" class="nowordlink" target="_top" title="Clilstore index page">Clilstore</a></li>
 $buttonsHtml
-<li><a href="$serverUrl/wordlink/?navsize=1&amp;sl=$sl&amp;url=referer"
+<!-- Can’t see any need for this.  Delete sometime in future. --CPD
+<li><a href="$serverhome/wordlink/?navsize=1&amp;sl=$sl&amp;url=referer"
     title="Wordlink this page (link it word by word to dictionaries)">Wordlink</a></li>
+-->
 <li class="right"><a href="unitinfo.php?id=$id" class="nowordlink" target="_top"
     title="Summary and other details on this unit">Unit info</a></li>
 $buttonedit
@@ -101,9 +103,6 @@ EOBUT;
         div.left  { float:left;  margin:0.5em; }
         div.right { float:right; margin:0.5em; }
         div.text  { margin-bottom:3px; }
-/* Previous version
-        div.scroll{ width:100%; height:400px; border:1px solid #797; background-color:#efe; padding:2px 1px 1px 2px; overflow:auto; -webkit-overflow-scrolling2:touch; }
-*/
         div.scroll{ width:100%; height:400px; padding:2px 1px 1px 2px; overflow:auto; }
         ul.linkbuts { float:$left; }
         ul.linkbuts li { float:$left; }
@@ -190,8 +189,8 @@ EOBUT;
 $linkbuttons
 <div class="body-indent">
 <wordlink noshow><p class="noshow" style="direction:ltr"><span class="csinfo">  <!--class="noshow" is for stupid IE7. Delete when IE7 is dead-->
-This is a <a href="$serverUrl/clilstore" class="csinfo">Clilstore</a> unit.
-You can <span class="csbutton"><a href="$serverUrl/cs/$id" class="csinfo">link all words to dictionaries</a></span>.
+This is a <a href="$serverhome/clilstore" class="csinfo">Clilstore</a> unit.
+You can <span class="csbutton"><a href="$serverhome/cs/$id" class="csinfo">link all words to dictionaries</a></span>.
 </span></p></wordlink>
 
 <h1 style="margin:3px 0">$title</h1>
@@ -203,7 +202,7 @@ $text
 
 </div>
 $linkbuttons
-<p style="clear:both;font-size:70%;margin:0;text-align:center">Short url:&nbsp;&nbsp; $serverUrl/cs/$id</p>
+<p style="clear:both;font-size:70%;margin:0;text-align:center">Short url:&nbsp;&nbsp; $serverhome/cs/$id</p>
 </body>
 </html>
 EOD1;
