@@ -136,6 +136,7 @@ EODbutHtml;
     $user = $myCLIL->id;
     if (!isset($_REQUEST['id'])) { throw new SM_MDexception('No id parameter'); }
     $id = $_REQUEST['id'];
+    $insistOnTitleJS = ( empty($id) ? 'insistOnTitle();' : '' );
 
     if (@$_REQUEST['editor']=='old') { $editor = 'old'; } else { $editor = 'new'; }
     if ($editor=='new') {
@@ -154,7 +155,7 @@ EODbutHtml;
         plugins: [
              "advlist autolink link image lists charmap preview hr anchor spellchecker",
              "searchreplace wordcount visualblocks visualchars code fullscreen media nonbreaking",
-             "save table contextmenu directionality emoticons template paste textcolor"
+             "save table directionality emoticons template paste"
        ],
        content_css: "$tinymceCSS",
        toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | print preview media fullpage | forecolor backcolor", 
@@ -393,8 +394,8 @@ EOD2;
                 $stmt->execute(array('id'=>$id));
                 while ($r = $stmt->fetch(PDO::FETCH_OBJ)) { $buttons[] = new button($r->ord,$r->but,$r->wl,$r->new,$r->link); }
                 $text = str_replace('&','&amp;',$text);
-                $permis = 'checked';
-                $legend = "Editing Clilstore unit $id";
+                if ($test<>2) { $permis = 'checked'; }
+                $legend = ( $test==2 ? "Creating" : "Editing" ) . " Clilstore unit $id";
                 $cruth  = 'html'; 
             }
             if (count($buttons)<8) { $buttons[] = new button(count($buttons)); } // Always create at least one blank button, up to a maximum of 8 buttons
@@ -402,7 +403,7 @@ EOD2;
         }
         $clonech = ( empty($clone) ? '' : ' checked' );
         $brch    = ( empty($br)    ? '' : ' checked' );
-        $testch  = ( empty($test)  ? '' : ' checked' );
+        $testch  = ( !($test==1)   ? '' : ' checked' );
         $permisch= ( empty($permis)? '' : ' checked' );
         $medtype0sel  = ( $medtype==0 ? ' checked' : '' );
         $medtype1sel  = ( $medtype==1 ? ' checked' : '' );
@@ -600,12 +601,36 @@ EODfilesButton;
             if (permisvalue) { ccdiv.className = ''; }
              else            { ccdiv.className = 'fann'; }
         }
+
+        function insistOnTitle() {
+            el = document.getElementById('title');
+            el.onblur =
+                function() {
+                    var title = el.value;
+                    if (title.length<4) {
+                        setTimeout( function(){el.focus();} ,0);
+                    } else {
+                        var xmlhttp = new XMLHttpRequest();
+                        xmlhttp.onload = function() {
+                            var resp = this.responseText;
+                            if (this.status!=200 || resp.substring(0,8)!='Created:') { 
+                                alert('Error in createUnit:'+this.status+' '+this.responseText); return;
+                            } else {
+                                var newunit = resp.substring(8);
+                                window.location.href = '$serverhome/clilstore/edit.php?id=' + newunit;
+                            }
+                        }
+                        xmlhttp.open('GET', 'ajax/createUnit.php?title=' + title);
+                        xmlhttp.send();
+                    }
+                }
+        }
     </script>
 
 $tinymceScript
 
 </head>
-<body onload="setLevel($level); medlenDisp($medtype); licenceChange('$licence'); permisChange();">
+<body onload="setLevel($level); medlenDisp($medtype); licenceChange('$licence'); permisChange(); $insistOnTitleJS">
 
 <ul class="linkbuts">
 <li><a href="./" title="Clilstore index page">Clilstore</a>
@@ -621,7 +646,7 @@ $editorsMessage
 <div style="float:right;padding:3px;font-size:75%;color#333" title="Copy this unit and create a new unit with a new unit number - not something you would do very often">
 $cloneHtml</div>
 <div>Title<br>
-<input name="title" value="$titleSC" required pattern=".{4,120}" title="Title (between 4 and 120 characters long)" style="width:99%"></div>
+<input id=title name="title" value="$titleSC" autofocus "required pattern=".{4,120}" title="Title (between 4 and 120 characters long)" style="width:99%"></div>
 <div style="margin-top:6px">Embed code for media or picture (if any) <span style="font-size:80%;padding-left:3em">Float or scroll
 <select name="medfloat" style="width:7em" title="Choose the placement on the page">
   <option value="none"$floatnone> </option>
