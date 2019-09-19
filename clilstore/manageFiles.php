@@ -105,8 +105,9 @@
         $filesHtml .= <<<EODeditFile
 <tr>
 <td><input name="filename[]" value="$filename" title="filesize $filesize"><input type="hidden" name="fileid[]" value="$fileid"></td>
-<td><a href="/cs/$id/$filename"><img src="/icons-smo/td.gif" title="View this file" alt="View"></a></td>
 <td><a href="./manageFiles.php?save=delete&amp;id=$id&amp;fileid=$fileid"><img src="/icons-smo/curAs.png" title="Delete this file (immediately and permanently)" alt="Delete"></a></td>
+<td><a href="/cs/$id/$filename"><img src="/icons-smo/td.gif" title="View this file" alt="View"></a></td>
+<td style="font-size:80%">/cs/$id/$filename</td>
 </tr>
 EODeditFile;
     }
@@ -116,12 +117,13 @@ EODeditFile;
         $mainForm = <<<EODmainForm
 <form method="post" name="mainForm">
 <fieldset style="margin:6px 0 0 0;border:1px solid grey;padding:10px;border-radius:5px;background-color:#fafaff">
-<legend style="font-weight:bold">Rename or delete existing files</legend>
+<legend class=boldleg>Rename or delete existing files</legend>
 <table id="filesbuts">
-<tr style="font-size:85%">
-<td>File <span class="info">(you can edit its name here to change it)</span></td>
-<td>View</td>
+<tr style="font-size:85%;background-color:#ddf">
+<td>File <span class="info" style="font-style:italic">(you can edit its name here to change it)</span></td>
 <td>Delete</td>
+<td>View</td>
+<td>Link address <span style="font-size:80%;font-style:italic">(relative url for use in buttons or in the body of the unit)</span></td>
 </tr>
 $filesHtml
 </table>
@@ -148,27 +150,28 @@ EODmainForm;
     <link rel="stylesheet" href="style.css?version=2014-04-15">
     <link rel="icon" type="image/png" href="/favicons/clilstore.png">
     <style type="text/css">
-        table#filesbuts { margin-bottom:0.2em; }
+        table#filesbuts { margin-bottom:0.2em; border-collapse:collapse; }
+        table#filesbuts td { padding:2px 4px; } 
         table#filesbuts td:nth-child(1) input { min-width:20em; background-color:#bfe; color:black; font-size:100%;
                                                    padding:3px 6px; border:1px solid green; border-radius:4px; }
-        table#filesbuts td:nth-child(2)       { width:1.5em; text-align:center; }
-        table#filesbuts td:nth-child(3)       { width:1.8em; text-align:center; }
+        table#filesbuts td:nth-child(2)       { width:1.8em; text-align:center; }
+        table#filesbuts td:nth-child(3)       { width:1.5em; text-align:center; }
+        table#filesbuts td:nth-child(4)       { padding-left:1em; color:green; }
         div.box { border:1px solid black; padding:4px; border-radius:4px; background-color:#ffd; }
         div.errorMessage { margin:0.5em 0; color:red;   font-weight:bold; }
         div.happyMessage { margin:0.5em 0; color:green; font-weight:bold; }
         input[type=submit], a.button { font-size:112%; background-color:#55a8eb; color:white; font-weight:bold; padding:3px 10px; border:0; border-radius:12px; }
         input[type=submit]:hover, a.button:hover { background-color:blue; }
         .info { color:green; font-size:80%; }
+        legend.boldleg { font-weight:bold; background-color:white; border-radius:4px; border:1px solid grey; }
     </style>
     <script>
-        <!--
         function makeNiceFilename(value) {
             var niceName = value.split("\\\\").pop().split("/").pop();
             var el = document.getElementById('filenameUpl');
             el.value = niceName;
             document.getElementById('nicenameDiv').style.display = 'block';
         }
-        //-->
     </script>
 </head>
 <body>
@@ -182,21 +185,16 @@ EODmainForm;
 $errorMessage
 $happyMessage
 
-<div style="margin:0.5em 2em;padding:0 0.5em;border:1px solid green;border-radius:0.5em">
 <p class="info">You can upload files which will be attached to this unit.  Make sure that you name them with the correct filename extension: <b>.html</b> or <b>.docx</b> or <b>.pdf</b> or whatever, as appropriate to their file type.<br>
-And give them short, sensible “computer-friendly” names such as “<b>Exercise1.html</b>” rather than the likes of like “<b>Exercise écrit, N°1. - Très important!.html</b>”, which would very likely give the computer indigestion.</p>
+Give them short, sensible “computer-friendly” names such as “<b>Exercise1.html</b>” rather than the likes of like “<b>Exercise écrit, N°1. - Très important!.html</b>”, which would very likely give the computer indigestion.</p>
 
-<p class="info">If you have an attached file called “<b>Exercise.pdf</b>”, for example, you can link to it from one of the link buttons on the unit by writing “<b>file:Exercise.pdf</b>”.<br>
-If you have an attached picture called “<b>photo.jpg</b>?”, you can incorporate it within the unit via the link address “<b>/cs/<i>nnnn</i>/photo.jpg</b>”, where <i>nnnn</i> is the unit number.</p>
-</div>
-
-<fieldset style="background-color:#eef;border:8px solid #55a8eb;border-radius:10px">
+<fieldset style="margin-top:2em;background-color:#ddf;border:8px solid #55a8eb;border-radius:10px">
 <legend style="background-color:#55a8eb;color:white;padding:2px 4px;border:0">$legend</legend>
 
 $mainForm
 
 <fieldset style="margin:1.5em 0 0 0;border:1px solid grey;padding:10px;border-radius:5px;background-color:#fafaff">
-<legend style="font-weight:bold">Upload a new file</legend>
+<legend class=boldleg>Upload a new file</legend>
 <form id="upload_form" enctype="multipart/form-data" method="post">
 <div>
     <label for="bloigh">Choose the file on your computer</label>

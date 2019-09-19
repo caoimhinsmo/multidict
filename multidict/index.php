@@ -136,7 +136,7 @@ EOD3;
   $advSwopHtml = "<div class=basOnly><b>basic</b><input type=range id=basRange min=0 max=1 step=1 value=0 style=width:3em;margin:0;padding:0><a>advanced</a></div>"
                 ."<div class=advOnly><a>basic</a><input type=range id=advRange min=0 max=1 step=1 value=1 style=width:3em;margin:0;padding:0><b>advanced</b></div>";
 
-  $advSwopHtml = "<div style='float:right;margin-right:2em;font-size:70%' title='Swop between basic and advanced interface' onclick='mdAdvSet(1-mdAdv)'>$advSwopHtml</div>";
+  $advSwopHtml = "<div style='float:left;margin-right:2em;font-size:70%' title='Swop between basic and advanced interface' onclick='mdAdvSet(1-mdAdv)'>$advSwopHtml</div>";
 
   echo <<<EOD4
 <!DOCTYPE html>

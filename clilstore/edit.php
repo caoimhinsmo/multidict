@@ -440,7 +440,7 @@ EOD2;
 
         if (empty($id)) { //Creating a new unit
             $submitValue = 'Publish';
-            $filesButton = '<span class="info">You can upload and attach attach files to the unit for use on buttons, but to do this you must save the unit first then edit it again.</span>';
+            $filesButton = '<span class="info">Once you have given this new unit a title, you’ll be able attach files to it for use on buttons or in the body of the unit itself.</span>';
         } else {
             $submitValue = 'Save unit';
             $filesButton = <<<EODfilesButton
@@ -451,11 +451,6 @@ EODfilesButton;
         $errorMessage = ( empty($errorMessage) ? '' :  '<div class="errorMessage">'.$errorMessage.'<br><br>The '
                                                      . ($id==0 ? 'new unit was' : 'changes were')
                                                      . ' not saved. Correct any errors or omissions and resubmit.</div>' );
-//Fossil - delete
-//        for ($i=0;$i<=3;$i++) {
-//            ${'wl' .$i.'ch'} = ( ${'wl' .$i} ? 'checked' : '' );
-//            ${'new'.$i.'ch'} = ( ${'new'.$i} ? 'checked' : '' );
-//        }
         $buttonsHtml = '';
         foreach ($buttons as $b) { $buttonsHtml .= $b->formHtml(); }
 
