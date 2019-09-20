@@ -122,21 +122,21 @@ EOD3;
       $schemeValue = ( $scheme=='https' ? 1 : 0 );
       $schemeSwopRange = "<input type=range min=0 max=1 step=1 value=$schemeValue style=width:3em;margin:0;padding:0>";
       if ($scheme=='https') {
-          $schemeSwopHtml = '<a>http</a>' . $schemeSwopRange . '<b>https</b>';
+          $schemeSwopHtml = '<a title="Swop to http">http</a>' . $schemeSwopRange . '<b>https</b>';
           $schemeSwopLocation = 'http';
       } else {
-          $schemeSwopHtml = '<b>http</b>' . $schemeSwopRange . '<a>https</a>';
+          $schemeSwopHtml = '<b>http</b>' . $schemeSwopRange . '<a title="Swop to https">https</a>';
           $schemeSwopLocation = 'https';
       }
       $schemeSwopLocation .= "://$server_name$php_self";
       if (!empty($_GET)) { $schemeSwopLocation .= '?' . $_SERVER['QUERY_STRING']; }
-      $schemeSwopHtml = "<div style='float:right;padding-right:4px;font-size:70%' onclick=window.location.replace('$schemeSwopLocation');>$schemeSwopHtml</div>";
+      $schemeSwopHtml = "<span class=toggle title='Swop between http and https' onclick=\"window.location.replace('$schemeSwopLocation')\">$schemeSwopHtml</span>";
   }
 
-  $advSwopHtml = "<div class=basOnly><b>basic</b><input type=range id=basRange min=0 max=1 step=1 value=0 style=width:3em;margin:0;padding:0><a>advanced</a></div>"
-                ."<div class=advOnly><a>basic</a><input type=range id=advRange min=0 max=1 step=1 value=1 style=width:3em;margin:0;padding:0><b>advanced</b></div>";
+  $advSwopHtml = "<span class=basOnly><b>basic</b><input type=range id=basRange min=0 max=1 step=1 value=0 style=width:3em;margin:0;padding:0><a title='Switch to advanced interface'>advanced</a></span>"
+                ."<span class=advOnly><a title='Switch to basic interface'>basic</a><input type=range id=advRange min=0 max=1 step=1 value=1 style=width:3em;margin:0;padding:0><b>advanced</b></span>";
 
-  $advSwopHtml = "<div style='float:left;margin-right:2em;font-size:70%' title='Swop between basic and advanced interface' onclick='mdAdvSet(1-mdAdv)'>$advSwopHtml</div>";
+  $advSwopHtml = "<span class=toggle title='Swop between basic and advanced interface' onclick='mdAdvSet(1-mdAdv)'>$advSwopHtml</span>";
 
   echo <<<EOD4
 <!DOCTYPE html>
@@ -179,6 +179,9 @@ Replace the following sometime with flexbox - Option 3 at https://stackoverflow.
         div#dictSelectOff:hover { background-color:#ddf; }
         span.lemma0 { font-weight:bold; text-decoration:underline; color:#bb2020; }
         span.lemmaword { font-style:italic; }
+        span.toggle { margin:0 0 0 0.5em; border-radius:0.3em; padding:0.1em 0.3em 0 0.3em; background-color:#75c8fb; color:white; font-size:80%; }
+        span.toggle b { color:yellow; }
+        span.toggle input { font-size:90%; vertical-align:bottom; }
         a#esc span { border:1px solid grey; border-radius:3px; padding: 0 2px; color:grey; background-color:white; }
         a#esc:hover { background-color:inherit; }
         a#esc:hover span { color:yellow; background-color:blue; }
@@ -197,6 +200,7 @@ Replace the following sometime with flexbox - Option 3 at https://stackoverflow.
         div.advanced div.basOnly  { display:none; }
         div.basic    div.advOnly  { display:none; }
         div.basic    span.advOnly { display:none; }
+        div.advanced span.basOnly { display:none; }
     </style>
     <script>
         var standalone, mdAdv, mdAdvClass;
@@ -271,13 +275,14 @@ Replace the following sometime with flexbox - Option 3 at https://stackoverflow.
 <div id="framcontainer">
 <div id="navigation"><div id="navigation-content">
 <div id=mdAdvDiv class=$mdAdvClass>
-$schemeSwopHtml
-$advSwopHtml
 <p style="margin:0 0 1px 0">
 $serverlink
 <span style="background-color:orange;color:#bfb;padding:1px 2px;font-weight:bold">Multidict</span>
 <a class="button" href="help.php" target="MDiframe$sid">Help</a>
-<a class="button" href="about.php" target="MDiframe$sid">About</a></p>
+<a class="button" href="about.php" target="MDiframe$sid">About</a>
+$advSwopHtml
+$schemeSwopHtml
+</p>
 
 <form id="mdForm" action="./" style="margin:0 0 0 2px;padding-top:1px">
 <div style="width:100%;padding-top:1px;">
