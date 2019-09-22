@@ -830,16 +830,24 @@ EOD;
       $stmt = null;
   }
 
+
+  public function csid() {
+      //If the url looks like that of a Clilstore unit, return the unit number. Otherwise return 0, or return -1 if no url at all.
+      $url = $this->url;
+      if (empty($url)) return -1;
+      if (!preg_match('|//(.*)multidict\.(.*)/clilstore/page\.php\?id=(\d+)|',$url,$matches)) return 0; //Not a Clilstore unit
+      return $matches[3];
+  }
+
   public function csClickCounter() {
       //If it looks like Multidict is being called from a Clilstore unit, add 1 to the click count for that unit
       //And if a user is logged in, update the vocabulary tables for this user
-      $url = $this->url;
-      if (!preg_match('|//(.*)multidict\.(.*)/clilstore/page\.php\?id=(\d+)|',$url,$matches)) return; //Not a Clilstore unit
-      if ( !isset($_GET['sid']) || !isset($_GET['word']) || isset($_GET['tl']) )              return; //Not a click from Wordlink
-      $unitid = $matches[3];
+      $csid = self::csid();
+      if ($csid<1) return;  //Not a Clilstore unit
+      if ( !isset($_GET['sid']) || !isset($_GET['word']) || isset($_GET['tl']) ) return; //Not a click from Wordlink
       $DbMultidict = SM_DbMultidictPDO::singleton('rw');
       $stmt = $DbMultidict->prepare('UPDATE clilstore SET clicks=clicks+1 WHERE id=:id');
-      $stmt->execute([':id'=>$unitid]);
+      $stmt->execute([':id'=>$csid]);
       $word  = $this->word;
       $sl    = $this->sl;
       $utime = time();
@@ -849,7 +857,7 @@ EOD;
                 ." VALUES (:unit,:word,1,1,:utime)"
                 ." ON DUPLICATE KEY UPDATE clicks=clicks+1,newclicks=newclicks+1,utime=:utime";
       $stmtWC = $DbMultidict->prepare($queryWC);
-      $stmtWC->execute([':unit'=>$unitid,':word'=>$word,':utime'=>$utime]);
+      $stmtWC->execute([':unit'=>$csid,':word'=>$word,':utime'=>$utime]);
 
       //Update the vocabulary for the Clilstore user, if the user has record set to on
       $myCLIL = SM_myCLIL::singleton();
@@ -869,7 +877,7 @@ EOD;
               $queryVU = "INSERT INTO csVocUnit (vocid,unit,calls) VALUES (:vocid,:unit,1)"
                         ." ON DUPLICATE KEY UPDATE calls=calls+1";
               $stmtVU = $DbMultidict->prepare($queryVU);
-              $stmtVU->execute([':vocid'=>$vocid,':unit'=>$unitid]);
+              $stmtVU->execute([':vocid'=>$vocid,':unit'=>$csid]);
               $DbMultidict->commit();
           }
       }

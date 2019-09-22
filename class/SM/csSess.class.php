@@ -596,5 +596,14 @@ ENDHTML;
       $stmt = null;
   }
 
+  public static function csTitle($id) {
+     // Returns the title of the Clilstore unit with id $id
+      $DbMultidict = SM_DbMultidictPDO::singleton('rw');
+      $stmt = $DbMultidict->prepare('SELECT title FROM clilstore WHERE id=:id');
+      $stmt->execute(['id'=>$id]);
+      $title = $stmt->fetchColumn();
+      if ($title) { return $title; } else { return ''; }
+  }
+
 }
 ?>
