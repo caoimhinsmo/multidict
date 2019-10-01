@@ -74,20 +74,28 @@
                         ."</span></li>"
                         ."<li class=right><a class=$vocClass href='voc.php?user=$user&amp;sl=$sl' nowordlink target=voctab title='Open your vocabulary list in a separate tab'>V</a>";
     }
-    $linkbuttons = <<<EOBUT
-<ul class="linkbuts" title="Navigate to other pages (Right-click to open in a new browser tab or window)">
+    $sharebutton = "<iframe src='https://www.facebook.com/plugins/share_button.php?href=$serverhome/cs/$id&layout=button&size=small&mobile_iframe=true&width=60&height=20&appId [www.facebook.com]' width='60' height='20' style='border:none;overflow:hidden' scrolling='no' frameborder='0' allowTranspare
+ncy='true'></iframe>";
+    $navbar1 = <<<EOD_NB1
+<ul class="linkbuts">
 <li><a href="./" class="nowordlink" target="_top" title="Clilstore index page">Clilstore</a></li>
-$buttonsHtml
-<!-- Can’t see any need for this.  Delete sometime in future. --CPD
-<li><a href="$serverhome/wordlink/?navsize=1&amp;sl=$sl&amp;url=referer"
-    title="Wordlink this page (link it word by word to dictionaries)">Wordlink</a></li>
--->
+<li>$sharebutton
 <li class="right"><a href="unitinfo.php?id=$id" class="nowordlink" target="_top"
     title="Summary and other details on this unit">Unit info</a></li>
 $buttonedit
 $recordVocHtml
 </ul>
-EOBUT;
+EOD_NB1;
+    $navbar2 = <<<EOD_NB2
+<ul class="linkbuts">
+<li><a href="./" class="nowordlink" target="_top" title="Clilstore index page">Clilstore</a></li>
+$buttonsHtml
+<li class="right"><a href="unitinfo.php?id=$id" class="nowordlink" target="_top"
+    title="Summary and other details on this unit">Unit info</a></li>
+$buttonedit
+$recordVocHtml
+</ul>
+EOD_NB2;
 
     echo <<<EOD1
 <!DOCTYPE html>
@@ -95,9 +103,9 @@ EOBUT;
 <head>
     <meta charset="UTF-8">
     <title>CLILstore unit $id: $title</title>
-    <link rel="StyleSheet" href="style.css?version=2014-04-15" type="text/css">
+    <link rel="StyleSheet" href="style.css?version=2014-04-15">
     <link rel="icon" type="image/png" href="/favicons/clilstore.png">
-    <style type="text/css">
+    <style>
         html,body { height:100%; width:100%; overflow:auto; }
         div.none  { margin:0.5em; }
         div.left  { float:left;  margin:0.5em; }
@@ -186,7 +194,7 @@ EOBUT;
     </script>
 </head>
 <body lang="$sl">
-$linkbuttons
+$navbar1
 <div class="body-indent">
 <wordlink noshow><p class="noshow" style="direction:ltr"><span class="csinfo">  <!--class="noshow" is for stupid IE7. Delete when IE7 is dead-->
 This is a <a href="$serverhome/clilstore" class="csinfo">Clilstore</a> unit.
@@ -201,7 +209,7 @@ $text
 </div>
 
 </div>
-$linkbuttons
+$navbar2
 <p style="clear:both;font-size:70%;margin:0;text-align:center">Short url:&nbsp;&nbsp; $serverhome/cs/$id</p>
 </body>
 </html>

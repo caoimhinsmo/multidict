@@ -43,7 +43,7 @@
     if ($csid) {
         $favicon = 'clilstore';
         $noframes = "Clilstore unit $csid<br>(Clilstore and Wordlink link webpages word-by-word to online dictionaries)";
-        $logo = '/lonelogo/clilstore-blue.png';
+        $logo = '/lonelogo/COOLfb.png';
         $pagetitle = "Clilstore unit $csid";
         $description = htmlspecialchars(SM_csSess::csTitle($csid));
     } else {
