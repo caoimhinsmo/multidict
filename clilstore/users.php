@@ -24,7 +24,6 @@
         $stmt->execute([':user'=>$myid]);
         $myadlev = $stmt->fetchColumn();
     } else { $myadlev = -1; }
-//$myadlev = 1;
 
     if ($myadlev<0) { $inctest = 0; }
       else        { $inctest = $_GET['inctest'] ?? ''; }
@@ -32,12 +31,16 @@
     if ($inctest) {
         $testCond = 'test<2';
         $inctestChecked = 'checked';
-        $h1 = 'Clilstore users who have published units';
+        $h1 = 'Clilstore users who have created units (including test units)';
     } else {
         $testCond = 'test<1';
         $inctestChecked = '';
-        $h1 = 'Clilstore users who have created units (including test units)';
+        $h1 = 'Clilstore users who have published units';
     }
+    $inctestCheckbox = ( $myadlev >= 0
+                       ? "<input id=inctest type=checkbox name=inctest $inctestChecked onchange=inctestChange()><label for=inctest>Include test units</label>"
+                       : ''
+                       );
     $testCond = ( empty($_GET['inctest']) ? 'test<1' : 'test<2' );
     $sort = $_GET['sort'] ?? '';
     $sorts = ( $sort ? explode('|',$sort) : [] );
@@ -207,7 +210,7 @@ EOD_tableHtml;
 <div class="body-indent">
 
 <h1 style="font-size:130%">$h1</h1>
-<input id=inctest type=checkbox name=inctest $inctestChecked onchange=inctestChange()><label for=inctest>Include test units</label>
+$inctestCheckbox
 
 $tableHtml
 
