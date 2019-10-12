@@ -17,7 +17,7 @@ ul.smo-navlist a:focus   { color:#039; text-decoration:none; border-top-color:#1
 /* ------------ Link buttons ----------------------------------------------------------------------------------------- */
 ul.linkbuts { clear:both; width:100%; padding:3px 1px;
               margin:0 0 1px 0; list-style-type:none; float:left;
-              color:#ffa; background-color:#ccd;
+              color:#ffa; background-color:#cef;
               white-space:nowrap; }
 ul.linkbuts li { display:inline; float:left; margin:2px 2px; }
 ul.linkbuts li a { border:0; padding:2px 4px; border-radius:6px;

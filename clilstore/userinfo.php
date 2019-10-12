@@ -14,7 +14,6 @@
     if (empty($_GET['user'])) { throw new SM_MDexception('No user parameter'); }
     $user = $_GET['user'];
     $giveFullInfo = in_array($myCLIL->id, array(/* $user,*/'admin','caoimhinsmo','Kent','fred','Claisneachd'));
-    $timeFormat = ( $giveFullInfo ? 'Y-m-d H:i:s' : 'Y-m-d' );
 
     function dateTime($dateTimeObj,$giveFullInfo) {
         $dateTime = $dateTimeObj->format('Y-m-d');
@@ -53,7 +52,7 @@
             $u  = $r->user;
             $em = $r->email;
             $u = htmlspecialchars($u);
-            $usersArr[] = "<a href=\"./userinfo.php?user=$u\" title=\"$em\">$u</a>";
+            $usersArr[] = "<a href=\"./users.php?user=$u\" title=\"$em\">$u</a>";
         }
         $usersList = implode(', ',$usersArr);
         if (!empty($usersList)) { $fullnameHtml .= "<br><span style=\"font-size:85%;color:grey\">Other users with this name: $usersList</span>"; }
@@ -178,9 +177,9 @@ EODfullInfo;
     <meta charset="UTF-8">
     <title>Information on Clilstore user $userHtml</title>
     <link rel="icon" type="image/png" href="/favicons/clilstore.png">
-    <link rel="StyleSheet" href="/css/smo.css" type="text/css">
-    <link rel="StyleSheet" href="style.css?version=2014-04-15" type="text/css">
-    <style type="text/css">
+    <link rel="StyleSheet" href="/css/smo.css">
+    <link rel="StyleSheet" href="style.css?version=2014-04-15">
+    <style>
         div.body-indent { clear:both; margin:0 0.25%; padding:0 0.25% 6px 0.25%; border-top:1px solid white; }
         table#priomh    { border-collapse:collapse; }
         table#priomh td { padding:7px 4px; vertical-align:top; }
@@ -192,6 +191,7 @@ EODfullInfo;
 <body>
 <ul class="linkbuts">
 <li><a href="./" title="Clilstore index page">Clilstore</a>
+<li><a href="users.php">Users</a>
 </ul>
 <div class="body-indent">
 
@@ -202,6 +202,7 @@ $displayInfo
 </div>
 <ul class="linkbuts">
 <li><a href="./" title="Clilstore index page">Clilstore</a>
+<li><a href="users.php">Users</a>
 </ul>
 </body>
 </html>
