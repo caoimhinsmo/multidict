@@ -25,9 +25,9 @@
         $myadlev = $stmt->fetchColumn();
     } else { $myadlev = -1; }
 
-    if ($myadlev<0) { $inctest = 0; }
-      else        { $inctest = $_GET['inctest'] ?? ''; }
-    if ($inctest=='off') { $inctest = ''; }
+    if      ($myadlev<0)              { $inctest = 0; }
+     elseif (isset($_GET['inctest'])) { $inctest = 1; }
+     else                             { $inctest = 0; }
     if ($inctest) {
         $testCond = 'test<2';
         $inctestChecked = 'checked';
@@ -41,7 +41,6 @@
                        ? "<input id=inctest type=checkbox name=inctest $inctestChecked onchange=inctestChange()><label for=inctest>Include test units</label>"
                        : ''
                        );
-    $testCond = ( empty($_GET['inctest']) ? 'test<1' : 'test<2' );
     $sort = $_GET['sort'] ?? '';
     $sorts = ( $sort ? explode('|',$sort) : [] );
     $sorts[] = 'fullname';
@@ -121,10 +120,11 @@ EODtr;
     $totalNviews   = round($totalNviews,3);
     $totalClicksav = round($totalNclicks/$totalNviews,4);
     $tableTopAdlev2 = $tableBotAdlev2 = '';
+    $sortInctest = ( $inctest ? "$sort&amp;inctest" : $sort );
     if ($myadlev >= 2) {
         $tableTopAdlev2 = <<<EOD_tableTopAdlev2
-  <td><a href="users.php?sort=adlev|$sort">adlev</a></td>
-  <td><a href="users.php?sort=email|$sort">email</a></td>
+  <td><a href="users.php?sort=adlev|$sortInctest">adlev</a></td>
+  <td><a href="users.php?sort=email|$sortInctest">email</a></td>
 EOD_tableTopAdlev2;
         $tableBotAdlev2 = <<<EOD_tableBotAdlev2
   <td></td>
@@ -134,15 +134,15 @@ EOD_tableBotAdlev2;
     $tableHtml = <<<EOD_tableHtml
 <table id=main>
 <tr id=maintop title='Click to sort'>
-  <td><a href="users.php?sort=fullname|$sort">Full name</a></td>
-  <td><a href="users.php?sort=user|$sort">User</a></td>
-  <td><a href="users.php?sort=nunits|$sort">Units</a></td>
-  <td><a href="users.php?sort=nclicks|$sort">Clicks</a></td>
-  <td><a href="users.php?sort=nviews|$sort">Views</a></td>
-  <td><a href="users.php?sort=clickav|$sort">Clicks/V</a></td>
-  <td><a href="users.php?sort=joined|$sort">Joined</a></td>
-  <td><a href="users.php?sort=firstCreate|$sort">First create</a></td>
-  <td><a href="users.php?sort=lastChange|$sort">Last change</a></td>
+  <td><a href="users.php?sort=fullname|$sortInctest">Full name</a></td>
+  <td><a href="users.php?sort=user|$sortInctest">User</a></td>
+  <td><a href="users.php?sort=nunits|$sortInctest">Units</a></td>
+  <td><a href="users.php?sort=nclicks|$sortInctest">Clicks</a></td>
+  <td><a href="users.php?sort=nviews|$sortInctest">Views</a></td>
+  <td><a href="users.php?sort=clickav|$sortInctest">Clicks/V</a></td>
+  <td><a href="users.php?sort=joined|$sortInctest">Joined</a></td>
+  <td><a href="users.php?sort=firstCreate|$sortInctest">First create</a></td>
+  <td><a href="users.php?sort=lastChange|$sortInctest">Last change</a></td>
 $tableTopAdlev2</tr>
 $tableHtml
 <tr id=mainbottom>
