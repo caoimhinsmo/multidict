@@ -23,7 +23,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Check safe browsing</title>
-    <link rel="StyleSheet" href="/css/smo.css" type="text/css">
+    <link rel="StyleSheet" href="/css/smo.css">
 </head>
 <body style="padding:3px">
 <h1 style="font-size:120%">Test a url for suspected malware or phishing using the Google Safe Browsing API</h1>

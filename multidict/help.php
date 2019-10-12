@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Multidict Help</title>
-    <link rel="StyleSheet" href="/css/smo.css" type="text/css">
-    <style type="text/css">
+    <link rel="StyleSheet" href="/css/smo.css">
+    <style>
         div.box { margin:2px; border:1px solid #393; padding:0.2em;
                   background-color:#efe; color:green; font-size:80%; text-align:justify }
     </style>

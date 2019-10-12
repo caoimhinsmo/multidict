@@ -146,10 +146,10 @@ EODmainForm;
 <head>
     <meta charset="UTF-8">
     <title>$legend</title>
-    <link rel="stylesheet" href="/css/smo.css" type="text/css">
+    <link rel="stylesheet" href="/css/smo.css">
     <link rel="stylesheet" href="style.css?version=2014-04-15">
     <link rel="icon" type="image/png" href="/favicons/clilstore.png">
-    <style type="text/css">
+    <style>
         table#filesbuts { margin-bottom:0.2em; border-collapse:collapse; }
         table#filesbuts td { padding:2px 4px; } 
         table#filesbuts td:nth-child(1) input { min-width:20em; background-color:#bfe; color:black; font-size:100%;

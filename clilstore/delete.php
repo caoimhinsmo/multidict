@@ -49,10 +49,10 @@
 <head>
     <meta charset="UTF-8">
     <title>Delete a clilstore unit</title>
-    <link rel="stylesheet" href="/css/smo.css" type="text/css">
+    <link rel="stylesheet" href="/css/smo.css">
     <link rel="stylesheet" href="style.css?version=2014-04-15">
     <link rel="icon" type="image/png" href="/favicons/clilstore.png">
-    <style type="text/css">
+    <style>
         input[type=submit]       { font-size:112%; background-color:#55a8eb; color:white; font-weight:bold; padding:3px 10px; border:0; border-radius:8px; }
         input[type=submit]:hover { background-color:blue; }
         input#delete       { background-color:#f84; }

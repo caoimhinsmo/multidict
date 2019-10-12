@@ -8,9 +8,9 @@
 <head>
     <meta charset="UTF-8">
     <title>Wordlink example pages</title>
-    <link rel="StyleSheet" href="/css/smo.css" type="text/css">
+    <link rel="StyleSheet" href="/css/smo.css">
     <link rel="icon" type="image/png" href="/favicons/wordlink.png">
-    <style type="text/css">
+    <style>
         fieldset#wiki { background-color:#eef; border:1px solid #88f;
                         -moz-border-radius:3px; -webkit-border-radius:3px; }
         fieldset#wiki legend { font-weight:bold; background-color:#ddf; border:1px solid blue; color:#006; 

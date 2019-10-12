@@ -18,10 +18,10 @@
 <head>
     <meta charset="UTF-8">
     <title>Change user options on Clilstore</title>
-    <link rel="stylesheet" href="/css/smo.css" type="text/css">
+    <link rel="stylesheet" href="/css/smo.css">
     <link rel="stylesheet" href="style.css?version=2014-04-15">
     <link rel="icon" type="image/png" href="/favicons/clilstore.png">
-    <style type="text/css">
+    <style>
         span.callcount { font-size:75%; color:grey; }
         table#vocab { border-collapse:collapse; border:1px solid grey; margin-bottom:0.5em; }
         table#vocab tr#vocabhead { background-color:grey; color:white; font-weight:bold; }

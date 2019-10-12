@@ -45,10 +45,10 @@
 <head>
     <meta charset="UTF-8">
     <title>Register a new userid on clilstore</title>
-    <link rel="stylesheet" href="/css/smo.css" type="text/css">
+    <link rel="stylesheet" href="/css/smo.css">
     <link rel="stylesheet" href="style.css?version=2014-04-15">
     <link rel="icon" type="image/png" href="/favicons/clilstore.png">
-    <style type="text/css">
+    <style>
         span.info { color:green; font-size:70%; }
     </style>
 </head>

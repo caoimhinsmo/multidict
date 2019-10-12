@@ -6,7 +6,7 @@
 <head>
     <meta charset="UTF-8">
     <title>About Wordlink</title>
-    <link rel="StyleSheet" href="/css/smo.css" type="text/css">
+    <link rel="StyleSheet" href="/css/smo.css">
     <link rel="icon" type="image/png" href="/favicons/wordlink.png">
 </head>
 <body>

@@ -12,10 +12,10 @@
 <head>
     <meta charset="UTF-8">
     <title>Change password on Clilstore</title>
-    <link rel="stylesheet" href="/css/smo.css" type="text/css">
+    <link rel="stylesheet" href="/css/smo.css">
     <link rel="stylesheet" href="style.css?version=2014-04-15">
     <link rel="icon" type="image/png" href="/favicons/clilstore.png">
-    <style type="text/css">
+    <style>
         div.errorMessage { margin:0.5em 0; color:red; font-weight:bold; }
         span.info { color:green; font-size:70%; }
     </style>

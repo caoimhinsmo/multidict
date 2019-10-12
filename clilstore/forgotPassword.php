@@ -12,10 +12,10 @@
 <head>
     <meta charset="UTF-8">
     <title>Login to Clilstore</title>
-    <link rel="stylesheet" href="/css/smo.css" type="text/css">
+    <link rel="stylesheet" href="/css/smo.css">
     <link rel="stylesheet" href="style.css?version=2014-04-15">
     <link rel="icon" type="image/png" href="/favicons/clilstore.png">
-    <style type="text/css">
+    <style>
         div.errorMessage { color:red; font-weight:bold; margin:1em 0; }
         span.info { color:green; font-size:70%; font-style:italic; }
     </style>

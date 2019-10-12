@@ -8,7 +8,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Languages handled by Multidict</title>
-    <style type="text/css">
+    <style>
         div.headings div { font-weight:bold; text-decoration:underline; }
         p.family   { margin:2em 0 0 0; background-color:#bbf; font-size:150%; font-weight: bold;color:red; }
         p.subgroup { margin:1.5em 0 0 0; background-color:#ddf; font-size:130%; font-weight: bold;color:brown; padding-left:0.3em;   }

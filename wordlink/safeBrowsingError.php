@@ -26,7 +26,7 @@ EOD_PHISHING;
 <head>
     <meta charset="UTF-8">
     <title>Wordlink: Safe browsing check failure</title>
-    <link rel="StyleSheet" href="/css/smo.css" type="text/css">
+    <link rel="StyleSheet" href="/css/smo.css">
 </head>
 <body style="padding:3px;background-color:#f55;color:white">
 <h1 style="font-size:120%;text-align:center">Wordlink has refused to process this page because it is suspect</h1>

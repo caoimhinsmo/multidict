@@ -787,7 +787,7 @@ END_tableHtmlBun;
     <link rel="StyleSheet" href="/css/smo.css">
     <link rel="StyleSheet" href="style.css">
     <link rel="icon" type="image/png" href="/favicons/clilstore.png">
-    <style type="text/css">
+    <style>
         table#main { border:1px solid #888; border-collapse:collapse; white-space:nowrap; color:#111; }
         table#main tr td { padding:0 3px; vertical-align:top; }
 

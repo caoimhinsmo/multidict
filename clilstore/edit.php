@@ -147,7 +147,7 @@ EODbutHtml;
                         . 'if you feel safer with this, or want to be in full control of your html, or encounter problems copy-and-pasting text into the new editor.</p>';
         $tinymceCSS = '/clilstore/tinymce.css?bogus=' . time();  //Bogus parameter to thwart browser cache and ensure refresh while under development
         $tinymceScript = <<<EODtinyMCE
-    <script type="text/javascript" src="/tinymce/tinymce.min.js"></script>
+    <script src="/tinymce/tinymce.min.js"></script>
     <script>
     tinymce.init({
         selector: "textarea#text",
@@ -471,11 +471,11 @@ EODfilesButton;
 <head>
     <meta charset="UTF-8">
     <title>$legend</title>
-    <link rel="stylesheet" href="/css/smo.css" type="text/css">
+    <link rel="stylesheet" href="/css/smo.css">
     <link rel="stylesheet" href="style.css?version=2014-05-15">
     <link rel="icon" type="image/png" href="/favicons/clilstore.png">
     <meta name="robots" content="noindex">
-    <style type="text/css">
+    <style>
         table#editlinkbuts { margin-bottom:0.5em; }
         table#editlinkbuts td:nth-child(1) input { width:12em; text-align:center; background-color:#bfb; color:black; 
                                                    padding:2px 4px; border:1px solid green; border-radius:6px; }
