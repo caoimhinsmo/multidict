@@ -170,7 +170,7 @@ EOD_tableHtml;
     <link rel="StyleSheet" href="style.css?version=2014-04-15">
     <style>
         div.body-indent { clear:both; margin:0 0.25%; padding:0 0.25% 6px 0.25%; border-top:1px solid white; }
-        table#main    { border-collapse:collapse; border:1px solid; margin:1em 0.3em; }
+        table#main    { border-collapse:collapse; border:1px solid; margin:0 0.3em 1em 0.3em; }
         table#main tr:nth-child(odd) { background-color:#ddf; }
         table#main tr:hover { background-color:yellow; }
         table#main td { padding:1px 6px; }
@@ -212,6 +212,7 @@ EOD_tableHtml;
 <h1 style="font-size:130%">$h1</h1>
 $inctestCheckbox
 
+<p class=info style="margin:1em 0 0 1em">Click column name to sort. Click again to sort in the opposite direction. The previous sort column is used for secondary sorting.</p>
 $tableHtml
 
 </div>

@@ -3,7 +3,7 @@ a:link    { color:#4fa4ea; }
 a:visited { color:#bf7fda; }
 a:hover   { color:white; background-color:brown; }
 
-span.info, ul.info { color:green; font-size:80%; }
+p.info, span.info, ul.info { color:green; font-size:80%; }
 
 ul.smo-navlist { background-color:#55a8eb; }
 ul.smo-navlist li a { background-color:#27b; color:white; border-color:#27b; border-right-color:white; }
