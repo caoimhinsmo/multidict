@@ -92,7 +92,7 @@ class SM_myCLIL {
       header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");  //Àm a chaidh seachad = no caching
       $this->toradh = 'sgrios|diultadhCS|Sorry. You are not allowed to view this page';
       if ($this->id=='') {
-          $this->toradh .= '<br>because you are not logged in to Clilstore';
+          $this->toradh .= '<br>because you are not logged in to Clilstore on ' .$_SERVER['SERVER_NAME'];
       } else {
           $this->toradh .= '<br>(You are logged in to Clilstore as &ldquo;' . $this->id . '&rdquo;)';
           if (!empty($this->id2)) { $this->toradh

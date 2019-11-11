@@ -17,7 +17,7 @@
     $DbMultidict = SM_DbMultidictPDO::singleton();
 
     $query0 = 'SELECT url,pparams,firstlast FROM dictPageURL'
-             .' WHERE dictindex=:dictindex AND inst=:inst AND firstword<:word'
+             .' WHERE dictindex=:dictindex AND inst=:inst AND firstword<=:word'
              .' ORDER BY firstword DESC LIMIT 1';
     $stmt0 = $DbMultidict->prepare($query0);
     $stmt0->execute( array(':dictindex'=>$dictindex, ':inst'=>$inst, ':word'=>$word) );
