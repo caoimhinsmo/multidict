@@ -1,6 +1,5 @@
-<?php
-  if (!include('autoload.inc.php'))
-    header("Location:http://claran.smo.uhi.ac.uk/mearachd/include_a_dhith/?faidhle=autoload.inc.php");
+<?php if (!include('autoload.inc.php'))
+  header("Location:http://claran.smo.uhi.ac.uk/mearachd/include_a_dhith/?faidhle=autoload.inc.php");
 
   header('Cache-Control: no-cache, no-store, must-revalidate');
   header("Cache-Control:max-age=0");
@@ -23,6 +22,14 @@ EOD_cookieMessage;
     $DbMultidict = SM_DbMultidictPDO::singleton('rw');
     $servername = SM_myCLIL::servername();
     $serverhome = SM_myCLIL::serverhome();
+
+    $csNavbar = SM_csNavbar::csNavbar();
+    $smohl = SM_T::hl0();
+    $T = new SM_T('clilstore/index');
+    $T_Help               = $T->_('Cobhair');
+    $T_About_Clilstore    = $T->_('mu_Clilstore');
+    $T_Language           = $T->_('Cànan');
+    $T_Select_lang_level  = $T->_('Select_lang_level');
 
 //    if (isset($_GET['mode']))         { $csSess->setMode($_GET['mode']            ); }
     if (!empty($_GET['sortCol']))     { $csSess->sortCol($_GET['sortCol']         ); }
@@ -131,7 +138,7 @@ $incUnitMessage
 </div><br style="clear:both">
 END_USER2;
     }
-    if ($mode<=1) { $userHtml .= '<p style="clear:both">Select the language you are learning and then your level to see the available units.</p>'; }
+    if ($mode<=1) { $userHtml .= "<p style='clear:both'>$T_Select_lang_level</p>"; }
 
     function wildChars (&$s,&$sVis,$con) {
      //Standardises wildcard characters to SQL format (% and _), removing duplicates
@@ -439,7 +446,7 @@ END_USER2;
         $levelButHtml = $csSess->levelButHtml();
         $tabletopChoices = <<<ENDtabletopChoices
 <form id="selectForm" method="post" style="margin:1em 0">
-Language <select name="sl" style="background-color:$slSelectColor" onchange="document.getElementById('selectForm').submit();">
+$T_Language <select name="sl" style="background-color:$slSelectColor" onchange="document.getElementById('selectForm').submit();">
 $slOptionsHtml
 </select>
 </form>
@@ -462,9 +469,6 @@ ENDtabletopChoices;
         $hoverColorOdd  = '#fe6';
         $hoverColorEven = '#fe6';
     }
-
-    if ($user) { $logInOut = "<li class=deas><a href=logout.php title='Logout from Clilstore'>Logout</a>"; }
-     else      { $logInOut = "<li class=deas><a href=login.php title='Login/register to get the full range of Clilstore facilities'>Login</a>"; }
 
     if ($mode==0 && $f['slFil']=='') { $noTable = true; } else { $noTable = false; }
 
@@ -914,10 +918,7 @@ END_tableHtmlBun;
 </head>
 <body onload="history.pushState('','',location.pathname);">
 
-<ul class="smo-navlist">
-<li><a href="/" title="Multidict, Wordlink, and Clilstore">$servername</a>
-$logInOut
-</ul>
+$csNavbar
 $cookieMessage
 <div class="smo-body-indent">
 <a><img src=/favicons/restart.png style="float:right" alt="Restart" title="See Clilstore site as would a new arrival (For testing)" onclick="newbie();"></a>
@@ -925,8 +926,8 @@ $cookieMessage
 
 <h1 style="float:left;margin:10px 12px 0 0"><img src="/icons-smo/clilstore-blue45.png" alt="Clilstore" style="width:184px;height:45px"></h1>
 <p style="margin:22px 0 0 0;font-size:90%;float:left">Teaching units<br>for Content and Language Integrated Learning</p>
-<a href="help.html" class="button">Help</a>
-<a href="about.html" class="button">About</a>
+<a href="help.html" class="button">$T_Help</a>
+<a href="about.html" class="button">$T_About_Clilstore</a>
 $photo
 
 <div style="width:100%;min-height:1px;clear:both">
@@ -956,10 +957,7 @@ $tableHtml
 </div>
 
 </div>
-<ul class="smo-navlist" style="clear:both">
-<li><a href="/" title="Multidict, Wordlink, and Clilstore">$servername</a></li>
-$logInOut
-</ul>
+$csNavbar
 
 </body>
 </html>
