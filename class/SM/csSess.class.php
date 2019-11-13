@@ -352,6 +352,11 @@ setcookie('csSession','',1,'/clilstore/','multidict.net');
 
   public function addColHtml() {
      // Creates a select box for choosing a column to be added to the table
+
+      $T = new SM_T('clilstore/addColHtml');
+      $T_Add_a_column      = $T->_('Add_a_column');
+      $T_Add_a_column_title = $T->_('Add_a_column_title');
+
       $csid = $this->csSession->csid;
       $mode = $this->csSession->mode;
       $opts = array();
@@ -363,8 +368,8 @@ setcookie('csSession','',1,'/clilstore/','multidict.net');
       if (empty($opts)) { return ''; }
       $options = implode("\r",$opts);
       $selectHtml = <<<END_addColHtml
-<select name="addCol" style="background-color:white" onchange="addColChange(this.value)" title="Add a column to the table to see more information on the units">
-<option value="">Add a column</option>
+<select name="addCol" style="background-color:white" onchange="addColChange(this.value)" title="$T_Add_a_column_title">
+<option value="">$T_Add_a_column</option>
 $options
 </select>
 END_addColHtml;

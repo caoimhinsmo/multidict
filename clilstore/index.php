@@ -31,6 +31,7 @@ EOD_cookieMessage;
     $T_Language           = $T->_('Cànan');
     $T_Select_lang_level  = $T->_('Select_lang_level');
     $T_My_vocabulary      = $T->_('My_vocabulary');
+    $T_Add_a_column_info  = $T->_('Add_a_column_info');
 
 //    if (isset($_GET['mode']))         { $csSess->setMode($_GET['mode']            ); }
     if (!empty($_GET['sortCol']))     { $csSess->sortCol($_GET['sortCol']         ); }
@@ -60,7 +61,7 @@ EOD_cookieMessage;
     if ($mode==1) { $photo = '<img src="http://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/Headphones-Sennheiser-HD555.jpg/320px-Headphones-Sennheiser-HD555.jpg" '
                                 . 'style="float:left;padding-left:20px;width:80px;height:60px" alt="">'; }
 
-    if ($mode<=1) { $checkboxesHtml = '<span style="color:green;font-size:80%">You can add columns to the table to show more information about the units</span>'; } else {
+    if ($mode<=1) { $checkboxesHtml = "<span style='color:green;font-size:80%'>$T_Add_a_column_info</span>"; } else {
         $incTestLabel = ( empty($user)
                         ? 'Include test units'
                         : 'Include test units by other authors' );
