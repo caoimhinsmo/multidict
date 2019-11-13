@@ -468,7 +468,14 @@ END_addColHtml;
 
   public function levelButHtml () {
      // Returns the HTML for displaying CEFR level choice buttons
-      $labels = array(-1=>'Any',0=>'A1',1=>'A2',2=>'B1',3=>'B2',4=>'C1',5=>'C2');
+
+      $T = new SM_T('clilstore/levelButHtml');
+      $T_Level    = $T->_('Level');
+      $T_Basic    = $T->_('Basic');
+      $T_Advanced = $T->_('Advanced');
+      $T_Any      = $T->_('Any');
+
+      $labels = array(-1=>"$T_Any",0=>'A1',1=>'A2',2=>'B1',3=>'B2',4=>'C1',5=>'C2');
       $counts = array(-1=>0, 0=>0, 1=>0, 2=>0, 3=>0, 4=>0, 5=>0 );
       $hrefSelf = $_SERVER['PHP_SELF'];
       $sl    = $this->csFilter['sl']['val1'];
@@ -510,16 +517,16 @@ END_addColHtml;
       $buttonC1  = $button[4];
       $buttonC2  = $button[5];
       $html = <<<ENDHTML
-<p style="padding:2px;"><span style="background-color:#def;padding:5px 5px">Level
+<p style="padding:2px;"><span style="background-color:#def;padding:5px 5px">$T_Level
 $buttonAny
-<span style="color:green;font-size:80%;padding-left:3em">Basic</span>
+<span style="color:green;font-size:80%;padding-left:3em">$T_Basic</span>
 $buttonA1
 $buttonA2
 $buttonB1
 $buttonB2
 $buttonC1
 $buttonC2
-<span style="color:green;font-size:80%">Advanced</span></span></p>
+<span style="color:green;font-size:80%">$T_Advanced</span></span></p>
 ENDHTML;
       return $html;
   }

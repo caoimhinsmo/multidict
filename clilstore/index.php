@@ -24,12 +24,13 @@ EOD_cookieMessage;
     $serverhome = SM_myCLIL::serverhome();
 
     $csNavbar = SM_csNavbar::csNavbar();
-    $smohl = SM_T::hl0();
+
     $T = new SM_T('clilstore/index');
     $T_Help               = $T->_('Cobhair');
     $T_About_Clilstore    = $T->_('mu_Clilstore');
     $T_Language           = $T->_('Cànan');
     $T_Select_lang_level  = $T->_('Select_lang_level');
+    $T_My_vocabulary      = $T->_('My_vocabulary');
 
 //    if (isset($_GET['mode']))         { $csSess->setMode($_GET['mode']            ); }
     if (!empty($_GET['sortCol']))     { $csSess->sortCol($_GET['sortCol']         ); }
@@ -120,7 +121,7 @@ EODincUnit;
             $createButton = "<a href='edit.php?id=0' class=mybutton style='margin-right:2px'>Create a unit…</a>";
         }
         if ($mode<=1) { $mybuttons = <<<END_MYBUTTONSstud
-<a href="voc.php?user=$user" class="mybutton" style="margin-left:0;margin-right:1px">My vocabulary</a>
+<a href="voc.php?user=$user" class="mybutton" style="margin-left:0;margin-right:1px">$T_My_vocabulary</a>
 END_MYBUTTONSstud;
         } else { $mybuttons = <<<END_MYBUTTONSteach
 <a href="./?owner=$user" class="mybutton" style="margin-left:0;margin-right:1px">My units</a>
