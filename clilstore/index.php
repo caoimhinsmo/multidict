@@ -32,6 +32,7 @@ EOD_cookieMessage;
     $T_Select_lang_level  = $T->_('Select_lang_level');
     $T_My_vocabulary      = $T->_('My_vocabulary');
     $T_Add_a_column_info  = $T->_('Add_a_column_info');
+    $T_See_as_newbie      = $T->_('See_as_newbie');
 
 //    if (isset($_GET['mode']))         { $csSess->setMode($_GET['mode']            ); }
     if (!empty($_GET['sortCol']))     { $csSess->sortCol($_GET['sortCol']         ); }
@@ -923,7 +924,7 @@ END_tableHtmlBun;
 $csNavbar
 $cookieMessage
 <div class="smo-body-indent">
-<a><img src=/favicons/restart.png style="float:right" alt="Restart" title="See Clilstore site as would a new arrival (For testing)" onclick="newbie();"></a>
+<a><img src=/favicons/restart.png style="float:right" alt="Restart" title="$T_See_as_newbie" onclick="newbie();"></a>
 <!--<span style="font-size:50%;color:red;background-color:yellow">News: Service will be down on 20 February 2016 during communications upgrade</span>-->
 
 <h1 style="float:left;margin:10px 12px 0 0"><img src="/icons-smo/clilstore-blue45.png" alt="Clilstore" style="width:184px;height:45px"></h1>

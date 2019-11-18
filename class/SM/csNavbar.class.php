@@ -28,21 +28,28 @@ class SM_csNavbar {
           'fr'=>'Français',
           'ga'=>'Gaeilge',
           'gd'=>'Gàidhlig',
-          'cy'=>'Cymraeg (anorffenedig)',
-          'da'=>'Dansk (ufuldstændig)',
-          'es'=>'Español (incompleto)',
-          'it'=>'Italiano (incompleto)',
-          'bg'=>'Български (непълен)');
+          'cy'=>'Cymraeg',
+          'da'=>'Dansk',
+          'es'=>'Español',
+          'it'=>'Italiano',
+          'bg'=>'Български');
       $options = '';
       foreach ($hlArr as $hl=>$hlAinm) { $options .= "<option value='$hl|en'" . ( $hl==$smohl ? ' selected' : '' ) . ">$hlAinm</option>\n"; }
       $selCanan = <<< END_selCanan
 <script>
     function atharraichCanan(hl) {
         document.cookie='smohl='+hl;
-        const params = new URLSearchParams(location.search)
-        params.delete('hl');
-        var paramstr = params.toString();
-        if (paramstr!='') { paramstr = '?'+paramstr; }
+        var paramstr = location.search;
+        if (/Trident/.test(navigator.userAgent) || /MSIE/.test(navigator.userAgent)) {
+          //Rud lag lag airson seann Internet Explorer, nach eil eòlach air URLSearchParams. Sguab ás nuair a bhios IE marbh.
+            if (paramstr.length==6 && paramstr.substring(0,4)=='?hl=') { paramstr = ''; }
+            paramstr = paramstr;
+        } else {
+            const params = new URLSearchParams(paramstr)
+            params.delete('hl');
+            paramstr = params.toString();
+            if (paramstr!='') { paramstr = '?'+paramstr; }
+        }
         loc = window.location;
         location = loc.protocol + '//' + loc.hostname + loc.pathname + paramstr;
     }
