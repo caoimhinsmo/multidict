@@ -915,6 +915,8 @@ END_tableHtmlBun;
 	    document.cookie = "myCLIL_authentication=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
 	    document.cookie = "csSessionId=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/clilstore/;";
 	    document.cookie = "wlUser=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+            document.cookie = "smohl=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/";
+            document.cookie = "smohl=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/clilstore/";
             window.location = window.location.href;
         }
 </script>
