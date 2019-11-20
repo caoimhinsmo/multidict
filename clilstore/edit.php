@@ -40,6 +40,7 @@
   function getEmbed($medembed) {
     //If $medembed does not in fact contain embed code, but instead is recognised as a url for a Youtube or TED video or some such, then replace this with the correct (hopefully!) embed code.
     //Can also deal with url’s ending in .mp3, .m4a and .ogg, converting them to HTML5 <audio> elements, although these may not work in all browsers and platforms
+    //Can also deal with url’s ending in .mp4, converting them to HTML5 <video> elements, although these may not work in all browsers and platforms
     //If $medembed is not recognised as any such url, then it is returned unchanged.
       $embedcodeArr = array(
           '|.*<iframe.*|u' => '$0', //Leave unchanged if it already contains embed code
@@ -64,9 +65,11 @@
           '|(.*)://(.*)\.mp3$|u'
                            => '<audio controls="controls" style="width:100%;max-height:70px" title="Listen to audio (MP3 - may not work in all browsers and platforms)"> <source src="$1://$2.mp3" type="audio/mpeg"/>  <span style="color:red;font-size:90%">[No <audio> element support - You need to update your browser]</span> </audio>',
           '|(.*)://(.*)\.m4a$|u'
-                           => '<audio controls="controls" style="width:100%;max-height:70px" title="Listen to audio (MP4 - may not work in all browsers and platforms)"> <source src="$1://$2.m4a" type="audio/mp4"/>  <span style="color:red;font-size:90%">[No <audio> element support - You need to update your browser]</span> </audio>',
+                           => '<audio controls="controls" style="width:100%;max-height:70px" title="Listen to audio (M4A - may not work in all browsers and platforms)"> <source src="$1://$2.m4a" type="audio/mp4"/>  <span style="color:red;font-size:90%">[No <audio> element support - You need to update your browser]</span> </audio>',
           '|(.*)://(.*)\.ogg$|u'
                            => '<audio controls="controls" style="width:100%;max-height:70px" title="Listen to audio (.ogg - may not work in all browsers and platforms)"> <source src="$1://$2.ogg" type="audio/ogg"/>  <span style="color:red;font-size:90%">[No <audio> element support - You need to update your browser]</span> </audio>',
+          '|(.*)://(.*)\.mp4$|u'
+                           => '<video controls="controls" style="width:320px;max-height:240pxpx" title="View audio (.mp4 - may not work in all browsers and platforms)"> <source src="$1://$2.mp4" type="video/mp4"/>  <span style="color:red;font-size:90%">[No <video> element support - You need to update your browser]</span> </audio>',
           '|(.*)://(.*)\.jpg$|u'  => '<img src="$1://$2.jpg" style="width:500px" alt="">',
           '|(.*)://(.*)\.jpeg$|u' => '<img src="$1://$2.jpeg" style="width:500px" alt="">',
           '|(.*)://(.*)\.png$|u'  => '<img src="$1://$2.png" style="width:500px" alt="">',
