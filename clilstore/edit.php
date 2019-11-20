@@ -65,11 +65,11 @@
           '|(.*)://(.*)\.mp3$|u'
                            => '<audio controls="controls" style="width:100%;max-height:70px" title="Listen to audio (MP3 - may not work in all browsers and platforms)"> <source src="$1://$2.mp3" type="audio/mpeg"/>  <span style="color:red;font-size:90%">[No <audio> element support - You need to update your browser]</span> </audio>',
           '|(.*)://(.*)\.m4a$|u'
-                           => '<audio controls="controls" style="width:100%;max-height:70px" title="Listen to audio (M4A - may not work in all browsers and platforms)"> <source src="$1://$2.m4a" type="audio/mp4"/>  <span style="color:red;font-size:90%">[No <audio> element support - You need to update your browser]</span> </audio>',
+                           => '<audio controls="controls" style="width:100%;max-height:70px" title="Listen to audio (M4A - may not work in all browsers and platforms)"> <source src="$1://$2.m4a" type="audio/m4a"/>  <span style="color:red;font-size:90%">[No <audio> element support - You need to update your browser]</span> </audio>',
           '|(.*)://(.*)\.ogg$|u'
                            => '<audio controls="controls" style="width:100%;max-height:70px" title="Listen to audio (.ogg - may not work in all browsers and platforms)"> <source src="$1://$2.ogg" type="audio/ogg"/>  <span style="color:red;font-size:90%">[No <audio> element support - You need to update your browser]</span> </audio>',
           '|(.*)://(.*)\.mp4$|u'
-                           => '<video controls="controls" style="width:320px;max-height:240pxpx" title="View audio (.mp4 - may not work in all browsers and platforms)"> <source src="$1://$2.mp4" type="video/mp4"/>  <span style="color:red;font-size:90%">[No <video> element support - You need to update your browser]</span> </audio>',
+                           => '<video controls="controls" style="width:480px" title="View audio (.mp4 - may not work in all browsers and platforms)"> <source src="$1://$2.mp4" type="video/mp4"/>  <span style="color:red;font-size:90%">[No <video> element support - You need to update your browser]</span> </audio>',
           '|(.*)://(.*)\.jpg$|u'  => '<img src="$1://$2.jpg" style="width:500px" alt="">',
           '|(.*)://(.*)\.jpeg$|u' => '<img src="$1://$2.jpeg" style="width:500px" alt="">',
           '|(.*)://(.*)\.png$|u'  => '<img src="$1://$2.png" style="width:500px" alt="">',
