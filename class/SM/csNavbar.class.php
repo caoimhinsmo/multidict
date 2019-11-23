@@ -3,7 +3,7 @@ class SM_csNavbar {
 
   public static function csNavbar($domhan='',$duilleagAghaidh=0) {
       $servername =  $_SERVER['SERVER_NAME'];
-      $serverhome = ( $_SERVER['HTTPS'] ? 'https' : 'http' ) . '://' . $_SERVER['SERVER_NAME'];
+      $serverhome = ( empty($_SERVER['HTTPS']) ? 'http' : 'https' ) . '://' . $_SERVER['SERVER_NAME'];
       $smohl = SM_T::hl0();
       $T = new SM_T('clilstore/navbar');
       $T_homeTitle          = $T->_('homeTitle');
