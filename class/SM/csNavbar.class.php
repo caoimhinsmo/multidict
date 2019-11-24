@@ -31,7 +31,10 @@ class SM_csNavbar {
           'cy'=>'Cymraeg',
           'da'=>'Dansk',
           'es'=>'Español',
+          'is'=>'Íslenska',
           'it'=>'Italiano',
+          'lt'=>'Lietuvių',
+          'pt'=>'Português',
           'bg'=>'Български');
       $options = '';
       foreach ($hlArr as $hl=>$hlAinm) { $options .= "<option value='$hl|en'" . ( $hl==$smohl ? ' selected' : '' ) . ">$hlAinm</option>\n"; }

@@ -120,6 +120,38 @@ CLICKHTML;
       return $html;
   }
 
+  function createPopup($url,$message,$sid) {
+      // This will create a button to click to open the dictionary results in a popup window
+      if ($message) { $message = "<br>\n<span style=color:red>$message</span>"; }
+      $html = <<<POPUPHTML
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Form to click lookup word in dictionary</title>
+    <style>
+        a.button { display:inline-block; margin-left:0.8em; padding:0 4px; border-radius:4px; background-color:#75c8fb; color:white; text-decoration:none; }
+        a.button:hover { background-color:blue; color:white; }
+    </style>
+    <script>
+      function popup(url) {
+          dictwin = window.open(url, "dictwin", "resizable=1,scrollbars=1,top=50,left=25,height=500,width=700");
+          dictwin.focus();
+//          dictwin.outerHeight = screen.availHeight - 250;
+//          dictwin.outerWidth  = screen.availWidth  - 100;
+      }
+    </script>
+</head>
+<body>
+<p>Click “Submit” to look up the word in the dictionary</p>
+<p><a href="javascript:popup('$url')" target2='dictab$sid' class=button>Submit</a></p>
+<p>The results will be opened in a new popup window$message</p>
+</body>
+</html>
+POPUPHTML;
+      return $html;
+  }
+
 
   try {
 
@@ -231,6 +263,11 @@ $hl = 'ENG';
         goto echohtml;
     }
     
+    if ($handling=='popup') {
+        $html = createPopup($url,$message,$sid);
+        goto echohtml;
+    }
+    
     $servername = $_SERVER['SERVER_NAME'];
     $scheme = ( empty($_SERVER['HTTPS']) ? 'http' : 'https' );
     $server = "$scheme://$servername";
@@ -248,7 +285,8 @@ $hl = 'ENG';
                     else  { $req->setMethod('GET');  }
 //    $req->setConfig('proxy_host','wwwcache.uhi.ac.uk');
 //    $req->setConfig('proxy_port',8080);
-    if ($dict=='IATE') { $req->setConfig('protocol_version','1.0'); } //Hack for IATE because ->getBody() suddenly started giving a gzinflate() error for IATE, failing to decompress the body returned by IATE under HTTP 1.1 -- 2014-08-01
+// Following line can seemingly be deleted since no longer required -- CPD, 2019-11-24
+//if ($dict=='IATE') { $req->setConfig('protocol_version','1.0'); } //Hack for IATE because ->getBody() suddenly started giving a gzinflate() error for IATE, failing to decompress the body returned by IATE under HTTP 1.1 -- 2014-08-01
     $req->setConfig('timeout',20);
     $req->setHeader('Referer',"$server/multidict/");
 
