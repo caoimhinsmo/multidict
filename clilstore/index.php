@@ -23,8 +23,6 @@ EOD_cookieMessage;
     $servername = SM_myCLIL::servername();
     $serverhome = SM_myCLIL::serverhome();
 
-    $csNavbar = SM_csNavbar::csNavbar('clilstore');
-
     $T = new SM_T('clilstore/index');
     $T_Help               = $T->_('Cobhair');
     $T_About_Clilstore    = $T->_('mu_Clilstore');
@@ -33,6 +31,8 @@ EOD_cookieMessage;
     $T_My_vocabulary      = $T->_('My_vocabulary');
     $T_Add_a_column_info  = $T->_('Add_a_column_info');
     $T_See_as_newbie      = $T->_('See_as_newbie');
+
+    $csNavbar = SM_csNavbar::csNavbar($T->domhan);
 
 //    if (isset($_GET['mode']))         { $csSess->setMode($_GET['mode']            ); }
     if (!empty($_GET['sortCol']))     { $csSess->sortCol($_GET['sortCol']         ); }
