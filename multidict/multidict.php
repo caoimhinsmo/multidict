@@ -135,14 +135,19 @@ CLICKHTML;
     </style>
     <script>
       function popup(url) {
-          dictwin = window.open(url, "dictwin", "resizable=1,scrollbars=1,top=50,left=25,height=500,width=700");
+          var ow = window.outerWidth;
+          var oh = window.outerHeight;
+          var ih = window.innerHeight;
+          var dleft   = Math.round(ow*0.61) + 2;
+          var dwidth  = Math.round(ow*0.39) - 5;
+          var dtop    = oh - ih + 18;
+          var dheight = ih - 18;
+          var dictwin = window.open(url, "dictwin", "resizable=1,scrollbars=1,top="+dtop+",left="+dleft+",outerHeight="+dheight+",outerWidth="+dwidth);
           dictwin.focus();
-//          dictwin.outerHeight = screen.availHeight - 250;
-//          dictwin.outerWidth  = screen.availWidth  - 100;
       }
     </script>
 </head>
-<body>
+<body id='bod'>
 <p>Click “Submit” to look up the word in the dictionary</p>
 <p><a href="javascript:popup('$url')" target2='dictab$sid' class=button>Submit</a></p>
 <p>The results will be opened in a new popup window$message</p>

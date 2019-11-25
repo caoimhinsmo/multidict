@@ -23,7 +23,7 @@ EOD_cookieMessage;
     $servername = SM_myCLIL::servername();
     $serverhome = SM_myCLIL::serverhome();
 
-    $csNavbar = SM_csNavbar::csNavbar();
+    $csNavbar = SM_csNavbar::csNavbar('clilstore');
 
     $T = new SM_T('clilstore/index');
     $T_Help               = $T->_('Cobhair');
