@@ -36,7 +36,7 @@ which you think would be worth adding to the system, we would be very happy to c
 
 <div style="min-height:65px;border:2px solid #47d;margin:4em 0 0.5em 0;border-radius:4px;color:#47d;font-size:95%">
 <div style="float:left;margin-right:1.5em">
-<a href="http://eacea.ec.europa.eu/llp/index_en.php"><img src="/EUlogo.png" alt="" style="margin:3px"></a>
+<a href="http://eacea.ec.europa.eu/llp/index_en.php"><img src="/EUlogos/EUlogo_en.png" alt="" style="margin:3px"></a>
 </div>
 <div style="min-height:59px">
 <p style="margin:0.3em 0;color:#1e4d9f;font-size:75%">Disclaimer: The European Commission support for the production of this publication does not constitute an endorsement of the contents which reflects the views only of the authors, and the Commission cannot be held responsible for any use which may be made of the information contained therein.</p>

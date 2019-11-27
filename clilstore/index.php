@@ -47,6 +47,8 @@ EOD_cookieMessage;
     $T_Logout                 = $T->_('Logout');
     $T_Logout_from_Clilstore  = $T->_('Logout_from_Clilstore');
     $T_Logged_in_as           = $T->_('Logged_in_as');
+    $T_Disclaimer             = $T->_('Disclaimer');
+    $T_Disclaimer_EuropeanCom = $T->_('Disclaimer_EuropeanCom');
 
     $csNavbar = SM_csNavbar::csNavbar($T->domhan);
 
@@ -947,8 +949,8 @@ $cookieMessage
 
 <h1 style="float:left;margin:10px 12px 0 0"><img src="/icons-smo/clilstore-blue45.png" alt="Clilstore" style="width:184px;height:45px"></h1>
 <p style="margin:22px 0 0 0;font-size:90%;float:left">Teaching units<br>for Content and Language Integrated Learning</p>
-<a href="help.html" class="button">$T_Help</a>
-<a href="about.html" class="button">$T_About_Clilstore</a>
+<a href="help.php" class="button">$T_Help</a>
+<a href="about.php" class="button">$T_About_Clilstore</a>
 $photo
 
 <div style="width:100%;min-height:1px;clear:both">
@@ -969,10 +971,10 @@ $tableHtml
 
 <div style="min-height:65px;max-width:840px;border:2px solid #47d;margin:8em 0 0.5em 0;border-radius:4px;color:#47d;font-size:95%">
 <div style="float:left;margin-right:1.5em">
-<a href="https://eacea.ec.europa.eu/erasmus-plus_en"><img src="/EUlogo.png" alt="" style="margin:3px"></a>
+<a href="https://eacea.ec.europa.eu/erasmus-plus_en"><img src="/EUlogos/EUlogo_en.png" alt="" style="margin:3px"></a>
 </div>
 <div style="min-height:59px">
-<p style="margin:0.3em 0;color:#1e4d9f;font-size:75%">Disclaimer: The European Commission support for the production of this publication does not constitute an endorsement of the contents which reflects the views only of the authors, and the Commission cannot be held responsible for any use which may be made of the information contained therein.</p>
+<p style="margin:0.3em 0;color:#1e4d9f;font-size:75%">$T_Disclaimer: $T_Disclaimer_EuropeanCom</p>
 </div>
 </div>
 </div>
