@@ -24,13 +24,29 @@ EOD_cookieMessage;
     $serverhome = SM_myCLIL::serverhome();
 
     $T = new SM_T('clilstore/index');
-    $T_Help               = $T->_('Cobhair');
-    $T_About_Clilstore    = $T->_('mu_Clilstore');
-    $T_Language           = $T->_('Cànan');
-    $T_Select_lang_level  = $T->_('Select_lang_level');
-    $T_My_vocabulary      = $T->_('My_vocabulary');
-    $T_Add_a_column_info  = $T->_('Add_a_column_info');
-    $T_See_as_newbie      = $T->_('See_as_newbie');
+    $T_Help                   = $T->_('Cobhair');
+    $T_About_Clilstore        = $T->_('mu_Clilstore');
+    $T_Language               = $T->_('Cànan');
+    $T_Select_lang_level      = $T->_('Select_lang_level');
+    $T_My_options             = $T->_('My_options');
+    $T_My_units               = $T->_('My_units');
+    $T_My_vocabulary          = $T->_('My_vocabulary');
+    $T_Add_a_column_info      = $T->_('Add_a_column_info');
+    $T_See_as_newbie          = $T->_('See_as_newbie');
+    $T_Create_a_unit          = $T->_('Create_a_unit') . '…';
+    $T_For_students           = $T->_('For_students');
+    $T_For_teachers           = $T->_('For_teachers');
+    $T_More_options           = $T->_('More_options');
+    $T_more_options           = $T->_('more_options');
+    $T_For_students_info      = $T->_('For_students_info');
+    $T_For_students_more_info = $T->_('For_students_more_info');
+    $T_For_teachers_info      = $T->_('For_teachers_info');
+    $T_For_teachers_more_info = $T->_('For_teachers_more_info');
+    $T_Include_test_units     = $T->_('Include_test_units');
+    $T_Include_test_units_o   = $T->_('Include_test_units_o');
+    $T_Logout                 = $T->_('Logout');
+    $T_Logout_from_Clilstore  = $T->_('Logout_from_Clilstore');
+    $T_Logged_in_as           = $T->_('Logged_in_as');
 
     $csNavbar = SM_csNavbar::csNavbar($T->domhan);
 
@@ -64,15 +80,15 @@ EOD_cookieMessage;
 
     if ($mode<=1) { $checkboxesHtml = "<span style='color:green;font-size:80%'>$T_Add_a_column_info</span>"; } else {
         $incTestLabel = ( empty($user)
-                        ? 'Include test units'
-                        : 'Include test units by other authors' );
+                        ? "$T_Include_test_units"
+                        : "$T_Include_test_units_o" );
         $incTestChecked = ( $incTest ? 'checked' : '' );
         $wideChecked    = ( $mode==3 ? 'checked' : '' );
         $checkboxesHtml = <<<CHECKBOXES
 <input type="checkbox" name="incTest" id="incTest" $incTestChecked tabindex=2 title="include test units" onclick="submitFForm()">
 <label for="incTest" style="padding-right:2em">$incTestLabel</label>
 <input type="checkbox" name="wide" id="wide" $wideChecked tabindex=4 title="include all columns" onclick="submitFForm()">
-<label for="wide">More options</label>
+<label for="wide">$T_More_options</label>
 CHECKBOXES;
     }
     $checkboxesHtml = <<<CHECKBOXES2
@@ -120,21 +136,21 @@ EODincUnit;
             $createButton = '';
         } else {
             $incUnitMessage = '';
-            $createButton = "<a href='edit.php?id=0' class=mybutton style='margin-right:2px'>Create a unit…</a>";
+            $createButton = "<a href='edit.php?id=0' class=mybutton style='margin-right:2px'>$T_Create_a_unit</a>";
         }
         if ($mode<=1) { $mybuttons = <<<END_MYBUTTONSstud
 <a href="voc.php?user=$user" class="mybutton" style="margin-left:0;margin-right:1px">$T_My_vocabulary</a>
 END_MYBUTTONSstud;
         } else { $mybuttons = <<<END_MYBUTTONSteach
-<a href="./?owner=$user" class="mybutton" style="margin-left:0;margin-right:1px">My units</a>
+<a href="./?owner=$user" class="mybutton" style="margin-left:0;margin-right:1px">$T_My_units</a>
 $createButton
 END_MYBUTTONSteach;
         }
         $userHtml = <<<END_USER2
 <div style="clear:both;float:left;margin:0.5em 0 1.8em 0;padding:2px 4px;background-color:#def">
-<p style="margin:2px 3px">Logged in as <b>$user</b>
-<a href="logout.php" title="Logout from Clilstore" class="mybutton" style="margin-right:5px">Logout <img src="/icons-smo/logout.png" alt=""></a>
-<a href="options.php?user=$user" title="Change your Clilstore options or password" class="mybutton" style="margin-right:2.5em">My options</a>
+<p style="margin:2px 3px">$T_Logged_in_as <b>$user</b>
+<a href="logout.php" title="$T_Logout_from_Clilstore" class="mybutton" style="margin-right:5px">$T_Logout <img src="/icons-smo/logout.png" alt=""></a>
+<a href="options.php?user=$user" title="Change your Clilstore options or password" class="mybutton" style="margin-right:2.5em">$T_My_options</a>
 $mybuttons
 </p>
 $incUnitMessage
@@ -939,10 +955,10 @@ $photo
 
 <form id="modeForm" method="get" style="float:left;padding:10px 0">
 <select name="mode" style="background-color:white" onchange="document.getElementById('modeForm').submit();">
-<option $mode0selected value="0" title="The simplest, most basic interface">Student page</option>
-<option $mode1selected value="1" title="Another student interface, but with more options for filtering and searching for units">Student page - more options</option>
-<option $mode2selected value="2" title="Designed for language teachers who create Clilstore units">Author page</option>
-<option $mode3selected value="3" title="Another author page, showing more options - designed for wider screens">Author page - more options</option>
+<option $mode0selected value="0" title="$T_For_students_info">$T_For_students</option>
+<option $mode1selected value="1" title="$T_For_students_more_info">$T_For_students - $T_more_options</option>
+<option $mode2selected value="2" title="$T_For_teachers_info">$T_For_teachers</option>
+<option $mode3selected value="3" title="$T_For_teachers_more_info">$T_For_teachers - $T_more_options</option>
 </select>
 </form>
 
