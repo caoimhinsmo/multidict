@@ -50,7 +50,10 @@ EOD_cookieMessage;
     $T_Disclaimer             = $T->_('Disclaimer');
     $T_Disclaimer_EuropeanCom = $T->_('Disclaimer_EuropeanCom');
 
-    $csNavbar = SM_csNavbar::csNavbar($T->domhan);
+    $csNavbar = SM_csNavbar::csNavbar($T->domhan,1);
+
+    $EUlogo = '/EUlogos/' . SM_T::hl0() . '.jpg';
+    if (!file_exists($_SERVER['DOCUMENT_ROOT'] . $EUlogo)) { $EUlogo = '/EUlogos/en.jpg'; }
 
 //    if (isset($_GET['mode']))         { $csSess->setMode($_GET['mode']            ); }
     if (!empty($_GET['sortCol']))     { $csSess->sortCol($_GET['sortCol']         ); }
@@ -971,7 +974,7 @@ $tableHtml
 
 <div style="min-height:65px;max-width:840px;border:2px solid #47d;margin:8em 0 0.5em 0;border-radius:4px;color:#47d;font-size:95%">
 <div style="float:left;margin-right:1.5em">
-<a href="https://eacea.ec.europa.eu/erasmus-plus_en"><img src="/EUlogos/EUlogo_en.png" alt="" style="margin:3px"></a>
+<a href="https://eacea.ec.europa.eu/erasmus-plus_en"><img src="$EUlogo" alt="" style="margin:3px"></a>
 </div>
 <div style="min-height:59px">
 <p style="margin:0.3em 0;color:#1e4d9f;font-size:75%">$T_Disclaimer: $T_Disclaimer_EuropeanCom</p>

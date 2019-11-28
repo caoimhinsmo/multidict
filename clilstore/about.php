@@ -1,19 +1,23 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>About Clilstore</title>
-    <link rel="StyleSheet" href="/css/smo.css">
-    <link rel="StyleSheet" href="style.css">
-    <link rel="icon" type="image/png" href="/favicons/clilstore.png">
-</head>
-<body>
+<?php
+  if (!include('autoload.inc.php'))
+    header("Location:http://claran.smo.uhi.ac.uk/mearachd/include_a_dhith/?faidhle=autoload.inc.php");
 
-<ul class="smo-navlist">
-<li><a href="./" title="Clilstore - create and store Wordlinked pages for use by students">Clilstore</a></li>
-</ul>
+  header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+  header("Pragma: no-cache");
+
+  try {
+    $T = new SM_T('clilstore/about');
+    $T_Disclaimer             = $T->_('Disclaimer');
+    $T_Disclaimer_EuropeanCom = $T->_('Disclaimer_EuropeanCom');
+    
+    $csNavbar = SM_csNavbar::csNavbar($T->domhan);
+
+    $EUlogo = '/EUlogos/' . SM_T::hl0() . '.jpg';
+    if (!file_exists($_SERVER['DOCUMENT_ROOT'] . $EUlogo)) { $EUlogo = '/EUlogos/en.jpg'; }
+
+    $HTML = <<<END_HTML
+$csNavbar
 <div class="smo-body-indent" style="max-width:1000px">
-
 
 <h1 class="smo">Clilstore</h1>
 
@@ -52,19 +56,39 @@ You can see our <a href="//www.facebook.com/tools4clil/photos_albums">photo albu
 
 <div style="min-height:65px;border:2px solid #47d;margin:4em 0 0.5em 0;border-radius:4px;color:#47d;font-size:95%">
 <div style="float:left;margin-right:1.5em">
-<a href="//eacea.ec.europa.eu/erasmus-plus_en"><img src="/EUlogos/EUlogo_en.png" alt="" style="margin:3px"></a>
+<a href="//eacea.ec.europa.eu/erasmus-plus_en"><img src="$EUlogo" alt="" style="margin:3px"></a>
 </div>
 <div style="min-height:59px">
-<p style="margin:0.3em 0;color:#1e4d9f;font-size:75%">Disclaimer: The European Commission support for the production of this publication does not constitute an endorsement of the contents which reflects the views only of the authors, and the Commission cannot be held responsible for any use which may be made of the information contained therein.</p>
+<p style="margin:0.3em 0;color:#1e4d9f;font-size:75%">$T_Disclaimer: $T_Disclaimer_EuropeanCom</p>
 </div>
 </div>
 <p style="font-size:75%;margin:0">Clilstore is a well-behaved, responsible website - See our short and simple <a href="privacyPolicy.php">privacy policy</a>.</p>
 
 </div>
-<ul class="smo-navlist">
-<li><a href="./" title="Clilstore - create and store Wordlinked pages for use by students">Clilstore</a></li>
-</ul>
+$csNavbar
+END_HTML;
 
-<div class="smo-latha">2019-05-08 <a href="/~caoimhin/cpd.html">CPD</a></div>
+  } catch (Exception $e) {
+    $HTML = $e->getMessage();
+  }
+
+  $HTMLdoc = <<<END_HTMLdoc
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>About Clilstore</title>
+    <link rel="StyleSheet" href="/css/smo.css">
+    <link rel="StyleSheet" href="style.css">
+    <link rel="icon" type="image/png" href="/favicons/clilstore.png">
+</head>
+<body>
+
+$HTML
+
 </body>
 </html>
+END_HTMLdoc;
+
+  echo $HTMLdoc;
+?>

@@ -36,10 +36,10 @@ ul.smo-navlist { padding:0; margin:0 0 1px 0; list-style-type:none; float:left; 
 
 ul.smo-navlist li { display:inline; }
 
-ul.smo-navlist li a { float:left; padding:1px 2px 0px 5px; border-top:1px solid #039; border-bottom:1px solid #039;
-                      border-right:1px solid white; background-color:#039; color:#ff0; text-decoration:none; }
+ul.smo-navlist li a { float:left; margin:0 1px; padding:0px 9px; border-radius:14px; border-top:1px solid #039; border-bottom:1px solid #039;
+                      background-color:#039; color:#ff0; text-decoration:none; height:24px; }
 
-ul.smo-navlist li.deas a { float:right; border-left:1px solid white; border-right:0; }
+ul.smo-navlist li.deas a { float:right; border-right:0; }
 
 ul.smo-navlist a:visited { color:#ffc; text-decoration:none; }
 
