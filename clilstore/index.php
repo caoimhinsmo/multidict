@@ -53,6 +53,46 @@ EOD_cookieMessage;
     $T_register               = $T->_('register','hsc');
     $loginReasonStudent       = $T->_('loginReasonStudent','hsc');
     $loginReasonTeacher       = $T->_('loginReasonTeacher','hsc');
+    $T_Lorg                   = $T->_('Lorg');
+
+    $T_UnitID                 = $T->_('UnitID');
+    $T_Views                  = $T->_('Views');
+    $T_Clicks                 = $T->_('Clicks');
+    $T_Created                = $T->_('Created');
+    $T_Changed                = $T->_('Changed');
+    $T_Licence                = $T->_('Licence');
+    $T_Owner                  = $T->_('Owner');
+
+// Language
+// Level
+// Words
+// Media
+// Time
+// Buttons
+// Files
+// Title
+// TextSummary
+
+    $T_UnitID_title           = $T->_('UnitID_title');
+    $T_Views_title            = $T->_('Views_title');
+    $T_Clicks_title           = $T->_('Clicks_title');
+    $T_Created_title          = $T->_('Created_title');
+    $T_Changed_title          = $T->_('Changed_title');
+    $T_Licence_title          = $T->_('Licence_title');
+    $T_Owner_title            = $T->_('Owner_title');
+    $T_by_language_code       = $T->_('by_language_code');
+
+    $T_Click_to_sort          = $T->_('Click_to_sort','hsc');
+/*
+ <td class="sl"><a href="./?sortCol=sl" title="Click to sort (by language code)">Language</a></td>
+ <td class="level"><a href="./?sortCol=level" title="CEFR level - Click to sort">Level</a></td>
+ <td class="words"><a href="./?sortCol=words" title="Number of words in text - Click to sort">Words</a></td>
+ <td class="medtype"><a href="./?sortCol=medtype" title="Click to sort">Media</a></td>
+ <td class="medlen"><a href="./?sortCol=medlen" title="Media length - Click to sort">Time</a></td>
+ <td class="buttons"><a href="./?sortCol=buttons" title="Buttons - Click to sort">Buttons</a></td>
+ <td class="files"><a href="./?sortCol=files" title="Files - Click to sort">Files</a></td>
+ <td class="title"><a href="./?sortCol=title" title="Click to sort">Title</a></td>
+*/
 
     $csNavbar = SM_csNavbar::csNavbar($T->domhan,1);
 
@@ -532,24 +572,24 @@ $checkboxesHtml
 <td style="min-width:690px">
 <table id="main">
 <tr class="row1">
- <td class="id"><a href="./?sortCol=id" title="Click to sort">id</a></td>
- <td class="views"><a href="./?sortCol=views" title="Click to sort">Views</a></td>
- <td class="clicks"><a href="./?sortCol=clicks" title="Click to sort">Clicks</a></td>
- <td class="created"><a href="./?sortCol=created" title="Click to sort">Created</a></td>
- <td class="changed"><a href="./?sortCol=changed" title="Click to sort">Changed</a></td>
- <td class="licence"><a href="./?sortCol=licence" title="Click to sort">Licence</a></td>
- <td class="owner"><a href="./?sortCol=owner" title="Click to sort">Owner</a></td>
- <td class="sl"><a href="./?sortCol=sl" title="Click to sort (by language code)">Language</a></td>
- <td class="level"><a href="./?sortCol=level" title="CEFR level - Click to sort">Level</a></td>
- <td class="words"><a href="./?sortCol=words" title="Number of words in text - Click to sort">Words</a></td>
- <td class="medtype"><a href="./?sortCol=medtype" title="Click to sort">Media</a></td>
- <td class="medlen"><a href="./?sortCol=medlen" title="Media length - Click to sort">Time</a></td>
- <td class="buttons"><a href="./?sortCol=buttons" title="Buttons - Click to sort">Buttons</a></td>
- <td class="files"><a href="./?sortCol=files" title="Files - Click to sort">Files</a></td>
+ <td class="id"><a href="./?sortCol=id" title="$T_UnitID_title\n$T_Click_to_sort">$T_UnitID</a></td>
+ <td class="views"><a href="./?sortCol=views" title="$T_Views_title\n$T_Click_to_sort">$T_Views</a></td>
+ <td class="clicks"><a href="./?sortCol=clicks" title="$T_Clicks_title\n$T_Click_to_sort">$T_Clicks</a></td>
+ <td class="created"><a href="./?sortCol=created" title="$T_Created_title\n$T_Click_to_sort">$T_Created</a></td>
+ <td class="changed"><a href="./?sortCol=changed" title="$T_Changed_title\n$T_Click_to_sort">$T_Changed</a></td>
+ <td class="licence"><a href="./?sortCol=licence" title="$T_Licence_title\n$T_Click_to_sort">$T_Licence</a></td>
+ <td class="owner"><a href="./?sortCol=owner" title="$T_Owner_title\n$T_Click_to_sort">$T_Owner</a></td>
+ <td class="sl"><a href="./?sortCol=sl" title="$T_Click_to_sort ($T_by_language_code)">$T_Language</a></td>
+ <td class="level"><a href="./?sortCol=level" title="CEFR level - $T_Click_to_sort">Level</a></td>
+ <td class="words"><a href="./?sortCol=words" title="Number of words in text - $T_Click_to_sort">Words</a></td>
+ <td class="medtype"><a href="./?sortCol=medtype" title="$T_Click_to_sort">Media</a></td>
+ <td class="medlen"><a href="./?sortCol=medlen" title="Media length - $T_Click_to_sort">Time</a></td>
+ <td class="buttons"><a href="./?sortCol=buttons" title="Buttons - $T_Click_to_sort">Buttons</a></td>
+ <td class="files"><a href="./?sortCol=files" title="Files - $T_Click_to_sort">Files</a></td>
  <td class="delete">&nbsp;</td>
  <td class="edit">&nbsp;</td>
  <td class="nowl">&nbsp;</td>
- <td class="title"><a href="./?sortCol=title" title="Click to sort">Title</a></td>
+ <td class="title"><a href="./?sortCol=title" title="$T_Click_to_sort">Title</a></td>
  <td>Text or Summary</td>
 </tr>
 <tr class="row2">
@@ -595,7 +635,7 @@ $slOptionsHtml
 <td class="nowl"></td>
 <td class="title" colspan=2>
  <div class="find">
-     <input type="submit" name="filter" value="Find" tabindex=80>&nbsp;&nbsp;
+     <input type="submit" name="filter" value="$T_Lorg" tabindex=80>&nbsp;&nbsp;
      <input type="reset" value="Clear filter" title="Clear all filtering" tabindex=90>
  </div>
 </td>

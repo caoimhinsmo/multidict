@@ -6,7 +6,7 @@ a:hover   { color:white; background-color:brown; }
 p.info, span.info, ul.info { color:green; font-size:80%; }
 
 ul.smo-navlist { background-color:#55a8eb; }
-ul.smo-navlist li a { background-color:#27b; color:white; border-color:#27b; border-right-color:white; }
+ul.smo-navlist li a { background-color:#15a; color:white; border-color:#27b; border-right-color:white; }
 ul.smo-navlist a:visited { color:white; }
 ul.smo-navlist li:first-child a:before { content:""; margin-right:0; }
 
