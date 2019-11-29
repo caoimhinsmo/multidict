@@ -44,11 +44,15 @@ EOD_cookieMessage;
     $T_For_teachers_more_info = $T->_('For_teachers_more_info');
     $T_Include_test_units     = $T->_('Include_test_units');
     $T_Include_test_units_o   = $T->_('Include_test_units_o');
-    $T_Logout                 = $T->_('Logout');
+    $T_Login                  = $T->_('Log_air');
     $T_Logout_from_Clilstore  = $T->_('Logout_from_Clilstore');
     $T_Logged_in_as           = $T->_('Logged_in_as');
     $T_Disclaimer             = $T->_('Disclaimer');
     $T_Disclaimer_EuropeanCom = $T->_('Disclaimer_EuropeanCom');
+    $T_or                     = $T->_('or');
+    $T_register               = $T->_('register','hsc');
+    $loginReasonStudent       = $T->_('loginReasonStudent','hsc');
+    $loginReasonTeacher       = $T->_('loginReasonTeacher','hsc');
 
     $csNavbar = SM_csNavbar::csNavbar($T->domhan,1);
 
@@ -104,10 +108,10 @@ $checkboxesHtml
 CHECKBOXES2;
 
     if (empty($user)) {
-        if ($mode<=1) { $loginReason = 'to enjoy the full range of Clilstore facilities including the vocabulary builder'; }
-          else        { $loginReason = 'if you wish to create and edit pages'; }
+        if ($mode<=1) { $loginReason = $loginReasonStudent; }
+          else        { $loginReason = $loginReasonTeacher; }
         $userHtml = <<<END_USER1
-<p style="clear:both;padding:1em 0"><a href="login.php" class=mybutton>Login</a> or <a href="register.php">register</a> $loginReason.</p>
+<p style="clear:both;padding:1em 0"><a href="login.php" class=mybutton>$T_Login</a> $T_or <a href="register.php">$T_register</a> $loginReason.</p>
 END_USER1;
     } else {
         $stmtIncUnit = $DbMultidict->prepare('SELECT id AS incUnit, created AS incCreated FROM clilstore WHERE test=2 and owner=:user'); //Check whether the user has any incomplete units

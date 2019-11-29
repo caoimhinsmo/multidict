@@ -7,13 +7,14 @@ class SM_csNavbar {
       $smohl = SM_T::hl0();
 
       $T = new SM_T('clilstore/navbar');
-      $T_homeTitle            = $T->_('homeTitle');
+      $T_homeTitle            = $T->_('homeTitle','hsc');
       $T_canan_eadarAghaidh   = $T->_('canan_eadarAghaidh','hsc');
       $T_Log_air              = $T->_('Log_air','hsc');
       $T_Log_air_fios         = $T->_('Log_air_fios','hsc');
+      $T_Logout               = $T->_('Logout','hsc');
       $T_Log_dheth_fios       = $T->_('Log_dheth_fios','hsc');
       $T_tr_fios              = $T->_('tr_fios','hsc');
-      $T_Clilstore_index_page = $T->_('Clilstore_index_page');
+      $T_Clilstore_index_page = $T->_('Clilstore_index_page','hsc');
 
       if ($duilleagAghaidh) { $SmotrCeangal = "<li><a href='/' title='$T_homeTitle'>$servername</a>"; }
         else                { $SmotrCeangal = "<li><a href='/clilstore/' title='$T_Clilstore_index_page'>Clilstore</a>"; }
@@ -21,7 +22,7 @@ class SM_csNavbar {
       if ($myCLIL->cead(SM_myCLIL::LUCHD_EADARTHEANGACHAIDH))
         { $trPutan = "\n<li class=deas><a href='//www3.smo.uhi.ac.uk/teanga/smotr/tr.php?domhan=$domhan' target='tr' title='$T_tr_fios'>tr</a>"; } else { $trPutan = ''; }
       $ceangalRiMoSMO = ( isset($myCLIL->id)
-                        ? "<li class='deas'><a href='/clilstore/logout.php' title='$T_Log_dheth_fios'>Logout</a></li>"
+                        ? "<li class='deas'><a href='/clilstore/logout.php' title='$T_Log_dheth_fios'>$T_Logout</a></li>"
                         : "<li class='deas'><a href='/clilstore/login.php?till_gu=/' title='$T_Log_air_fios'>$T_Log_air</a></li>"
                         );
       $hlArr = array(
