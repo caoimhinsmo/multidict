@@ -240,6 +240,13 @@ setcookie('csSession','',1,'/clilstore/','multidict.net');
 
 
   public function symbolRowHtml() {
+      $T = new SM_T('clilstore/symbolRowHtml');
+      $T_Sort_the_column     = $T->h('Sort_the_column');
+      $T_Hide_the_column     = $T->h('Hide_the_column');
+      $T_Click_to_sort_hide  = $T->h('Click_to_sort_hide');
+      $T_Restore             = $T->h('Restore');
+      $T_Restore_title       = $T->h('Restore_title');
+
       $csid = $this->csSession->csid;
       $mode = $this->csSession->mode;
       $modecol = "m$mode";
@@ -269,13 +276,13 @@ setcookie('csSession','',1,'/clilstore/','multidict.net');
               $symbolHtml[$fd] = "<td class=\"$fd\">.</td>\r";
           } elseif ($fd<>'title') {
               $pad = ( $fd=='id' ? '' : '&nbsp;' );
-              $deleteHtml = "<a href=\"$hrefSelf?deleteCol=$fd\" style=\"color:red;font-size:80%\" title=\"hide column\">×</a>";
-              $symbolHtml[$fd] = "<td class=\"$fd\"><a href=\"$hrefSelf?sortCol=$fd\" title=\"sort column\">$sym$pad</a> $deleteHtml</td>\r";
+              $deleteHtml = "<a href='$hrefSelf?deleteCol=$fd' style='color:red;font-size:80%' title='$T_Hide_the_column'>×</a>";
+              $symbolHtml[$fd] = "<td class='$fd'><a href='$hrefSelf?sortCol=$fd' title='$T_Sort_the_column'>$sym$pad</a> $deleteHtml</td>\r";
           } else {
-              $symbolinfo = '<span style="font-size:65%">⇐ Click <span style="color:#55a8eb">▵</span> to sort column, '
-                           .'<span style="color:red">×</span> to hide '
-                           ."[<a href='$hrefSelf?restoreCols=restore' title='Restore default columns and sorting' style='font-size:110%'>Restore</a>]</span>";
-              $symbolHtml['title'] = "<td class=title colspan=2 style='vertical-align:bottom'><div style='float:right'>$symbolinfo</div><a href='$hrefSelf?sortCol=title' title='sort column'>$sym</a></td>";
+              $symbolinfo = '<span style="font-size:65%">⇐ '
+                           . sprintf($T_Click_to_sort_hide, '<span style="color:#55a8eb;font-size:140%">▵</span>', '<span style="color:red;font-size:140%">×</span>')
+                           . " [<a href='$hrefSelf?restoreCols=restore' title='$T_Restore_title' style='font-size:110%'>$T_Restore</a>]</span>";
+              $symbolHtml['title'] = "<td class=title colspan=2 style='vertical-align:bottom'><div style='float:right'>$symbolinfo</div><a href='$hrefSelf?sortCol=title' title='$T_Sort_the_column'>$sym</a></td>";
           }
       }
       $symbolHtml_id = $symbolHtml['id'];
@@ -354,16 +361,15 @@ setcookie('csSession','',1,'/clilstore/','multidict.net');
      // Creates a select box for choosing a column to be added to the table
 
       $T = new SM_T('clilstore/addColHtml');
-      $T_Add_a_column      = $T->_('Add_a_column');
-      $T_Add_a_column_title = $T->_('Add_a_column_title');
+      $T_Add_a_column      = $T->h('Add_a_column');
+      $T_Add_a_column_title = $T->h('Add_a_column_title');
 
       $csid = $this->csSession->csid;
       $mode = $this->csSession->mode;
       $opts = array();
       foreach ($this->csFilter as $r) {
           $fd   = $r['fd'];
-          $name = $this->csFields[$fd]['name'];
-          if ($r["m$mode"]<>1) { $opts[] = "<option value=\"$fd\">$name</option>"; }
+          if ($r["m$mode"]<>1) { $opts[] = "<option value='$fd'>{$T->h("csCol_$fd")}</option>"; }
       }
       if (empty($opts)) { return ''; }
       $options = implode("\r",$opts);
@@ -475,7 +481,7 @@ END_addColHtml;
      // Returns the HTML for displaying CEFR level choice buttons
 
       $T = new SM_T('clilstore/levelButHtml');
-      $T_Level    = $T->_('Level');
+      $T_Level    = $T->_('csCol_level');
       $T_Basic    = $T->_('Basic');
       $T_Advanced = $T->_('Advanced');
       $T_Any      = $T->_('Any');

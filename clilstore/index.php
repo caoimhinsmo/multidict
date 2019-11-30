@@ -24,75 +24,79 @@ EOD_cookieMessage;
     $serverhome = SM_myCLIL::serverhome();
 
     $T = new SM_T('clilstore/index');
-    $T_Help                   = $T->_('Cobhair');
-    $T_About_Clilstore        = $T->_('mu_Clilstore');
-    $T_Language               = $T->_('Cànan');
-    $T_Select_lang_level      = $T->_('Select_lang_level');
-    $T_My_options             = $T->_('My_options');
-    $T_My_units               = $T->_('My_units');
-    $T_My_vocabulary          = $T->_('My_vocabulary');
-    $T_Add_a_column_info      = $T->_('Add_a_column_info');
-    $T_See_as_newbie          = $T->_('See_as_newbie');
-    $T_Create_a_unit          = $T->_('Create_a_unit') . '…';
-    $T_For_students           = $T->_('For_students');
-    $T_For_teachers           = $T->_('For_teachers');
-    $T_More_options           = $T->_('More_options');
-    $T_more_options           = $T->_('more_options');
-    $T_For_students_info      = $T->_('For_students_info');
-    $T_For_students_more_info = $T->_('For_students_more_info');
-    $T_For_teachers_info      = $T->_('For_teachers_info');
-    $T_For_teachers_more_info = $T->_('For_teachers_more_info');
-    $T_Include_test_units     = $T->_('Include_test_units');
-    $T_Include_test_units_o   = $T->_('Include_test_units_o');
-    $T_Login                  = $T->_('Log_air');
-    $T_Logout_from_Clilstore  = $T->_('Logout_from_Clilstore');
-    $T_Logged_in_as           = $T->_('Logged_in_as');
-    $T_Disclaimer             = $T->_('Disclaimer');
-    $T_Disclaimer_EuropeanCom = $T->_('Disclaimer_EuropeanCom');
-    $T_or                     = $T->_('or');
-    $T_register               = $T->_('register','hsc');
-    $loginReasonStudent       = $T->_('loginReasonStudent','hsc');
-    $loginReasonTeacher       = $T->_('loginReasonTeacher','hsc');
-    $T_Lorg                   = $T->_('Lorg');
+    $T_Help                   = $T->h('Cobhair');
+    $T_About_Clilstore        = $T->h('mu_Clilstore');
+    $T_Select_lang_level      = $T->h('Select_lang_level');
+    $T_My_options             = $T->h('My_options');
+    $T_My_units               = $T->h('My_units');
+    $T_My_vocabulary          = $T->h('My_vocabulary');
+    $T_Add_a_column_info      = $T->h('Add_a_column_info');
+    $T_See_as_newbie          = $T->h('See_as_newbie');
+    $T_Create_a_unit          = $T->h('Create_a_unit') . '…';
+    $T_For_students           = $T->h('For_students');
+    $T_For_teachers           = $T->h('For_teachers');
+    $T_More_options           = $T->h('More_options');
+    $T_more_options           = $T->h('more_options');
+    $T_For_students_info      = $T->h('For_students_info');
+    $T_For_students_more_info = $T->h('For_students_more_info');
+    $T_For_teachers_info      = $T->h('For_teachers_info');
+    $T_For_teachers_more_info = $T->h('For_teachers_more_info');
+    $T_Include_test_units     = $T->h('Include_test_units');
+    $T_Include_test_units_o   = $T->h('Include_test_units_o');
+    $T_Login                  = $T->h('Log_air');
+    $T_Logout_from_Clilstore  = $T->h('Logout_from_Clilstore');
+    $T_Logged_in_as           = $T->h('Logged_in_as');
+    $T_Disclaimer             = $T->h('Disclaimer');
+    $T_Disclaimer_EuropeanCom = $T->h('Disclaimer_EuropeanCom');
+    $T_or                     = $T->h('or');
+    $T_register               = $T->h('register');
+    $loginReasonStudent       = $T->h('loginReasonStudent');
+    $loginReasonTeacher       = $T->h('loginReasonTeacher');
+    $T_Lorg                   = $T->h('Lorg');
 
-    $T_UnitID                 = $T->_('UnitID');
-    $T_Views                  = $T->_('Views');
-    $T_Clicks                 = $T->_('Clicks');
-    $T_Created                = $T->_('Created');
-    $T_Changed                = $T->_('Changed');
-    $T_Licence                = $T->_('Licence');
-    $T_Owner                  = $T->_('Owner');
+    $T_UnitID                 = $T->h('csCol_id');
+    $T_Views                  = $T->h('csCol_views');
+    $T_Clicks                 = $T->h('csCol_clicks');
+    $T_Created                = $T->h('csCol_created');
+    $T_Changed                = $T->h('csCol_changed');
+    $T_Licence                = $T->h('csCol_licence');
+    $T_Owner                  = $T->h('csCol_owner');
+    $T_Language               = $T->h('csCol_sl');
+    $T_Level                  = $T->h('csCol_level');
+    $T_Words                  = $T->h('csCol_words');
+    $T_Media                  = $T->h('csCol_medtype');
+    $T_MedLength              = $T->h('csCol_medlen');
+    $T_Buttons                = $T->h('csCol_buttons');
+    $T_Files                  = $T->h('csCol_files');
+    $T_Title                  = $T->h('csCol_title');
+    $T_TextOrSummary          = $T->h('csCol_text');
 
-// Language
-// Level
-// Words
-// Media
-// Time
-// Buttons
-// Files
-// Title
-// TextSummary
+    $T_UnitID_title           = $T->h('UnitID_title');
+    $T_Views_title            = $T->h('Views_title');
+    $T_Clicks_title           = $T->h('Clicks_title');
+    $T_Created_title          = $T->h('Created_title');
+    $T_Changed_title          = $T->h('Changed_title');
+    $T_Licence_title          = $T->h('Licence_title');
+    $T_Owner_title            = $T->h('Owner_title');
+    $T_by_language_code       = $T->h('by_language_code');
+    $T_Level_title            = $T->h('Level_title');
+    $T_Words_title            = $T->h('Words_title');
+    $T_Media_title            = $T->h('Media_title');
+    $T_MedLength_title        = $T->h('MedLength_title');
+    $T_Buttons_title          = $T->h('Buttons_title');
+    $T_Files_title            = $T->h('Files_title');
 
-    $T_UnitID_title           = $T->_('UnitID_title');
-    $T_Views_title            = $T->_('Views_title');
-    $T_Clicks_title           = $T->_('Clicks_title');
-    $T_Created_title          = $T->_('Created_title');
-    $T_Changed_title          = $T->_('Changed_title');
-    $T_Licence_title          = $T->_('Licence_title');
-    $T_Owner_title            = $T->_('Owner_title');
-    $T_by_language_code       = $T->_('by_language_code');
-
-    $T_Click_to_sort          = $T->_('Click_to_sort','hsc');
-/*
- <td class="sl"><a href="./?sortCol=sl" title="Click to sort (by language code)">Language</a></td>
- <td class="level"><a href="./?sortCol=level" title="CEFR level - Click to sort">Level</a></td>
- <td class="words"><a href="./?sortCol=words" title="Number of words in text - Click to sort">Words</a></td>
- <td class="medtype"><a href="./?sortCol=medtype" title="Click to sort">Media</a></td>
- <td class="medlen"><a href="./?sortCol=medlen" title="Media length - Click to sort">Time</a></td>
- <td class="buttons"><a href="./?sortCol=buttons" title="Buttons - Click to sort">Buttons</a></td>
- <td class="files"><a href="./?sortCol=files" title="Files - Click to sort">Files</a></td>
- <td class="title"><a href="./?sortCol=title" title="Click to sort">Title</a></td>
-*/
+    $T_Click_to_sort          = $T->h('Click_to_sort','hsc');
+    $T_min                    = $T->h('min');
+    $T_max                    = $T->h('max');
+    $T_part_placeholder       = $T->h('part_placeholder');
+    $T_Clear_filter           = $T->h('Clear_filter');
+    $T_Clear_filter_title     = $T->h('Clear_filter_title');
+    $T_units_found            = $T->h('units_found');
+    $T_Total                  = $T->h('Iomlan');
+    $T_Average                = $T->h('Average');
+    $T_First_choose_language  = $T->h('First_choose_language');
+    $T_No_units_match_filter  = $T->h('No_units_match_filter');
 
     $csNavbar = SM_csNavbar::csNavbar($T->domhan,1);
 
@@ -580,22 +584,22 @@ $checkboxesHtml
  <td class="licence"><a href="./?sortCol=licence" title="$T_Licence_title\n$T_Click_to_sort">$T_Licence</a></td>
  <td class="owner"><a href="./?sortCol=owner" title="$T_Owner_title\n$T_Click_to_sort">$T_Owner</a></td>
  <td class="sl"><a href="./?sortCol=sl" title="$T_Click_to_sort ($T_by_language_code)">$T_Language</a></td>
- <td class="level"><a href="./?sortCol=level" title="CEFR level - $T_Click_to_sort">Level</a></td>
- <td class="words"><a href="./?sortCol=words" title="Number of words in text - $T_Click_to_sort">Words</a></td>
- <td class="medtype"><a href="./?sortCol=medtype" title="$T_Click_to_sort">Media</a></td>
- <td class="medlen"><a href="./?sortCol=medlen" title="Media length - $T_Click_to_sort">Time</a></td>
- <td class="buttons"><a href="./?sortCol=buttons" title="Buttons - $T_Click_to_sort">Buttons</a></td>
- <td class="files"><a href="./?sortCol=files" title="Files - $T_Click_to_sort">Files</a></td>
+ <td class="level"><a href="./?sortCol=level" title="$T_Level_title\n$T_Click_to_sort">$T_Level</a></td>
+ <td class="words"><a href="./?sortCol=words" title="$T_Words_title\n$T_Click_to_sort">$T_Words</a></td>
+ <td class="medtype"><a href="./?sortCol=medtype" title="$T_Media_title\n$T_Click_to_sort">$T_Media</a></td>
+ <td class="medlen"><a href="./?sortCol=medlen" title="$T_MedLength_title\n$T_Click_to_sort">$T_MedLength</a></td>
+ <td class="buttons"><a href="./?sortCol=buttons" title="$T_Buttons_title\n$T_Click_to_sort">$T_Buttons</a></td>
+ <td class="files"><a href="./?sortCol=files" title="$T_Files_title\n$T_Click_to_sort">$T_Files</a></td>
  <td class="delete">&nbsp;</td>
  <td class="edit">&nbsp;</td>
  <td class="nowl">&nbsp;</td>
- <td class="title"><a href="./?sortCol=title" title="$T_Click_to_sort">Title</a></td>
- <td>Text or Summary</td>
+ <td class="title"><a href="./?sortCol=title" title="$T_Click_to_sort">$T_Title</a></td>
+ <td>$T_TextOrSummary</td>
 </tr>
 <tr class="row2">
-<td class="id"><input name="id" type="text" $idVal pattern="[0-9]{1,5}" tabindex=10 autofocus style="width:2.5em" onchange="submitFForm()"></td>
-<td class="views"><input name="viewsMin" type="text" pattern="[0-9]{1,}" $viewsMinVal placeholder="min." title="minimum number of views" tabindex=14 style="width:3.5em;text-align:right" onchange="submitFForm()"></td>
-<td class="clicks"><input name="clicksMin" type="text" pattern="[0-9]{1,}" $clicksMinVal placeholder="min." title="minimum number of clicks" tabindex=16 style="width:3.5em;text-align:right" onchange="submitFForm()"></td>
+<td class="id"><input name="id" type="text" $idVal pattern="[0-9]{1,5}" tabindex=10 autofocus style="width:2.5em;text-align:right" onchange="submitFForm()"></td>
+<td class="views"><input name="viewsMin" type="text" pattern="[0-9]{1,}" $viewsMinVal placeholder="$T_min" title="minimum number of views" tabindex=14 style="width:3.5em;text-align:right" onchange="submitFForm()"></td>
+<td class="clicks"><input name="clicksMin" type="text" pattern="[0-9]{1,}" $clicksMinVal placeholder="$T_min" title="minimum number of clicks" tabindex=16 style="width:3.5em;text-align:right" onchange="submitFForm()"></td>
 <td class="created"><input name="createdMin" type="date" $createdMinVal tabindex=20 title="start date" onchange="submitFForm()"></td>
 <td class="changed"><input name="changedMin" type="date" $changedMinVal tabindex=30 title="start date" onchange="submitFForm()"></td>
 <td class="licence"><input name="licence" type="text" $licenceVal tabindex=40 list="licenceList" style="width:4.7em" onchange="submitFForm()"></td>
@@ -603,40 +607,40 @@ $checkboxesHtml
 <td class="sl">$mode0commentoutStart<select name="sl" style="background-color:$slSelectColor" tabindex=50 onchange="submitFForm()">
 $slOptionsHtml
 </select>$mode0commentoutFinish</td>
-<td class="level">$mode0commentoutStart<input name="levelMin" type="text" $levelMinVal placeholder="min." list="levelList" title="minimum CEFR level" tabindex=60 style="width:2.8em;text-align:center" onchange="submitFForm()">$mode0commentoutFinish</td>
-<td class="words"><input name="wordsMin" type="text" pattern="[0-9]{1,}" $wordsMinVal placeholder="min." title="minimum number of words in text" tabindex=62 style="width:3.5em;text-align:right" onchange="submitFForm()"></td>
-<td class="medtype">$mode0commentoutStart<input name="medtype" type="text" $medtypeVal pattern="[0-2]" placeholder="0,1,2" title="0=none; 1=sound; 2=video" tabindex=64 style="width:2.1em" onchange="submitFForm()">$mode0commentoutFinish</td>
-<td class="medlen"><input name="medlenMin" type="text" pattern="[0-9]{1,}" $medlenMinVal placeholder="min." title="minimum media length in seconds" tabindex=66 style="width:3.3em;text-align:right" onchange="submitFForm()"></td>
-<td class="buttons"><input name="buttonsMin" type="text" pattern="[0-9]{1,}" $buttonsMinVal placeholder="min." title="minimum number of link buttons" tabindex=68 style="width:3.3em;text-align:right" onchange="submitFForm()"></td>
-<td class="files"><input name="filesMin" type="text" pattern="[0-9]{1,}" $filesMinVal placeholder="min." title="minimum number of attached files" tabindex=70 style="width:3.3em;text-align:right" onchange="submitFForm()"></td>
+<td class="level">$mode0commentoutStart<input name="levelMin" type="text" $levelMinVal placeholder="$T_min" list="levelList" title="minimum CEFR level" tabindex=60 style="width:2.8em;text-align:center" onchange="submitFForm()">$mode0commentoutFinish</td>
+<td class="words"><input name="wordsMin" type="text" pattern="[0-9]{1,}" $wordsMinVal placeholder="$T_min" title="minimum number of words in text" tabindex=62 style="width:3.5em;text-align:right" onchange="submitFForm()"></td>
+<td class="medtype">$mode0commentoutStart<input name="medtype" type="text" $medtypeVal pattern="[0-2]" placeholder="0,1,2" title="0=none; 1=sound; 2=video" tabindex=64 style="width:2.1em;text-align:center" onchange="submitFForm()">$mode0commentoutFinish</td>
+<td class="medlen"><input name="medlenMin" type="text" pattern="[0-9]{1,}" $medlenMinVal placeholder="$T_min" title="minimum media length in seconds" tabindex=66 style="width:3.3em;text-align:right" onchange="submitFForm()"></td>
+<td class="buttons"><input name="buttonsMin" type="text" pattern="[0-9]{1,}" $buttonsMinVal placeholder="$T_min" title="minimum number of link buttons" tabindex=68 style="width:3.3em;text-align:right" onchange="submitFForm()"></td>
+<td class="files"><input name="filesMin" type="text" pattern="[0-9]{1,}" $filesMinVal placeholder="$T_min" title="minimum number of attached files" tabindex=70 style="width:3.3em;text-align:right" onchange="submitFForm()"></td>
 <td class="delete"></td>
 <td class="edit"></td>
 <td class="nowl"></td>
-<td class="title"><input name="title" type="text" $titleVal placeholder="contains 🔍" title="Part of the title" tabindex=72 style="width:17em" onchange="submitFForm()"></td>
-<td class="title"><input name="text" type="text" $textVal placeholder="contains 🔍" title="Part of the text or summary" tabindex=74 style="min-width:10em;width:95%" onchange="submitFForm()"></td>
+<td class="title"><input name="title" type="text" $titleVal placeholder="$T_part_placeholder 🔍" title="Part of the title" tabindex=72 style="width:17em" onchange="submitFForm()"></td>
+<td class="title"><input name="text" type="text" $textVal placeholder="$T_part_placeholder 🔍" title="Part of the text or summary" tabindex=74 style="min-width:10em;width:95%" onchange="submitFForm()"></td>
 </tr>
 <tr class="row3" style="background-color:#e2e2e2">
 <td class="id"></td>
-<td class="views"><input name="viewsMax" type="text" pattern="[0-9]{1,}" $viewsMaxVal placeholder="max." tabindex="15" style="width:3.5em;text-align:right" title="maximum number of views" onchange="submitFForm()"></td>
-<td class="clicks"><input name="clicksMax" type="text" pattern="[0-9]{1,}" $clicksMaxVal placeholder="max." tabindex="16" style="width:3.5em;text-align:right" title="maximum number of clicks" onchange="submitFForm()"></td>
+<td class="views"><input name="viewsMax" type="text" pattern="[0-9]{1,}" $viewsMaxVal placeholder="$T_max" tabindex="15" style="width:3.5em;text-align:right" title="maximum number of views" onchange="submitFForm()"></td>
+<td class="clicks"><input name="clicksMax" type="text" pattern="[0-9]{1,}" $clicksMaxVal placeholder="$T_max" tabindex="16" style="width:3.5em;text-align:right" title="maximum number of clicks" onchange="submitFForm()"></td>
 <td class="created"><input name="createdMax" type="date" $createdMaxVal tabindex=21 title="end date" onchange="submitFForm()"></td>
 <td class="changed"><input name="changedMax" type="date" $changedMaxVal tabindex=31 title="end date" onchange="submitFForm()"></td>
 <td class="licence"></td>
 <td class="owner"></td>
 <td class="sl"></td>
-<td class="level">$mode0commentoutStart<input name="levelMax" type="text" $levelMaxVal placeholder="max." list="levelList" tabindex="61" title="maximum CEFR level" style="width:2.8em;text-align:center" onchange="submitFForm()">$mode0commentoutFinish</td>
-<td class="words"><input name="wordsMax" type="text" pattern="[0-9]{1,}" $wordsMaxVal placeholder="max." tabindex="63" style="width:3.5em;text-align:right" title="maximum number of words in text" onchange="submitFForm()"></td>
+<td class="level">$mode0commentoutStart<input name="levelMax" type="text" $levelMaxVal placeholder="$T_max" list="levelList" tabindex="61" title="maximum CEFR level" style="width:2.8em;text-align:center" onchange="submitFForm()">$mode0commentoutFinish</td>
+<td class="words"><input name="wordsMax" type="text" pattern="[0-9]{1,}" $wordsMaxVal placeholder="$T_max" tabindex="63" style="width:3.5em;text-align:right" title="maximum number of words in text" onchange="submitFForm()"></td>
 <td class="medtype"></td>
-<td class="medlen"><input name="medlenMax" type="text" pattern="[0-9]{1,}" $medlenMaxVal placeholder="max." tabindex="67" style="width:3.3em;text-align:right" title="maximum media length in seconds" onchange="submitFForm()"></td>
-<td class="buttons"><input name="buttonsMax" type="text" pattern="[0-9]{1,}" $buttonsMaxVal placeholder="max." tabindex="69" style="width:3.3em;text-align:right" title="maximum number of link buttons" onchange="submitFForm()"></td>
-<td class="files"><input name="filesMax" type="text" pattern="[0-9]{1,}" $filesMaxVal placeholder="max." tabindex="71" style="width:3.3em;text-align:right" title="maximum number of attached files" onchange="submitFForm()"></td>
+<td class="medlen"><input name="medlenMax" type="text" pattern="[0-9]{1,}" $medlenMaxVal placeholder="$T_max" tabindex="67" style="width:3.3em;text-align:right" title="maximum media length in seconds" onchange="submitFForm()"></td>
+<td class="buttons"><input name="buttonsMax" type="text" pattern="[0-9]{1,}" $buttonsMaxVal placeholder="$T_max" tabindex="69" style="width:3.3em;text-align:right" title="maximum number of link buttons" onchange="submitFForm()"></td>
+<td class="files"><input name="filesMax" type="text" pattern="[0-9]{1,}" $filesMaxVal placeholder="$T_max" tabindex="71" style="width:3.3em;text-align:right" title="maximum number of attached files" onchange="submitFForm()"></td>
 <td class="delete"></td>
 <td class="edit"></td>
 <td class="nowl"></td>
 <td class="title" colspan=2>
  <div class="find">
      <input type="submit" name="filter" value="$T_Lorg" tabindex=80>&nbsp;&nbsp;
-     <input type="reset" value="Clear filter" title="Clear all filtering" tabindex=90>
+     <input type="reset" value="$T_Clear_filter" title="$T_Clear_filter_title" tabindex=90>
  </div>
 </td>
 </tr>
@@ -771,14 +775,14 @@ END_tableHtmlBarr;
         $stmt = null;
         $DbMultidict = null;
         if ($nunits==0) {
-            $noUnitsMessage = ( $mode==0 && $f['slFil']==''
-                              ? 'First you need to choose a language'
-                              : 'No units match this filter.  You need to revise or Clear the filter.' );
-            $noUnitsMessage = "<p><span style='color:red'>$noUnitsMessage</span></p>\n";
+            $unitsFoundMessage = ( $mode==0 && $f['slFil']==''
+                                 ? "$T_First_choose_language"
+                                 : "$T_No_units_match_filter" );
+            $unitsFoundMessage = "<p><span style='color:red'>$unitsFoundMessage</span></p>\n";
         } elseif ($nunits<2) {
-            $noUnitsMessage = '';
+            $unitsFoundMessage = '';
         } else { //Calculate and display statistics
-             $noUnitsMessage  = "<p style=\"margin-top:0;color:grey;font-size:70%\">$nunits units found</p>";
+             $unitsFoundMessage  = "<p style='margin-top:0;color:grey;font-size:70%'>$nunits $T_units_found</p>";
              if ($mode>1) {
                  $avgLevel  = ( $cnt['level']==0  ? '' : sprintf('%.1f',$tot['level']/$cnt['level']) );
                  $avgLevelHtml = SM_csSess::cefrHtml($avgLevel);
@@ -801,8 +805,8 @@ END_tableHtmlBarr;
                  $clickRateMessage = rateMessage($clickRate);
                  $totViewRateMessage  = rateMessage($viewRate *$nunits);
                  $totClickRateMessage = rateMessage($clickRate*$nunits);
-                 $totalsRow = '<tr style="font-size:80%;color:grey;background-color:#ddd">'
-                            . '<td class="id">Totals:</td>'
+                 $totalsRow = '<tr style="font-size:70%;color:grey;background-color:#ddd">'
+                            . "<td class='id'>$T_Total</td>"
                             . '<td class="views"  title="'.$totViewRateMessage .'">' . $tot['views']  . '</td>'
                             . '<td class="clicks" title="'.$totClickRateMessage.'">' . $tot['clicks'] . '</td>'
                             . '<td class="created"></td>'
@@ -818,8 +822,8 @@ END_tableHtmlBarr;
                             . '<td class="files">'  . $tot['files']  . '</td>' 
                             . '<td colspan="5"></td>'
                             . '</tr>';
-                 $avgRow    = '<tr style="font-size:80%;color:grey;background-color:#ddd;border-top:solid 1px #888">'
-                            . '<td class="id">Avg.:</td>'
+                 $avgRow    = '<tr style="font-size:70%;color:grey;background-color:#ddd;border-top:solid 1px #888">'
+                            . "<td class='id'>$T_Average</td>"
                             . '<td class="views"  title="'.$viewRateMessage .'">'   . sprintf('%.1f',$tot['views']/$nunits)    . '</td>'
                             . '<td class="clicks" title="'.$clickRateMessage.'">'   . sprintf('%.1f',$tot['clicks']/$nunits)   . '</td>'
                             . "<td class='created' title='$avgCreatedDateTime UT'>$avgCreatedDate</td>"
@@ -842,7 +846,7 @@ END_tableHtmlBarr;
 $avgRow
 $totalsRow
 </table>
-$noUnitsMessage
+$unitsFoundMessage
 </td>
 <td>$studentphoto</td>
 </tr></table>

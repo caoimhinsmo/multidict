@@ -7,14 +7,14 @@ class SM_csNavbar {
       $smohl = SM_T::hl0();
 
       $T = new SM_T('clilstore/navbar');
-      $T_homeTitle            = $T->_('homeTitle','hsc');
-      $T_canan_eadarAghaidh   = $T->_('canan_eadarAghaidh','hsc');
-      $T_Log_air              = $T->_('Log_air','hsc');
-      $T_Log_air_fios         = $T->_('Log_air_fios','hsc');
-      $T_Logout               = $T->_('Logout','hsc');
-      $T_Log_dheth_fios       = $T->_('Log_dheth_fios','hsc');
-      $T_tr_fios              = $T->_('tr_fios','hsc');
-      $T_Clilstore_index_page = $T->_('Clilstore_index_page','hsc');
+      $T_homeTitle            = $T->h('homeTitle');
+      $T_canan_eadarAghaidh   = $T->h('canan_eadarAghaidh');
+      $T_Log_air              = $T->h('Log_air');
+      $T_Log_air_fios         = $T->h('Log_air_fios');
+      $T_Logout               = $T->h('Logout');
+      $T_Log_dheth_fios       = $T->h('Log_dheth_fios');
+      $T_tr_fios              = $T->h('tr_fios');
+      $T_Clilstore_index_page = $T->h('Clilstore_index_page');
 
       if ($duilleagAghaidh) { $SmotrCeangal = "<li><a href='/' title='$T_homeTitle'>$servername</a>"; }
         else                { $SmotrCeangal = "<li><a href='/clilstore/' title='$T_Clilstore_index_page'>Clilstore</a>"; }
@@ -27,13 +27,13 @@ class SM_csNavbar {
                         );
       $hlArr = array(
           'br'=>'Brezhoneg',
+          'da'=>'Dansk',
           'de'=>'Deutsch',
           'en'=>'English',
           'fr'=>'Français',
           'ga'=>'Gaeilge',
           'gd'=>'Gàidhlig',
           'cy'=>'Cymraeg',
-          'da'=>'Dansk',
           'es'=>'Español',
           'is'=>'Íslenska',
           'it'=>'Italiano',
