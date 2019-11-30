@@ -5,25 +5,16 @@
   header("Cache-Control:max-age=0");
 
   try {
-    $tableHtml = $cookieMessage = '';
-    if (!isset($_COOKIE['csSessionId'])) $cookieMessage = <<<EOD_cookieMessage
-<div id=cookieMessage>
-<p>First visit to Clilstore?</p>
-<p>Clilstore, like virtually all other interactive sites, needs to use cookies to work properly &nbsp;
-<a id=gotitButton style='float:none' onclick=location.reload()>Got it</a></p>
-<p style='font-size:80%;margin-top:2em'>If this message persists when you click “Got it”, then your browser must be refusing cookies, or have Javascript disabled.<br></p>
-<p style='font-size:80%'>Clilstore is a well-behaved, responsible website. See our very short <a href="privacyPolicy.php">privacy policy</a>.</p>
-</div>
-EOD_cookieMessage;
-
-    $myCLIL = SM_myCLIL::singleton();
-    $user = ( isset($myCLIL->id) ? $myCLIL->id : '' );
-    $csSess   = SM_csSess::singleton();
-    $DbMultidict = SM_DbMultidictPDO::singleton('rw');
-    $servername = SM_myCLIL::servername();
-    $serverhome = SM_myCLIL::serverhome();
-
     $T = new SM_T('clilstore/index');
+
+    $T_First_visit_to_CS      = $T->h('First_visit_to_CS');
+    $T_CS_needs_cookies       = $T->h('CS_needs_cookies');
+    $T_Got_it                 = $T->h('Got_it');
+    $T_If_message_persists    = $T->h('If_message_persists');
+    $T_privacy_policy         = $T->h('privacy_policy');
+    $T_CS_is_well_behaved     = $T->h('CS_is_well_behaved');
+    $T_setNewbieAlert         = $T->j('setNewbieAlert');
+
     $T_Help                   = $T->h('Cobhair');
     $T_About_Clilstore        = $T->h('mu_Clilstore');
     $T_Select_lang_level      = $T->h('Select_lang_level');
@@ -98,7 +89,29 @@ EOD_cookieMessage;
     $T_First_choose_language  = $T->h('First_choose_language');
     $T_No_units_match_filter  = $T->h('No_units_match_filter');
 
+    $T_If_message_persists = sprintf($T_If_message_persists,$T_Got_it);
+    $T_privacy_policy      = "<a href='privacyPolicy.php'>$T_privacy_policy</a>";
+    $T_CS_is_well_behaved  = sprintf($T_CS_is_well_behaved,$T_privacy_policy);
+
     $csNavbar = SM_csNavbar::csNavbar($T->domhan,1);
+
+    $tableHtml = $cookieMessage = '';
+    if (!isset($_COOKIE['csSessionId'])) $cookieMessage = <<<EOD_cookieMessage
+<div id=cookieMessage>
+<p>$T_First_visit_to_CS</p>
+<p>$T_CS_needs_cookies &nbsp;
+<a id=gotitButton style='float:none' onclick=location.reload()>$T_Got_it</a></p>
+<p style='font-size:80%;margin-top:2em'>$T_If_message_persists</p>
+<p style='font-size:80%'>$T_CS_is_well_behaved</p>
+</div>
+EOD_cookieMessage;
+
+    $myCLIL = SM_myCLIL::singleton();
+    $user = ( isset($myCLIL->id) ? $myCLIL->id : '' );
+    $csSess   = SM_csSess::singleton();
+    $DbMultidict = SM_DbMultidictPDO::singleton('rw');
+    $servername = SM_myCLIL::servername();
+    $serverhome = SM_myCLIL::serverhome();
 
     $EUlogo = '/EUlogos/' . SM_T::hl0() . '.jpg';
     if (!file_exists($_SERVER['DOCUMENT_ROOT'] . $EUlogo)) { $EUlogo = '/EUlogos/en.jpg'; }
@@ -977,10 +990,12 @@ END_tableHtmlBun;
             xmlhttp.send();
         }
 
-        function newbie() {
-            alert('Clilstore cookies will be deleted (so you will be logged out if you were logged in),\\n'
-	        + 'and you will see the site as would a new user, a fresh arrival.\\n\\n'
-		+ '(This is mostly used for tesing purposes.)');
+        function setNewbie() {
+//            alert('Clilstore cookies will be deleted (so you will be logged out if you were logged in),\\n'
+//	        + 'and you will see the site as would a new user, a fresh arrival.\\n\\n'
+//		+ '(This is mostly used for tesing purposes.)');
+
+            alert('$T_setNewbieAlert');
 	    document.cookie = "myCLIL_authentication=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
 	    document.cookie = "csSessionId=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/clilstore/;";
 	    document.cookie = "wlUser=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
@@ -995,7 +1010,7 @@ END_tableHtmlBun;
 $csNavbar
 $cookieMessage
 <div class="smo-body-indent">
-<a><img src=/favicons/restart.png style="float:right" alt="Restart" title="$T_See_as_newbie" onclick="newbie();"></a>
+<a><img src=/favicons/restart.png style="float:right" alt="Restart" title="$T_See_as_newbie" onclick="setNewbie();"></a>
 <!--<span style="font-size:50%;color:red;background-color:yellow">News: Service will be down on 20 February 2016 during communications upgrade</span>-->
 
 <h1 style="float:left;margin:10px 12px 0 0"><img src="/icons-smo/clilstore-blue45.png" alt="Clilstore" style="width:184px;height:45px"></h1>
