@@ -50,7 +50,7 @@ class SM_csSess {
      // Fetches the filter records from table csFilter into the array $csFilter
       $csid = $this->csSession->csid;
       $DbMultidict = SM_DbMultidictPDO::singleton('rw');
-      $stmt = $DbMultidict->prepare('SELECT * FROM csFilter WHERE csid=:csid');
+      $stmt = $DbMultidict->prepare('SELECT csFilter.* FROM csFilter,csFields WHERE csid=:csid AND csFilter.fd=csFields.fd ORDER BY fid'); //Try to order fields sensibly
       $stmt->bindParam(':csid',$csid,PDO::PARAM_INT);
       $stmt->execute();
       while ($r = $stmt->fetch(PDO::FETCH_ASSOC)) {

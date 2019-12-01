@@ -77,10 +77,30 @@
     $T_Buttons_title          = $T->h('Buttons_title');
     $T_Files_title            = $T->h('Files_title');
 
+    $T_minimum_views          = $T->h('minimum_views');
+    $T_maximum_views          = $T->h('maximum_views');
+    $T_minimum_clicks         = $T->h('minimum_clicks');
+    $T_maximum_clicks         = $T->h('maximum_clicks');
+    $T_start_date             = $T->h('start_date');
+    $T_minimum_CEFR_level     = $T->h('minimum_CEFR_level');
+    $T_maximum_CEFR_level     = $T->h('maximum_CEFR_level');
+    $T_minimum_words          = $T->h('minimum_words');
+    $T_maximum_words          = $T->h('maximum_words');
+    $T_media_field_title      = $T->h('media_field_title');
+    $T_minimum_media_length   = $T->h('minimum_media_length');
+    $T_maximum_media_length   = $T->h('maximum_media_length');
+    $T_maximum_buttons        = $T->h('maximum_buttons');
+    $T_minimum_buttons        = $T->h('minimum_buttons');
+    $T_maximum_files          = $T->h('maximum_files');
+    $T_minimum_files          = $T->h('minimum_files');
+    $T_title_title            = $T->h('title_title');
+    $T_text_title             = $T->h('text_title');
+
     $T_Click_to_sort          = $T->h('Click_to_sort','hsc');
     $T_min                    = $T->h('min');
     $T_max                    = $T->h('max');
     $T_part_placeholder       = $T->h('part_placeholder');
+    $T_or_wildcard_pattern    = $T->h('or_wildcard_pattern');
     $T_Clear_filter           = $T->h('Clear_filter');
     $T_Clear_filter_title     = $T->h('Clear_filter_title');
     $T_units_found            = $T->h('units_found');
@@ -611,42 +631,42 @@ $checkboxesHtml
 </tr>
 <tr class="row2">
 <td class="id"><input name="id" type="text" $idVal pattern="[0-9]{1,5}" tabindex=10 autofocus style="width:2.5em;text-align:right" onchange="submitFForm()"></td>
-<td class="views"><input name="viewsMin" type="text" pattern="[0-9]{1,}" $viewsMinVal placeholder="$T_min" title="minimum number of views" tabindex=14 style="width:3.5em;text-align:right" onchange="submitFForm()"></td>
-<td class="clicks"><input name="clicksMin" type="text" pattern="[0-9]{1,}" $clicksMinVal placeholder="$T_min" title="minimum number of clicks" tabindex=16 style="width:3.5em;text-align:right" onchange="submitFForm()"></td>
-<td class="created"><input name="createdMin" type="date" $createdMinVal tabindex=20 title="start date" onchange="submitFForm()"></td>
-<td class="changed"><input name="changedMin" type="date" $changedMinVal tabindex=30 title="start date" onchange="submitFForm()"></td>
+<td class="views"><input name="viewsMin" type="text" pattern="[0-9]{1,}" $viewsMinVal placeholder="$T_min" title="$T_minimum_views" tabindex=14 style="width:3.5em;text-align:right" onchange="submitFForm()"></td>
+<td class="clicks"><input name="clicksMin" type="text" pattern="[0-9]{1,}" $clicksMinVal placeholder="$T_min" title="$T_minimum_clicks" tabindex=16 style="width:3.5em;text-align:right" onchange="submitFForm()"></td>
+<td class="created"><input name="createdMin" type="date" $createdMinVal tabindex=20 title="$T_start_date" onchange="submitFForm()"></td>
+<td class="changed"><input name="changedMin" type="date" $changedMinVal tabindex=30 title="$T_start_date" onchange="submitFForm()"></td>
 <td class="licence"><input name="licence" type="text" $licenceVal tabindex=40 list="licenceList" style="width:4.7em" onchange="submitFForm()"></td>
 <td class="owner"><input name="owner" type="text" $ownerVal tabindex=44 list="ownerList" style="width:10em" onchange="submitFForm()"></td>
 <td class="sl">$mode0commentoutStart<select name="sl" style="background-color:$slSelectColor" tabindex=50 onchange="submitFForm()">
 $slOptionsHtml
 </select>$mode0commentoutFinish</td>
-<td class="level">$mode0commentoutStart<input name="levelMin" type="text" $levelMinVal placeholder="$T_min" list="levelList" title="minimum CEFR level" tabindex=60 style="width:2.8em;text-align:center" onchange="submitFForm()">$mode0commentoutFinish</td>
-<td class="words"><input name="wordsMin" type="text" pattern="[0-9]{1,}" $wordsMinVal placeholder="$T_min" title="minimum number of words in text" tabindex=62 style="width:3.5em;text-align:right" onchange="submitFForm()"></td>
-<td class="medtype">$mode0commentoutStart<input name="medtype" type="text" $medtypeVal pattern="[0-2]" placeholder="0,1,2" title="0=none; 1=sound; 2=video" tabindex=64 style="width:2.1em;text-align:center" onchange="submitFForm()">$mode0commentoutFinish</td>
-<td class="medlen"><input name="medlenMin" type="text" pattern="[0-9]{1,}" $medlenMinVal placeholder="$T_min" title="minimum media length in seconds" tabindex=66 style="width:3.3em;text-align:right" onchange="submitFForm()"></td>
-<td class="buttons"><input name="buttonsMin" type="text" pattern="[0-9]{1,}" $buttonsMinVal placeholder="$T_min" title="minimum number of link buttons" tabindex=68 style="width:3.3em;text-align:right" onchange="submitFForm()"></td>
-<td class="files"><input name="filesMin" type="text" pattern="[0-9]{1,}" $filesMinVal placeholder="$T_min" title="minimum number of attached files" tabindex=70 style="width:3.3em;text-align:right" onchange="submitFForm()"></td>
+<td class="level">$mode0commentoutStart<input name="levelMin" type="text" $levelMinVal placeholder="$T_min" list="levelList" title="$T_minimum_CEFR_level" tabindex=60 style="width:2.8em;text-align:center" onchange="submitFForm()">$mode0commentoutFinish</td>
+<td class="words"><input name="wordsMin" type="text" pattern="[0-9]{1,}" $wordsMinVal placeholder="$T_min" title="$T_minimum_words" tabindex=62 style="width:3.5em;text-align:right" onchange="submitFForm()"></td>
+<td class="medtype">$mode0commentoutStart<input name="medtype" type="text" $medtypeVal pattern="[0-2]" placeholder="0,1,2" title="$T_media_field_title" tabindex=64 style="width:2.1em;text-align:center" onchange="submitFForm()">$mode0commentoutFinish</td>
+<td class="medlen"><input name="medlenMin" type="text" pattern="[0-9]{1,}" $medlenMinVal placeholder="$T_min" title="$T_minimum_media_length" tabindex=66 style="width:3.3em;text-align:right" onchange="submitFForm()"></td>
+<td class="buttons"><input name="buttonsMin" type="text" pattern="[0-9]{1,}" $buttonsMinVal placeholder="$T_min" title="$T_minimum_buttons" tabindex=68 style="width:3.3em;text-align:right" onchange="submitFForm()"></td>
+<td class="files"><input name="filesMin" type="text" pattern="[0-9]{1,}" $filesMinVal placeholder="$T_min" title="$T_minimum_files" tabindex=70 style="width:3.3em;text-align:right" onchange="submitFForm()"></td>
 <td class="delete"></td>
 <td class="edit"></td>
 <td class="nowl"></td>
-<td class="title"><input name="title" type="text" $titleVal placeholder="$T_part_placeholder 🔍" title="Part of the title" tabindex=72 style="width:17em" onchange="submitFForm()"></td>
-<td class="title"><input name="text" type="text" $textVal placeholder="$T_part_placeholder 🔍" title="Part of the text or summary" tabindex=74 style="min-width:10em;width:95%" onchange="submitFForm()"></td>
+<td class="title"><input name="title" type="text" $titleVal placeholder="$T_part_placeholder ($T_or_wildcard_pattern) 🔍" title="$T_title_title ($T_or_wildcard_pattern)" tabindex=72 style="width:17em" onchange="submitFForm()"></td>
+<td class="title"><input name="text" type="text" $textVal placeholder="$T_part_placeholder ($T_or_wildcard_pattern) 🔍" title="$T_text_title ($T_or_wildcard_pattern)" tabindex=74 style="min-width:10em;width:95%" onchange="submitFForm()"></td>
 </tr>
 <tr class="row3" style="background-color:#e2e2e2">
 <td class="id"></td>
-<td class="views"><input name="viewsMax" type="text" pattern="[0-9]{1,}" $viewsMaxVal placeholder="$T_max" tabindex="15" style="width:3.5em;text-align:right" title="maximum number of views" onchange="submitFForm()"></td>
-<td class="clicks"><input name="clicksMax" type="text" pattern="[0-9]{1,}" $clicksMaxVal placeholder="$T_max" tabindex="16" style="width:3.5em;text-align:right" title="maximum number of clicks" onchange="submitFForm()"></td>
+<td class="views"><input name="viewsMax" type="text" pattern="[0-9]{1,}" $viewsMaxVal placeholder="$T_max" tabindex="15" style="width:3.5em;text-align:right" title="$T_maximum_views" onchange="submitFForm()"></td>
+<td class="clicks"><input name="clicksMax" type="text" pattern="[0-9]{1,}" $clicksMaxVal placeholder="$T_max" tabindex="16" style="width:3.5em;text-align:right" title="$T_maximum_clicks" onchange="submitFForm()"></td>
 <td class="created"><input name="createdMax" type="date" $createdMaxVal tabindex=21 title="end date" onchange="submitFForm()"></td>
 <td class="changed"><input name="changedMax" type="date" $changedMaxVal tabindex=31 title="end date" onchange="submitFForm()"></td>
 <td class="licence"></td>
 <td class="owner"></td>
 <td class="sl"></td>
-<td class="level">$mode0commentoutStart<input name="levelMax" type="text" $levelMaxVal placeholder="$T_max" list="levelList" tabindex="61" title="maximum CEFR level" style="width:2.8em;text-align:center" onchange="submitFForm()">$mode0commentoutFinish</td>
-<td class="words"><input name="wordsMax" type="text" pattern="[0-9]{1,}" $wordsMaxVal placeholder="$T_max" tabindex="63" style="width:3.5em;text-align:right" title="maximum number of words in text" onchange="submitFForm()"></td>
+<td class="level">$mode0commentoutStart<input name="levelMax" type="text" $levelMaxVal placeholder="$T_max" list="levelList" tabindex="61" title="$T_maximum_CEFR_level" style="width:2.8em;text-align:center" onchange="submitFForm()">$mode0commentoutFinish</td>
+<td class="words"><input name="wordsMax" type="text" pattern="[0-9]{1,}" $wordsMaxVal placeholder="$T_max" tabindex="63" style="width:3.5em;text-align:right" title="$T_maximum_words" onchange="submitFForm()"></td>
 <td class="medtype"></td>
-<td class="medlen"><input name="medlenMax" type="text" pattern="[0-9]{1,}" $medlenMaxVal placeholder="$T_max" tabindex="67" style="width:3.3em;text-align:right" title="maximum media length in seconds" onchange="submitFForm()"></td>
-<td class="buttons"><input name="buttonsMax" type="text" pattern="[0-9]{1,}" $buttonsMaxVal placeholder="$T_max" tabindex="69" style="width:3.3em;text-align:right" title="maximum number of link buttons" onchange="submitFForm()"></td>
-<td class="files"><input name="filesMax" type="text" pattern="[0-9]{1,}" $filesMaxVal placeholder="$T_max" tabindex="71" style="width:3.3em;text-align:right" title="maximum number of attached files" onchange="submitFForm()"></td>
+<td class="medlen"><input name="medlenMax" type="text" pattern="[0-9]{1,}" $medlenMaxVal placeholder="$T_max" tabindex="67" style="width:3.3em;text-align:right" title="$T_maximum_media_length" onchange="submitFForm()"></td>
+<td class="buttons"><input name="buttonsMax" type="text" pattern="[0-9]{1,}" $buttonsMaxVal placeholder="$T_max" tabindex="69" style="width:3.3em;text-align:right" title="$T_maximum_buttons" onchange="submitFForm()"></td>
+<td class="files"><input name="filesMax" type="text" pattern="[0-9]{1,}" $filesMaxVal placeholder="$T_max" tabindex="71" style="width:3.3em;text-align:right" title="$T_maximum_files" onchange="submitFForm()"></td>
 <td class="delete"></td>
 <td class="edit"></td>
 <td class="nowl"></td>
