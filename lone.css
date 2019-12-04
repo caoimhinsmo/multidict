@@ -1,7 +1,7 @@
 @charset "utf-8";
 #master {
 	height: 470px;
-	width: 550px;
+	width: 590px;
 	margin-right: auto;
 	margin-left: auto;
 	position: relative;
@@ -23,7 +23,7 @@
 #clilstore {
 	position: absolute;
 	height: 165px;
-	width: 521px;
+	width: 561px;
 	left: 26px;
 	top: 17px;
 	z-index: 1;
@@ -31,21 +31,21 @@
 #wordlink {
 	position: absolute;
 	height: 93px;
-	width: 521px;
+	width: 561px;
 	left: 26px;
 	top: 162px;
 }
 #multidict {
 	position: absolute;
 	height: 125px;
-	width: 519px;
+	width: 561px;
 	left: 27px;
 	top: 255px;
 }
 #cliltext {
 	position: absolute;
 	height: 69px;
-	width: 515px;
+	width: 560px;
 	left: 0px;
 	top: 67px;
 }
@@ -75,7 +75,7 @@ body {
 #wordtext {
 	position: absolute;
 	height: 22px;
-	width: 522px;
+	width: 560px;
 	left: 0px;
 	top: 65px;
 }
@@ -86,7 +86,7 @@ body {
 #multitext {
 	position: absolute;
 	height: 24px;
-	width: 521px;
+	width: 560px;
 	left: 0px;
 	top: 95px;
 }
@@ -115,7 +115,7 @@ body {
 	background-color: #E6E6E6;
 	position: absolute;
 	height: 55px;
-	width: 247px;
+	width: 287px;
 	right: 6px;
 	bottom: 10px;
 	color: #000000;

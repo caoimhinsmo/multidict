@@ -1,3 +1,22 @@
+<?php if (!include('autoload.inc.php'))
+  header("Location:http://claran.smo.uhi.ac.uk/mearachd/include_a_dhith/?faidhle=autoload.inc.php");
+
+  header('Cache-Control: no-cache, no-store, must-revalidate');
+  header("Cache-Control:max-age=0");
+
+  $T = new SM_T('clilstore/serverhome');
+
+  $T_Clilstore_studentWelcome = $T->h('Clilstore_studentWelcome');
+  $T_Clilstore_teacherWelcome = $T->h('Clilstore_teacherWelcome');
+  $T_Wordlink_welcome         = $T->h('Wordlink_welcome');
+  $T_Multidict_welcome        = $T->h('Multidict_welcome');
+  $T_Disclaimer               = $T->h('Disclaimer');
+  $T_Disclaimer_EuropeanCom   = $T->h('Disclaimer_EuropeanCom');
+
+  $EUlogo = '/EUlogos/' . SM_T::hl0() . '.jpg';
+  if (!file_exists($_SERVER['DOCUMENT_ROOT'] . $EUlogo)) { $EUlogo = '/EUlogos/en.jpg'; }
+
+echo <<< END_html
 <!doctype html>
 <html>
 <head>
@@ -49,24 +68,26 @@
 <div id="apDiv2"><a href="/clilstore/?mode=2"><img src="lonelogo/pil-blue.png" alt="" style="width:17px;height:17px;border:0"></a></div>
   <div id="clilstore"> <a href="/clilstore/?mode=0"><img src="lonelogo/clilstore-blue.png" style="width:217px;height:81px;border:0" alt="Clilstore"></a>
     <div id="cliltext">
-      <p>Students: Find language videos at your level on various topics, with transcripts where every word <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;is 
-linked to a choice of online dictionaries in your own language      
+      <p style='padding-left:5em;text-indent:-5em'>$T_Clilstore_studentWelcome
       <p><br>
-      <p>Teachers: Create, store and organise multimedia wordlinked learning units for use by students    </div>
+      <p style='padding-left:5em;text-indent:-5em'>$T_Clilstore_teacherWelcome
+    </div>
     <div class="rule1"></div>
   </div>
   <div id="wordlink"><a href="/wordlink/"><img src="lonelogo/wordlink-blue.png" style="width:252px;height:80px;border:0" alt="Wordlink"></a>
-    <div id="wordtext">Link (mostly) any webpage automatically word-by-word to online dictionaries in a choice of languages</div>
+    <div id="wordtext">$T_Wordlink_welcome</div>
     <div id="rule1"></div>
   </div>
   <div id="apDiv3"><a href="/multidict/"><img src="lonelogo/pil-blue.png" alt="" style="width:17px;height:17px;border:0"></a></div>
   <div id="multidict"><a href="/multidict/"><img src="lonelogo/multidict-blue.png" style="width:250px;height:111px;border:0" alt="Multidict"></a>
   <div id="apDiv4"><a href="/wordlink/"><img src="lonelogo/pil-blue.png" alt="" style="width:17px;height:17px;border:0"></a></div>
-    <div id="multitext">Find and switch easily between online dictionaries in many languages</div>
+    <div id="multitext">$T_Multidict_welcome</div>
   </div>
-  <div id="disclaimer"><a href="http://eacea.ec.europa.eu/llp/index_en.php"><img src="EUlogo.png" style="width:275px;height:60px;border:0" alt="logo"></a></div>
-  <div id="distekst">Disclaimer: The European Commission support for the production of this publication does not constitute an endorsement of the contents which reflects the
-views only of the authors, and the Commission cannot be held responsible for any use which may be made of the information contained therein.</div>
+  <div id="disclaimer"><a href="http://eacea.ec.europa.eu/llp/index_en.php"><img src="$EUlogo" style="width:275px;height:60px;border:0" alt="logo"></a></div>
+  <div id="distekst">$T_Disclaimer: $T_Disclaimer_EuropeanCom</div>
 </div>
 </body>
 </html>
+END_html;
+
+?>

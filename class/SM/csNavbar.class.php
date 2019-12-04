@@ -26,26 +26,32 @@ class SM_csNavbar {
                         : "<li class='deas'><a href='/clilstore/login.php?till_gu=/' title='$T_Log_air_fios'>$T_Log_air</a></li>"
                         );
       $hlArr = array(
-          'br'=>'Brezhoneg',
           'da'=>'Dansk',
-          'de'=>'Deutsch',
           'en'=>'English',
+          'gd'=>'Gàidhlig',
+          'lt'=>'Lietuvių',
+            '----1'=>'',  //Partial translations
+          'it'=>'Italiano',
+          'pt'=>'Português',
+            '----2'=>'',  //Very partial translations
+          'br'=>'Brezhoneg',
+          'cy'=>'Cymraeg',
+          'de'=>'Deutsch',
+          'es'=>'Español',
           'fr'=>'Français',
           'ga'=>'Gaeilge',
-          'gd'=>'Gàidhlig',
-          'cy'=>'Cymraeg',
-          'es'=>'Español',
           'is'=>'Íslenska',
-          'it'=>'Italiano',
-          'lt'=>'Lietuvių',
-          'pt'=>'Português',
           'bg'=>'Български');
       $options = '';
-      foreach ($hlArr as $hl=>$hlAinm) { $options .= "<option value='$hl|en'" . ( $hl==$smohl ? ' selected' : '' ) . ">$hlAinm</option>\n"; }
+      foreach ($hlArr as $hl=>$hlAinm) {
+          if (substr($hl,0,4)=='----') { $options .= "<option value='' disabled>&nbsp;_{$hlAinm}_</option>/n"; }  //Divider in the list of select options
+            else                       { $options .= "<option value='$hl|en'" . ( $hl==$smohl ? ' selected' : '' ) . ">$hlAinm</option>\n"; }
+      }
       $selCanan = <<< END_selCanan
 <script>
     function atharraichCanan(hl) {
-        document.cookie='smohl='+hl;
+        document.cookie = 'smohl=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/clilstore/'; //Delete any old cookies. (Delete this line after 2020-01-01 --CPD)
+        document.cookie = 'smohl=' + hl + '; path=/; max-age=31536000';
         var paramstr = location.search;
         if (/Trident/.test(navigator.userAgent) || /MSIE/.test(navigator.userAgent)) {
           //Rud lag lag airson seann Internet Explorer, nach eil eòlach air URLSearchParams. Sguab ás nuair a bhios IE marbh.
