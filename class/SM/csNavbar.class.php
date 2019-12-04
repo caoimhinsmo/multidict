@@ -29,9 +29,9 @@ class SM_csNavbar {
           'da'=>'Dansk',
           'en'=>'English',
           'gd'=>'Gàidhlig',
+          'it'=>'Italiano',
           'lt'=>'Lietuvių',
             '----1'=>'',  //Partial translations
-          'it'=>'Italiano',
           'pt'=>'Português',
             '----2'=>'',  //Very partial translations
           'br'=>'Brezhoneg',

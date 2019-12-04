@@ -32,8 +32,8 @@
     $url  = $wlSession->url;
     $csid = $wlSession->csid();
     if ($csid==-1)     { $startAdvice = ''; }
-     elseif ($csid==0) { $startAdvice = 'src="startAdvice.html"'; }
-     else              { $startAdvice = 'src="startAdviceCs.html"'; }
+     elseif ($csid==0) { $startAdvice = 'src="startAdvice.php"'; }
+     else              { $startAdvice = 'src="startAdvice.php?cs=1"'; }
     if (!empty($_GET['upload'])) {
         if ($_GET['upload']==1) { $wlSession->url = '{upload}'; }
         if ($_GET['upload']==2) { $wlSession->url = '{compose}'; }

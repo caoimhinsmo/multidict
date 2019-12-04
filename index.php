@@ -84,7 +84,7 @@ echo <<< END_html
     <div id="multitext">$T_Multidict_welcome</div>
   </div>
   <div id="disclaimer"><a href="http://eacea.ec.europa.eu/llp/index_en.php"><img src="$EUlogo" style="width:275px;height:60px;border:0" alt="logo"></a></div>
-  <div id="distekst">$T_Disclaimer: $T_Disclaimer_EuropeanCom</div>
+  <div id="distekst"><i>$T_Disclaimer:</i> $T_Disclaimer_EuropeanCom</div>
 </div>
 </body>
 </html>

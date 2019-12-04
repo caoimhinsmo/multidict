@@ -1060,7 +1060,7 @@ $tableHtml
 <a href="https://eacea.ec.europa.eu/erasmus-plus_en"><img src="$EUlogo" alt="" style="margin:3px"></a>
 </div>
 <div style="min-height:59px">
-<p style="margin:0.3em 0;color:#1e4d9f;font-size:75%">$T_Disclaimer: $T_Disclaimer_EuropeanCom</p>
+<p style="margin:0.3em 0;color:#1e4d9f;font-size:75%"><i>$T_Disclaimer:</i> $T_Disclaimer_EuropeanCom</p>
 </div>
 </div>
 </div>

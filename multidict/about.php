@@ -47,7 +47,7 @@ which you think would be worth adding to the system, we would be very happy to c
 <a href="http://eacea.ec.europa.eu/llp/index_en.php"><img src="$EUlogo" alt="" style="margin:3px"></a>
 </div>
 <div style="min-height:59px">
-<p style="margin:0.3em 0;color:#1e4d9f;font-size:75%">$T_Disclaimer: $T_Disclaimer_EuropeanCom</p>
+<p style="margin:0.3em 0;color:#1e4d9f;font-size:75%"><i>$T_Disclaimer:</i> $T_Disclaimer_EuropeanCom</p>
 </div>
 </div>
 
