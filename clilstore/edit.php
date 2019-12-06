@@ -141,6 +141,9 @@ EODbutHtml;
     $id = $_REQUEST['id'];
     $insistOnTitleJS = ( empty($id) ? 'insistOnTitle();' : '' );
 
+    $servername = SM_myCLIL::servername();
+    $serverhome = SM_myCLIL::serverhome();
+
     if (@$_REQUEST['editor']=='old') { $editor = 'old'; } else { $editor = 'new'; }
     if ($editor=='new') {
         $oldEditorLink = "edit.php?id=$id&amp;editor=old";
@@ -336,8 +339,6 @@ EODtinyMCE;
             $stmt = $DbMultidict->prepare('UPDATE clilstore SET buttons=:buttons WHERE id=:id');
             $stmt->execute(array(':buttons'=>$nbuttons,':id'=>$id)); //Update in clilstore the count of the number of buttons which the unit has
             $stmt = null;
-            $servername = SM_myCLIL::servername();
-            $serverhome = SM_myCLIL::serverhome();
             if ( isset($_GET['view']) ) { $happyRefresh = "$serverhome/cs/$id";     }
                                    else { $happyRefresh = "$serverhome/clilstore/"; }
             if (!empty($warningMessage)) {

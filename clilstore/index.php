@@ -35,6 +35,7 @@
     $T_Include_test_units     = $T->h('Include_test_units');
     $T_Include_test_units_o   = $T->h('Include_test_units_o');
     $T_Login                  = $T->h('Log_air');
+    $T_Logout                 = $T->h('Logout');
     $T_Logout_from_Clilstore  = $T->h('Logout_from_Clilstore');
     $T_Logged_in_as           = $T->h('Logged_in_as');
     $T_Disclaimer             = $T->h('Disclaimer');
