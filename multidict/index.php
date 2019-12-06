@@ -239,6 +239,10 @@ Replace the following sometime with flexbox - Option 3 at https://stackoverflow.
                 localStorage.setItem('mdAdvWl',mdAdv);
             }
         }
+        function slSelOn() {
+            document.getElementById('slSelOn').style.display = 'block';
+            document.getElementById('slSelOff').style.display = 'none';
+        }
         function submitForm(langChanged) {
             if (langChanged=='sl') { document.getElementById('tl').value   = ''; }
             if (langChanged>'')    { document.getElementById('dict').value = ''; }
@@ -297,13 +301,13 @@ $wordformHtmlFull
 <div$fromClass>
 <div class="formItem" style="min-width:60px;max-width:28%">
 <div id="swop" class="label" style="float:right;padding-right:0.7em;font-weight:bold;display:none" title="swop" onclick="swopLangs();"><a>&#x2194;</a></div>
-<div style="display:$slSelectOnDisplay">
+<div id=slSelOn style="display:$slSelectOnDisplay">
 <div class="label">From</div>
 <select name="sl" id="sl" title="Source language" onchange="submitForm('sl');">
 $slOptionsHtml
 </select><span class=advOnly>$nbSlHtml</span>
 </div>
-<div style="display:$slSelectOffDisplay">
+<div id=slSelOff style="display:$slSelectOffDisplay" onclick="slSelOn()">
 <div class="label">From</div>
 <b>$sl</b>
 </div>
