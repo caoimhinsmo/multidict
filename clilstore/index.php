@@ -1012,14 +1012,11 @@ END_tableHtmlBun;
         }
 
         function setNewbie() {
-//            alert('Clilstore cookies will be deleted (so you will be logged out if you were logged in),\\n'
-//	        + 'and you will see the site as would a new user, a fresh arrival.\\n\\n'
-//		+ '(This is mostly used for tesing purposes.)');
-
             alert('$T_setNewbieAlert');
 	    document.cookie = "myCLIL_authentication=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
 	    document.cookie = "csSessionId=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/clilstore/;";
 	    document.cookie = "wlUser=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+	    document.cookie = "Thl=; expires=Thu, 01 Jan 2019 00:00:00 UTC; path=/;";
             window.location = window.location.href;
         }
 </script>
