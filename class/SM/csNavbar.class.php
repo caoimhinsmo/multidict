@@ -4,7 +4,7 @@ class SM_csNavbar {
   public static function csNavbar($domhan='',$duilleagAghaidh=0) {
       $servername =  $_SERVER['SERVER_NAME'];
       $serverhome = ( empty($_SERVER['HTTPS']) ? 'http' : 'https' ) . '://' . $_SERVER['SERVER_NAME'];
-      $smohl = SM_T::hl0();
+      $hl0 = SM_T::hl0();
 
       $T = new SM_T('clilstore/navbar');
       $T_homeTitle            = $T->h('homeTitle');
@@ -45,13 +45,12 @@ class SM_csNavbar {
       $options = '';
       foreach ($hlArr as $hl=>$hlAinm) {
           if (substr($hl,0,4)=='----') { $options .= "<option value='' disabled>&nbsp;_{$hlAinm}_</option>/n"; }  //Divider in the list of select options
-            else                       { $options .= "<option value='$hl|en'" . ( $hl==$smohl ? ' selected' : '' ) . ">$hlAinm</option>\n"; }
+            else                       { $options .= "<option value='$hl|en'" . ( $hl==$hl0 ? ' selected' : '' ) . ">$hlAinm</option>\n"; }
       }
       $selCanan = <<< END_selCanan
 <script>
     function atharraichCanan(hl) {
-        document.cookie = 'smohl=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/clilstore/'; //Delete any old cookies. (Delete this line after 2020-01-01 --CPD)
-        document.cookie = 'smohl=' + hl + '; path=/; max-age=31536000';
+        document.cookie = 'Thl=' + hl + '; path=/; max-age=15000000';  //Valid for six months
         var paramstr = location.search;
         if (/Trident/.test(navigator.userAgent) || /MSIE/.test(navigator.userAgent)) {
           //Rud lag lag airson seann Internet Explorer, nach eil eòlach air URLSearchParams. Sguab ás nuair a bhios IE marbh.
