@@ -528,7 +528,7 @@ END_addColHtml;
       $buttonC1  = $button[4];
       $buttonC2  = $button[5];
       $html = <<<ENDHTML
-<p style="padding:2px;"><span style="background-color:#def;padding:5px 5px">$T_Level
+<p style="padding:2px;margin:0 0 1.5em 0"><span style="background-color:#def;padding:5px 5px">$T_Level
 $buttonAny
 <span style="color:green;font-size:80%;padding-left:3em">$T_Basic</span>
 $buttonA1

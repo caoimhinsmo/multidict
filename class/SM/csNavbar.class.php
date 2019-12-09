@@ -31,8 +31,9 @@ class SM_csNavbar {
           'gd'=>'Gàidhlig',
           'it'=>'Italiano',
           'lt'=>'Lietuvių',
-            '----1'=>'',  //Partial translations
           'pt'=>'Português',
+          'bg'=>'Български',
+//            '----1'=>'',  //Partial translations
             '----2'=>'',  //Very partial translations
           'br'=>'Brezhoneg',
           'cy'=>'Cymraeg',
@@ -40,8 +41,7 @@ class SM_csNavbar {
           'es'=>'Español',
           'fr'=>'Français',
           'ga'=>'Gaeilge',
-          'is'=>'Íslenska',
-          'bg'=>'Български');
+          'is'=>'Íslenska');
       $options = '';
       foreach ($hlArr as $hl=>$hlAinm) {
           if (substr($hl,0,4)=='----') { $options .= "<option value='' disabled>&nbsp;_{$hlAinm}_</option>/n"; }  //Divider in the list of select options

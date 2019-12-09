@@ -15,6 +15,8 @@
     $T_CS_is_well_behaved     = $T->h('CS_is_well_behaved');
     $T_setNewbieAlert         = $T->j('setNewbieAlert');
 
+    $T_Teaching_units         = $T->h('Teaching_units');
+    $T_for_CLIL               = $T->h('for_CLIL');
     $T_Help                   = $T->h('Cobhair');
     $T_About_Clilstore        = $T->h('mu_Clilstore');
     $T_Select_lang_level      = $T->h('Select_lang_level');
@@ -160,8 +162,7 @@ EOD_cookieMessage;
     $addColHtml = $csSess->addColHtml();
     $symbolRowHtml = $csSess->symbolRowHtml();
 
-    $studentphoto = $photo = $tabletopChoices = '';
-    if ($mode==0) { $studentphoto = '<img src="student.jpg" alt="">'; }
+    $photo = $tabletopChoices = '';
     if ($mode==1) { $photo = '<img src="http://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/Headphones-Sennheiser-HD555.jpg/320px-Headphones-Sennheiser-HD555.jpg" '
                                 . 'style="float:left;padding-left:20px;width:80px;height:60px" alt="">'; }
 
@@ -551,7 +552,7 @@ END_USER2;
     if ($mode==0) {
         $levelButHtml = $csSess->levelButHtml();
         $tabletopChoices = <<<ENDtabletopChoices
-<form id="selectForm" method="post" style="margin:1em 0">
+<form id="selectForm" method="post" style="margin:1em 0 0.5em 0">
 $T_Language <select name="sl" style="background-color:$slSelectColor" onchange="document.getElementById('selectForm').submit();">
 $slOptionsHtml
 </select>
@@ -606,8 +607,6 @@ $ownerListHtml
 </datalist>
 
 $checkboxesHtml
-<table><tr style="vertical-align:top">
-<td style="min-width:690px">
 <table id="main">
 <tr class="row1">
  <td class="id"><a href="./?sortCol=id" title="$T_UnitID_title\n$T_Click_to_sort">$T_UnitID</a></td>
@@ -785,25 +784,25 @@ END_tableHtmlBarr;
                   . '<img src="/icons-smo/peann.png" alt="Edit" title ="Edit this unit" class="favicon"/></a>';
             }
             $tableHtml .= '<tr class="data">'
-                        . "<td class=\"id\"><a href=\"/cs/$id\" title=\"$views views\">$id</a></td>"
-                        . "<td class=\"views\">$views</td>"
-                        . "<td class=\"clicks\">$clicks</td>"
-                        . "<td class=\"created\" title=\"$createdDateTime UT\">$createdDate</td>"
-                        . "<td class=\"changed\" title=\"$changedDateTime UT\">$changedDate</td>"
-                        . "<td class=\"licence\">$licence</td>"
-                        . "<td class=\"owner\">$ownerHtml</td>"
-                        . "<td class=\"sl\" title=\"language code: $sl\">$endonym</td>"
-                        . "<td class=\"level\">$cefrHtml</td>"
-                        . "<td class=\"words\">$words</td>"
-                        . "<td class=\"medtype\">$medtypeHtml</td>"
-                        . "<td class=\"medlen\">$medlenHtml</td>"
-                        . "<td class=\"buttons\">$buttonsHtml</td>"
-                        . "<td class=\"files\">$filesHtml</td>"
-                        . "<td class=\"delete\">$deleteHtml</td>"
-                        . "<td class=\"edit\">$editHtml</td>"
-                        . "<td class=\"nowl\"><a href=\"page.php?id=$id\">"
+                        . "<td class='id'><a href='/cs/$id' title='$views views'>$id</a></td>"
+                        . "<td class='views'>$views</td>"
+                        . "<td class='clicks'>$clicks</td>"
+                        . "<td class='created' title='$createdDateTime UT'>$createdDate</td>"
+                        . "<td class='changed' title='$changedDateTime UT'>$changedDate</td>"
+                        . "<td class='licence'>$licence</td>"
+                        . "<td class='owner'>$ownerHtml</td>"
+                        . "<td class='sl' title='language code: $sl'>$endonym</td>"
+                        . "<td class='level'>$cefrHtml</td>"
+                        . "<td class='words'>$words</td>"
+                        . "<td class='medtype'>$medtypeHtml</td>"
+                        . "<td class='medlen'>$medlenHtml</td>"
+                        . "<td class='buttons'>$buttonsHtml</td>"
+                        . "<td class='files'>$filesHtml</td>"
+                        . "<td class='delete'>$deleteHtml</td>"
+                        . "<td class='edit'>$editHtml</td>"
+                        . "<td class='nowl'><a href='page.php?id=$id'>"
                         .    '<img src="/favicons/no_wordlink.png" alt="no_wordlink" title="The plain page, not wordlinked" class="favicon"/></a></td>'
-                        . "<td class=\"$titleClass\" colspan=\"2\">$testHtml<a href=\"/cs/$id\" title=\"$summary\">$title</a></td>"
+                        . "<td class='$titleClass' colspan='2'>$testHtml<a href='/cs/$id' title='$summary'>$title</a></td>"
                         . "</tr>\n";
         }
         $stmt = null;
@@ -881,9 +880,6 @@ $avgRow
 $totalsRow
 </table>
 $unitsFoundMessage
-</td>
-<td>$studentphoto</td>
-</tr></table>
 </form>
 END_tableHtmlBun;
     }
@@ -893,7 +889,7 @@ END_tableHtmlBun;
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Clilstore - Teaching units for content and language integrated learning</title>
+    <title>Clilstore - $T_Teaching_units $T_for_CLIL</title>
     <link rel="StyleSheet" href="/css/smo.css">
     <link rel="StyleSheet" href="style.css">
     <link rel="icon" type="image/png" href="/favicons/clilstore.png">
@@ -1030,7 +1026,7 @@ $cookieMessage
 <!--<span style="font-size:50%;color:red;background-color:yellow">News: Service will be down on 20 February 2016 during communications upgrade</span>-->
 
 <h1 style="float:left;margin:10px 12px 0 0"><img src="/icons-smo/clilstore-blue45.png" alt="Clilstore" style="width:184px;height:45px"></h1>
-<p style="margin:22px 0 0 0;font-size:90%;float:left">Teaching units<br>for Content and Language Integrated Learning</p>
+<p style="margin:22px 0 0 0;font-size:90%;float:left">$T_Teaching_units<br>$T_for_CLIL</p>
 <a href="help.php" class="button">$T_Help</a>
 <a href="about.php" class="button">$T_About_Clilstore</a>
 $photo
