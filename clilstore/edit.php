@@ -11,6 +11,13 @@
       $myCLIL->toradh = $e->getMessage();
   }
 
+  $T = new SM_T('clilstore/edit');
+
+  $T_First_visit_to_CS      = $T->h('First_visit_to_CS');
+  $T_Creating_new_unit      = $T->h('Creating_new_unit');  
+
+  $hl0 = $T->hl0();
+
   function scriptscan($text) {
       if (preg_match('|<\?php|iu', $text)) { return 'PHP'; }
       if (preg_match('|<\?|iu',    $text)) { return 'scripting'; }
@@ -152,11 +159,18 @@ EODbutHtml;
                         . 'You can still <a href="'.$oldEditorLink.'">edit your unit using the old html editor</a> '
                         . 'if you feel safer with this, or want to be in full control of your html, or encounter problems copy-and-pasting text into the new editor.</p>';
         $tinymceCSS = '/clilstore/tinymce.css?bogus=' . time();  //Bogus parameter to thwart browser cache and ensure refresh while under development
+
+        $hlTiny = $hl0;
+        $langdirTiny = $_SERVER['DOCUMENT_ROOT'] . '/tinymce/langs/';
+        $hlTinyTra = ['af'=>'af_ZA', 'azj'=>'az', 'bg'=>'bg_BG', 'bn'=>'bn_BD', 'en'=>'en_GB', 'ekk'=>'et', 'pes'=>'fa', 'fr'=>'fr_FR', 'he'=>'he_IL', 'hu'=>'hu_HU', 'kab'=>'kab',
+                      'ka'=>'ka_GE', 'km'=>'km_KH', 'ko'=>'ko_KR', 'lvs'=>'lv', 'nb'=>'nb_NO', 'pt'=>'pt_PT', 'sv'=>'sv_SE', 'th'=>'th_TH', 'zh-Hans'=>'zh_CN', 'zh-Hant'=>'zh_TW'];
+        if ( !file_exists("{$langdirTiny}{$hlTiny}.js" && isset($hlTinyTra[$hlTiny])) ) { $hlTiny = $hlTinyTra[$hlTiny]; }
         $tinymceScript = <<<EODtinyMCE
     <script src="/tinymce/tinymce.min.js"></script>
     <script>
     tinymce.init({
         selector: "textarea#text",
+        language: "$hlTiny",
         entity_encoding: "raw",
         plugins: [
              "advlist autolink link image lists charmap preview hr anchor spellchecker",
@@ -380,7 +394,7 @@ EOD2;
                 $level = -1;
                 $medfloat = 'scroll';
                 $licence = 'BY-SA';
-                $legend = 'Creating a new Clilstore unit';
+                $legend = $T_Creating_new_unit;
                //See if the user has a default language set for new units
                 $stmt = $DbMultidict->prepare('SELECT unitLang FROM users WHERE user=:user');
                 $stmt->execute(array('user'=>$user));
@@ -407,7 +421,7 @@ EOD2;
         }
         $clonech = ( empty($clone) ? '' : ' checked' );
         $brch    = ( empty($br)    ? '' : ' checked' );
-        $testch  = ( !($test==1)   ? '' : ' checked' );
+        $testch  = ( (isset($test)&&$test==1)   ? ' checked' : '' );
         $permisch= ( empty($permis)? '' : ' checked' );
         $medtype0sel  = ( $medtype==0 ? ' checked' : '' );
         $medtype1sel  = ( $medtype==1 ? ' checked' : '' );
