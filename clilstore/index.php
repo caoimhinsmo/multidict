@@ -55,14 +55,14 @@
     $T_Changed                = $T->h('csCol_changed');
     $T_Licence                = $T->h('csCol_licence');
     $T_Owner                  = $T->h('csCol_owner');
-    $T_Language               = $T->h('csCol_sl');
+    $T_Language               = $T->h('Language');
     $T_Level                  = $T->h('csCol_level');
     $T_Words                  = $T->h('csCol_words');
     $T_Media                  = $T->h('csCol_medtype');
     $T_MedLength              = $T->h('csCol_medlen');
     $T_Buttons                = $T->h('csCol_buttons');
     $T_Files                  = $T->h('csCol_files');
-    $T_Title                  = $T->h('csCol_title');
+    $T_Title                  = $T->h('Title');
     $T_TextOrSummary          = $T->h('csCol_text');
 
     $T_UnitID_title           = $T->h('UnitID_title');

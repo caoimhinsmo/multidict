@@ -15,6 +15,8 @@
 
   $T_Creating_new_unit      = $T->h('Creating_new_unit');  
   $T_editorsMessage         = $T->h('editorsMessage');
+  $T_Title                  = $T->h('Title');
+  $T_Language               = $T->h('Language');
 
   $hl0 = $T->hl0();
 
@@ -658,7 +660,7 @@ $editorsMessage
 <legend style="width:auto;margin-left:auto;margin-right:auto;background-color:#55a8eb;color:white;padding:1px 3em">$legend</legend>
 <div style="float:right;padding:3px;font-size:75%;color#333" title="Copy this unit and create a new unit with a new unit number - not something you would do very often">
 $cloneHtml</div>
-<div>Title<br>
+<div>$T_Title<br>
 <input id=title name="title" value="$titleSC" autofocus "required pattern=".{4,120}" title="Title (between 4 and 120 characters long)" style="width:99%"></div>
 <div style="margin-top:6px">Embed code for media or picture (if any) <span style="font-size:80%;padding-left:3em">Float or scroll
 <select name="medfloat" style="width:7em" title="Choose the placement on the page">
@@ -688,7 +690,7 @@ $filesButton
 </fieldset>
 
 <div style="margin-top:5px">
-Language
+$T_Language
 <select name="sl" required>
 $slOptionHtml
 </select>
