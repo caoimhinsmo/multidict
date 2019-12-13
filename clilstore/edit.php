@@ -13,8 +13,8 @@
 
   $T = new SM_T('clilstore/edit');
 
-  $T_First_visit_to_CS      = $T->h('First_visit_to_CS');
   $T_Creating_new_unit      = $T->h('Creating_new_unit');  
+  $T_editorsMessage         = $T->h('editorsMessage');
 
   $hl0 = $T->hl0();
 
@@ -155,16 +155,16 @@ EODbutHtml;
     if ($editor=='new') {
         $oldEditorLink = "edit.php?id=$id&amp;editor=old";
         if (isset($_GET['view'])) { $oldEditorLink .= '&amp;view'; }
-        $editorsMessage = '<p style="margin:1em 0;color:green;font-size:80%">This is the Clilstore wysiwyg editor. '
-                        . 'You can still <a href="'.$oldEditorLink.'">edit your unit using the old html editor</a> '
-                        . 'if you feel safer with this, or want to be in full control of your html, or encounter problems copy-and-pasting text into the new editor.</p>';
+        $editorsMessage = strtr($T_editorsMessage, [ '{' => "<a href='$oldEditorLink'>", '}' => '</a>' ] );
+        $editorsMessage = "<p style='margin:1em 0;color:green;font-size:80%'>$editorsMessage</p>";
         $tinymceCSS = '/clilstore/tinymce.css?bogus=' . time();  //Bogus parameter to thwart browser cache and ensure refresh while under development
 
         $hlTiny = $hl0;
         $langdirTiny = $_SERVER['DOCUMENT_ROOT'] . '/tinymce/langs/';
-        $hlTinyTra = ['af'=>'af_ZA', 'azj'=>'az', 'bg'=>'bg_BG', 'bn'=>'bn_BD', 'en'=>'en_GB', 'ekk'=>'et', 'pes'=>'fa', 'fr'=>'fr_FR', 'he'=>'he_IL', 'hu'=>'hu_HU', 'kab'=>'kab',
-                      'ka'=>'ka_GE', 'km'=>'km_KH', 'ko'=>'ko_KR', 'lvs'=>'lv', 'nb'=>'nb_NO', 'pt'=>'pt_PT', 'sv'=>'sv_SE', 'th'=>'th_TH', 'zh-Hans'=>'zh_CN', 'zh-Hant'=>'zh_TW'];
-        if ( !file_exists("{$langdirTiny}{$hlTiny}.js" && isset($hlTinyTra[$hlTiny])) ) { $hlTiny = $hlTinyTra[$hlTiny]; }
+        $hlTinyTra = ['af'=>'af_ZA', 'azj'=>'az', 'bg'=>'bg_BG', 'bn'=>'bn_BD', 'en'=>'en_GB', 'ekk'=>'et', 'pes'=>'fa',
+                     'fr'=>'fr_FR', 'he'=>'he_IL', 'hu'=>'hu_HU', 'kab'=>'kab', 'ka'=>'ka_GE', 'km'=>'km_KH', 'ko'=>'ko_KR',
+                     'lvs'=>'lv', 'nb'=>'nb_NO', 'pt'=>'pt_PT', 'sv'=>'sv_SE', 'th'=>'th_TH', 'zh-Hans'=>'zh_CN', 'zh-Hant'=>'zh_TW'];
+        if ( !file_exists("{$langdirTiny}{$hlTiny}.js") ) { $hlTiny = $hlTinyTra[$hlTiny] ?? $hlTiny; }
         $tinymceScript = <<<EODtinyMCE
     <script src="/tinymce/tinymce.min.js"></script>
     <script>
