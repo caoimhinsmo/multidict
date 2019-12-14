@@ -13,10 +13,19 @@
 
   $T = new SM_T('clilstore/edit');
 
-  $T_Creating_new_unit      = $T->h('Creating_new_unit');  
-  $T_editorsMessage         = $T->h('editorsMessage');
-  $T_Title                  = $T->h('Title');
-  $T_Language               = $T->h('Language');
+  $T_Creating_new_unit     = $T->h('Creating_new_unit');  
+  $T_editorsMessage        = $T->h('editorsMessage');
+  $T_Title                 = $T->h('Title');
+  $T_Language              = $T->h('Language');
+  $T_Embed_code_legend     = $T->h('Embed_code_legend');
+  $T_Float_or_scroll       = $T->h('Float_or_scroll');
+  $T_Left                  = $T->h('Left');
+  $T_Right                 = $T->h('Right');
+  $T_Scroll_text           = $T->h('Scroll_text');
+  $T_Choose_the_placement  = $T->h('Choose_the_placement');
+
+  $T_Creating_Clilstore_unit_d = $T->h('Creating_Clilstore_unit_d');
+  $T_Editing_Clilstore_unit_d  = $T->h('Editing_Clilstore_unit_d');
 
   $hl0 = $T->hl0();
 
@@ -415,7 +424,8 @@ EOD2;
                 while ($r = $stmt->fetch(PDO::FETCH_OBJ)) { $buttons[] = new button($r->ord,$r->but,$r->wl,$r->new,$r->link); }
                 $text = str_replace('&','&amp;',$text);
                 if ($test<>2) { $permis = 'checked'; }
-                $legend = ( $test==2 ? "Creating" : "Editing" ) . " Clilstore unit $id";
+                $legend = ( $test==2 ? $T_Creating_Clilstore_unit_d : $T_Editing_Clilstore_unit_d );
+                $legend = sprintf($legend,$id);
                 $cruth  = 'html'; 
             }
             if (count($buttons)<8) { $buttons[] = new button(count($buttons)); } // Always create at least one blank button, up to a maximum of 8 buttons
@@ -662,12 +672,12 @@ $editorsMessage
 $cloneHtml</div>
 <div>$T_Title<br>
 <input id=title name="title" value="$titleSC" autofocus "required pattern=".{4,120}" title="Title (between 4 and 120 characters long)" style="width:99%"></div>
-<div style="margin-top:6px">Embed code for media or picture (if any) <span style="font-size:80%;padding-left:3em">Float or scroll
-<select name="medfloat" style="width:7em" title="Choose the placement on the page">
+<div style="margin-top:6px">$T_Embed_code_legend <span style="font-size:80%;padding-left:3em">$T_Float_or_scroll
+<select name="medfloat" title="$T_Choose_the_placement">
   <option value="none"$floatnone> </option>
-  <option value="left"$floatleft>left</option>
-  <option value="right"$floatright>right</option>
-  <option value="scroll"$floatscroll>scroll text</option>
+  <option value="left"$floatleft>$T_Left</option>
+  <option value="right"$floatright>$T_Right</option>
+  <option value="scroll"$floatscroll>$T_Scroll_text</option>
 </select>
 </span>
 <input name="medembed" value="$medembedHtml" style="width:99%"></div>
