@@ -54,7 +54,7 @@
     $T_Created                = $T->h('csCol_created');
     $T_Changed                = $T->h('csCol_changed');
     $T_Licence                = $T->h('csCol_licence');
-    $T_Owner                  = $T->h('csCol_owner');
+    $T_Owner                  = $T->h('Owner');
     $T_Language               = $T->h('Language');
     $T_Level                  = $T->h('csCol_level');
     $T_Words                  = $T->h('csCol_words');

@@ -13,21 +13,59 @@
 
   $T = new SM_T('clilstore/edit');
 
-  $T_Creating_new_unit     = $T->h('Creating_new_unit');  
-  $T_editorsMessage        = $T->h('editorsMessage');
-  $T_Title                 = $T->h('Title');
-  $T_Language              = $T->h('Language');
-  $T_Embed_code_legend     = $T->h('Embed_code_legend');
-  $T_Float_or_scroll       = $T->h('Float_or_scroll');
-  $T_Left                  = $T->h('Left');
-  $T_Right                 = $T->h('Right');
-  $T_Scroll_text           = $T->h('Scroll_text');
-  $T_Choose_the_placement  = $T->h('Choose_the_placement');
+  $T_Creating_new_unit   = $T->h('Creating_new_unit');  
+  $T_editorsMessage      = $T->h('editorsMessage');
+  $T_Title               = $T->h('Title');
+  $T_Language            = $T->h('Language');
+  $T_Embed_code_legend   = $T->h('Embed_code_legend');
+  $T_Float_or_scroll     = $T->h('Float_or_scroll');
+  $T_Left                = $T->h('Left');
+  $T_Right               = $T->h('Right');
+  $T_Scroll_text         = $T->h('Scroll_text');
+  $T_Clone_as_a_new_unit = $T->h('Clone_as_a_new_unit');
+  $T_Text                = $T->h('Text');
+  $T_Text_Advice         = $T->h('Text_Advice');
+  $T_Link_buttons        = $T->h('Link_buttons');
+  $T_Button_text         = $T->h('Button_text');
+  $T_You_can_write_here  = $T->h('You_can_write_here');
+  $T_Whether_to_WL_link  = $T->h('Whether_to_WL_link');
+  $T_Learner_level       = $T->h('Learner_level');
+  $T_CEFR                = $T->h('CEFR');
+  $T_CEFR_longname       = $T->h('CEFR_longname');
+  $T_Unspecified         = $T->h('Unspecified');
+  $T_Choose_level_info   = $T->h('Choose_level_info');
+  $T_CEFR_A1_name        = $T->h('CEFR_A1_name');
+  $T_CEFR_A2_name        = $T->h('CEFR_A2_name');
+  $T_CEFR_B1_name        = $T->h('CEFR_B1_name');
+  $T_CEFR_B2_name        = $T->h('CEFR_B2_name');
+  $T_CEFR_C1_name        = $T->h('CEFR_C1_name');
+  $T_CEFR_C2_name        = $T->h('CEFR_C2_name');
+  $T_easier_side         = $T->h('easier_side');
+  $T_harder_side         = $T->h('harder_side');
+  $T_CEFR_A1_description = $T->h('CEFR_A1_description');
+  $T_CEFR_A2_description = $T->h('CEFR_A2_description');
+  $T_CEFR_B1_description = $T->h('CEFR_B1_description');
+  $T_CEFR_B2_description = $T->h('CEFR_B2_description');
+  $T_CEFR_C1_description = $T->h('CEFR_C1_description');
+  $T_CEFR_C2_description = $T->h('CEFR_C2_description');
+  $T_Media_type          = $T->h('Media_type');
+  $T_video               = $T->h('video');
+  $T_sound_only          = $T->h('sound_only');
+  $T_neither             = $T->h('neither');
+  $T_eg                  = $T->h('eg');
+  $T_Summary             = $T->h('Summary');
+  $T_Language_notes      = $T->h('Language_notes');
+  $T_1000_character_max  = $T->h('1000_character_max');
+  $T_Tick_if_test_unit   = $T->h('Tick_if_test_unit');
+  $T_Owner               = $T->h('Owner');
 
+  $T_Choose_the_placement      = $T->h('Choose_the_placement');
+  $T_Clone_this_unit_title     = $T->h('Clone_this_unit_title');
   $T_Creating_Clilstore_unit_d = $T->h('Creating_Clilstore_unit_d');
   $T_Editing_Clilstore_unit_d  = $T->h('Editing_Clilstore_unit_d');
 
   $hl0 = $T->hl0();
+  $csNavbar = SM_csNavbar::csNavbar($T->domhan,0);
 
   function scriptscan($text) {
       if (preg_match('|<\?php|iu', $text)) { return 'PHP'; }
@@ -119,22 +157,6 @@
           $this->link = trim(strip_tags($link));
       }
 
-      public function formHtml () {
-          $ord   = $this->ord;
-          $but   = $this->but;
-          $wlch  = ( $this->wl  ? 'checked' : '');
-          $newch = ( $this->new ? 'checked' : '');
-          $link  = $this->link;
-          $html  = <<<EODbutHtml
-<tr>
-<td><input name="but[]"  value="$but"></td>
-<td><input type="checkbox" name="wl[]" $wlch value="$ord" title="Whether to wordlink this link?  If you use this, remember to test whether it works, and switch WL back off if it doesn’t"></td>
-<td><input type="checkbox"  name="new[]" $newch value="$ord" title="Whether to open this link in a new tab/window?"></td>
-<td><input name="link[]" value="$link"></td>
-</tr>
-EODbutHtml;
-          return $html;
-      }
   }
 
 //CEFR level descriptions
@@ -441,9 +463,9 @@ EOD2;
         $medlenHtml = SM_csSess::secs2minsecs($medlen);  if ($medlenHtml=='?:??') { $medlenHtml = ''; }
 
         $medembedHtml = htmlspecialchars($medembed);
-        if ($id>0) { $cloneHtml = "<input type=checkbox name=clone id=clone $clonech> <label for=clone>Clone as a new unit</label>"; }
+        if ($id>0) { $cloneHtml = "<input type=checkbox name=clone id=clone $clonech> <label for=clone>$T_Clone_as_a_new_unit</label>"; }
         if ($editor=='new') {
-            $textAdvice = '(If you find your browser refuses to paste text into here, try drag-and-drop instead, or use the old html editor, or try another browser)';
+            $textAdvice = $T_Text_Advice;
         } else {
             $textAdvice = ( $cruth=='html'
                           ? 'This is html - Remember to put &lt;p&gt;...&lt;/p&gt; round any new paragraphs you insert'
@@ -482,7 +504,21 @@ EODfilesButton;
                                                      . ($id==0 ? 'new unit was' : 'changes were')
                                                      . ' not saved. Correct any errors or omissions and resubmit.</div>' );
         $buttonsHtml = '';
-        foreach ($buttons as $b) { $buttonsHtml .= $b->formHtml(); }
+        foreach ($buttons as $b) {
+            $ord   = $b->ord;
+            $but   = $b->but;
+            $wlch  = ( $b->wl  ? 'checked' : '');
+            $newch = ( $b->new ? 'checked' : '');
+            $link  = $b->link;
+            $buttonsHtml  .= <<<EODbutHtml
+<tr>
+<td><input name="but[]"  value="$but" placeholder="$T_You_can_write_here"></td>
+<td><input type="checkbox" name="wl[]" $wlch value="$ord" title="$T_Whether_to_WL_link\nIf you use this, remember to test whether it works, and switch WL back off if it doesn’t"></td>
+<td><input type="checkbox"  name="new[]" $newch value="$ord" title="Whether to open this link in a new tab/window?"></td>
+<td><input name="link[]" value="$link"></td>
+</tr>
+EODbutHtml;
+        }
 
         $titleSC = htmlspecialchars($title);
 
@@ -534,18 +570,18 @@ EODfilesButton;
            //Set and display the message
             var message;
             if      (level==-1) { radValue = -1; message = ''; }
-             else if (level<10) { radValue =  5; message = 'Breakthrough';}
-             else if (level<20) { radValue = 15; message = 'Waystage';}
-             else if (level<30) { radValue = 25; message = 'Threshold';}
-             else if (level<40) { radValue = 35; message = 'Vantage';}
-             else if (level<50) { radValue = 45; message = 'Effective operational efficiency';}
-             else if (level<60) { radValue = 55; message = 'Mastery';}
+             else if (level<10) { radValue =  5; message = '$T_CEFR_A1_name';}
+             else if (level<20) { radValue = 15; message = '$T_CEFR_A2_name';}
+             else if (level<30) { radValue = 25; message = '$T_CEFR_B1_name';}
+             else if (level<40) { radValue = 35; message = '$T_CEFR_B2_name';}
+             else if (level<50) { radValue = 45; message = '$T_CEFR_C1_name';}
+             else if (level<60) { radValue = 55; message = '$T_CEFR_C2_name';}
              else               { radValue = -1; message = '';}
             if (level!=-1) {
-                if       (level%10 < 3) { message += ' <span style="color:#777">(easier side)</span>'; }
-                 else if (level%10 < 5) { message += ' <span style="color:#aaa">(easier side)</span>'; }
-                if       (level%10 > 7) { message += ' <span style="color:#777">(harder side)</span>'; }
-                 else if (level%10 > 5) { message += ' <span style="color:#aaa">(harder side)</span>'; }
+                if       (level%10 < 3) { message += ' <span style="color:#777">($T_easier_side)</span>'; }
+                 else if (level%10 < 5) { message += ' <span style="color:#aaa">($T_easier_side)</span>'; }
+                if       (level%10 > 7) { message += ' <span style="color:#777">($T_harder_side)</span>'; }
+                 else if (level%10 > 5) { message += ' <span style="color:#aaa">($T_harder_side)</span>'; }
             }
             document.getElementById('cefrmessage').innerHTML = message;
            //Select and highlight the correct cefr radio button
@@ -657,9 +693,7 @@ $tinymceScript
 </head>
 <body onload="setLevel($level); medlenDisp($medtype); licenceChange('$licence'); permisChange(); $insistOnTitleJS">
 
-<ul class="linkbuts">
-<li><a href="./" title="Clilstore index page">Clilstore</a>
-</ul>
+$csNavbar
 <div class="smo-body-indent">
 $errorMessage
 $editorsMessage
@@ -668,7 +702,7 @@ $editorsMessage
 
 <fieldset style="background-color:#eef;border:8px solid #55a8eb;border-radius:10px">
 <legend style="width:auto;margin-left:auto;margin-right:auto;background-color:#55a8eb;color:white;padding:1px 3em">$legend</legend>
-<div style="float:right;padding:3px;font-size:75%;color#333" title="Copy this unit and create a new unit with a new unit number - not something you would do very often">
+<div style="float:right;padding:3px;font-size:75%;color#333" title="$T_Clone_this_unit_title">
 $cloneHtml</div>
 <div>$T_Title<br>
 <input id=title name="title" value="$titleSC" autofocus "required pattern=".{4,120}" title="Title (between 4 and 120 characters long)" style="width:99%"></div>
@@ -682,14 +716,14 @@ $cloneHtml</div>
 </span>
 <input name="medembed" value="$medembedHtml" style="width:99%"></div>
 <div style="margin-top:6px">
-Text <span class="info" style="padding-left:2em">$textAdvice</span><br>
+$T_Text <span class="info" style="padding-left:2em">$textAdvice</span><br>
 <textarea name="text" id="text" placeholder="The text for the students to read (minimum length 100 characters)" style="width:100%;height:400px">$text</textarea></div>
 <fieldset style="margin:6px 0 0 0;border:1px solid green;padding:5px;corner-radius:5px">
-<legend>Link buttons</legend>
+<legend>$T_Link_buttons</legend>
 <table id="editlinkbuts">
 <tr style="font-size:85%">
-<td style="text-align:center">Button text</td>
-<td title="Whether to wordlink this link?">WL</td>
+<td style="text-align:center">$T_Button_text</td>
+<td title="$T_Whether_to_WL_link">WL</td>
 <td title="Whether to open this link in a new tab/window?">New</td>
 <td>Link <span class="info">(url or Clilstore unit number)</span></td>
 </tr>
@@ -707,56 +741,56 @@ $slOptionHtml
 </div>
 
 <div style="margin:12px 0;padding:4px;border:0">
-Learner level
-(<a href="//en.wikipedia.org/wiki/Common_European_Framework_of_Reference_for_Languages#Common_reference_levels" title="Common European Framework of Reference for Languages">CEFR</a>)&nbsp;
+$T_Learner_level
+(<a href="//en.wikipedia.org/wiki/Common_European_Framework_of_Reference_for_Languages#Common_reference_levels" title="$T_CEFR_longname">$T_CEFR</a>)&nbsp;
 
 <label for="un" class="rad">
- <input type="radio" name="cefr" value="-1" id="un" onclick="radClick(-1);"><span style="color:grey;font-size:75%;vertical-align:middle">Unspecified</span></label>&nbsp;
-<label for="a1" class="rad" title="$a1Desc">
+ <input type="radio" name="cefr" value="-1" id="un" onclick="radClick(-1);"><span style="color:grey;font-size:75%;vertical-align:middle">$T_Unspecified</span></label>&nbsp;
+<label for="a1" class="rad" title=" $T_CEFR_A1_description">
  <input type="radio" name="cefr" value="5"  id="a1" onclick="radClick(5); ">A1</label>
-<label for="a2" class="rad" title="$a2Desc">
+<label for="a2" class="rad" title=" $T_CEFR_A2_description">
  <input type="radio" name="cefr" value="15" id="a2" onclick="radClick(15);">A2</label>
-<label for="b1" class="rad" title="$b1Desc">
+<label for="b1" class="rad" title=" $T_CEFR_B1_description">
  <input type="radio" name="cefr" value="25" id="b1" onclick="radClick(25);">B1</label>
-<label for="b2" class="rad" title="$b2Desc">
+<label for="b2" class="rad" title=" $T_CEFR_B2_description">
  <input type="radio" name="cefr" value="35" id="b2" onclick="radClick(35);">B2</label>
-<label for="c1" class="rad" title="$c1Desc">
+<label for="c1" class="rad" title=" $T_CEFR_C1_description">
  <input type="radio" name="cefr" value="45" id="c1" onclick="radClick(45);">C1</label>
-<label for="c2" class="rad" title="$c2Desc">
+<label for="c2" class="rad" title=" $T_CEFR_C2_description">
  <input type="radio" name="cefr" value="55" id="c2" onclick="radClick(55);">C2</label>
 
 <input name="level" id="level" type="range" min=-1 max=59 value=$level style="width:17em;color:#aaa" title="range 0-59" oninput="setLevel(value);" onchange="setLevel(value);">
 <output id="levnum" style="font-size:80%;color:#ccc;display:inline-block;width:20px;text-align:right"></output>
 <output id="cefrmessage"><span style="color:red;font-size:80%">Warning: you have Javascript switched off</span></output><br>
-<span class="info" style="padding-left:15em">The learner level must be specified, or else the unit must be marked as a test unit)</span>
+<span class="info" style="padding-left:20em">$T_Choose_level_info</span>
 </div>
 
 <div style="margin-top:6px">
-Media type:<br>
-&nbsp;<input type="radio" name="medtype"$medtype2sel value="2" id="medtype2" onclick="medlenDisp(2)"><label for="medtype2">video</label><br>
-&nbsp;<input type="radio" name="medtype"$medtype1sel value="1" id="medtype1" onclick="medlenDisp(1)"><label for="medtype1">sound only</label><br>
-&nbsp;<input type="radio" name="medtype"$medtype0sel value="0" id="medtype0" onclick="medlenDisp(0)"><label for="medtype0">neither</label><br>
+$T_Media_type:<br>
+&nbsp;<input type="radio" name="medtype"$medtype2sel value="2" id="medtype2" onclick="medlenDisp(2)"><label for="medtype2">$T_video</label><br>
+&nbsp;<input type="radio" name="medtype"$medtype1sel value="1" id="medtype1" onclick="medlenDisp(1)"><label for="medtype1">$T_sound_only</label><br>
+&nbsp;<input type="radio" name="medtype"$medtype0sel value="0" id="medtype0" onclick="medlenDisp(0)"><label for="medtype0">$T_neither</label><br>
 <span id="medlen">Media length: <input name="medlen" value="$medlenHtml" style="width:4em;text-align:right" placeholder="?:??" title="media length in seconds, or in minutes and seconds">
-<span class="info">e.g. 80, 80s, 1:20</span></span>&nbsp;
+<span class="info">$T_eg 80, 80s, 1:20</span></span>&nbsp;
 </div>
 
 <div style="margin-top:8px">
-Summary: <span class="info">(1000 character maximum)</span>
+$T_Summary: <span class="info">($T_1000_character_max)</span>
 <textarea name="summary" style="width:99%;height:2.5em;margin:2px;padding:0.4em;border:1px solid;border-radius:0.4em">$summary</textarea>
 </div>
 
 <div style="margin-top:6px">
-Language notes: <span class="info">(1000 character maximum)</span>
+$T_Language_notes: <span class="info">($T_1000_character_max)</span>
 <textarea name="langnotes" style="width:99%;height:2.5em;margin:2px;padding:0.4em;border:1px solid;border-radius:0.4em">$langnotes</textarea>
 </div>
 
 <div style="margin-top:7px">
-<input type="checkbox" name="test" id="test" $testch title="Tick if this is still just a test unit" onClick="testClick(this)">
-<label for="test">Tick if this is still just a test unit, not a production unit</label>
+<input type="checkbox" name="test" id="test" $testch onClick="testClick(this)">
+<label for="test">$T_Tick_if_test_unit</label>
 </div>
 
 <div style="margin-top:8px">
-Owner: <span style="padding:1px 3px;border:1px solid">$owner</span>
+$T_Owner: <span style="padding:1px 3px;border:1px solid">$owner</span>
 &nbsp;<input  type="checkbox" name="permis" id="permis" required $permisch onChange="permisChange();">
 <label for="permis">I am the author of the text and material <i>or</i> I have permission to use the text and material. <i>And</i> I agree to the Clilstore</label> <a href="copyleftPolicy.html">copyleft policy</a>.
 </div>
@@ -804,7 +838,7 @@ I grant use of this unit under the following <a href="//creativecommons.org/lice
 </table>
 </div>
 
-<div style="margin-top:8px">
+<div style="margin-top:8px;margin-bottom:2em">
 <input type="submit" name="save" id="save" value="$submitValue">
 </div>
 
@@ -812,9 +846,7 @@ I grant use of this unit under the following <a href="//creativecommons.org/lice
 </form>
 
 </div>
-<ul class="linkbuts" style="margin-top:1.5em">
-<li><a href="./" title="Clilstore index page">Clilstore</a></li>
-</ul>
+$csNavbar
 
 </body>
 </html>
