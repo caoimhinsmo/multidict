@@ -58,6 +58,13 @@
   $T_1000_character_max  = $T->h('1000_character_max');
   $T_Tick_if_test_unit   = $T->h('Tick_if_test_unit');
   $T_Owner               = $T->h('Owner');
+  $T_I_am_the_author     = $T->h('I_am_the_author');
+  $T_I_agree_to_copyleft = $T->h('I_agree_to_copyleft');
+  $T_I_grant_use         = $T->h('I_grant_use');
+  $T_CC_BY_message       = $T->j('CC_BY_message');
+  $T_CC_SA_message       = $T->j('CC_SA_message');
+  $T_CC_ND_message       = $T->j('CC_ND_message');
+  $T_CC_NC_message       = $T->j('CC_NC_message');
 
   $T_Choose_the_placement      = $T->h('Choose_the_placement');
   $T_Clone_this_unit_title     = $T->h('Clone_this_unit_title');
@@ -66,6 +73,10 @@
 
   $hl0 = $T->hl0();
   $csNavbar = SM_csNavbar::csNavbar($T->domhan,0);
+
+  $T_I_am_the_author     = strtr( $T_I_am_the_author,     [ '['=>'<i>', ']'=>'</i>' ] );
+  $T_I_agree_to_copyleft = strtr( $T_I_agree_to_copyleft, [ '['=>'<i>', ']'=>'</i>', '{'=>'<a href=copyleftPolicy.php>', '}'=>'</a>' ] );
+  $T_I_grant_use         = strtr( $T_I_grant_use,         [ '{'=>'<a href=https://creativecommons.org/licenses/>', '}'=>'</a>' ] );
 
   function scriptscan($text) {
       if (preg_match('|<\?php|iu', $text)) { return 'PHP'; }
@@ -554,11 +565,12 @@ EODbutHtml;
         label.midrange       { background-color:#ed0; }
         div.box { border:1px solid black; padding:4px; border-radius:4px; background-color:#ffd; }
         div.errorMessage { margin:0.5em 0; color:red; font-weight:bold; }
-        table.licence { margin:3px 0 0 6em; border-spacing:0; }
-        table.licence td { border:2px solid white; border-radius:6px; }
-        table.licence td.chk { border-color:#bb3; background-color:#ffd; }
-        table.licence img { padding:1px 25px 4px 4px; }
-        table.licence input { margin:0 0 0 4px; padding:0; }
+        table#ownertab { margin:1.5em 0 0.3em 0; border-collapse:collapse; }
+        table#ownertab tr { vertical-align:top; }
+        table#licTable { margin:0.5em 0 1em 4em; }
+        table#licTable td { border:2px solid white; border-radius:6px; }
+        table#licTable td.chk { border-color:#bb3; background-color:#ffd; }
+        table#licTable img { padding:1px 25px 4px 4px; }
         div#licenceInfo { margin:4px 0 0 6px; border:2px solid #bb3; border-radius:6px; background-color:#ffd; padding:2px; }
         div.fann { opacity:0.25; }
     </style>
@@ -644,12 +656,16 @@ EODbutHtml;
                 case 'BY-NC-ND': licName = 'Attribution-NonCommercial-NoDerivs';   break;
             }
             licNameLink = '<a href="//creativecommons.org/licenses/' + licence.toLowerCase() + '/4.0/">' + licName + '</a>';
-            var message = { 'BY':'Anyone sharing a copy or derivative of this unit must acknowledge the original author. (A link to the original unit will do)',
-                            'SA':'Any new products based on this unit may only be shared under this same ' + licence  + ' licence.',
-                            'ND':'Identical copies of this unit may be shared, but products derived from it may not.',
-                            'NC':'Commercial use of this unit is not allowed.' }; 
+            var message = { 'BY':'$T_CC_BY_message',
+                            'SA':'$T_CC_SA_message',
+                            'ND':'$T_CC_ND_message',
+                            'NC':'$T_CC_NC_message' }; 
+            if (licence=='BY-NC-SA') { message['SA'] = message['SA'].replace('BY-SA','BY-NC-SA'); }
             bits = licence.split('-');
-            if (bits[bits.length-1]=='ND') { message['BY'] = message['BY'].replace('or derivative ',''); }
+            var lastbit = bits[bits.length-1];
+            var re = /([^\{]*)\{([^\}]*)\}(.*)/;
+            if (lastbit=='ND') { message['BY'] = message['BY'].replace( re, '$1$3'   ); }
+              else             { message['BY'] = message['BY'].replace( re, '$1$2$3' ); }
             info = '&nbsp;&nbsp;' + licNameLink + '<ul class="info" style="margin-top:2px">';
             for ( i=0; i<bits.length; i++ ) { info += '<li>' + message[bits[i]]; }
             info += '</ul>';
@@ -789,15 +805,15 @@ $T_Language_notes: <span class="info">($T_1000_character_max)</span>
 <label for="test">$T_Tick_if_test_unit</label>
 </div>
 
-<div style="margin-top:8px">
-$T_Owner: <span style="padding:1px 3px;border:1px solid">$owner</span>
-&nbsp;<input  type="checkbox" name="permis" id="permis" required $permisch onChange="permisChange();">
-<label for="permis">I am the author of the text and material <i>or</i> I have permission to use the text and material. <i>And</i> I agree to the Clilstore</label> <a href="copyleftPolicy.html">copyleft policy</a>.
-</div>
+<table id=ownertab><tr>
+<td>$T_Owner: <span style="font-size:120%;text-decoration:underline;padding-right:0.35em">$owner</span></td>
+<td><input  type="checkbox" name="permis" id="permis" required $permisch onChange="permisChange();"></td>
+<td><label for="permis">$T_I_am_the_author<br>$T_I_agree_to_copyleft</td>
+</tr></table>
 
 <div style="margin-left2:5em" id="ccdiv">
-I grant use of this unit under the following <a href="//creativecommons.org/licenses/">Creative Commons</a> licence
-<table id="licTable" class="licence">
+$T_I_grant_use
+<table id=licTable>
 <tr>
    <td id="td-BY-SA">
        <input type="radio" name="licence" value="BY-SA" id="rad-BY-SA" {$chkLic['BY-SA']} onclick="licenceChange('BY-SA');">
