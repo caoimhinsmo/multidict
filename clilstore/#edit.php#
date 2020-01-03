@@ -365,7 +365,7 @@ EODtinyMCE;
                 $stmt = null;
                 $happyMessage = 'Unit created';
                 $happyTitle   = 'Create a new Clilstore unit: Unit created';
-                $id = current($DbMultidict->query("select max(id) from clilstore")->fetch()); //The id of the newly created unit
+                $id = current($DbMultidict->query("SELECT MAX(id) FROM clilstore")->fetch()); //The id of the newly created unit
             } else {
                 $stmt = $DbMultidict->prepare('SELECT changed,licence FROM clilstore WHERE id=?');
                 $stmt->execute(array($id));
