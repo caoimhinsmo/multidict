@@ -111,12 +111,17 @@
     $T_Average                = $T->h('Average');
     $T_First_choose_language  = $T->h('First_choose_language');
     $T_No_units_match_filter  = $T->h('No_units_match_filter');
+    $T_inc_d_attached_files   = $T->h('inc_d_attached_files');
+    $T_incUnitMessage         = $T->h('incUnitMessage');
+    $T_hours                  = $T->h('hours');
+    $T_minutes                = $T->h('minutes');
+    $T_seconds                = $T->h('seconds');
 
     $T_If_message_persists = sprintf($T_If_message_persists,$T_Got_it);
     $T_privacy_policy      = "<a href='privacyPolicy.php'>$T_privacy_policy</a>";
     $T_CS_is_well_behaved  = sprintf($T_CS_is_well_behaved,$T_privacy_policy);
 
-    $csNavbar = SM_csNavbar::csNavbar($T->domhan,1);
+    $csNavbar = SM_csNavbar::csNavbar($T->domhan);
 
     $tableHtml = $cookieMessage = '';
     if (!isset($_COOKIE['csSessionId'])) $cookieMessage = <<<EOD_cookieMessage
@@ -202,25 +207,30 @@ END_USER1;
             if ($secondsToLive<=0) {
                 header("Location:$serverhome/clilstore/delete.php?id=$incUnit&delete");
             } elseif ($secondsToLive<100) {
-                $deleteTimeMess = "$secondsToLive seconds";
+                $deleteTimeMess = "$secondsToLive $T_seconds";
             } else {
                 $minutesToLive = round($secondsToLive/60);
                 if ($minutesToLive<100) {
-                    $deleteTimeMess = "$minutesToLive minutes";
+                    $deleteTimeMess = "$minutesToLive $T_minutes";
                 } else {
                     $hoursToLive = round($minutesToLive/60);
-                    $deleteTimeMess = "$hoursToLive hours";
+                    $deleteTimeMess = "$hoursToLive $T_hours";
                 }
             }
             $stmtIncUnitFcount = $DbMultidict->prepare('SELECT COUNT(1) As cnt FROM csFiles WHERE id=:id');
             $stmtIncUnitFcount->execute([':id'=>$incUnit]);
             $incUnitFcount = $stmtIncUnitFcount->fetchColumn();
-            $fcountMessage = ( $incUnitFcount ? " (including $incUnitFcount attached files)" : '' );
-            $incUnitMessage = <<< EODincUnit
-<p style='margin:0;padding:0.5em;background-color:red;color:white'>You have an incomplete unit$fcountMessage which you started and have not yet saved.<br>
-You need to either <a href='edit.php?id=$incUnit' class=mybutton>complete</a> and save it, or else <a href='delete.php?id=$incUnit' class=mybutton>delete</a> it.<br>
-Otherwise it will be deleted automatically $deleteTimeMess from now.</p>
-EODincUnit;
+            $fcountMessage = ( $incUnitFcount ? ' <i>('.sprintf($T_inc_d_attached_files,$incUnitFcount).')</i>' : '' );
+            $incUnitMessage = sprintf($T_incUnitMessage,$fcountMessage,$deleteTimeMess);
+            $incUnitMessage = strtr($incUnitMessage,
+                                     [ '{' => "<a href='edit.php?id=$incUnit' class=mybutton>",
+                                       '}' => '</a>',
+                                       '[' => "<a href='delete.php?id=$incUnit' class=mybutton>",
+                                       ']' => '</a>',
+                                       '&lt;br&gt;' => '<br>'
+                                     ]);
+            $incUnitMessage = "<p style='margin:0;padding:0.5em;background-color:red;color:white'>$incUnitMessage</p>";
+                                    
             $createButton = '';
         } else {
             $incUnitMessage = '';

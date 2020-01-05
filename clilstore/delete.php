@@ -11,6 +11,22 @@
       $myCLIL->toradh = $e->getMessage();
   }
 
+  $T = new SM_T('clilstore/delete');
+
+  $T_Unit     = $T->h('Unit');  
+  $T_Cancel   = $T->h('Sguir');
+  $T_Or_else  = $T->h('Air neo');
+  $T_Delete   = $T->h('Sguab às');
+
+  $T_Really_delete_unit  = $T->h('Really_delete_unit');
+  $T_Parameter_p_a_dhith = $T->h('Parameter_p_a_dhith');
+  $T_Error_Not_owner     = $T->h('Error_Not_owner');
+  $T_Attached_files_info = $T->h('Attached_files_info');
+  $T_Unit_d_deleted      = $T->h('Unit_d_deleted');
+  $T_Failed_to_delete_d  = $T->h('Failed_to_delete_d');
+
+  $hl0 = $T->hl0();
+
   try {
     $myCLIL->dearbhaich();
     $user = $myCLIL->id;
@@ -19,8 +35,9 @@
 
     if (isset($_GET['cancel'])) { header("Location:$serverhome/clilstore/"); }
 
-    if (empty($_GET['id'])) { throw new SM_MDexception('No id parameter'); }
+    if (empty($_GET['id'])) { throw new SM_MDexception(sprintf($T_Parameter_p_a_dhith,'id')); }
     $id = $_GET['id'];
+    $csNavbar = SM_csNavbar::csNavbar($T->domhan,$id);
 
     if (empty($_GET['delete'])) {
         $DbMultidict = SM_DbMultidictPDO::singleton('r');
@@ -31,17 +48,21 @@
         $stmt1->bindColumn(2,$owner);
         $stmt1->fetch();
         $stmt1 = null;
-        if ($user<>$owner && $user<>'admin') { throw new SM_MDexception("Your are trying to delete a unit belonging to another user, $owner - This is not allowed"); }
+        if ($user<>$owner && $user<>'admin') { throw new SM_MDexception(sprintf($T_Error_Not_owner,$owner)); }
         $stmt2 = $DbMultidict->prepare('SELECT filename FROM csFiles WHERE id=:id');
         $stmt2->bindParam(':id', $id, PDO::PARAM_INT);
         $stmt2->execute();
         $filenameArr = $stmt2->fetchAll(PDO::FETCH_COLUMN, 0);
         $stmt2 = null;
         if (!empty($filenameArr)) {
-            $filesInfo = "This unit has the following attached files <i>(which will all be permanently deleted if you delete the unit)</i>:<br>\n";
+            $T_Attached_files_info = strtr($T_Attached_files_info,
+                                           [ '(' => '<i style=color:red>(',
+                                             ')' => ')</i>'
+                                           ]);
+            $filesInfo = "$T_Attached_files_info<br>\n";
             foreach ($filenameArr as $filename) { $filesInfo .= "&nbsp;&nbsp;&nbsp;<b>$filename</b><br>\n"; }
             $filesInfo .= "<br>\n";
-        }
+        } else { $filesInfo = ''; }
 
         echo <<<EOD1
 <!DOCTYPE html>
@@ -61,28 +82,22 @@
 </head>
 <body>
 
-<ul class="linkbuts">
-<li><a href="./" title="Clilstore index page">Clilstore</a>
-<li><a href="/cs/$id" title="Back to Unit $id">Unit $id</a></li>
-</ul>
+$csNavbar
 <div class="smo-body-indent" style="padding-top:2em;padding-bottom:2em">
 
 <form method="get">
-Delete Unit $id: “<b>$title</b>”<br><br>
+$T_Delete $T_Unit $id: “<b>$title</b>”<br><br>
 $filesInfo
-Really delete unit this unit?
+$T_Really_delete_unit
 <input type="hidden" name="id" value="$id"/>
-<input type="submit" name="delete" value="Yes" id="delete">
+<input type="submit" name="delete" value="$T_Delete" id="delete">
 <br><br>
-Or else
-<input type="submit" name="cancel" value="Cancel"/>
+$T_Or_else
+<input type="submit" name="cancel" value="$T_Cancel"/>
 </form>
 
 </div>
-<ul class="linkbuts">
-<li><a href="./" title="Clilstore index page">Clilstore</a>
-<li><a href="/cs/$id" title="Back to Unit $id">Unit $id</a></li>
-</ul>
+$csNavbar
 
 </body>
 </html>
@@ -101,10 +116,10 @@ EOD1;
             $stmt5->execute();
             $stmt5 = null;
             $DbMultidict->commit();
-            $message = '<p><img src="/icons-smo/sgudal.png" alt="">Unit deleted</p>';
+            $message = '<p><img src="/icons-smo/sgudal.png" alt="">' . sprintf($T_Unit_d_deleted,$id) . '</p>';
         } catch (PDOException $ex) {
             $DbMultidict->rollBack();
-            throw new SM_MDexception("Failed to delete unit $id<br>".$ex->getMessage());
+            throw new SM_MDexception(sprintf($T_Failed_to_delete_d,$id).'<br>'.$ex->getMessage());
         }
 
         echo <<<EOD2

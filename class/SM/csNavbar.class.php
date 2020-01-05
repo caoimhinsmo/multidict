@@ -1,7 +1,7 @@
 <?php
 class SM_csNavbar {
 
-  public static function csNavbar($domhan='',$duilleagAghaidh=0) {
+  public static function csNavbar($domhan='',$unit=NULL) {
       $servername =  $_SERVER['SERVER_NAME'];
       $serverhome = ( empty($_SERVER['HTTPS']) ? 'http' : 'https' ) . '://' . $_SERVER['SERVER_NAME'];
       $hl0 = SM_T::hl0();
@@ -15,9 +15,16 @@ class SM_csNavbar {
       $T_Log_dheth_fios       = $T->h('Log_dheth_fios');
       $T_tr_fios              = $T->h('tr_fios');
       $T_Clilstore_index_page = $T->h('Clilstore_index_page');
+      $T_Unit                 = $T->h('Unit');  
 
-      if ($duilleagAghaidh) { $SmotrCeangal = "<li><a href='/' title='$T_homeTitle'>$servername</a>"; }
-        else                { $SmotrCeangal = "<li><a href='/clilstore/' title='$T_Clilstore_index_page'>Clilstore</a>"; }
+      $SmotrCeangal = ( $_SERVER['PHP_SELF']=='/clilstore/index.php'
+                      ? "<li><a href='/' title='$T_homeTitle'>$servername</a>"
+                      : "<li><a href='/clilstore/' title='$T_Clilstore_index_page'>Clilstore</a>"
+                      );
+      $unitCeangal = ( isset($unit)
+                     ? "<li><a href='/cs/$unit'>$T_Unit $unit</a></li>"
+                     : ''
+                     );
       $myCLIL = SM_myCLIL::singleton();
       if ($myCLIL->cead(SM_myCLIL::LUCHD_EADARTHEANGACHAIDH))
         { $trPutan = "\n<li class=deas><a href='//www3.smo.uhi.ac.uk/teanga/smotr/tr.php?domhan=$domhan' target='tr' title='$T_tr_fios'>tr</a>"; } else { $trPutan = ''; }
@@ -74,6 +81,7 @@ END_selCanan;
       $csNavbar = <<<EOD_NAVBAR
 <ul class="smo-navlist">
 $SmotrCeangal
+$unitCeangal
 $ceangalRiMoSMO
 <li style="float:right" title="$T_canan_eadarAghaidh">$selCanan$trPutan
 </ul>

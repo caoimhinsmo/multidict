@@ -16,6 +16,7 @@
   $T_Creating_new_unit   = $T->h('Creating_new_unit');  
   $T_editorsMessage      = $T->h('editorsMessage');
   $T_Title               = $T->h('Title');
+  $T_Title_info_4_120    = $T->h('Title_info_4_120');
   $T_Language            = $T->h('Language');
   $T_Embed_code_legend   = $T->h('Embed_code_legend');
   $T_Float_or_scroll     = $T->h('Float_or_scroll');
@@ -24,11 +25,17 @@
   $T_Scroll_text         = $T->h('Scroll_text');
   $T_Clone_as_a_new_unit = $T->h('Clone_as_a_new_unit');
   $T_Text                = $T->h('Text');
+  $T_Text_placeholder    = $T->h('Text_placeholder');
   $T_Text_Advice         = $T->h('Text_Advice');
+  $T_Text_Advice_html    = $T->h('Text_Advice_html');
+  $T_Text_Advice_new     = $T->h('Text_Advice_new');
+  $T_Text_Advice_new_br  = $T->h('Text_Advice_new_br');
   $T_Link_buttons        = $T->h('Link_buttons');
   $T_Button_text         = $T->h('Button_text');
   $T_You_can_write_here  = $T->h('You_can_write_here');
   $T_Whether_to_WL_link  = $T->h('Whether_to_WL_link');
+  $T_Whether_to_WL_info  = $T->h('Whether_to_WL_info');
+  $T_Whether_to_new_tab  = $T->h('Whether_to_new_tab');
   $T_Learner_level       = $T->h('Learner_level');
   $T_CEFR                = $T->h('CEFR');
   $T_CEFR_longname       = $T->h('CEFR_longname');
@@ -50,6 +57,7 @@
   $T_CEFR_C2_description = $T->h('CEFR_C2_description');
   $T_Media_type          = $T->h('Media_type');
   $T_Media_length        = $T->h('Media_length');
+  $T_Media_length_title  = $T->h('Media_length_title');
   $T_video               = $T->h('video');
   $T_sound_only          = $T->h('sound_only');
   $T_neither             = $T->h('neither');
@@ -66,6 +74,11 @@
   $T_Publish             = $T->h('Publish');
   $T_Parameter_p_a_dhith = $T->h('Parameter_p_a_dhith');
   $T_Warning             = $T->h('Warning');
+  $T_Unit_created        = $T->h('Unit_created');
+  $T_Edit_complete       = $T->h('Edit_complete');
+  $T_New                 = $T->h('New');
+  $T_Link                = $T->h('Link');
+  $T_Link_advice         = $T->h('Link_advice');
 
   $T_CC_BY_message       = $T->j('CC_BY_message');
   $T_CC_SA_message       = $T->j('CC_SA_message');
@@ -87,15 +100,21 @@
   $T_Err_Invalid_media_length  = $T->h('Err_Invalid_media_length');
   $T_Err_CEFR_level_missing    = $T->h('Err_CEFR_level_missing');
   $T_Err_Invalid_CC_licence    = $T->h('Err_Invalid_CC_licence');
+  $T_Err_Invalid_level         = $T->h('Err_Invalid_level');
   $T_Warn_No_text              = $T->h('Warn_No_text');
   $T_Warn_Hardly_any_text      = $T->h('Warn_Hardly_any_text');
+  $T_Warn_New_licence_restrict = $T->h('Warn_New_licence_restrict');
+  $T_No_unit_found_for_id      = $T->h('No_unit_found_for_id');
+  $T_May_only_edit_own_units   = $T->h('May_only_edit_own_units');
+  $T_You_have_Javascript_off   = $T->h('You_have_Javascript_off');
 
   $hl0 = $T->hl0();
-  $csNavbar = SM_csNavbar::csNavbar($T->domhan,0);
+  $csNavbar = SM_csNavbar::csNavbar($T->domhan);
 
   $T_I_am_the_author     = strtr( $T_I_am_the_author,     [ '['=>'<i>', ']'=>'</i>' ] );
   $T_I_agree_to_copyleft = strtr( $T_I_agree_to_copyleft, [ '['=>'<i>', ']'=>'</i>', '{'=>'<a href=copyleftPolicy.php>', '}'=>'</a>' ] );
   $T_I_grant_use         = strtr( $T_I_grant_use,         [ '{'=>'<a href=https://creativecommons.org/licenses/>', '}'=>'</a>' ] );
+  $T_Text_Advice_new     = strtr( $T_Text_Advice_new,     [ '['=>'<b>', ']'=>'</b>' ] );
 
   function scriptscan($text) {
       if (preg_match('|<\?php|iu', $text)) { return 'PHP'; }
@@ -350,7 +369,7 @@ EODtinyMCE;
 
             function getLevel($levelStr) {
                 if ($levelStr=='') { return -1; }
-                if (!is_numeric($levelStr)) { throw new SM_MDexception("sgrios|bog|Invalid level '$levelStr'"); }
+                if (!is_numeric($levelStr)) { throw new SM_MDexception("sgrios|bog|$T_Err_Invalid_level: $levelStr"); }
                 return intval($levelStr);
             }
             $level = getLevel($level);
@@ -363,9 +382,8 @@ EODtinyMCE;
                 $stmt = $DbMultidict->prepare($query);
                 $stmt->execute(array($user,$sl,$level,$title,$text,$medembed,$medfloat,$medtype,$medlen,$words,$created,$changed,$summary,$langnotes,$licence,$test));
                 $stmt = null;
-                $happyMessage = 'Unit created';
-                $happyTitle   = 'Create a new Clilstore unit: Unit created';
-                $id = current($DbMultidict->query("select max(id) from clilstore")->fetch()); //The id of the newly created unit
+                $happyMessage = $T_Unit_created;
+                $id = current($DbMultidict->query("SELECT MAX(id) FROM clilstore")->fetch()); //The id of the newly created unit
             } else {
                 $stmt = $DbMultidict->prepare('SELECT changed,licence FROM clilstore WHERE id=?');
                 $stmt->execute(array($id));
@@ -377,7 +395,7 @@ EODtinyMCE;
                 $newBits  = array_diff_assoc($bits,$prevBits);
                 if (  ( in_array('NC',$newBits) || in_array('ND',$newBits) || (in_array('SA',$newBits)&&!in_array('ND',$prevBits)) ) //New licence contains new restrictions
                    && time()-$row['changed'] > 20 ) //Old licence has been in force for some time
-                    { $warningMessage = "The new licence $licence includes restrictions not present in the old licence $prevLicence.  It may may not be possible to enforce these if people have already made copies under the old terms."; }
+                    { $warningMessage = strtr($T_Warn_New_licence_restrict, ['{%s1}'=>$licence,'{%s2}'=>$prevLicence]); }
                 $query = 'UPDATE clilstore'
                         . ' SET sl=?,level=?,title=?,text=?,medembed=?,medfloat=?,medtype=?,medlen=?,words=?,summary=?,langnotes=?,changed=?,licence=?,test=?'
                         . ' WHERE id=? AND owner LIKE ?';
@@ -386,8 +404,7 @@ EODtinyMCE;
                 $result = $stmt->execute(array(
                            $sl,$level,$title,$text,$medembed,$medfloat,$medtype,$medlen,$words,$summary,$langnotes,$changed,$licence,$test,$id,$userRequired));
                 $DbMultidict->prepare('DELETE FROM csButtons WHERE id=:id')->execute(array('id'=>$id)); //Delete any previous buttons
-                $happyMessage = "Edit complete";
-                $happyTitle   = 'Edit a Clilstore unit: Edit complete';
+                $happyMessage = $T_Edit_complete;
             }
             $stmt = $DbMultidict->prepare('INSERT INTO csButtons(id,ord,but,wl,new,link) VALUES(?,?,?,?,?,?)');
             $nbuttons = 0;
@@ -410,7 +427,7 @@ EODtinyMCE;
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="refresh" content="$refreshTime; url=$happyRefresh">
-    <title>$happyTitle</title>
+    <title>Clilstore: $happyMessage</title>
     <link rel="icon" type="image/png" href="/favicons/clilstore.png">
 </head>
 <body>
@@ -449,9 +466,9 @@ EOD2;
              //Editing an old unit, so first fetch the values from the database
                 $stmt = $DbMultidict->prepare('SELECT owner,sl,level,title,text,medembed,medfloat,medtype,medlen,summary,langnotes,licence,test FROM clilstore WHERE id=:id');
                 $stmt->execute(array('id'=>$id));
-                if (!$row = $stmt->fetch(PDO::FETCH_ASSOC)) { throw new SM_MDexception("No unit found for id=$id"); }
+                if (!$row = $stmt->fetch(PDO::FETCH_ASSOC)) { throw new SM_MDexception("$T_No_unit_found_for_id=$id"); }
                 extract($row);
-                if ($user<>$owner && $user<>'admin') { throw new SM_MDexception('You may only edit your own units'); }
+                if ($user<>$owner && $user<>'admin') { throw new SM_MDexception($T_May_only_edit_own_units); }
 
                 $stmt = $DbMultidict->prepare('SELECT ord,but,wl,new,link FROM csButtons WHERE id=:id');
                 $stmt->execute(array('id'=>$id));
@@ -473,6 +490,7 @@ EOD2;
         $medtype1sel  = ( $medtype==1 ? ' checked' : '' );
         $medtype2sel  = ( $medtype==2 ? ' checked' : '' );
         $medlenHtml = SM_csSess::secs2minsecs($medlen);  if ($medlenHtml=='?:??') { $medlenHtml = ''; }
+        $T_Text_Advice_new = strtr( $T_Text_Advice_new, [ '{%s}'=> "(<input type=checkbox name=br id=br $brch> <label for=br>$T_Text_Advice_new_br</label>).&nbsp;&nbsp;&nbsp;&nbsp;" ] );
 
         $medembedHtml = htmlspecialchars($medembed);
         if ($id>0) { $cloneHtml = "<input type=checkbox name=clone id=clone $clonech> <label for=clone>$T_Clone_as_a_new_unit</label>"; }
@@ -480,9 +498,8 @@ EOD2;
             $textAdvice = $T_Text_Advice;
         } else {
             $textAdvice = ( $cruth=='html'
-                          ? 'This is html - Remember to put &lt;p&gt;...&lt;/p&gt; round any new paragraphs you insert'
-                          : "<b>Either</b> plaintext with blank lines between paragraphs (<input type=checkbox name=br id=br $brch> <label for=br>tick to preserve line breaks at ends of lines</label>)."
-                           .' &nbsp;&nbsp;&nbsp;&nbsp; <b>Or else</b> entirely in html.' );
+                          ? $T_Text_Advice_html
+                          : $T_Text_Advice_new );
         }
         $floatnone = $floatleft = $floatright = $floatscroll = '';
         if      ($medfloat=='none')  { $floatnone  = ' selected'; }
@@ -523,8 +540,8 @@ EODfilesButton;
             $buttonsHtml  .= <<<EODbutHtml
 <tr>
 <td><input name="but[]"  value="$but" placeholder="$T_You_can_write_here"></td>
-<td><input type="checkbox" name="wl[]" $wlch value="$ord" title="$T_Whether_to_WL_link\nIf you use this, remember to test whether it works, and switch WL back off if it doesn’t"></td>
-<td><input type="checkbox"  name="new[]" $newch value="$ord" title="Whether to open this link in a new tab/window?"></td>
+<td><input type="checkbox" name="wl[]" $wlch value="$ord" title="$T_Whether_to_WL_link\n$T_Whether_to_WL_info"></td>
+<td><input type="checkbox"  name="new[]" $newch value="$ord" title="$T_Whether_to_new_tab"></td>
 <td><input name="link[]" value="$link"></td>
 </tr>
 EODbutHtml;
@@ -720,7 +737,7 @@ $editorsMessage
 <div style="float:right;padding:3px;font-size:75%;color#333" title="$T_Clone_this_unit_title">
 $cloneHtml</div>
 <div>$T_Title<br>
-<input id=title name="title" value="$titleSC" autofocus "required pattern=".{4,120}" title="Title (between 4 and 120 characters long)" style="width:99%"></div>
+<input id=title name="title" value="$titleSC" autofocus "required pattern=".{4,120}" title="$T_Title_info_4_120" style="width:99%"></div>
 <div style="margin-top:6px">$T_Embed_code_legend <span style="font-size:80%;padding-left:3em">$T_Float_or_scroll
 <select name="medfloat" title="$T_Choose_the_placement">
   <option value="none"$floatnone> </option>
@@ -732,15 +749,15 @@ $cloneHtml</div>
 <input name="medembed" value="$medembedHtml" style="width:99%"></div>
 <div style="margin-top:6px">
 $T_Text <span class="info" style="padding-left:2em">$textAdvice</span><br>
-<textarea name="text" id="text" placeholder="The text for the students to read (minimum length 100 characters)" style="width:100%;height:400px">$text</textarea></div>
+<textarea name="text" id="text" placeholder="$T_Text_placeholder" style="width:100%;height:400px">$text</textarea></div>
 <fieldset style="margin:6px 0 0 0;border:1px solid green;padding:5px;corner-radius:5px">
 <legend>$T_Link_buttons</legend>
 <table id="editlinkbuts">
 <tr style="font-size:85%">
 <td style="text-align:center">$T_Button_text</td>
 <td title="$T_Whether_to_WL_link">WL</td>
-<td title="Whether to open this link in a new tab/window?">New</td>
-<td>Link <span class="info">(url or Clilstore unit number)</span></td>
+<td title="$T_Whether_to_new_tab">$T_New</td>
+<td>$T_Link <span class="info">($T_Link_advice)</span></td>
 </tr>
 $buttonsHtml
 </table>
@@ -776,7 +793,7 @@ $T_Learner_level
 
 <input name="level" id="level" type="range" min=-1 max=59 value=$level style="width:17em;color:#aaa" title="range 0-59" oninput="setLevel(value);" onchange="setLevel(value);">
 <output id="levnum" style="font-size:80%;color:#ccc;display:inline-block;width:20px;text-align:right"></output>
-<output id="cefrmessage"><span style="color:red;font-size:80%">Warning: you have Javascript switched off</span></output><br>
+<output id="cefrmessage"><span style="color:red;font-size:80%">$T_Warning: $T_You_have_Javascript_off</span></output><br>
 <span class="info" style="padding-left:20em">$T_Choose_level_info</span>
 </div>
 
@@ -785,7 +802,7 @@ $T_Media_type:<br>
 &nbsp;<input type="radio" name="medtype"$medtype2sel value="2" id="medtype2" onclick="medlenDisp(2)"><label for="medtype2">$T_video</label><br>
 &nbsp;<input type="radio" name="medtype"$medtype1sel value="1" id="medtype1" onclick="medlenDisp(1)"><label for="medtype1">$T_sound_only</label><br>
 &nbsp;<input type="radio" name="medtype"$medtype0sel value="0" id="medtype0" onclick="medlenDisp(0)"><label for="medtype0">$T_neither</label><br>
-<span id="medlen">$T_Media_length: <input name="medlen" value="$medlenHtml" style="width:4em;text-align:right" placeholder="?:??" title="media length in seconds, or in minutes and seconds">
+<span id="medlen">$T_Media_length: <input name="medlen" value="$medlenHtml" style="width:4em;text-align:right" placeholder="?:??" title="$T_Media_length_title">
 <span class="info">$T_eg 80, 80s, 1:20</span></span>&nbsp;
 </div>
 
