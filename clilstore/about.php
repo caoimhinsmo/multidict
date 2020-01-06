@@ -7,9 +7,69 @@
 
   try {
     $T = new SM_T('clilstore/about');
-    $T_Disclaimer             = $T->_('Disclaimer');
-    $T_Disclaimer_EuropeanCom = $T->_('Disclaimer_EuropeanCom');
-    
+    $T_Disclaimer             = $T->h('Disclaimer');
+    $T_Disclaimer_EuropeanCom = $T->h('Disclaimer_EuropeanCom');
+    $T_About_Clilstore        = $T->h('mu_Clilstore');
+    $T_About_Clilstore_text1  = $T->h('About_Clilstore_text1');
+    $T_About_Clilstore_text2  = $T->h('About_Clilstore_text2');
+    $T_About_Clilstore_text3  = $T->h('About_Clilstore_text3');
+    $T_About_Clilstore_text4  = $T->h('About_Clilstore_text4');
+    $T_About_Clilstore_text5  = $T->h('About_Clilstore_text5');
+    $T_About_Clilstore_text6  = $T->h('About_Clilstore_text6');
+    $T_About_Clilstore_text7  = $T->h('About_Clilstore_text7');
+    $T_Denmark                = $T->h('Denmark');
+    $T_Ireland                = $T->h('Ireland');
+    $T_Lithuania              = $T->h('Lithuania');
+    $T_Portugal               = $T->h('Portugal');
+    $T_Spain                  = $T->h('Spain');
+    $T_photo_albums           = $T->h('photo_albums');
+
+    $T_About_Clilstore_text1 = strtr($T_About_Clilstore_text1,
+      [ '{' => '<i>',
+        '}' => '</i>'
+      ]);
+    $T_About_Clilstore_text2 = strtr($T_About_Clilstore_text2,
+      [ '{Caoimhín Ó Donnaíle}' => '<a href="http://www.smo.uhi.ac.uk/~caoimhin/">Caoimhín Ó Donnaíle</a>',
+        '{Sabhal Mòr Ostaig}' => '<a href="http://www.smo.uhi.ac.uk/">Sabhal Mòr Ostaig</a>',
+        '{COOL}' => '<a href="http://www.languages.dk/">COOL</a>',
+        '{Ana Gimeno}' => '<a href="https://agimeno.webs.upv.es/">Ana Gimeno</a>',
+        '{Universitat Politècnica de València}' => '<a href="https://www.upv.es/">Universitat Politècnica de València</a>',
+        '{FAZ}' => '<a href="https://faz.dk/">FAZ</a>',
+        '{Ollscoil Uladh}' => '<a href="https://www.ulster.ac.uk/">Ollscoil Uladh</a>',
+        '{Kroggårdsskolen}' => '<a href="https://kroggaardsskolen.skoleporten.dk/">Kroggårdsskolen</a>',
+        '{ETI Malta (Executive Training Institute)}' => '<a href="https://www.etimalta.com/">ETI Malta (Executive Training Institute)</a>',
+        '{Liceo Scientifico Statale Elio Vittorini}' => '<a href="https://www.eliovittorini.gov.it/wordpress/">Liceo Scientifico Statale Elio Vittorini</a>'
+      ]);
+    $T_About_Clilstore_text3 = strtr($T_About_Clilstore_text3,
+      [ '{TOOLS}' => '<a href="http://www.languages.dk/tools/">TOOLS</a>',
+        '{{Denmark1}}' => "<a href='https://www.sde.dk/'>$T_Denmark</a>",
+        '{{Denmark2}}' => "<a href='https://www.sdu.dk/en/Om_SDU/Institutter_centre/C_Mellemoest'>$T_Denmark</a>",
+        '{{Ireland}}' => "<a href='https://www.ulster.ac.uk/'>$T_Ireland</a>",
+        '{{Lithuania}}' => "<a href='https://www.mprc.lt/'>$T_Lithuania</a>",
+        '{{Portugal}}' => "<a href='https://www.uevora.pt/'>$T_Portugal</a>",
+        '{{Spain}}' => "<a href='https://www.upv.es/'>$T_Spain</a>",
+        '{EuroCALL}' => '<a href="https://www.eurocall-languages.org/">EuroCALL</a>'
+      ]);
+    $T_About_Clilstore_text4 = strtr($T_About_Clilstore_text4,
+      [ '{Wordlink}' => '<a href="/wordlink/">Wordlink</a>',
+        '{Multidict}' => '<a href="/multidict/">Multidict</a>',
+        '{POOLS-T}' => '<a href="https://www.languages.dk/pools-t/">POOLS-T</a>'
+      ]);
+    $T_About_Clilstore_text5 = strtr($T_About_Clilstore_text5,
+      [ '{caoimhin@smo.uhi.ac.uk}' => '<a href="mailto:caoimhin@smo.uhi.ac.uk">caoimhin@smo.uhi.ac.uk</a>'
+      ]);
+    $T_About_Clilstore_text6 = strtr($T_About_Clilstore_text6,
+      [ '{Facebook}' => '<a href="//www.facebook.com/tools4clil" style="white-space:nowrap"><img src="/favicons/facebook.png" alt=""> Facebook</a>',
+        '{Linkedin}' => '<a href="//www.linkedin.com/groups/Tools4Clil-4269787" style="white-space:nowrap"><img src="/favicons/linkedin.png" alt=""> Linkedin</a>',
+        '{Twitter}' => '<a href="//www.twitter.com/tools4clil" style="white-space:nowrap"><img src="/favicons/twitter.png" alt=""> Twitter</a>',
+        '{Wordpress}' => '<a href="//tools4clil.wordpress.com/" style="white-space:nowrap"><img src="/favicons/wordpress.png" alt=""> Wordpress</a>',
+        '{photo albums}' => "<a href='//www.facebook.com/tools4clil/photos_albums'>$T_photo_albums</a>"
+     ]);
+    $T_About_Clilstore_text7 = strtr($T_About_Clilstore_text7,
+      [ '{' => '<a href="/clilstore/privacyPolicy.php">',
+        '}' => '</a>'
+      ]);
+
     $csNavbar = SM_csNavbar::csNavbar($T->domhan);
 
     $EUlogo = '/EUlogos/' . SM_T::hl0() . '.jpg';
@@ -19,40 +79,19 @@
 $csNavbar
 <div class="smo-body-indent" style="max-width:1000px">
 
-<h1 class="smo">Clilstore</h1>
+<h1 class="smo">$T_About_Clilstore</h1>
 
-<p>Clilstore is a store of copyleft <u>content and language integrated</u> teaching materials.</p>
+<p>$T_About_Clilstore_text1</p>
 
-<p>It is being developed by <a href="http://~caoimhin/">Caoimhín Ó Donnaíle</a> at <a href="http://www.smo.uhi.ac.uk/">Sabhal Mòr Ostaig</a> in Skye
-as part of the European funded <a href="http://www.languages.dk/">COOL</a> project (2018-2021),
-led by <a href="//agimeno.webs.upv.es/">Ana Gimeno</a> at <a href="//www.upv.es/">Universitat Politècnica de València</a> in Spain,
-assisted by Kent Andersen at <a href="//faz.dk/">FAZ</a> in Denmark,
-and with other partners from
-<a href="https://www.ulster.ac.uk/">Ollscoil Uladh</a> in Ireland,
-<a href="https://kroggaardsskolen.skoleporten.dk/">Kroggårdsskolen</a> in Odense in Denmark,
-<a href="https://www.etimalta.com/">ETI Malta (Executive Training Institute)</a>, and
-<a href="https://www.eliovittorini.gov.it/wordpress/">Liceo Scientifico Statale Elio Vittorini</a> in Milan in Italy.</p>
+<p>$T_About_Clilstore_text2</p>
 
-<p>It was originally developed by Caoimhín Ó Donnaíle at Sabhal Mòr Ostaig
-as part of the European funded <a href="http://www.languages.dk/tools/">TOOLS</a> project (2012-2014), led by Kent Andersen in
-<a href="https://www.sde.dk/">Denmark</a> and with other partners from
-<a href="https://www.sdu.dk/en/Om_SDU/Institutter_centre/C_Mellemoest">Denmark</a>,
-<a href="https://www.ulster.ac.uk/">Ireland</a>,
-<a href="https://www.mprc.lt/">Lithuania</a>,
-<a href="https://www.uevora.pt/">Portugal</a>,
-<a href="https://www.upv.es/">Spain</a> and
-<a href="https://www.eurocall-languages.org/">EuroCALL</a>.</p>
+<p>$T_About_Clilstore_text3</p>
 
-<p>Clilstore uses <a href="/wordlink/">Wordlink</a>, a WWW based facility which links arbitrary webpages automatically, word by word with online dictionaries.  And Wordlink in turn uses  <a href="/multidict/" target="_top">Multidict</a>, a multiple dictionary lookup facility which makes use of freely available online dictionaries.  Both Wordlink and Multidict were developed as part of the European funded <a href="//www.languages.dk/pools-t/">POOLS-T</a> project (2008-2010) and their development is continuing as part of the present COOL project.</p>
+<p>$T_About_Clilstore_text4</p>
 
-<p>We would be very glad indeed to receive comments or suggestions on this facility - Simply send them by e-mail (in any language) to <a href="mailto:caoimhin@smo.uhi.ac.uk">caoimhin@smo.uhi.ac.uk</a>.  If you have suggestions as to other online dictionaries which you think would be worth adding to Multidict, we would be very happy to consider them.</p>
+<p>$T_About_Clilstore_text5</p>
 
-<p>COOL is a social media friendly project, and you are warmly invited to make suggestions and give feedback via
-<a href="//www.facebook.com/tools4clil"><img src="/favicons/facebook.png" alt=""> Facebook</a>,
-<a href="//www.linkedin.com/groups/Tools4Clil-4269787"><img src="/favicons/linkedin.png" alt=""> Linkedin</a>,
-<a href="//www.twitter.com/tools4clil"><img src="/favicons/twitter.png" alt=""> Twitter</a>, and our
-<a href="//tools4clil.wordpress.com/"><img src="/favicons/wordpress.png" alt=""> Blog</a>.
-You can see our <a href="//www.facebook.com/tools4clil/photos_albums">photo albums</a> on Facebook.</p>
+<p>$T_About_Clilstore_text6</p>
 
 <div style="min-height:65px;border:2px solid #47d;margin:4em 0 0.5em 0;border-radius:4px;color:#47d;font-size:95%">
 <div style="float:left;margin-right:1.5em">
@@ -62,7 +101,8 @@ You can see our <a href="//www.facebook.com/tools4clil/photos_albums">photo albu
 <p style="margin:0.3em 0;color:#1e4d9f;font-size:75%"><i>$T_Disclaimer:</i> $T_Disclaimer_EuropeanCom</p>
 </div>
 </div>
-<p style="font-size:75%;margin:0">Clilstore is a well-behaved, responsible website - See our short and simple <a href="privacyPolicy.php">privacy policy</a>.</p>
+
+<p style="font-size:75%;margin:0">$T_About_Clilstore_text7</p>
 
 </div>
 $csNavbar
