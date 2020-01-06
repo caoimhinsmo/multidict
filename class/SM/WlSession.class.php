@@ -638,9 +638,11 @@ setcookie ('SM_wlUser', '', 1, '',  'multidict.net' );
 
 
   public function dictIconHtml() {
-      // Returns html for a favicon for the current dictionary, if it has one
-      // also an ESC button
-      // also any user message for the dictionary
+     // Returns html for a favicon for the current dictionary, if it has one
+     // also an ESC button
+     // also any user message for the dictionary
+      $T = new SM_T('multidict');
+      $T_Click_to_escape_Multidict = $T->h('Click_to_escape_Multidict');
       $dict = $this->dict;
       $sl   = $this->sl;
       $tl   = $this->tl;
@@ -663,7 +665,7 @@ setcookie ('SM_wlUser', '', 1, '',  'multidict.net' );
 //The following dictionary icon used to be included in the next statement, but I have removed it (despite the name of the function) -- CPD 2019-08-22
 //<img src="icon.php?dict=$dict" alt="" style="border:none;margin-top:-5px;vertical-align:bottom">
       if (!empty($icon)) { $html = <<<EOD
-<a href="$url" target="_top" title="Click to escape Multidict and go to the dictionary’s own homepage" id="esc">
+<a href="$url" target="_top" title="$T_Click_to_escape_Multidict" id="esc">
 <span>Esc</span>
 </a>
 EOD;

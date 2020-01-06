@@ -5,6 +5,28 @@
   header("Cache-Control:max-age=0");
   header('P3P: CP="CAO PSA OUR"');
 
+  $T = new SM_T('multidict/index');
+  $T_Word        = $T->h('Facal');
+  $T_Search      = $T->h('Search');
+  $T_From        = $T->h('From');
+  $T_To          = $T->h('To');
+  $T_Dictionary  = $T->h('Dictionary');
+  $T_swop        = $T->h('swop');
+  $T_basic       = $T->h('basic');
+  $T_advanced    = $T->h('advanced');
+  $T_Help        = $T->h('Cobhair');
+
+  $T_Word_to_translate   = $T->h('Word_to_translate');
+  $T_Switch_to_advanced  = $T->h('Switch_to_advanced');
+  $T_Switch_to_basic     = $T->h('Switch_to_basic');
+  $T_Swop_basic_advanced = $T->h('Swop_basic_advanced');
+  $T_Swop_to_http        = $T->h('Swop_to_http');
+  $T_Swop_to_https       = $T->h('Swop_to_https');
+  $T_Swop_http_https     = $T->h('Swop_http_https');
+  $T_Source_language     = $T->h('Source_language');
+  $T_Target_language     = $T->h('Target_language');
+  $T_Choose_dictionary   = $T->h('Choose_dictionary');
+
   $sid = ( !empty($_GET['sid']) ? $_GET['sid'] : null);
   $wlSession = new SM_WlSession($sid);
   $wlSession->bestDict();
@@ -94,14 +116,14 @@ EODpageNav;
       $dictIconHtml   = $wlSession->dictIconHtml();
       $nbTlHtml       = $wlSession->nbTlHtml();
       $formItems = <<<EOD3
-<div class="formItem" style="min-width:95px;max-width:28%"><div class="label">To</div>
-<select name="tl" id="tl" title="Choose a target language" onchange="submitForm('tl');">
+<div class="formItem" style="min-width:95px;max-width:28%"><div class="label">$T_To</div>
+<select name="tl" id="tl" title="$T_Target_language" onchange="submitForm('tl');">
   <option value="">-Choose-</option>
 $tlSelectHtml
 </select><span class=advOnly>$nbTlHtml</span>
 </div>
-<div class="formItem" style="min-width:110px;max-width:40%;overflow:visible"><div class="label">Dictionary $dictIconHtml</div>
-<select id="dict" name="dict" onchange="submitForm();" title="Choose a dictionary (but reselect target language first if need be)">
+<div class="formItem" style="min-width:110px;max-width:40%;overflow:visible"><div class="label">$T_Dictionary $dictIconHtml</div>
+<select id="dict" name="dict" onchange="submitForm();" title="$T_Choose_dictionary">
   <option value="">-Choose-</option>
 $dictSelectHtml
 </select><br>
@@ -122,21 +144,21 @@ EOD3;
       $schemeValue = ( $scheme=='https' ? 1 : 0 );
       $schemeSwopRange = "<input type=range min=0 max=1 step=1 value=$schemeValue style=width:3em;margin:0;padding:0>";
       if ($scheme=='https') {
-          $schemeSwopHtml = '<a title="Swop to http">http</a>' . $schemeSwopRange . '<b>https</b>';
+          $schemeSwopHtml = "<a title='$T_Swop_to_http'>http</a>" . $schemeSwopRange . '<b>https</b>';
           $schemeSwopLocation = 'http';
       } else {
-          $schemeSwopHtml = '<b>http</b>' . $schemeSwopRange . '<a title="Swop to https">https</a>';
+          $schemeSwopHtml = '<b>http</b>' . $schemeSwopRange . "<a title='$T_Swop_to_https'>https</a>";
           $schemeSwopLocation = 'https';
       }
       $schemeSwopLocation .= "://$server_name$php_self";
       if (!empty($_GET)) { $schemeSwopLocation .= '?' . $_SERVER['QUERY_STRING']; }
-      $schemeSwopHtml = "<span class=toggle title='Swop between http and https' onclick=\"window.location.replace('$schemeSwopLocation')\">$schemeSwopHtml</span>";
+      $schemeSwopHtml = "<span class=toggle title='$T_Swop_http_https' onclick=\"window.location.replace('$schemeSwopLocation')\">$schemeSwopHtml</span>";
   }
 
-  $advSwopHtml = "<span class=basOnly><b>basic</b><input type=range id=basRange min=0 max=1 step=1 value=0 style=width:3em;margin:0;padding:0><a title='Switch to advanced interface'>advanced</a></span>"
-                ."<span class=advOnly><a title='Switch to basic interface'>basic</a><input type=range id=advRange min=0 max=1 step=1 value=1 style=width:3em;margin:0;padding:0><b>advanced</b></span>";
+  $advSwopHtml = "<span class=basOnly><b>$T_basic</b><input type=range id=basRange min=0 max=1 step=1 value=0 style=width:3em;margin:0;padding:0><a title='$T_Switch_to_advanced'>$T_advanced</a></span>"
+                ."<span class=advOnly><a title='$T_Switch_to_basic'>basic</a><input type=range id=advRange min=0 max=1 step=1 value=1 style=width:3em;margin:0;padding:0><b>$T_advanced</b></span>";
 
-  $advSwopHtml = "<span class=toggle title='Swop between basic and advanced interface' onclick='mdAdvSet(1-mdAdv)'>$advSwopHtml</span>";
+  $advSwopHtml = "<span class=toggle title='$T_Swop_basic_advanced' onclick='mdAdvSet(1-mdAdv)'>$advSwopHtml</span>";
 
   echo <<<EOD4
 <!DOCTYPE html>
@@ -282,7 +304,7 @@ Replace the following sometime with flexbox - Option 3 at https://stackoverflow.
 <p style="margin:0 0 1px 0">
 $serverlink
 <span style="background-color:orange;color:#bfb;padding:1px 2px;font-weight:bold">Multidict</span>
-<a class="button" href="help.php" target="MDiframe$sid">Help</a>
+<a class="button" href="help.php" target="MDiframe$sid">$T_Help</a>
 <a class="button" href="about.php" target="MDiframe$sid">About</a>
 $advSwopHtml
 $schemeSwopHtml
@@ -291,19 +313,19 @@ $schemeSwopHtml
 <form id="mdForm" action="./" style="margin:0 0 0 2px;padding-top:1px">
 <div style="width:100%;padding-top:1px;">
 <div class="formItem" style="width:35%;max-width:300px"><input type="hidden" name="sid" value="$sid">
-<div class="label">Word &nbsp;<input type="submit" name="go" value="Search" style="padding:0 3px;height:1.5em;line-height:1em">
+<div class="label">$T_Word &nbsp;<input type="submit" name="go" value="$T_Search" style="padding:0 3px;height:1.5em;line-height:1em">
 $pageNav</div>
-<input type="text" name="word" value="$word" title="The word to lookup in the dictionary" placeholder="Word to translate" style="width:94%">
+<input type="text" name="word" value="$word" title="The word to lookup in the dictionary" placeholder="$T_Word_to_translate" style="width:94%">
 </div>
 $wordformHtmlFull
 </div>
 <br style="clear:both">
 <div$fromClass>
 <div class="formItem" style="min-width:60px;max-width:28%">
-<div id="swop" class="label" style="float:right;padding-right:0.7em;font-weight:bold;display:none" title="swop" onclick="swopLangs();"><a>&#x2194;</a></div>
+<div id="swop" class="label" style="float:right;padding-right:0.7em;font-weight:bold;display:none" title="$T_swop" onclick="swopLangs();"><a>&#x2194;</a></div>
 <div id=slSelOn style="display:$slSelectOnDisplay">
-<div class="label">From</div>
-<select name="sl" id="sl" title="Source language" onchange="submitForm('sl');">
+<div class="label">$T_From</div>
+<select name="sl" id="sl" required title="$T_Source_language" onchange="submitForm('sl');">
 $slOptionsHtml
 </select><span class=advOnly>$nbSlHtml</span>
 </div>
