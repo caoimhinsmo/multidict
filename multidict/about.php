@@ -7,39 +7,46 @@
 
   try {
     $T = new SM_T('multidict/about');
-    $T_Disclaimer             = $T->_('Disclaimer');
-    $T_Disclaimer_EuropeanCom = $T->_('Disclaimer_EuropeanCom');
+    $T_Disclaimer             = $T->h('Disclaimer');
+    $T_Disclaimer_EuropeanCom = $T->h('Disclaimer_EuropeanCom');
+    $T_About_Multidict        = $T->h('About_Multidict');
+    $T_About_Multidict_text1  = $T->h('About_Multidict_text1');
+    $T_About_Multidict_text2  = $T->h('About_Multidict_text2');
+    $T_About_Multidict_text3  = $T->h('About_Multidict_text3');
+    $T_Note_for_dict_owners   = $T->h('Note_for_dict_owners');
     
-    $csNavbar = SM_csNavbar::csNavbar($T->domhan);
+    $T_About_Multidict_text1 = strtr($T_About_Multidict_text1,
+      [ '{Multidict}' => '<a href="/multidict/">Multidict</a>',
+        '{Caoimhín Ó Donnaíle}' => '<a href="http://www.smo.uhi.ac.uk/~caoimhin/">Caoimhín Ó Donnaíle</a>',
+        '{Sabhal Mòr Ostaig}' => '<a href="http://www.smo.uhi.ac.uk/">Sabhal Mòr Ostaig</a>',
+        '{Wordlink}' => '<a href="/wordlink/">Wordlink</a>',
+        '{POOLS-T}' => '<a href="https://www.languages.dk/pools-t/">POOLS-T</a>',
+        '{TOOLS}' => '<a href="https://www.languages.dk/tools/">TOOLS</a>',
+        '{COOL}' => '<a href="https://www.languages.dk/#Cool">COOL</a>'
+      ]);
+    $T_About_Multidict_text3 = strtr($T_About_Multidict_text3,
+      [ '{caoimhin@smo.uhi.ac.uk}' => '<a href="mailto:caoimhin@smo.uhi.ac.uk">caoimhin@smo.uhi.ac.uk</a>' ]);
+
+    $mdNavbar = SM_mdNavbar::mdNavbar($T->domhan);
 
     $EUlogo = '/EUlogos/' . SM_T::hl0() . '.jpg';
     if (!file_exists($_SERVER['DOCUMENT_ROOT'] . $EUlogo)) { $EUlogo = '/EUlogos/en.jpg'; }
 
     $HTML = <<<END_HTML
-<ul class="smo-navlist">
-<li><a href="./" title="Wordlink - a flexible system to search multiple dictionaries">Multidict</a></li>
-</ul>
+$mdNavbar
 <div class="smo-body-indent" style="max-width:75em">
 
 
-<h1 class="smo">About Multidict</h1>
+<h1 class="smo">$T_About_Multidict</h1>
 
-<p><a href="./">Multidict</a> is a multiple dictionary lookup facility.  It was developed by <a href="http://www.smo.uhi.ac.uk/~caoimhin/">Caoimhín Ó Donnaíle</a>
-at <a href="http://www.smo.uhi.ac.uk/">Sabhal Mòr Ostaig</a> to work in conjuction with <a href="/wordlink/about.html">Wordlink</a> (and historically with Kent Andersen’s
-<a href="http://www.languages.dk/tools/index.htm#The_Web_Page_Text_Blender">TextBlender</a>), 
-as part of the European funded <a href="http://www.languages.dk/pools-t/">POOLS-T</a> project (2008-2010). Development continued as part of the European funded <a href="http://www.languages.dk/tools/">TOOLS</a> project (2012-2014).  It is now being further developed as part of the European funded <a href="http://www.languages.dk/cool/">COOL</a> project (2018-2021).</p>
+<p>$T_About_Multidict_text1</p>
 
-<p>Multidict allows the user to select easily from a choice of online dictionaries.  Built into it is a large database of dictionaries
-with information on the languages they cater for and the parameters they require.  Multidict attempts to remember the user’s previous
-dictionary choices so as to speed up subsequent selection.  Multidict also includes a facility to link to dictionaries in page-image format
-at the Web Archive, Google Books, etc, via an index of the initial word on each page.</p>
+<p>$T_About_Multidict_text2</p>
 
-<p>We would be very glad indeed to receive comments or suggestions on this facility - Simply send them by e-mail (in any language)
-to <a href="mailto:caoimhin@smo.uhi.ac.uk">caoimhin@smo.uhi.ac.uk</a>.  If you have suggestions as to other online dictionaries
-which you think would be worth adding to the system, we would be very happy to consider them.</p>
+<p>$T_About_Multidict_text3</p>
 
 <ul>
-<li style="font-size:90%"><a href="for_dictionary_owners.html">A note for dictionary owners</a></li>
+<li style="font-size:90%;margin-top:2em"><a href="for_dictionary_owners.php">$T_Note_for_dict_owners</a></li>
 </ul>
 
 <div style="min-height:65px;border:2px solid #47d;margin:4em 0 0.5em 0;border-radius:4px;color:#47d;font-size:95%">
@@ -52,9 +59,7 @@ which you think would be worth adding to the system, we would be very happy to c
 </div>
 
 </div>
-<ul class="smo-navlist">
-<li><a href="./" title="Wordlink - a flexible system to search multiple dictionaries">Multidict</a></li>
-</ul>
+$mdNavbar
 END_HTML;
 
   } catch (Exception $e) {

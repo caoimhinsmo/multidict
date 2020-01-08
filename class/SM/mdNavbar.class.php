@@ -1,12 +1,12 @@
 <?php
-class SM_csNavbar {
+class SM_mdNavbar {
 
-  public static function csNavbar($domhan='',$unit=NULL) {
+  public static function mdNavbar($domhan='',$unit=NULL) {
       $servername =  $_SERVER['SERVER_NAME'];
       $serverhome = ( empty($_SERVER['HTTPS']) ? 'http' : 'https' ) . '://' . $_SERVER['SERVER_NAME'];
       $hl0 = SM_T::hl0();
 
-      $T = new SM_T('clilstore/navbar');
+      $T = new SM_T('clilstore/mdNavbar');
       $T_homeTitle            = $T->h('homeTitle');
       $T_canan_eadarAghaidh   = $T->h('canan_eadarAghaidh');
       $T_Log_air              = $T->h('Log_air');
@@ -17,14 +17,21 @@ class SM_csNavbar {
       $T_Clilstore_index_page = $T->h('Clilstore_index_page');
       $T_Unit                 = $T->h('Unit');  
 
-      $SmotrCeangal = ( $_SERVER['PHP_SELF']=='/clilstore/index.php'
-                      ? "<li><a href='/' title='$T_homeTitle'>$servername</a>"
-                      : "<li><a href='/clilstore/' title='$T_Clilstore_index_page'>Clilstore</a>"
-                      );
-      $unitCeangal = ( isset($unit)
-                     ? "<li><a href='/cs/$unit'>$T_Unit $unit</a></li>"
-                     : ''
-                     );
+      $php_self = $_SERVER['PHP_SELF'];
+      $php_self1 = explode('/',$php_self)[1] ?? '';
+      if ($php_self=='/clilstore/index.php') {
+          $homeLink = "<li><a href='/' title='$T_homeTitle'>$servername</a>";
+      } elseif ($php_self1=='clilstore') {
+          $homeLink = "<li><a href='/clilstore/' title='$T_Clilstore_index_page'>Clilstore</a>";
+      } elseif ($php_self1=='multidict') {
+          $homeLink = "<li><a href='/multidict/' title='$T_Multidict_index_page'>Multidict</a>";
+      } else {
+          $homeLink = '';
+      }
+      $unitLink = ( isset($unit)
+                  ? "<li><a href='/cs/$unit'>$T_Unit $unit</a></li>"
+                  : ''
+                  );
       $myCLIL = SM_myCLIL::singleton();
       if ($myCLIL->cead(SM_myCLIL::LUCHD_EADARTHEANGACHAIDH))
         { $trPutan = "\n<li class=deas><a href='//www3.smo.uhi.ac.uk/teanga/smotr/tr.php?domhan=$domhan' target='tr' title='$T_tr_fios'>tr</a>"; } else { $trPutan = ''; }
@@ -78,15 +85,15 @@ class SM_csNavbar {
 $options</select>
 </form>
 END_selCanan;
-      $csNavbar = <<<EOD_NAVBAR
+      $mdNavbar = <<<EOD_NAVBAR
 <ul class="smo-navlist">
-$SmotrCeangal
-$unitCeangal
+$homeLink
+$unitLink
 $ceangalRiMoSMO
 <li style="float:right" title="$T_canan_eadarAghaidh">$selCanan$trPutan
 </ul>
 EOD_NAVBAR;
-      return $csNavbar;
+      return $mdNavbar;
   }
 
 }

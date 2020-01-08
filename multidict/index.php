@@ -15,6 +15,7 @@
   $T_basic       = $T->h('basic');
   $T_advanced    = $T->h('advanced');
   $T_Help        = $T->h('Cobhair');
+  $T_About       = $T->h('About');
 
   $T_Word_to_translate   = $T->h('Word_to_translate');
   $T_Switch_to_advanced  = $T->h('Switch_to_advanced');
@@ -26,6 +27,7 @@
   $T_Source_language     = $T->h('Source_language');
   $T_Target_language     = $T->h('Target_language');
   $T_Choose_dictionary   = $T->h('Choose_dictionary');
+  $T_About_Multidict     = $T->h('About_Multidict');
 
   $sid = ( !empty($_GET['sid']) ? $_GET['sid'] : null);
   $wlSession = new SM_WlSession($sid);
@@ -305,7 +307,7 @@ Replace the following sometime with flexbox - Option 3 at https://stackoverflow.
 $serverlink
 <span style="background-color:orange;color:#bfb;padding:1px 2px;font-weight:bold">Multidict</span>
 <a class="button" href="help.php" target="MDiframe$sid">$T_Help</a>
-<a class="button" href="about.php" target="MDiframe$sid">About</a>
+<a class="button" href="about.php" title="$T_About_Multidict">$T_About</a>
 $advSwopHtml
 $schemeSwopHtml
 </p>

@@ -121,7 +121,7 @@
     $T_privacy_policy      = "<a href='privacyPolicy.php'>$T_privacy_policy</a>";
     $T_CS_is_well_behaved  = sprintf($T_CS_is_well_behaved,$T_privacy_policy);
 
-    $csNavbar = SM_csNavbar::csNavbar($T->domhan);
+    $mdNavbar = SM_mdNavbar::mdNavbar($T->domhan);
 
     $tableHtml = $cookieMessage = '';
     if (!isset($_COOKIE['csSessionId'])) $cookieMessage = <<<EOD_cookieMessage
@@ -1029,7 +1029,7 @@ END_tableHtmlBun;
 </head>
 <body onload="history.pushState('','',location.pathname);">
 
-$csNavbar
+$mdNavbar
 $cookieMessage
 <div class="smo-body-indent">
 <a><img src=/favicons/restart.png style="float:right" alt="Restart" title="$T_See_as_newbie" onclick="setNewbie();"></a>
@@ -1068,7 +1068,7 @@ $tableHtml
 </div>
 
 </div>
-$csNavbar
+$mdNavbar
 
 </body>
 </html>

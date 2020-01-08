@@ -109,7 +109,7 @@
   $T_You_have_Javascript_off   = $T->h('You_have_Javascript_off');
 
   $hl0 = $T->hl0();
-  $csNavbar = SM_csNavbar::csNavbar($T->domhan);
+  $mdNavbar = SM_mdNavbar::mdNavbar($T->domhan);
 
   $T_I_am_the_author     = strtr( $T_I_am_the_author,     [ '['=>'<i>', ']'=>'</i>' ] );
   $T_I_agree_to_copyleft = strtr( $T_I_agree_to_copyleft, [ '['=>'<i>', ']'=>'</i>', '{'=>'<a href=copyleftPolicy.php>', '}'=>'</a>' ] );
@@ -725,7 +725,7 @@ $tinymceScript
 </head>
 <body onload="setLevel($level); medlenDisp($medtype); licenceChange('$licence'); permisChange(); $insistOnTitleJS">
 
-$csNavbar
+$mdNavbar
 <div class="smo-body-indent">
 $errorMessage
 $editorsMessage
@@ -878,7 +878,7 @@ $T_I_grant_use
 </form>
 
 </div>
-$csNavbar
+$mdNavbar
 
 </body>
 </html>

@@ -677,6 +677,8 @@ EOD;
 
   public function nbSlHtml() {
       // Returns html for swopping sl to a cognate language
+      $T = new SM_T('multidict');
+      $T_Switch_to = $T->h('Switch_to');
       $sl = $this->sl;
       $DbMultidict = SM_DbMultidictPDO::singleton('rw');
       $html = '';
@@ -690,9 +692,9 @@ EOD;
       $stmt->bindColumn(3,$icon);
       while ($stmt->fetch()) {
           if (empty($icon)) {
-              $html .= "<a onclick=\"slChange('$alt')\" title=\"Switch to $endonym\" class=\"box\">$alt</a>";
+              $html .= "<a onclick=\"slChange('$alt')\" title=\"$T_Switch_to $endonym\" class=\"box\">$alt</a>";
           } else {
-              $html .= "<a onclick=\"slChange('$alt')\" title=\"Switch to $endonym\"><img src=\"/multidict/icon.php?lang=$alt\" alt=\"\"/></a>";
+              $html .= "<a onclick=\"slChange('$alt')\" title=\"$T_Switch_to $endonym\"><img src=\"/multidict/icon.php?lang=$alt\" alt=\"\"/></a>";
           }
       }
       if (!empty($html)) { $html = "<br/>\n<div class=\"nbLang\">$html</div>\n"; }

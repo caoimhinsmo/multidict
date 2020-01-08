@@ -10,7 +10,7 @@
     $T_Disclaimer             = $T->_('Disclaimer');
     $T_Disclaimer_EuropeanCom = $T->_('Disclaimer_EuropeanCom');
     
-    $csNavbar = SM_csNavbar::csNavbar($T->domhan);
+    $mdNavbar = SM_mdNavbar::mdNavbar($T->domhan);
 
     $EUlogo = '/EUlogos/' . SM_T::hl0() . '.jpg';
     if (!file_exists($_SERVER['DOCUMENT_ROOT'] . $EUlogo)) { $EUlogo = '/EUlogos/en.jpg'; }

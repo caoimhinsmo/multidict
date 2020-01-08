@@ -70,13 +70,13 @@
         '}' => '</a>'
       ]);
 
-    $csNavbar = SM_csNavbar::csNavbar($T->domhan);
+    $mdNavbar = SM_mdNavbar::mdNavbar($T->domhan);
 
     $EUlogo = '/EUlogos/' . SM_T::hl0() . '.jpg';
     if (!file_exists($_SERVER['DOCUMENT_ROOT'] . $EUlogo)) { $EUlogo = '/EUlogos/en.jpg'; }
 
     $HTML = <<<END_HTML
-$csNavbar
+$mdNavbar
 <div class="smo-body-indent" style="max-width:1000px">
 
 <h1 class="smo">$T_About_Clilstore</h1>
@@ -105,7 +105,7 @@ $csNavbar
 <p style="font-size:75%;margin:0">$T_About_Clilstore_text7</p>
 
 </div>
-$csNavbar
+$mdNavbar
 END_HTML;
 
   } catch (Exception $e) {

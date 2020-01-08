@@ -37,7 +37,7 @@
 
     if (empty($_GET['id'])) { throw new SM_MDexception(sprintf($T_Parameter_p_a_dhith,'id')); }
     $id = $_GET['id'];
-    $csNavbar = SM_csNavbar::csNavbar($T->domhan,$id);
+    $mdNavbar = SM_mdNavbar::mdNavbar($T->domhan,$id);
 
     if (empty($_GET['delete'])) {
         $DbMultidict = SM_DbMultidictPDO::singleton('r');
@@ -82,7 +82,7 @@
 </head>
 <body>
 
-$csNavbar
+$mdNavbar
 <div class="smo-body-indent" style="padding-top:2em;padding-bottom:2em">
 
 <form method="get">
@@ -97,7 +97,7 @@ $T_Or_else
 </form>
 
 </div>
-$csNavbar
+$mdNavbar
 
 </body>
 </html>
