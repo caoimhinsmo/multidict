@@ -46,7 +46,7 @@ $mdNavbar
 <p>$T_About_Multidict_text3</p>
 
 <ul>
-<li style="font-size:90%;margin-top:2em"><a href="for_dictionary_owners.php">$T_Note_for_dict_owners</a></li>
+<li style="font-size:90%;margin-top:2em"><a href="dictionary_owners.php">$T_Note_for_dict_owners</a></li>
 </ul>
 
 <div style="min-height:65px;border:2px solid #47d;margin:4em 0 0.5em 0;border-radius:4px;color:#47d;font-size:95%">

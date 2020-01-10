@@ -28,6 +28,9 @@
   $T_Target_language     = $T->h('Target_language');
   $T_Choose_dictionary   = $T->h('Choose_dictionary');
   $T_About_Multidict     = $T->h('About_Multidict');
+  $T_Rotation_message    = $T->h('Rotation_message');
+  $T_Page_forward        = $T->h('Page_forward');
+  $T_Page_back           = $T->h('Page_back');
 
   $sid = ( !empty($_GET['sid']) ? $_GET['sid'] : null);
   $wlSession = new SM_WlSession($sid);
@@ -81,15 +84,15 @@ $wlSession->wfs = $wfs = $stmt->fetch()['wfs'];
       $wordformHtml = implode(' <span dir="ltr">←</span> ',$wordformArr);
       $wordformHtmlFull = <<<EODWFFH
 <div class="formItem" style="margin:0 0 0 0.5%px;width:63%;border2:1px solid purple">
-<div class="label" style="padding:4px 0 1px 0;overflow:hidden">Multidict will try these wordforms in rotation (on reclick)</div>
+<div class="label" style="padding:4px 0 1px 0;overflow:hidden">$T_Rotation_message</div>
 <div style="font-size:85%;color:brown">$wordformHtml ↩</div>
 </div>
 EODWFFH;
   }
   $dictClass = $wlSession->dictClass();
   if (substr($dictClass,0,1)=='p') { $pageNav = <<<EODpageNav
-<input type="submit" name="go" value="<" style="padding:0 3px;margin-left:1.2em" title="Page back">
-<input type="submit" name="go" value=">" style="padding:0 3px" title="Page forward">
+<input type="submit" name="go" value="<" style="padding:0 3px;margin-left:1.2em" title="$T_Page_back">
+<input type="submit" name="go" value=">" style="padding:0 3px" title="$T_Page_forward">
 EODpageNav;
   } else { $pageNav = ''; }
 
