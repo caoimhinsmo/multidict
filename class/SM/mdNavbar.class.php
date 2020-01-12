@@ -1,6 +1,28 @@
 <?php
 class SM_mdNavbar {
 
+  public static function hlArr() {
+      $hlArr = array(
+          'da'=>'Dansk',
+          'en'=>'English',
+          'es'=>'Español',
+          'gd'=>'Gàidhlig',
+          'it'=>'Italiano',
+          'lt'=>'Lietuvių',
+          'pt'=>'Português',
+          'bg'=>'Български',
+//            '----1'=>'',  //Partial translations
+            '----2'=>'',  //Very partial translations
+          'br'=>'Brezhoneg',
+          'cy'=>'Cymraeg',
+          'de'=>'Deutsch',
+          'fr'=>'Français',
+          'ga'=>'Gaeilge',
+          'is'=>'Íslenska');
+      return $hlArr;
+  }
+
+
   public static function mdNavbar($domhan='',$unit=NULL) {
       $servername =  $_SERVER['SERVER_NAME'];
       $serverhome = ( empty($_SERVER['HTTPS']) ? 'http' : 'https' ) . '://' . $_SERVER['SERVER_NAME'];
@@ -15,6 +37,8 @@ class SM_mdNavbar {
       $T_Log_dheth_fios       = $T->h('Log_dheth_fios');
       $T_tr_fios              = $T->h('tr_fios');
       $T_Clilstore_index_page = $T->h('Clilstore_index_page');
+      $T_Wordlink_index_page  = $T->h('Wordlink_index_page');
+      $T_Multidict_index_page = $T->h('Multidict_index_page');
       $T_Unit                 = $T->h('Unit');  
 
       $php_self = $_SERVER['PHP_SELF'];
@@ -23,6 +47,8 @@ class SM_mdNavbar {
           $homeLink = "<li><a href='/' title='$T_homeTitle'>$servername</a>";
       } elseif ($php_self1=='clilstore') {
           $homeLink = "<li><a href='/clilstore/' title='$T_Clilstore_index_page'>Clilstore</a>";
+      } elseif ($php_self1=='wordlink') {
+          $homeLink = "<li><a href='/wordlink/' title='$T_Wordlink_index_page'>Wordlink</a>";
       } elseif ($php_self1=='multidict') {
           $homeLink = "<li><a href='/multidict/' title='$T_Multidict_index_page'>Multidict</a>";
       } else {
@@ -39,23 +65,7 @@ class SM_mdNavbar {
                         ? "<li class='deas'><a href='/clilstore/logout.php' title='$T_Log_dheth_fios'>$T_Logout</a></li>"
                         : "<li class='deas'><a href='/clilstore/login.php?till_gu=/' title='$T_Log_air_fios'>$T_Log_air</a></li>"
                         );
-      $hlArr = array(
-          'da'=>'Dansk',
-          'en'=>'English',
-          'gd'=>'Gàidhlig',
-          'it'=>'Italiano',
-          'lt'=>'Lietuvių',
-          'pt'=>'Português',
-          'bg'=>'Български',
-//            '----1'=>'',  //Partial translations
-            '----2'=>'',  //Very partial translations
-          'br'=>'Brezhoneg',
-          'cy'=>'Cymraeg',
-          'de'=>'Deutsch',
-          'es'=>'Español',
-          'fr'=>'Français',
-          'ga'=>'Gaeilge',
-          'is'=>'Íslenska');
+      $hlArr = self::hlArr();
       $options = '';
       foreach ($hlArr as $hl=>$hlAinm) {
           if (substr($hl,0,4)=='----') { $options .= "<option value='' disabled>&nbsp;_{$hlAinm}_</option>/n"; }  //Divider in the list of select options
@@ -67,7 +77,7 @@ class SM_mdNavbar {
         document.cookie = 'Thl=' + hl + '; path=/; max-age=15000000';  //Valid for six months
         var paramstr = location.search;
         if (/Trident/.test(navigator.userAgent) || /MSIE/.test(navigator.userAgent)) {
-          //Rud lag lag airson seann Internet Explorer, nach eil eòlach air URLSearchParams. Sguab ás nuair a bhios IE marbh.
+          //Something really weak for Internet Explorer, which doesn’t understand URLSearchParams. Delete when IE is finally dead.
             if (paramstr.length==6 && paramstr.substring(0,4)=='?hl=') { paramstr = ''; }
             paramstr = paramstr;
         } else {
@@ -94,6 +104,43 @@ $ceangalRiMoSMO
 </ul>
 EOD_NAVBAR;
       return $mdNavbar;
+  }
+
+  public static function hlSelect() {
+      $hl0 = SM_T::hl0();
+
+      $T = new SM_T('clilstore/mdNavbar');
+      $T_interface_language  = $T->h('canan_eadarAghaidh');
+
+      $hlArr = self::hlArr();
+      $options = '';
+      foreach ($hlArr as $hl=>$hlAinm) {
+          if (substr($hl,0,4)=='----') { $options .= "<option value='' disabled>&nbsp;_{$hlAinm}_</option>/n"; }  //Divider in the list of select options
+            else                       { $options .= "<option value='$hl|en' title='$hlAinm'" . ( $hl==$hl0 ? ' selected' : '' ) . ">$hl</option>\n"; }
+      }
+      $hrSelect = <<< END_hrSelect
+<script>
+    function atharraichCanan(hl) {
+        document.cookie = 'Thl=' + hl + '; path=/; max-age=15000000';  //Valid for six months
+        var paramstr = location.search;
+        if (/Trident/.test(navigator.userAgent) || /MSIE/.test(navigator.userAgent)) {
+          //Something really weak for Internet Explorer, which doesn’t understand URLSearchParams. Delete when IE is finally dead.
+            if (paramstr.length==6 && paramstr.substring(0,4)=='?hl=') { paramstr = ''; }
+            paramstr = paramstr;
+        } else {
+            const params = new URLSearchParams(paramstr)
+            params.delete('hl');
+            paramstr = params.toString();
+            if (paramstr!='') { paramstr = '?'+paramstr; }
+        }
+        loc = window.location;
+        location = loc.protocol + '//' + loc.hostname + loc.pathname + paramstr;
+    }
+</script>
+<select class=hlSelect name="hl" title="$T_interface_language" onchange="atharraichCanan(this.options[this.selectedIndex].value)">
+$options</select>
+END_hrSelect;
+      return $hrSelect;
   }
 
 }

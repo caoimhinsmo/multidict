@@ -4,6 +4,18 @@
 
   header('P3P: CP="CAO PSA OUR"');
 
+  $T = new SM_T('wordlink/wordlink');
+
+  $T_Help    = $T->h('Cobhair');
+  $T_Process = $T->h('Process');
+
+  $T_Wordlink_start_text1 = $T->h('Wordlink_start_text1');
+  $T_Wordlink_start_text2 = $T->h('Wordlink_start_text2');
+  $T_Wordlink_start_text3 = $T->h('Wordlink_start_text3');
+
+  $T_Wordlink_start_text2 = strtr( $T_Wordlink_start_text2, [ '{{Process}}' => '‘' . $T_Process . '’' ] );
+  $T_Wordlink_start_text3 = strtr( $T_Wordlink_start_text3, [ '{{Help}}'    => '‘' . $T_Help    . '’' ] );
+
   $document_root = $_SERVER['DOCUMENT_ROOT'];
   $servername = $_SERVER['SERVER_NAME'];
   $scheme = ( empty($_SERVER['HTTPS']) ? 'http' : 'https' );
@@ -372,9 +384,9 @@ END_LS;
 <body>
 <div style="margin:4em 0.5em 0 0.5em;border: 1px solid green;border-radius:0.5em;padding:0 0.5em;
             background-color:#efe;color:green">
-<p>Wordlink can link most webpages word-by-word to online dictionaries.</p>
-<p>Copy and paste a url into the box above, specify the language, and click Go to make a display copy of the page with all words linked to dictionary lookup.</p>
-<p>See Help for more information.</p>
+<p>$T_Wordlink_start_text1</p>
+<p>$T_Wordlink_start_text2</p>
+<p>$T_Wordlink_start_text3</p>
 </div>
 </body>
 </html>

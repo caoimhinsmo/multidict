@@ -161,9 +161,11 @@ EOD3;
   }
 
   $advSwopHtml = "<span class=basOnly><b>$T_basic</b><input type=range id=basRange min=0 max=1 step=1 value=0 style=width:3em;margin:0;padding:0><a title='$T_Switch_to_advanced'>$T_advanced</a></span>"
-                ."<span class=advOnly><a title='$T_Switch_to_basic'>basic</a><input type=range id=advRange min=0 max=1 step=1 value=1 style=width:3em;margin:0;padding:0><b>$T_advanced</b></span>";
+                ."<span class=advOnly><a title='$T_Switch_to_basic'>$T_basic</a><input type=range id=advRange min=0 max=1 step=1 value=1 style=width:3em;margin:0;padding:0><b>$T_advanced</b></span>";
 
   $advSwopHtml = "<span class=toggle title='$T_Swop_basic_advanced' onclick='mdAdvSet(1-mdAdv)'>$advSwopHtml</span>";
+
+  $hlSelect = SM_mdNavbar::hlSelect();
 
   echo <<<EOD4
 <!DOCTYPE html>
@@ -185,7 +187,6 @@ Replace the following sometime with flexbox - Option 3 at https://stackoverflow.
         div#dictionary iframe {width:100%; height:100%; border:none; margin:0; padding:0; display:block;}
 
         input { padding:0px 4px; }
-        select { margin-bottom:1px; }
         ul.dluth { margin:0; }
         div.label  { font-size:80%; color:#777; }
         div.nbLang { font-size:80%; color:#aaa; padding-bottom:1px; }
@@ -213,7 +214,8 @@ Replace the following sometime with flexbox - Option 3 at https://stackoverflow.
         a#esc:hover { background-color:inherit; }
         a#esc:hover span { color:yellow; background-color:blue; }
         div.formItem { float:left; margin:1px; white-space:nowrap; overflow:hidden; }
-        select { max-height:1.8em; margin-bottom:2px; margin-top:1px; }
+        select { margin-bottom:2px; margin-top:1px; }
+        select.hlSelect { margin:0; font-size:80%; }
         select[name="sl"],select[name="tl"] { width:100%; }
         select[name="dict"] { width:100%; }
         div#dictIcons         { height:18px; display:block; }
@@ -311,6 +313,7 @@ $serverlink
 <span style="background-color:orange;color:#bfb;padding:1px 2px;font-weight:bold">Multidict</span>
 <a class="button" href="help.php" target="MDiframe$sid">$T_Help</a>
 <a class="button" href="about.php" title="$T_About_Multidict">$T_About</a>
+$hlSelect
 $advSwopHtml
 $schemeSwopHtml
 </p>

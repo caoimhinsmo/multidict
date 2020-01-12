@@ -32,10 +32,6 @@ of success.</p>
 as “alternate target languages”.  They could be understood and provide meaning or inspiration to a speaker of the language in question.
 For example, a speaker of Serbian who was trying to read the Italian Wikipedia might find an Italian to Croatian dictionary useful.
 Or a Scottish Gaelic speaker trying to think of a suitable Gaelic word might find an English to Manx dictionary useful as inspiration.</p>
-
-<p>You can help by filling in any suitable AltSl and AltTl for languages you are familiar with.  List the language codes (from column 1)
-in order of increasing distance and click “Update” (one row at a time).  Or if you think you know better than the languages already listed,
-feel free to alter them.  But remember that this will change Multidict for all users, so be very careful.</p>
 </div>
 
 <?php

@@ -793,6 +793,7 @@ END_tableHtmlBarr;
                 $editHtml = "<a href=\"edit.php?id=$id\">"
                   . '<img src="/icons-smo/peann.png" alt="Edit" title ="Edit this unit" class="favicon"/></a>';
             }
+            $titleCool = strtr($title,[ "[COOL]" => "<img src='Cool.png' alt='[COOL]' style='padding-right:0.3em'>" ]);
             $tableHtml .= '<tr class="data">'
                         . "<td class='id'><a href='/cs/$id' title='$views views'>$id</a></td>"
                         . "<td class='views'>$views</td>"
@@ -812,7 +813,7 @@ END_tableHtmlBarr;
                         . "<td class='edit'>$editHtml</td>"
                         . "<td class='nowl'><a href='page.php?id=$id'>"
                         .    '<img src="/favicons/no_wordlink.png" alt="no_wordlink" title="The plain page, not wordlinked" class="favicon"/></a></td>'
-                        . "<td class='$titleClass' colspan='2'>$testHtml<a href='/cs/$id' title='$summary'>$title</a></td>"
+                        . "<td class='$titleClass' colspan='2'>$testHtml<a href='/cs/$id' title='$summary'>$titleCool</a></td>"
                         . "</tr>\n";
         }
         $stmt = null;

@@ -104,8 +104,8 @@
 <a class="button" style="float:left;margin:0 7px 0 0;border-radius:0;padding:1px 3px;font-size:80%" href="/" target="_top">$servername</a>
 <span style="background-color:orange;color:#bfb;padding:1px 3px;font-weight:bold">Wordlink</span>
 <a class="button" href="help.php" target=_top>$T_Help</a>
-<a class="button" href="about.php" target="_top">$T_About_Wordlink</a>
-$hlSelect
+<a class="button" href="about.php" target="_top">$T_About_Wordlink</a>$
+hlSelect
 </p>
 
 <form id="wlForm" action="./" target="_top" style="margin:0 0 0 2px" onsubmit="escapeAmpersands('testing');">
