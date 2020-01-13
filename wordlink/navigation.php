@@ -9,7 +9,6 @@
 
   $T_Help           = $T->h('Cobhair');
   $T_About_Wordlink = $T->h('About_Wordlink');
-  $T_Example_pages  = $T->h('Example_pages');
   $T_Process_page   = $T->h('Process_page');
   $T_Compose_page   = $T->h('Compose_page');
   $T_Copy_url_here  = $T->h('Copy_url_here');

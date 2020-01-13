@@ -8,8 +8,9 @@
   try {
     $T = new SM_T('wordlink/help');
 
-    $T_Help  = $T->h('Cobhair');
-    $T_Using_Wordlink      = $T->h('Using_Wordlink');
+    $T_Help        = $T->h('Cobhair');
+    $T_Splitscreen = $T->h('Splitscreen');
+
     $T_Wordlink_help_text1 = $T->h('Wordlink_help_text1');
     $T_Wordlink_help_text2 = $T->h('Wordlink_help_text2');
     $T_Wordlink_help_text3 = $T->h('Wordlink_help_text3');
@@ -17,10 +18,15 @@
     $T_Wordlink_help_text5 = $T->h('Wordlink_help_text5');
     $T_Wordlink_help_wa1   = $T->h('Wordlink_help_wa1');
     $T_Wordlink_help_wa2   = $T->h('Wordlink_help_wa2');
+    $T_Using_Wordlink      = $T->h('Using_Wordlink');
+    $T_Remove_exist_links  = $T->h('Remove_exist_links');
+    $T_For_web_authors     = $T->h('For_web_authors');
     
     $mdNavbar = SM_mdNavbar::mdNavbar($T->domhan);
 
     $T_Wordlink_help_text1 = strtr( $T_Wordlink_help_text1, [ '{Multidict}' => '<a href="/multidict/">Multidict</a>' ] );
+    $T_Wordlink_help_text2 = strtr( $T_Wordlink_help_text2, [ '{{Remove existing links}}' => '“' . $T_Remove_exist_links . '”' ] );
+    $T_Wordlink_help_text4 = strtr( $T_Wordlink_help_text4, [ '{{Splitscreen}}' => '“' . $T_Splitscreen . '”' ] );
     $T_Wordlink_help_text5 = strtr( $T_Wordlink_help_text5, [ '{' => '<a href="examples.php">', '}' => '</a>' ] );
 
     $HTML = <<<END_HTML
@@ -34,20 +40,14 @@ $mdNavbar
 <p>$T_Wordlink_help_text2</p>
 
 <p>$T_Wordlink_help_text3</p>
-<ul style="margin-top:0">
-<li>Very “flashy” webpages using lots of Flash or Javascript;</li>
-<li>Pages with very broken invalid html.  (Often very old web pages are in this cateogory);</li>
-<li>Pages which lie behind login systems.  So unfortunately, Wordlink will not currently work with social network sites or VLE’s.</li>
-</ul>
 
 <p>$T_Wordlink_help_text4</p>
 
 <p>$T_Wordlink_help_text5</p>
 
-<h2>For web authors</h2>
+<h2>$T_For_web_authors</h2>
 
-<p>$T_Wordlink_help_wa1</p>
-<p>You can help readers who are not fluent in your language by providing a link to Wordlink on your pages.  Specify the source language (sl) and the page address (url) as parameters in the link to Wordlink - i.e. src="http://multidict.net/wordlink/?sl=...&amp;url=...."</p>
+<p>$T_Wordlink_help_wa1 href="http://multidict.net/wordlink/?sl=…&ampurl=…"</p>
 
 <p>$T_Wordlink_help_wa2</p>
 

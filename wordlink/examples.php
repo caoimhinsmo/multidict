@@ -1,13 +1,32 @@
 <?php
   if (!include('autoload.inc.php'))
     header("Location:http://claran.smo.uhi.ac.uk/mearachd/include_a_dhith/?faidhle=autoload.inc.php");
-  $servername = $_SERVER['SERVER_NAME'];
-?>
+
+    $T = new SM_T('wordlink/examples');
+    $T_Example_pages    = $T->h('Example_pages');
+    $T_Example_pages_h1 = $T->h('Example_pages_h1');
+    
+    $mdNavbar = SM_mdNavbar::mdNavbar($T->domhan);
+
+    $wikiLinks = '';
+    $slArr = SM_WlSession::slArr();
+    foreach ($slArr as $sl=>$langInfo) {
+        $endonym    = $langInfo['endonym'];
+        $wiki       = $langInfo['wiki'];
+        $multidicts = $langInfo['multidicts'];
+        $class      = $langInfo['pools'];
+      if ($class=='omit' or empty($wiki)) { continue; }
+        if ($multidicts=='|Google|') { $class = 'googleOnly'; }
+        $wikiLinks .= "<div class='wiki $class'><a href='./?sl=$sl&amp;url=http://$wiki.wikipedia.org/' title='$endonym'>$sl</a></div>\n";
+    }
+    $wikiLinks .= "<div class='wiki tools' style='margin-left:1em'><a href='./?sl=en&amp;url=http://simple.wikipedia.org/' title='Simple English'>simple</a></div>\n";
+
+    echo <<<END_HTML
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Wordlink example pages</title>
+    <title>Wordlink: $T_Example_pages</title>
     <link rel="StyleSheet" href="/css/smo.css">
     <link rel="icon" type="image/png" href="/favicons/wordlink.png">
     <style>
@@ -26,36 +45,14 @@
     </style>
 </head>
 <body>
-
-<ul class="smo-navlist">
-<li><a href="/"><?php echo $servername; ?></a></li>
-<li><a href="./" title="Wordlink - a facility to link web pages automatically word-by-word to online dictionaries">Wordlink</a></li>
-</ul>
+$mdNavbar
 <div class="smo-body-indent">
 
-
-<h1 class="smo">Some example pages to show the working of Wordlink</h1>
+<h1 class="smo">$T_Example_pages_h1</h1>
 
 <fieldset id="wiki">
 <legend>Wikipedia</legend>
-<?php
-  try {
-    $DbMultidict = SM_DbMultidictPDO::singleton('r');
-    $slArr = SM_WlSession::slArr();
-    foreach ($slArr as $sl=>$langInfo) {
-        $endonym    = $langInfo['endonym'];
-        $wiki       = $langInfo['wiki'];
-        $multidicts = $langInfo['multidicts'];
-        $class      = $langInfo['pools'];
-      if ($class=='omit' or empty($wiki)) { continue; }
-        if ($multidicts=='|Google|') { $class = 'googleOnly'; }
-        echo "<div class=\"wiki $class\"><a target=\"_top\" href=\"./?sl=$sl&amp;url=http://$wiki.wikipedia.org/\" title=\"$endonym\">$sl</a></div>\n";
-    }
-    $stmt = null;
-    echo "<div class=\"wiki tools\" style=\"margin-left:1em\"><a target=\"_top\" href=\"./?sl=en&amp;url=http://simple.wikipedia.org/\" title=\"Simple English\">simple</a></div>\n";
-
-  } catch (exception $e) { echo $e; }
-?>
+$wikiLinks
 </fieldset>
 
 <ul>
@@ -65,12 +62,8 @@
    <a target="_top" href="./?sl=gd&amp;url=http://www.smo.uhi.ac.uk/gaidhlig/corpus/samhlaidhean/">Samhlaidhean</a>
 <li>Gàidhlig:
    <a target="_top" href="./?sl=gd&amp;navsize=1&amp;url=http://danamag.org/">Dàna</a> <i>(online magazine)</i>
-<li>Dansk:
-   <a target="_top" href="./?sl=da&amp;url=http://www.rockmusical.dk/">Rockmusical</a>
 <li>Français:
    <a target="_top" href="./?sl=fr&amp;url=http://www.gaulois.ardennes.culture.fr/accessible">Acy-Romance: Les Gaulois des Ardennes</a>
-<li>Español:
-   <a torget="_top" href="./?sl=es&amp;url=http%3A%2F%2Fwww.practicaespanol.com%2Fnoticias-en-practica-espanol">Noticias en Practica Español</a>
 <li>Cree:
    <a target="_top" href="./?sl=cr-Latn&amp;url=http://cr.wikipedia.org/wiki/Maskisin">Maskisin</a>
 <li>Ancient Greek:
@@ -78,11 +71,9 @@
 </ul>
 
 </div>
-<ul class="smo-navlist">
-<li><a href="/"><?php echo $servername ?></a>
-<li><a href="./" title="Wordlink - a facility to link web pages automatically word-by-word to online dictionaries">Wordlink</a>
-</ul>
-
-<div class="smo-latha">2015-12-02 <a href="/~caoimhin/cpd.html">CPD</a></div>
+$mdNavbar
 </body>
 </html>
+END_HTML;
+
+?>

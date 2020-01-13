@@ -311,7 +311,7 @@ Replace the following sometime with flexbox - Option 3 at https://stackoverflow.
 <p style="margin:0 0 1px 0">
 $serverlink
 <span style="background-color:orange;color:#bfb;padding:1px 2px;font-weight:bold">Multidict</span>
-<a class="button" href="help.php" target="MDiframe$sid">$T_Help</a>
+<a class="button" href="help.php">$T_Help</a>
 <a class="button" href="about.php" title="$T_About_Multidict">$T_About</a>
 $hlSelect
 $advSwopHtml
