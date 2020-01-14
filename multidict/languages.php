@@ -2,50 +2,18 @@
   if (!include('autoload.inc.php'))
     header("Location:http://claran.smo.uhi.ac.uk/mearachd/include_a_dhith/?faidhle=autoload.inc.php");
   header("Cache-Control:max-age=0");
-?>
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title>Languages handled by Multidict</title>
-    <style>
-        div.headings div { font-weight:bold; text-decoration:underline; }
-        p.family   { margin:2em 0 0 0; background-color:#bbf; font-size:150%; font-weight: bold;color:red; }
-        p.subgroup { margin:1.5em 0 0 0; background-color:#ddf; font-size:130%; font-weight: bold;color:brown; padding-left:0.3em;   }
-        a { text-decoration:none; }
-        a:hover { color:white; background-color:blue; }
-        span.mark { background-color:yellow; }
-        input[type=text] { background-color:#ffe; width:97%; margin:0; padding:0}
-        input[type=submit]:hover { background-color:blue; color:white; }
-    </style>
-</head>
-<body>
 
-<h1>Languages handled by Multidict</h1>
+  $T = new SM_T('multidict/languages');
 
-<div style="margin:0 2px 3em 2px;border:1px solid green;background-color:#dfd;padding:3px">
-<p>“<b>AltSl</b>” indicates those languages which are similar enough, both in meaning and in spelling (e.g. Danish compared to Norwegian Bokmål),
-to be used as “alternate source languages”.  That is to say, you could try looking up a word in their dictionaries and have a reasonable chance
-of success.</p>
+  $T_Error_in   = $T->h('Error_in');
+  $T_AltSl_info = $T->h('AltSl_info');
+  $T_AltTl_info = $T->h('AltTl_info');
+  $T_Languages_handled_by_Multidict = $T->h('Languages_handled_by_Multidict');
 
-<p>“<b>AltTl</b>” indicates those languages which are similar enough in word meanings (though not necessarily in spelling) to be used
-as “alternate target languages”.  They could be understood and provide meaning or inspiration to a speaker of the language in question.
-For example, a speaker of Serbian who was trying to read the Italian Wikipedia might find an Italian to Croatian dictionary useful.
-Or a Scottish Gaelic speaker trying to think of a suitable Gaelic word might find an English to Manx dictionary useful as inspiration.</p>
-</div>
+  $T_AltSl_info = strtr ( $T_AltSl_info, [ 'AltSl' => '<b>AltSl</b>' ] );
+  $T_AltTl_info = strtr ( $T_AltTl_info, [ 'AltTl' => '<b>AltTl</b>' ] );
 
-<?php
-  function checkValid($id) {
-      if (!SM_WlSession::langValid($id))
-        { throw new SM_MDexception("rabhadh|Update ignored because Multidict did not recognise language code &ldquo;$id&rdquo;"); }
-  }
-
-  function getAlts($param) {
-      $param = strtr($param,array('  '=>' '));
-      if (empty($param) || $param==' ') { return array(); }
-      $arr = explode(' ',trim($param));
-      return $arr;
-  }
+  $mdNavbar = SM_mdNavbar::mdNavbar($T->domhan);
 
   function getName ($id) {
       $DbMultidict = SM_DbMultidictPDO::singleton('rw');
@@ -59,99 +27,133 @@ Or a Scottish Gaelic speaker trying to think of a suitable Gaelic word might fin
       return $name;
   }
 
-
   try {
     $DbMultidict = SM_DbMultidictPDO::singleton('rw');
 
-    if (!empty($_GET['id'])) {
-        try {
-            $id    = $_GET['id'];
-            $altSlArr = getAlts($_GET['altsl']);
-            $altTlArr = getAlts($_GET['alttl']);
-            checkValid($id);
-            foreach ($altSlArr as $alt) { checkValid($alt); }
-            foreach ($altTlArr as $alt) { checkValid($alt); }
-            $stmt = $DbMultidict->prepare("DELETE FROM langAltSl WHERE id=?");
-            $stmt->execute(array($id));
-            $stmt = $DbMultidict->prepare("DELETE FROM langAltTl WHERE id=?");
-            $stmt->execute(array($id));
-            $stmt = $DbMultidict->prepare("INSERT INTO langAltSl(id,alt,ord) VALUES(?,?,?)");
-            for ($i=0;$i<count($altSlArr);$i++) { $stmt->execute(array($id,$altSlArr[$i],$i)); }
-            $stmt = $DbMultidict->prepare("INSERT INTO langAltTl(id,alt,ord) VALUES(?,?,?)");
-            for ($i=0;$i<count($altTlArr);$i++) { $stmt->execute(array($id,$altTlArr[$i],$i)); }
-            $stmt = null;
-        } catch (Exception $e) { echo $e; }
-    }
-
-    echo <<<EOD1
-<div class="headings" style="padding-bottom:1px;font-size:85%">
-  <div style="float:left;width:5.5em">Id</div>
-  <div style="float:left;width:14.5em">Endonym</div>
-  <div style="float:left;width:11.5em">English name</div>
-  <div style="float:left;width:110px">AltSl</div>
-  <div style="float:left;width:140px">AltTl</div>
-  <div style="float:left;width:5em;margin:0 3px 0 0">&nbsp</div>
-  <div>Parentage</div>
-</div>
+    $HTML = <<<EOD1
+<table id=mainTable>
+<tr><td>id</td><td>Endonym</td><td>English name</td><td>AltSl</td><td>AltTl</td><td></td><td>Parentage</td></tr>
 EOD1;
 
-    $query = "SELECT id, endonym, name_en, parentage FROM langV ORDER BY parentage_ord";
+    $query = "SELECT id, endonym, name_en, parentage FROM langV WHERE id<>'¤' AND id<>'x' ORDER BY parentage_ord";
     $stmt = $DbMultidict->prepare($query);
     $stmt->execute();
-    $stmt->bindColumn(1,$id);
-    $stmt->bindColumn(2,$endonym);
-    $stmt->bindColumn(3,$name_en);
-    $stmt->bindColumn(4,$parentage);
+    $langinfoAll = $stmt->fetchAll(PDO::FETCH_ASSOC);
     $parentNodes = array('');
-    while ($stmt->fetch()) {
-        if ($id=='¤' || $id=='x') { continue; }
+    foreach ($langinfoAll as $langInfo) {
+        extract($langInfo);
         $stmtSl = $DbMultidict->prepare("SELECT alt FROM langAltSl WHERE id=:id ORDER BY ord");
-        $stmtSl->bindParam(':id',$id);
-        $stmtSl->execute();
+        $stmtSl->execute([':id'=>$id]);
         $altSl = implode(' ',$stmtSl->fetchAll(PDO::FETCH_COLUMN, 0));
 
-        if ($id=='¤' || $id=='x') { continue; }
         $stmtTl = $DbMultidict->prepare("SELECT alt FROM langAltTl WHERE id=:id ORDER BY ord");
-        $stmtTl->bindParam(':id',$id);
-        $stmtTl->execute();
+        $stmtTl->execute([':id'=>$id]);
         $altTl = implode(' ',$stmtTl->fetchAll(PDO::FETCH_COLUMN, 0));
 
         $prevParentNodes = $parentNodes;
         $parentNodes = explode(':',$parentage);
         if (@$parentNodes[1]<>@$prevParentNodes[1]) {
-            echo '<p class="family">' . getName($parentNodes[1]) ."</p>\n";
+            $familyName = getName($parentNodes[1]);
+            $HTML .= "<tr class=family><td colspan=7>$familyName</td></tr>\n";
         }
         if (@$parentNodes[3]=='lieu' && @$parentNodes[4]<>@$prevParentNodes[4]) {
-            echo '<p class="subgroup">' . getName($parentNodes[4]) ."</p>\n";
+            $subgroupName = getName($parentNodes[4]);
+            $HTML .= "<tr class=subgroup><td colspan=7 style='padding-left:0.7em'>$subgroupName</td></tr>\n";
         }
         $parentNodesHtml = $parentNodes;
         $marked = 0;
         for ($i=0; $i<count($parentNodes); $i++) {
             $node = $nodeHtml = $parentNodes[$i];
             if ($marked==0 && isset($prevParentNodes[$i]) && $node<>$prevParentNodes[$i]) {
-                $nodeHtml = "<span class=\"mark\">$node</span>";
+                $nodeHtml = "<span class=mark>$node</span>";
                 $marked = 1;
             }
             $parentNodesHtml[$i] = "<a href=\"http://multitree.org/codes/$node\">$nodeHtml</a>";
         }
         $parentageHtml = implode (':',$parentNodesHtml);
-        echo <<<EOD2
-<form action="" method="get" style="margin:0;padding:0 2px 1px 2px;border-bottom:1px solid grey;background-color:#ffd;clear:both;font-size:85%">
-  <div style="float:left;width:5.5em;font-weight:bold"><a href="/multidict/?sl=$id" target="_top">$id</a></div>
-  <div style="float:left;width:14.5em;font-weight:bold">$endonym</div>
-  <div style="float:left;width:11.5em">$name_en</div>
-  <div><input type="hidden" name="id" value="$id"/></div>
-  <div style="float:left;width:110px"><input type="text" name="altsl" title="alternate source languages" value="$altSl"/></div>
-  <div style="float:left;width:140px"><input type="text" name="alttl" title="alternate target languages" value="$altTl"/></div>
-  <div><input type="submit" value="Update" style="float:left;width:5em;margin:0 3px 0 0"></div>
-  <div><span style="font-size:80%">$parentageHtml</span></div>
-</form>
-EOD2;
+        $HTML .= <<<END_ROW
+<tr>
+<td><a href="/multidict/?sl=$id">$id</a></td>
+<td>$endonym</td>
+<td>$name_en</td>
+<td><input type=text title="alternate source languages" value="$altSl" onchange=updateAlt('$id','sl',this)></td>
+<td><input type=text title="alternate target languages" value="$altTl" onchange=updateAlt('$id','tl',this)></td>
+<td><span id="$id-changed" class=change>✔<span></td>
+<td>$parentageHtml</td>
+</tr>
+END_ROW;
     }
-    $stmt = null;
+    $HTML .= "</table>\n";
 
-  } catch (Exception $e) { echo $e; }
-?>
+  } catch (Exception $e) { $HTML = $e->getMessage(); }
 
+
+  echo <<<END_DOC
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>$T_Languages_handled_by_Multidict</title>
+    <link rel="StyleSheet" href="/css/smo.css">
+    <style>
+        div.headings div { font-weight:bold; text-decoration:underline; }
+        a { text-decoration:none; }
+        a:hover { color:white; background-color:blue; }
+        span.mark { background-color:yellow; }
+        input[type=text] { background-color:#ffe; width:97%; margin:0; padding:0}
+        span.change { opacity:0; color:white; }
+        span.change.changed { color:green; animation:appearFade 5s; }
+        @keyframes appearFade { from { opacity:1; background-color:yellow; } 20% { opacity:0.8; background-color:transparent; } to { opacity:0; } }
+        table#mainTable { border-collapse:collapse; font-size:90%; margin-bottom:1em; }
+        table#mainTable tr:first-child { font-weight:bold; text-decoration:underline; }
+        table#mainTable tr.family   { border-top:1em solid white;   background-color:#bbf; font-size:150%; font-weight: bold;color:red; }
+        table#mainTable tr.subgroup { border-top:0.5em solid white; background-color:#ddf; font-size:130%; font-weight: bold;color:brown; }
+        table#mainTable tr:hover { background-color:pink; }
+        table#mainTable tr td:nth-child(1) { width:4.7em; font-weight:bold; }
+        table#mainTable tr td:nth-child(2) { width:14em;font-weight:bold; }
+        table#mainTable tr td:nth-child(3) { width:11em; }
+        table#mainTable tr td:nth-child(4) { width:8em; }
+        table#mainTable tr td:nth-child(5) { width:8em; }
+        table#mainTable tr td:nth-child(6) { width:1.5em; }
+        table#mainTable tr td:nth-child(7) { font-size:85%; }
+    </style>
+    <script>
+        function updateAlt(id,sltl,el) {
+            var altList = el.value.trim().replace(/  /g,' ').replace(/ /g,'|');
+            var xhttp = new XMLHttpRequest();
+            xhttp.onload = function() {
+                if (this.status!=200) { alert('$T_Error_in updateAlt:'+this.status); return; }
+                var resp = this.responseText;
+                if (resp!='OK' && resp!='') { alert(resp); return; }
+                var tickel = document.getElementById(id+'-changed');
+                tickel.classList.remove('changed'); //Remove the class (if required) and add again after a tiny delay, to restart the animation
+                setTimeout(function(){tickel.classList.add('changed');},50);
+            }
+            var url = window.location.origin + '/multidict/ajax/updateAlt.php';
+            var params = 'id=' + id + '&sltl=' + sltl + '&altList=' + altList;
+            xhttp.open('POST',url,true);
+            xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xhttp.send(params);
+        }
+    </script>
+</head>
+<body style="background-color:white">
+$mdNavbar
+<div class='smo-body-indent'>
+
+<h1>Languages handled by Multidict</h1>
+
+<div style="margin-bottom:3em;padding:0 0.6em;border:1px solid green;border-radius:0.5em;background-color:#dfd;max-width:75em">
+<p style='margin-top:0.5em'>$T_AltSl_info</p>
+<p style='margin-bottom:0.5em'>$T_AltTl_info</p>
+</div>
+
+$HTML
+
+</div>
+$mdNavbar
 </body>
 </html>
+END_DOC;
+
+?>
