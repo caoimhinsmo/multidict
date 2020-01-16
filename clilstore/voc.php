@@ -12,73 +12,21 @@
       $myCLIL->toradh = $e->getMessage();
   }
 
-  echo <<<EOD_BARR
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Change user options on Clilstore</title>
-    <link rel="stylesheet" href="/css/smo.css">
-    <link rel="stylesheet" href="style.css?version=2014-04-15">
-    <link rel="icon" type="image/png" href="/favicons/clilstore.png">
-    <style>
-        span.callcount { font-size:75%; color:grey; }
-        table#vocab { border-collapse:collapse; border:1px solid grey; margin-bottom:0.5em; }
-        table#vocab tr#vocabhead { background-color:grey; color:white; font-weight:bold; }
-        table#vocab tr:nth-child(odd)  { background-color:#ddf; }
-        table#vocab tr:nth-child(even) { background-color:#fff; }
-        table#vocab tr:nth-child(odd):hover  { background-color:#fe6; }
-        table#vocab tr:nth-child(even):hover { background-color:#fe6; }
-        table#vocab td.vocword a:hover { color:white; background-color:black; }
-        table#vocab td.meaning { min-width:40em; }
-        table#vocab td { padding:1px 3px; }
-        table#vocab tr + tr > td { border-left:1px solid #aaa; }
-        table#vocab tr.deleted { display:none; }
-        a.langbutton { margin:1px 7px; background-color:#55a8eb; color:white; font-weight:bold; padding:2px 8px; border:1px solid white; border-radius:8px; }
-        a.langbutton.selected { border-color:#55a8eb; background-color:yellow; color:#55a8eb; }
-        a.langbutton.live:hover { background-color:blue; }
-        a#emptyBut { border:0; padding:1px 3px; border-radius:6px; background-color:#27b; color:white; text-decoration:none; }
-        a#emptyBut:hover,
-        a#emptyBut:active,
-        a#emptyBut:focus  { background-color:#f00; color:white; }
-    </style>
-    <script>
-        function deleteVocWord(vocid) {
-            var xmlhttp = new XMLHttpRequest();
-            xmlhttp.onload = function() {
-                if (this.status!=200) { alert('Error in deleteVocWord:'+this.status); return; }
-                var el = document.getElementById('row'+vocid);
-                el.classList.add('deleted');
-            }
-            xmlhttp.open('GET', 'ajax/deleteVocWord.php?vocid=' + vocid);
-            xmlhttp.send();
-        }
-        function changeMeaning(vocid,meaning) {
-            var xmlhttp = new XMLHttpRequest();
-            xmlhttp.onload = function() { if (this.status!=200) { alert('Error in changeMeaning:'+this.status); } } 
-            xmlhttp.open('GET', 'ajax/changeMeaning.php?vocid=' + vocid + '&meaning=' + encodeURI(meaning));
-            xmlhttp.send();
-        }
-        function emptyVocList(user,sl) {
-            var r = confirm("Do you really want to delete every word from this vocabulary list?");
-            if (r==true) {
-                var xmlhttp = new XMLHttpRequest();
-                xmlhttp.onload = function() { if (this.status!=200) { alert('Error in emptyVocList:'+this.status); return; } }
-                xmlhttp.open('GET', 'ajax/emptyVocList.php?user='+user+'&sl=' +sl,true);
-                xmlhttp.send();
-                location.reload();
-                return false;
-            }
-        }
-    </script>
-</head>
-<body>
+  $T = new SM_T('clilstore/voc');
 
-<ul class="smo-navlist">
-<li><a href="./">Clilstore</a></li>
-</ul>
-<div class="smo-body-indent">
-EOD_BARR;
+  $T_Language = $T->h('Language');
+  $T_Word     = $T->h('Facal');
+  $T_words    = $T->h('facail');
+  $T_Meaning  = $T->h('Meaning');
+  $T_Error_in = $T->h('Error_in');
+
+  $T_Vocabulary_list_for_user_ = $T->h('Vocabulary_list_for_user_');
+  $T_Page_needs_parameter      = $T->h('Parameter_p_a_dhith');
+  $T_Clicked_in_unit           = $T->h('Clicked_in_unit');
+  $T_Delete_instantaneously    = $T->h('Delete_instantaneously');
+  $T_Lookup_with_Multidict     = $T->h('Lorg le Multidict');
+
+  $mdNavbar = SM_mdNavbar::mdNavbar($T->domhan);
 
   try {
     $myCLIL->dearbhaich();
@@ -86,12 +34,12 @@ EOD_BARR;
 
     $user = @$_REQUEST['user'] ?:null;
     $userSC = htmlspecialchars($user);
-    if (empty($user)) { throw new SM_MDexception('Parameter ‘user=’ is missing'); }
+    if (empty($user)) { throw new SM_MDexception(sprintf($T_Page_needs_parameter,'user')); }
 
     $DbMultidict = SM_DbMultidictPDO::singleton('rw');
     $vocHtml = $langButHtml = $slLorg = '';
 
-    $stmt = $DbMultidict->prepare('SELECT sl, SUM(calls) AS slSum FROM csVoc WHERE user=:user GROUP BY sl ORDER BY slSum DESC, sl');
+    $stmt = $DbMultidict->prepare('SELECT sl, COUNT(1) AS cnt, endonym FROM csVoc,lang WHERE user=:user AND csVoc.sl=lang.id GROUP BY sl ORDER BY cnt DESC, sl');
     $stmt->execute([':user'=>$user]);
     $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
     if (!empty($_GET['sl'])) { $slLorg = $_GET['sl']; }
@@ -101,7 +49,7 @@ EOD_BARR;
             extract($row);
             if ($sl==$slLorg) { $class = 'langbutton selected'; }
              else             { $class = 'langbutton live';     }
-            $langButArray[] = "<a href=voc.php?user=$userSC&amp;sl=$sl class='$class'>$sl</a>";
+            $langButArray[] = "<a href='voc.php?user=$userSC&amp;sl=$sl' title='$endonym ($cnt $T_words)' class='$class'>$sl</a>";
         }
         $langButHtml = implode(' ',$langButArray);
         $langButHtml = "<p>$langButHtml</p>";
@@ -124,12 +72,15 @@ EOD_BARR;
             $unitHtmlArr[] = "<a href='/cs/$unit' title='$title'>$unit</a>$callsVUhtml";
         }
         $unitsHtml = implode(' ',$unitHtmlArr);
-        $deleteVocWordHtml = "<img src='/icons-smo/curAs.png' alt='Delete' style='padding:0 0.5em' title='Delete instantaneously' onclick=\"deleteVocWord('$vocid')\">";
         $meaningSC  = htmlspecialchars($meaning);
-        $meaningHtml = "<input value='$meaningSC' style='width:95%' onchange=\"changeMeaning('$vocid',this.value);\">";
-        $multidictHtml = "<a href='/multidict/?sl=$slLorg&amp;word=$word' target=vocmdtab><img src=/favicons/multidict.png alt=''></a>";
-        $wordHtml      = "<a href='/multidict/?sl=$slLorg&amp;word=$word' target=vocmdtab>$word</a>";
-        $vocHtml .= "<tr id=row$vocid><td>$deleteVocWordHtml</td><td class=vocword>$multidictHtml $wordHtml</td><td class=meaning>$meaningHtml</td><td>$unitsHtml</td></tr>\n";
+        $vocHtml .= <<<END_vocHtml
+<tr id=row$vocid>
+<td><img src='/icons-smo/curAs.png' alt='Delete' title='$T_Delete_instantaneously' onclick="deleteVocWord('$vocid')"></td>
+<td title='$T_Lookup_with_Multidict'><a href='/multidict/?sl=$slLorg&amp;word=$word' target=vocmdtab><img src=/favicons/multidict.png alt=''> $word</a></td>
+<td><input value='$meaningSC' style='min-width:45em;max-width:55em' onchange="changeMeaning('$vocid',this.value);"><span id="$vocid-tick" class=change>✔<span></td>
+<td>$unitsHtml</td>
+</tr>
+END_vocHtml;
     }
 
     function optionsHtml($valueOptArr,$selectedValue) {
@@ -144,38 +95,114 @@ EOD_BARR;
 
     if (!empty($vocHtml)) { $vocTableHtml = <<<EOD_vocTable
 <table id=vocab>
-<tr id=vocabhead><td></td><td>Word</td><td>Meaning</td><td>Clicked in units</td></tr>
+<tr id=vocabhead><td></td><td>$T_Word</td><td>$T_Meaning</td><td>$T_Clicked_in_unit</td></tr>
 $vocHtml
 </table>
 
 <p style="margin:3.5em 0 0 0;font-size:85%">If you really want to, you can <a id=emptyBut onclick="emptyVocList('$user','$slLorg')">empty</a> the list to delete every single word in this vocabulary list.</p>
 EOD_vocTable;
     } else { $vocTableHtml = <<<EOD_noVocTable
-<p>There are no words in the vocabulary list</p>
-
+<p>There are no words in your vocabulary list</p>
 <p>You can add words to your vocabulary list by clicking on them in a Clilstore unit (with <i>Vocabulary record</i> switched on).</p>
 EOD_noVocTable;
     }
 
     $slLorgShow = ( $slLorg=='' ? 'any' : $slLorg );
-    echo <<<EOD
-<h1 style="font-size:160%;margin:0;padding-top:0.5em">Vocabulary list for user <span style="color:brown">$user</span></h1>
-<p style="font-size:85%;color:grey;margin:0 0 1em 0">Language: $slLorgShow</p>
+    $HTML = <<<EOD
+<h1 style="font-size:140%;margin:0;padding-top:0.5em">$T_Vocabulary_list_for_user_ <span style="color:brown">$user</span></h1>
+<p style="font-size:85%;color:grey;margin:0 0 1em 0">$T_Language: $slLorgShow</p>
 
 $langButHtml
 
 $vocTableHtml
 EOD;
 
-  } catch (Exception $e) { echo $e; }
+  } catch (Exception $e) { $HTML = $e; }
 
-  echo <<<EOD_BONN
+  $HTMLDOC = <<<END_HTMLDOC
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>$T_Vocabulary_list_for_user_ $user</title>
+    <link rel="stylesheet" href="/css/smo.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/png" href="/favicons/clilstore.png">
+    <style>
+        span.callcount { font-size:75%; color:grey; }
+        table#vocab { border-collapse:collapse; border:1px solid grey; margin-bottom:0.5em; white-space:nowrap; }
+        table#vocab tr#vocabhead { background-color:grey; color:white; font-weight:bold; }
+        table#vocab tr:nth-child(odd)  { background-color:#ddf; }
+        table#vocab tr:nth-child(even) { background-color:#fff; }
+        table#vocab tr:nth-child(odd):hover  { background-color:#fe6; }
+        table#vocab tr:nth-child(even):hover { background-color:#fe6; }
+        table#vocab td { padding:0px 3px; }
+        table#vocab td:nth-child(1) { padding:0 0.4em; }
+        table#vocab td:nth-child(2) a:hover { color:white; background-color:black; }
+        table#vocab td:nth-child(3) { padding:0; }
+        table#vocab tr + tr > td { border-left:1px solid #aaa; }
+        span.change { opacity:0; color:white; }
+        span.change.changed { color:green; animation:appearFade 5s; }
+        @keyframes appearFade { from { opacity:1; background-color:yellow; } 20% { opacity:0.8; background-color:transparent; } to { opacity:0; } }
+        a.langbutton { margin:1px 7px; background-color:#55a8eb; color:white; font-weight:bold; padding:2px 8px; border:1px solid white; border-radius:8px; }
+        a.langbutton.selected { border-color:#55a8eb; background-color:yellow; color:#55a8eb; }
+        a.langbutton.live:hover { background-color:blue; }
+        a#emptyBut { border:0; padding:1px 3px; border-radius:6px; background-color:#27b; color:white; text-decoration:none; }
+        a#emptyBut:hover,
+        a#emptyBut:active,
+        a#emptyBut:focus  { background-color:#f00; color:white; }
+    </style>
+    <script>
+        function deleteVocWord(vocid) {
+            var xhttp = new XMLHttpRequest();
+            xhttp.onload = function() {
+                var resp = this.responseText;
+                if (resp!='OK') { alert('$T_Error_in deleteVocWord:'+resp); return; }
+                var el = document.getElementById('row'+vocid);
+                el.parentNode.removeChild(el);
+            }
+            xhttp.open('GET', 'ajax/deleteVocWord.php?vocid=' + vocid);
+            xhttp.send();
+        }
+        function changeMeaning(vocid,meaning) {
+            var xhttp = new XMLHttpRequest();
+            xhttp.onload = function() {
+                var resp = this.responseText;
+                if (resp!='OK') { alert('$T_Error_in changeMeaning:'+resp); return; }
+                var tickel = document.getElementById(vocid+'-tick');
+                tickel.classList.remove('changed'); //Remove the class (if required) and add again after a tiny delay, to restart the animation
+                setTimeout(function(){tickel.classList.add('changed');},50);
+            }
+            xhttp.open('GET', 'ajax/changeMeaning.php?vocid=' + vocid + '&meaning=' + encodeURI(meaning));
+            xhttp.send();
+        }
+        function emptyVocList(user,sl) {
+            var r = confirm("Do you really want to delete every word from this vocabulary list?");
+            if (r==true) {
+                var xhttp = new XMLHttpRequest();
+                xhttp.onload = function() {
+                    var resp = this.responseText;
+                    if (resp!='OK') { alert('$T_Error_in emptyVocList:'+resp); return; }
+                    location.reload();
+                }
+                xhttp.open('GET', 'ajax/emptyVocList.php?user='+user+'&sl=' +sl,true);
+                xhttp.send();
+                return false;
+            }
+        }
+    </script>
+</head>
+<body>
+$mdNavbar
+<div class="smo-body-indent">
+
+$HTML
+
 </div>
-<ul class="smo-navlist">
-<li><a href="./">Clilstore</a></li>
-</ul>
-
+$mdNavbar
 </body>
 </html>
-EOD_BONN;
+END_HTMLDOC;
+
+  echo $HTMLDOC;
 ?>

@@ -693,7 +693,8 @@ END_tableHtmlBarr;
         $orderClause = $csSess->orderClause();
         $query = 'SELECT clilstore.id,owner,fullname,sl,endonym,level,words,medtype,medlen,buttons,files,title,text,summary,created,changed,licence,test,views,clicks'
                 .' FROM clilstore,users,lang'
-                ." WHERE $whereClause ORDER BY $orderClause";
+                ." WHERE $whereClause ORDER BY $orderClause"
+                .' LIMIT 0,500';
         $stmt = $DbMultidict->prepare($query);
         $i = 1;
         if (!empty($whereClauses['id']))         { $stmt->bindParam($i++,$idFil);       }

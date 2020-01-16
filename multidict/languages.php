@@ -9,6 +9,8 @@
   $T_AltSl_info = $T->h('AltSl_info');
   $T_AltTl_info = $T->h('AltTl_info');
   $T_Languages_handled_by_Multidict = $T->h('Languages_handled_by_Multidict');
+  $T_alternative_source_languages     = $T->h('alternative_source_languages');
+  $T_alternative_target_languages     = $T->h('alternative_target_languages');
 
   $T_AltSl_info = strtr ( $T_AltSl_info, [ 'AltSl' => '<b>AltSl</b>' ] );
   $T_AltTl_info = strtr ( $T_AltTl_info, [ 'AltTl' => '<b>AltTl</b>' ] );
@@ -76,8 +78,8 @@ EOD1;
 <td><a href="/multidict/?sl=$id">$id</a></td>
 <td>$endonym</td>
 <td>$name_en</td>
-<td><input type=text title="alternate source languages" value="$altSl" onchange=updateAlt('$id','sl',this)></td>
-<td><input type=text title="alternate target languages" value="$altTl" onchange=updateAlt('$id','tl',this)></td>
+<td><input type=text title="$T_alternative_source_languages" value="$altSl" onchange=updateAlt('$id','sl',this)></td>
+<td><input type=text title="$T_alternative_target_languages" value="$altTl" onchange=updateAlt('$id','tl',this)></td>
 <td><span id="$id-changed" class=change>✔<span></td>
 <td>$parentageHtml</td>
 </tr>
