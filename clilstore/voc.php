@@ -25,6 +25,13 @@
   $T_Clicked_in_unit           = $T->h('Clicked_in_unit');
   $T_Delete_instantaneously    = $T->h('Delete_instantaneously');
   $T_Lookup_with_Multidict     = $T->h('Lorg le Multidict');
+  $T_No_words_in_voc_list      = $T->h('No_words_in_voc_list');
+  $T_No_words_in_voc_list_for_ = $T->h('No_words_in_voc_list_for_');
+  $T_No_words_in_voc_list_info = $T->h('No_words_in_voc_list_info');
+  $T_Empty_voc_list_question   = $T->h('Empty_voc_list_question');
+  $T_Empty_voc_list_confirm    = $T->j('Empty_voc_list_confirm');
+
+  $T_No_words_in_voc_list_info = strtr ( $T_No_words_in_voc_list_info, [ '{'=>'<i>', '}'=>'</i>' ] );
 
   $mdNavbar = SM_mdNavbar::mdNavbar($T->domhan);
 
@@ -37,43 +44,57 @@
     if (empty($user)) { throw new SM_MDexception(sprintf($T_Page_needs_parameter,'user')); }
 
     $DbMultidict = SM_DbMultidictPDO::singleton('rw');
-    $vocHtml = $langButHtml = $slLorg = '';
+    $vocHtml = $langButHtml = '';
 
     $stmt = $DbMultidict->prepare('SELECT sl, COUNT(1) AS cnt, endonym FROM csVoc,lang WHERE user=:user AND csVoc.sl=lang.id GROUP BY sl ORDER BY cnt DESC, sl');
     $stmt->execute([':user'=>$user]);
-    $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    if (!empty($_GET['sl'])) { $slLorg = $_GET['sl']; }
-    else if (!empty($rows))  { $slLorg = $rows[0]['sl']; }
-    if (count($rows)>1) {
-        foreach ($rows as $row) {
-            extract($row);
-            if ($sl==$slLorg) { $class = 'langbutton selected'; }
-             else             { $class = 'langbutton live';     }
-            $langButArray[] = "<a href='voc.php?user=$userSC&amp;sl=$sl' title='$endonym ($cnt $T_words)' class='$class'>$sl</a>";
+    $vocLangs = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    if (empty($vocLangs)) {
+        $langButHtml = '';
+        $vocTableHtml = <<<END_noVocTable1
+<p>$T_No_words_in_voc_list</p>
+<p>$T_No_words_in_voc_list_info</p>
+END_noVocTable1;
+    } else {
+        $slLorg  = $_GET['sl'] ?? $vocLangs[0]['sl'];
+        foreach ($vocLangs as $vocLang) {
+            extract($vocLang);
+            if ($sl==$slLorg) {
+                $slLorgEndonym = $endonym;
+                $class = 'langbutton selected';
+            } else {
+               $class = 'langbutton live';
+            }
+            $langButArray[$sl] = "<a href='voc.php?user=$userSC&amp;sl=$sl' title='$endonym ($cnt $T_words)' class='$class'>$sl</a>";
         }
         $langButHtml = implode(' ',$langButArray);
         $langButHtml = "<p>$langButHtml</p>";
-    }
-
-    $stmt = $DbMultidict->prepare('SELECT vocid,word,calls,head,meaning FROM csVoc WHERE user=:user AND sl=:sl');
-    $stmt->execute([':user'=>$user,':sl'=>$slLorg]);
-    $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    foreach ($rows as $row) {
-        extract($row);
-        $queryVU = 'SELECT unit, calls AS callsVU, title FROM csVocUnit, clilstore WHERE vocid=:vocid AND clilstore.id=unit ORDER BY unit';
-        $stmtVU = $DbMultidict->prepare($queryVU);
-        $stmtVU->execute([':vocid'=>$vocid]);
-        $rowsVU = $stmtVU->fetchAll(PDO::FETCH_ASSOC);
-        $unitHtmlArr = [];
-        foreach ($rowsVU as $rowVU) {
-            extract($rowVU);
-            $title = addslashes($title);
-            $callsVUhtml = ( $callsVU==1 ? '' : "<span class=callcount>×$callsVU</span>" );
-            $unitHtmlArr[] = "<a href='/cs/$unit' title='$title'>$unit</a>$callsVUhtml";
-        }
-        $unitsHtml = implode(' ',$unitHtmlArr);
-        $meaningSC  = htmlspecialchars($meaning);
-        $vocHtml .= <<<END_vocHtml
+        if (empty($langButArray[$slLorg])) {
+            $vocTableHtml = <<<END_noVocTable2
+<p>$T_No_words_in_voc_list_for_ &lsquo;$slLorg&rsquo;.</p>
+<p>$T_No_words_in_voc_list_info</p>
+END_noVocTable2;
+        } else {
+            $stmt = $DbMultidict->prepare('SELECT vocid,word,calls,head,meaning FROM csVoc WHERE user=:user AND sl=:sl');
+            $stmt->execute([':user'=>$user,':sl'=>$slLorg]);
+            $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            foreach ($rows as $row) {
+                extract($row);
+                $queryVU = 'SELECT unit, calls AS callsVU, title FROM csVocUnit, clilstore WHERE vocid=:vocid AND clilstore.id=unit ORDER BY unit';
+                $stmtVU = $DbMultidict->prepare($queryVU);
+                $stmtVU->execute([':vocid'=>$vocid]);
+                $rowsVU = $stmtVU->fetchAll(PDO::FETCH_ASSOC);
+                $unitHtmlArr = [];
+                foreach ($rowsVU as $rowVU) {
+                    extract($rowVU);
+                    $title = addslashes($title);
+                    $callsVUhtml = ( $callsVU==1 ? '' : "<span class=callcount>×$callsVU</span>" );
+                    $unitHtmlArr[] = "<a href='/cs/$unit' title='$title'>$unit</a>$callsVUhtml";
+                }
+                $unitsHtml = implode(' ',$unitHtmlArr);
+                $meaningSC  = htmlspecialchars($meaning);
+                $vocHtml .= <<<END_vocHtml
 <tr id=row$vocid>
 <td><img src='/icons-smo/curAs.png' alt='Delete' title='$T_Delete_instantaneously' onclick="deleteVocWord('$vocid')"></td>
 <td title='$T_Lookup_with_Multidict'><a href='/multidict/?sl=$slLorg&amp;word=$word' target=vocmdtab><img src=/favicons/multidict.png alt=''> $word</a></td>
@@ -81,36 +102,24 @@
 <td>$unitsHtml</td>
 </tr>
 END_vocHtml;
-    }
-
-    function optionsHtml($valueOptArr,$selectedValue) {
-     //Creates the options html for a select in a form, based on value=>text array and the value to be selected
-        $htmlArr = array();
-        foreach ($valueOptArr as $value=>$option) {
-            $selected = ( $value==$selectedValue ? ' selected' : '' );
-            $htmlArr[] = "<option value='$value'$selected>$option</option>\n";
-        }
-        return implode("\r",$htmlArr);
-    }
-
-    if (!empty($vocHtml)) { $vocTableHtml = <<<EOD_vocTable
+            }
+            $T_Empty_voc_list_question = strtr ( $T_Empty_voc_list_question,
+                                                [ '{'    => "<a id=emptyBut onclick=\"emptyVocList('$user','$slLorg')\">",
+                                                  '}'    => '</a>',
+                                                  '[sl]' => "$slLorgEndonym"
+                                                ] );
+            $vocTableHtml = <<<END_vocTable
+<p>$T_Language: $slLorgEndonym</p>
 <table id=vocab>
 <tr id=vocabhead><td></td><td>$T_Word</td><td>$T_Meaning</td><td>$T_Clicked_in_unit</td></tr>
 $vocHtml
 </table>
-
-<p style="margin:3.5em 0 0 0;font-size:85%">If you really want to, you can <a id=emptyBut onclick="emptyVocList('$user','$slLorg')">empty</a> the list to delete every single word in this vocabulary list.</p>
-EOD_vocTable;
-    } else { $vocTableHtml = <<<EOD_noVocTable
-<p>There are no words in your vocabulary list</p>
-<p>You can add words to your vocabulary list by clicking on them in a Clilstore unit (with <i>Vocabulary record</i> switched on).</p>
-EOD_noVocTable;
+<p style="margin:3.5em 0 0 0;font-size:85%">$T_Empty_voc_list_question</p>
+END_vocTable;
+        }
     }
-
-    $slLorgShow = ( $slLorg=='' ? 'any' : $slLorg );
     $HTML = <<<EOD
 <h1 style="font-size:140%;margin:0;padding-top:0.5em">$T_Vocabulary_list_for_user_ <span style="color:brown">$user</span></h1>
-<p style="font-size:85%;color:grey;margin:0 0 1em 0">$T_Language: $slLorgShow</p>
 
 $langButHtml
 
@@ -177,7 +186,8 @@ EOD;
             xhttp.send();
         }
         function emptyVocList(user,sl) {
-            var r = confirm("Do you really want to delete every word from this vocabulary list?");
+            var confirmMessage = "$T_Empty_voc_list_confirm".replace('[sl]','‘'+sl+'’');
+            var r = confirm(confirmMessage);
             if (r==true) {
                 var xhttp = new XMLHttpRequest();
                 xhttp.onload = function() {
