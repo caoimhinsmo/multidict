@@ -16,6 +16,8 @@
   $EUlogo = '/EUlogos/' . SM_T::hl0() . '.jpg';
   if (!file_exists($_SERVER['DOCUMENT_ROOT'] . $EUlogo)) { $EUlogo = '/EUlogos/en.jpg'; }
 
+  $hlSelect = SM_mdNavbar::hlSelect();
+
 echo <<< END_html
 <!doctype html>
 <html>
@@ -61,6 +63,7 @@ echo <<< END_html
 </head>
 
 <body>
+<div style="float:left">$hlSelect</div>
 
 <div id="master">
 <!--<span style="color:red;background-color:yellow">News: Service disruption likely on Friday evening, 4 March, 17:00-21:00 UT</span>-->
