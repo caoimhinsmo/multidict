@@ -3,9 +3,11 @@ class SM_mdNavbar {
 
   public static function hlArr() {
       $hlArr = array(
+          'br'=>'Brezhoneg',
           'da'=>'Dansk',
           'en'=>'English',
           'es'=>'Español',
+          'ga'=>'Gaeilge',
           'gd'=>'Gàidhlig',
           'it'=>'Italiano',
           'lt'=>'Lietuvių',
@@ -13,11 +15,9 @@ class SM_mdNavbar {
           'bg'=>'Български',
 //            '----1'=>'',  //Partial translations
             '----2'=>'',  //Very partial translations
-          'br'=>'Brezhoneg',
           'cy'=>'Cymraeg',
           'de'=>'Deutsch',
           'fr'=>'Français',
-          'ga'=>'Gaeilge',
           'is'=>'Íslenska');
       return $hlArr;
   }

@@ -9,14 +9,16 @@
 
   try {
     $T = new SM_T('wordlink/startAdvice');
-    $T_startAdvice1           = $T->_('startAdvice1');
-    $T_startAdvice1cs         = $T->_('startAdvice1cs');
-    $T_startAdvice2           = $T->_('startAdvice2');
-    $T_startAdvice3           = $T->_('startAdvice3');
-    $T_startAdviceNoteWords   = $T->_('startAdviceNoteWords');
-    $T_startAdviceNoteForms   = $T->_('startAdviceNoteForms');
+    $T_startAdvice1           = $T->h('startAdvice1');
+    $T_startAdvice1cs         = $T->h('startAdvice1cs');
+    $T_startAdvice2           = $T->h('startAdvice2');
+    $T_startAdvice3           = $T->h('startAdvice3');
+    $T_startAdviceNoteWords   = $T->h('startAdviceNoteWords');
+    $T_startAdviceNoteForms   = $T->h('startAdviceNoteForms');
 
-   if ($cs==1) { $HTMLinner = <<<END_HTMLinner_cs
+    $T_startAdvice1cs = strtr ( $T_startAdvice1cs, [ '{*}' => '<sup>*</sup>' ] );
+
+    if ($cs==1) { $HTMLinner = <<<END_HTMLinner_cs
 <p>$T_startAdvice1cs</p>
 <p>$T_startAdvice2</p>
 <p>$T_startAdvice3</p>

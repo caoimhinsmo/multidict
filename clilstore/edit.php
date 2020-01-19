@@ -66,7 +66,7 @@
   $T_Language_notes      = $T->h('Language_notes');
   $T_1000_character_max  = $T->h('1000_character_max');
   $T_Tick_if_test_unit   = $T->h('Tick_if_test_unit');
-  $T_Owner               = $T->h('Owner');
+  $T_Owner               = $T->h('csCol_owner');
   $T_I_am_the_author     = $T->h('I_am_the_author');
   $T_I_agree_to_copyleft = $T->h('I_agree_to_copyleft');
   $T_I_grant_use         = $T->h('I_grant_use');
