@@ -7,6 +7,7 @@ class SM_mdNavbar {
           'da'=>'Dansk',
           'en'=>'English',
           'es'=>'Español',
+          'fr'=>'Français',
           'ga'=>'Gaeilge',
           'gd'=>'Gàidhlig',
           'it'=>'Italiano',
@@ -17,7 +18,6 @@ class SM_mdNavbar {
             '----2'=>'',  //Very partial translations
           'cy'=>'Cymraeg',
           'de'=>'Deutsch',
-          'fr'=>'Français',
           'is'=>'Íslenska');
       return $hlArr;
   }
