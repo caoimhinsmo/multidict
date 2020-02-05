@@ -773,7 +773,9 @@ END_tableHtmlBarr;
             $changedDate     = date_format($changedObj, 'Y-m-d');
             $changedDateTime = date_format($changedObj, 'Y-m-d H:i:s');
             if ($changed==$created) { $changedDate = $changedDateTime = ''; }
-            $ownerHtml = "<a href=\"userinfo.php?user=$owner\" title=\"$fullname\">$owner</a>";
+            $ownerHtml    = htmlspecialchars($owner);
+            $fullnameHtml = htmlspecialchars($fullname);
+            $ownerHtml = "<a href='userinfo.php?user=$ownerHtml' title='$fullnameHtml'>$ownerHtml</a>";
             $editHtml = $deleteHtml = '';
             $cefrHtml = SM_csSess::cefrHtml($level);
             $testHtml  = ( empty($test) ? '' : '<img src="/icons-smo/undConst.gif" alt="" style="padding-left:16px"> ' );
@@ -794,7 +796,8 @@ END_tableHtmlBarr;
                 $editHtml = "<a href=\"edit.php?id=$id\">"
                   . '<img src="/icons-smo/peann.png" alt="Edit" title ="Edit this unit" class="favicon"/></a>';
             }
-            $titleCool = strtr($title,[ "[COOL]" => "<img src='Cool.png' alt='[COOL]' style='padding-right:0.3em'>" ]);
+            $titleHtml = htmlspecialchars($title);
+            $titleCool = strtr($titleHtml,[ "[COOL]" => "<img src='Cool.png' alt='[COOL]' style='padding-right:0.3em'>" ]);
             $tableHtml .= '<tr class="data">'
                         . "<td class='id'><a href='/cs/$id' title='$views views'>$id</a></td>"
                         . "<td class='views'>$views</td>"

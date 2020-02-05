@@ -74,12 +74,18 @@
                         ."</span></li>"
                         ."<li class=right><a class=$vocClass href='voc.php?user=$user&amp;sl=$sl' nowordlink target=voctab title='Open your vocabulary list in a separate tab'>V</a>";
     }
-    $sharebutton = "<iframe src='https://www.facebook.com/plugins/share_button.php?href=$serverhome/cs/$id&layout=button&size=small&mobile_iframe=true&width=60&height=20&appId [www.facebook.com]' width='60' height='20' style='border:none;overflow:hidden' scrolling='no' frameborder='0' allowTranspare
-ncy='true'></iframe>";
+    $sharebuttonFB = "<iframe src='https://www.facebook.com/plugins/share_button.php?href=$serverhome/cs/$id&layout=button&size=small&mobile_iframe=true&width=60&height=20&appId [www.facebook.com]' width='60' height='20' style='border:none;overflow:hidden' scrolling='no' frameborder='0' allowTransparency='true'></iframe>";
+    $shareTitle = 'Clilstore unit: ' . urlencode($title);
+    $shareURL = urlencode("https://multidict.net/cs/$id");
+    $sharebuttonTw = "<a id=sharebuttonTw class='nowordlink' target=_blank href='https://twitter.com/intent/tweet?text=$shareTitle&amp;url=$shareURL' title='Share via Twitter'><img src='/favicons/twitter.png'></a>";
+    $sharebuttonWA = "<a id=sharebuttonWA class='nowordlink' target=_blank href='whatsapp://send?text=$shareTitle $shareURL' title='Share via Whatsapp'><img src='/favicons/whatsapp.png' alt='WA'></a>";
+//    if (stripos('Mobi',$_SERVER['HTTP_USER_AGENT'])===false) { $sharebuttonWA = ''; }
     $navbar1 = <<<EOD_NB1
 <ul class="linkbuts">
 <li><a href="./" class="nowordlink" target="_top" title="Clilstore index page">Clilstore</a></li>
-<li>$sharebutton
+<li>$sharebuttonFB
+<li>$sharebuttonTw
+<li>$sharebuttonWA
 <li class="right"><a href="unitinfo.php?id=$id" class="nowordlink" target="_top"
     title="Summary and other details on this unit">Unit info</a></li>
 $buttonedit
@@ -127,6 +133,10 @@ EOD_NB2;
         a.csinfo:link    { color:#00f; }
         a.csinfo:visited { color:#909; }
         a.csinfo:hover   { color:#ff0; background-color:blue; text-decoration:underline; }
+        a#sharebuttonTw       { background-color:white; }
+        a#sharebuttonTw:hover { background-color:#0ff; }
+        a#sharebuttonWA       { background-color:white; }
+        a#sharebuttonWA:hover { background-color:#0ff; }
         span.vocOff img:nth-child(1) { display:inline; }
         span.vocOff img:nth-child(2) { display:none; }
         span.vocOn  img:nth-child(1) { display:none; }
