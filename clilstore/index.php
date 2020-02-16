@@ -116,6 +116,10 @@
     $T_hours                  = $T->h('hours');
     $T_minutes                = $T->h('minutes');
     $T_seconds                = $T->h('seconds');
+    $T_Delete_this_unit       = $T->h('Delete_this_unit');
+    $T_Edit_this_unit         = $T->h('Edit_this_unit');
+    $T_Show_all               = $T->h('Seall_na_h_uile');
+    $T_only_first_n_are_shown = $T->h('only_first_n_are_shown');
 
     $T_If_message_persists = sprintf($T_If_message_persists,$T_Got_it);
     $T_privacy_policy      = "<a href='privacyPolicy.php'>$T_privacy_policy</a>";
@@ -124,6 +128,8 @@
     $mdNavbar = SM_mdNavbar::mdNavbar($T->domhan);
 
     $tableHtml = $cookieMessage = '';
+    $limitUnits = $limitInfo = FALSE;
+
     if (!isset($_COOKIE['csSessionId'])) $cookieMessage = <<<EOD_cookieMessage
 <div id=cookieMessage>
 <p>$T_First_visit_to_CS</p>
@@ -691,7 +697,7 @@ $slOptionsHtml
 END_tableHtmlBarr;
 
         $orderClause = $csSess->orderClause();
-        $query = 'SELECT clilstore.id,owner,fullname,sl,endonym,level,words,medtype,medlen,buttons,files,title,text,summary,created,changed,licence,test,views,clicks'
+        $query = 'SELECT clilstore.id,owner,fullname,sl,endonym,level,words,medtype,medlen,buttons,files,title,summary,created,changed,licence,test,views,clicks'
                 .' FROM clilstore,users,lang'
                 ." WHERE $whereClause ORDER BY $orderClause"
                 .' LIMIT 0,4000';
@@ -730,28 +736,15 @@ END_tableHtmlBarr;
         $tot['views'] = $tot['clicks'] = $tot['created'] = $tot['created2'] = $tot['changed'] = $tot['level'] = $tot['words'] = $tot['medlen'] = $tot['buttons'] = $tot['files'] = 0;
         $totalsRow = $avgRow = '';
        //
-        while ($page = $stmt->fetch(PDO::FETCH_OBJ)) {
-            $nunits++;
-            $id      = $page->id;
-            $owner   = $page->owner;
-            $fullname= $page->fullname;
-            $sl      = $page->sl;
-            $endonym = $page->endonym;
-            $level   = $page->level;
-            $words   = $page->words;
-            $medtype = $page->medtype;
-            $medlen  = $page->medlen;
-            $buttons = $page->buttons;
-            $files   = $page->files;
-            $title   = $page->title;
-            $text    = $page->text;
-            $summary = htmlspecialchars($page->summary);
-            $created = $page->created;
-            $changed = $page->changed;
-            $licence = $page->licence;
-            $test    = $page->test;
-            $views   = $page->views;
-            $clicks  = $page->clicks;
+        $units = $stmt->fetchAll(PDO::FETCH_ASSOC);~~
+        $nunits = count($units);
+        $maxunits = 500;  //The limit unless showAll is set
+        $showAll = $_REQUEST['showAll'] ?? '';
+        if ($nunits > $maxunits) {
+            if ($showAll) { $limitInfo = TRUE; } else { $limitUnits = TRUE; }
+        }
+        foreach ($units as $iunit=>$unit) {
+            extract($unit);
            //Increment statistics
             $tot['views']   += $views;
             $tot['clicks']  += $clicks;
@@ -765,7 +758,11 @@ END_tableHtmlBarr;
             $tot['files']   += $files;
             $cnt['level']   += ($level>-1);
             $cnt['medlen']  += ($medlen>0);
-           //
+            if ($limitUnits && $iunit>=$maxunits) {
+                if ($iunit==$maxunits) { $tableHtml .= "<tr><td>[...]</td></tr>\n"; }
+                continue;
+            }
+            $summary = htmlspecialchars($summary);
             $createdObj = new DateTime("@$created");
             $createdDate     = date_format($createdObj, 'Y-m-d');
             $createdDateTime = date_format($createdObj, 'Y-m-d H:i:s');
@@ -792,9 +789,9 @@ END_tableHtmlBarr;
             $filesHtml   = ( empty($files)   ? '' : $files   );
             if ($user==$owner || $user=='admin')  {
                 $deleteHtml = "<a href=\"delete.php?id=$id\">"
-                  . '<img src="/icons-smo/curAs.png" alt="Delete" title ="Delete this unit" class="favicon"/></a>';
+                  . "<img src='/icons-smo/curAs.png' alt='Delete' title ='$T_Delete_this_unit' class='favicon'></a>";
                 $editHtml = "<a href=\"edit.php?id=$id\">"
-                  . '<img src="/icons-smo/peann.png" alt="Edit" title ="Edit this unit" class="favicon"/></a>';
+                  . "<img src='/icons-smo/peann.png' alt='Edit' title ='$T_Edit_this_unit' class='favicon'></a>";
             }
             $titleHtml = htmlspecialchars($title);
             $titleCool = strtr($titleHtml,[ "[COOL]" => "<img src='Cool.png' alt='[COOL]' style='padding-right:0.3em'>" ]);
@@ -830,7 +827,10 @@ END_tableHtmlBarr;
         } elseif ($nunits<2) {
             $unitsFoundMessage = '';
         } else { //Calculate and display statistics
-             $unitsFoundMessage  = "<p style='margin-top:0;color:grey;font-size:70%'>$nunits $T_units_found</p>";
+             $unitsFoundMessage  = "<span style='color:grey'>$nunits $T_units_found</span>";
+             if ($limitUnits) { $unitsFoundMessage .= ", <span style='color:red'>" . sprintf($T_only_first_n_are_shown,$maxunits) . "</span><br>"
+                                                    . "<button name=showAll value=showAll type=submit title='Show information on all units (slightly condensed)'>$T_Show_all</button></p>"; }
+             $unitsFoundMessage = "<p style='margin-top:0;font-size:70%'>$unitsFoundMessage</p>";
              if ($mode>1) {
                  $avgLevel  = ( $cnt['level']==0  ? '' : sprintf('%.1f',$tot['level']/$cnt['level']) );
                  $avgLevelHtml = SM_csSess::cefrHtml($avgLevel);
@@ -889,7 +889,7 @@ END_tableHtmlBarr;
                             . '</tr>';
              }
         }
-
+ 
         $tableHtml .= <<<END_tableHtmlBun
 $avgRow
 $totalsRow
@@ -968,8 +968,8 @@ END_tableHtmlBun;
         img.favicon { width:16px; height:16px; border:0; margin:2px; }
         a.button { display:block; float:left; margin:1px 7px; background-color:#55a8eb; color:white; font-weight:bold; padding:3px 10px; border:0; border-radius:8px; }
         a.button:hover { background-color:blue; }
-        a.mybutton { background-color:#55a8eb; color:white; padding:1px 8px; border-radius:8px; white-space:nowrap; }
-        a.mybutton:hover { background-color:blue; }
+        a.mybutton, button { background-color:#55a8eb; color:white; padding:1px 8px; border-radius:8px; white-space:nowrap; }
+        a.mybutton:hover, button:hover { background-color:blue; }
         a.levelbutton { margin:1px 7px; background-color:#55a8eb; color:white; font-weight:bold; padding:2px 8px; border:1px solid white; border-radius:8px; }
         a.levelbutton.selected { border-color:#55a8eb; background-color:yellow; color:#55a8eb; }
         a.levelbutton.grey { background-color:#ccc; }
