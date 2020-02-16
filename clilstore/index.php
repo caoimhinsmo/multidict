@@ -401,9 +401,8 @@ END_USER2;
     $filesDisplay   = $csSess->display('files');
     $titleDisplay   = $csSess->display('title');
 
-    if ($mode==3)      { $editDisplay   = 'table-cell'; }
-     elseif ($mode==2) { $editDisplay   = 'table-cell'; }
-     else              { $editDisplay   = 'none';       }
+    if ($mode>1) { $editDisplay   = 'table-cell'; }
+     else        { $editDisplay   = 'none';       }
 
     $f['slFil']    = SM_WlSession::langName2Code($f['slFil']);  //Accept language names as well as codes
     $f['levelMin'] = SM_csSess::levelVis2Num($f['levelMin'],'min');
@@ -511,30 +510,30 @@ END_USER2;
     $titleVal      =
     $textVal       = '';
 
-    if (!empty($idFil))      { $idVal         = "value=\"$idFil\"";      }
-    if (!empty($viewsMin))   { $viewsMinVal   = "value=\"$viewsMin\"";   }
-    if (!empty($viewsMax))   { $viewsMaxVal   = "value=\"$viewsMax\"";   }
-    if (!empty($clicksMin))  { $clicksMinVal  = "value=\"$clicksMin\"";  }
-    if (!empty($clicksMax))  { $clicksMaxVal  = "value=\"$clicksMax\"";  }
-    if (!empty($createdMin)) { $createdMinVal = "value=\"$createdMin\""; }
-    if (!empty($createdMax)) { $createdMaxVal = "value=\"$createdMax\""; }
-    if (!empty($changedMin)) { $changedMinVal = "value=\"$changedMin\""; }
-    if (!empty($changedMax)) { $changedMaxVal = "value=\"$changedMax\""; }
-    if (!empty($licenceVis)) { $licenceVal    = "value=\"$licenceVis\""; }
-    if (!empty($ownerVis))   { $ownerVal      = "value=\"$ownerVis\"";   }
-    if (!($levelMin===''))   { $levelMinVal   = "value=\"$levelMinVis\"";}
-    if (!($levelMax===''))   { $levelMaxVal   = "value=\"$levelMaxVis\"";}
-    if (!empty($wordsMin))   { $wordsMinVal   = "value=\"$wordsMin\"";   }
-    if (!empty($wordsMax))   { $wordsMaxVal   = "value=\"$wordsMax\"";   }
-    if ($medtypeFil<>'')     { $medtypeVal    = "value=\"$medtypeFil\""; }
-    if (!empty($medlenMin))  { $medlenMinVal  = "value=\"$medlenMin\"";  }
-    if (!empty($medlenMax))  { $medlenMaxVal  = "value=\"$medlenMax\"";  }
-    if (!empty($buttonsMin)) { $buttonsMinVal = "value=\"$buttonsMin\""; }
-    if (!empty($buttonsMax)) { $buttonsMaxVal = "value=\"$buttonsMax\""; }
-    if (!empty($filesMin))   { $filesMinVal   = "value=\"$filesMin\"";   }
-    if (!empty($filesMax))   { $filesMaxVal   = "value=\"$filesMax\"";   }
-    if (!empty($titleVis))   { $titleVal      = "value=\"$titleVis\"";   }
-    if (!empty($textVis))    { $textVal       = "value=\"$textVis\"";    }
+    if (!empty($idFil))      { $idVal         = "value='$idFil'";      }
+    if (!empty($viewsMin))   { $viewsMinVal   = "value='$viewsMin'";   }
+    if (!empty($viewsMax))   { $viewsMaxVal   = "value='$viewsMax'";   }
+    if (!empty($clicksMin))  { $clicksMinVal  = "value='$clicksMin'";  }
+    if (!empty($clicksMax))  { $clicksMaxVal  = "value='$clicksMax'";  }
+    if (!empty($createdMin)) { $createdMinVal = "value='$createdMin'"; }
+    if (!empty($createdMax)) { $createdMaxVal = "value='$createdMax'"; }
+    if (!empty($changedMin)) { $changedMinVal = "value='$changedMin'"; }
+    if (!empty($changedMax)) { $changedMaxVal = "value='$changedMax'"; }
+    if (!empty($licenceVis)) { $licenceVal    = "value='$licenceVis'"; }
+    if (!empty($ownerVis))   { $ownerVal      = "value='$ownerVis'";   }
+    if (!($levelMin===''))   { $levelMinVal   = "value='$levelMinVis'";}
+    if (!($levelMax===''))   { $levelMaxVal   = "value='$levelMaxVis'";}
+    if (!empty($wordsMin))   { $wordsMinVal   = "value='$wordsMin'";   }
+    if (!empty($wordsMax))   { $wordsMaxVal   = "value='$wordsMax'";   }
+    if ($medtypeFil<>'')     { $medtypeVal    = "value='$medtypeFil'"; }
+    if (!empty($medlenMin))  { $medlenMinVal  = "value='$medlenMin'";  }
+    if (!empty($medlenMax))  { $medlenMaxVal  = "value='$medlenMax'";  }
+    if (!empty($buttonsMin)) { $buttonsMinVal = "value='$buttonsMin'"; }
+    if (!empty($buttonsMax)) { $buttonsMaxVal = "value='$buttonsMax'"; }
+    if (!empty($filesMin))   { $filesMinVal   = "value='$filesMin'";   }
+    if (!empty($filesMax))   { $filesMaxVal   = "value='$filesMax'";   }
+    if (!empty($titleVis))   { $titleVal      = "value='$titleVis'";   }
+    if (!empty($textVis))    { $textVal       = "value='$textVis'";    }
 
 
     $query = 'SELECT DISTINCT endonym,sl FROM clilstore,lang WHERE clilstore.sl=lang.id ORDER BY endonym';
@@ -550,7 +549,7 @@ END_USER2;
         $selected = ( $sl==$slFil ? ' selected' : '');;
 //      $codeInfo = ( $wideChecked ? " ($sl)" : '' );
         $codeInfo = " ($sl)";  //Decided to always include the language code
-        $slOptions[] = "<option value=\"$sl\"$selected>$endonym$codeInfo</option>";
+        $slOptions[] = "<option value='$sl'$selected>$endonym$codeInfo</option>";
     }
     $slOptionsHtml = implode("\n",$slOptions);
     $slSelectColor = ( $slFil=='' ? 'white' : 'yellow' );
@@ -766,8 +765,8 @@ END_tableHtmlBarr;
                           ? ''
                           : SM_csSess::secs2minsecs($medlen)
                           );
-            if      ($medtype==1) { $medtypeHtml = "<img src=\"audio.png\" alt=\"snd\" title=\"$medlenHtml\">"; }
-             elseif ($medtype==2) { $medtypeHtml = "<img src=\"video.png\" alt=\"vid\" title=\"$medlenHtml\">"; }
+            if      ($medtype==1) { $medtypeHtml = "<img src='audio.png' alt='snd' title='$medlenHtml'>"; }
+             elseif ($medtype==2) { $medtypeHtml = "<img src='video.png' alt='vid' title='$medlenHtml'>"; }
              else                 { $medtypeHtml = ''; }
             $buttonsHtml = ( empty($buttons) ? '' : $buttons );
             $filesHtml   = ( empty($files)   ? '' : $files   );

@@ -273,7 +273,7 @@ setcookie('csSession','',1,'/clilstore/','multidict.net');
       if (substr($hrefSelf,-9)=='index.php') { $hrefSelf = substr($hrefSelf,0,strlen($hrefSelf)-9); }
       foreach ($symbol as $fd=>$sym) {
           if ($sym=='.') {
-              $symbolHtml[$fd] = "<td class=\"$fd\">.</td>\r";
+              $symbolHtml[$fd] = "<td class='$fd'>.</td>\r";
           } elseif ($fd<>'title') {
               $pad = ( $fd=='id' ? '' : '&nbsp;' );
               $deleteHtml = "<a href='$hrefSelf?deleteCol=$fd' style='color:red;font-size:80%' title='$T_Hide_the_column'>×</a>";
@@ -480,10 +480,11 @@ END_addColHtml;
      // Returns the HTML for displaying CEFR level choice buttons
 
       $T = new SM_T('clilstore/levelButHtml');
-      $T_Level    = $T->_('csCol_level');
-      $T_Basic    = $T->_('Basic');
-      $T_Advanced = $T->_('Advanced');
-      $T_Any      = $T->_('Any');
+      $T_Level    = $T->h('csCol_level');
+      $T_Basic    = $T->h('Basic');
+      $T_Advanced = $T->h('Advanced');
+      $T_Any      = $T->h('Any');
+      $T_units    = $T->h('units');
 
       $labels = array(-1=>"$T_Any",0=>'A1',1=>'A2',2=>'B1',3=>'B2',4=>'C1',5=>'C2');
       $counts = array(-1=>0, 0=>0, 1=>0, 2=>0, 3=>0, 4=>0, 5=>0 );
@@ -517,7 +518,7 @@ END_addColHtml;
               $class .= ' selected';
               $href = '';
           }
-          $button[$cefr] = "<a href=\"$href\" class=\"$class\" title=\"$count units\">$label</a>";
+          $button[$cefr] = "<a href='$href' class='$class' title='$count $T_units'>$label</a>";
       }
       $buttonAny = $button[-1];
       $buttonA1  = $button[0];
@@ -593,7 +594,7 @@ ENDHTML;
        elseif ($level<55)  { $cefr = 'C2<span class="fann">-</span>'; }
        elseif ($level==55) { $cefr = 'C2<span class="fann">&nbsp;</span>'; }
        elseif ($level<60)  { $cefr = 'C2<span class="fann">+</span>'; }
-      $cefrHtml  = ( empty($cefr) ? '' : "<span title=\"$level\">$cefr</span>" );
+      $cefrHtml  = ( empty($cefr) ? '' : "<span title='$level'>$cefr</span>" );
       return $cefrHtml;
   }
 
