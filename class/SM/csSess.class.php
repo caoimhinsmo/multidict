@@ -301,26 +301,25 @@ setcookie('csSession','',1,'/clilstore/','multidict.net');
                  . $symbolHtml['buttons']
                  . $symbolHtml['files']
                  . '<td class="edit"></td>'
-                 . '<td class="nowl"></td>'
                  . $symbolHtml['title'];
       return $symbolRow;
   }
 
 
-  public function display($fd) {
-  // Returns either 'table-cell' or 'none', depending on whether or not the field should be displayed in the current mode
-  // This ‘display’ mechanism should probably be replaced by something better
+  public function visibility($fd) {
+  // Returns either 'visible' or 'collapse', depending on whether or not the field should be displayed in the current mode
+  // This ‘visibility’ mechanism should perhaps be replaced by something better
       $csid = $this->csSession->csid;
       $mode = $this->csSession->mode;
       if ($this->csFilter[$fd]["m$mode"]==1) {
-          return 'table-cell';
+          return 'visible';
       } else {
-          return 'none';
+          return 'collapse';
       }
   }
 
 
-/*
+/* Looks like this can be deleted  --CPD 2020-02-16
   public function deleteCol($fd) {
      // Deletes a column from display in the current mode by by setting its display value to 0
       $csid = $this->csSession->csid;

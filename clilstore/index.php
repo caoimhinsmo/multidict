@@ -385,24 +385,24 @@ END_USER2;
         }
     }
 
-    $idDisplay      = $csSess->display('id');
-    $viewsDisplay   = $csSess->display('views');
-    $clicksDisplay  = $csSess->display('clicks');
-    $createdDisplay = $csSess->display('created');
-    $changedDisplay = $csSess->display('changed');
-    $licenceDisplay = $csSess->display('licence');
-    $ownerDisplay   = $csSess->display('owner');
-    $slDisplay      = $csSess->display('sl');
-    $levelDisplay   = $csSess->display('level');
-    $wordsDisplay   = $csSess->display('words');
-    $medtypeDisplay = $csSess->display('medtype');
-    $medlenDisplay  = $csSess->display('medlen');
-    $buttonsDisplay = $csSess->display('buttons');
-    $filesDisplay   = $csSess->display('files');
-    $titleDisplay   = $csSess->display('title');
+    $idVisibility      = $csSess->visibility('id');
+    $viewsVisibility   = $csSess->visibility('views');
+    $clicksVisibility  = $csSess->visibility('clicks');
+    $createdVisibility = $csSess->visibility('created');
+    $changedVisibility = $csSess->visibility('changed');
+    $licenceVisibility = $csSess->visibility('licence');
+    $ownerVisibility   = $csSess->visibility('owner');
+    $slVisibility      = $csSess->visibility('sl');
+    $levelVisibility   = $csSess->visibility('level');
+    $wordsVisibility   = $csSess->visibility('words');
+    $medtypeVisibility = $csSess->visibility('medtype');
+    $medlenVisibility  = $csSess->visibility('medlen');
+    $buttonsVisibility = $csSess->visibility('buttons');
+    $filesVisibility   = $csSess->visibility('files');
+    $titleVisibility   = $csSess->visibility('title');
 
-    if ($mode>1) { $editDisplay   = 'table-cell'; }
-     else        { $editDisplay   = 'none';       }
+    if ($mode>1) { $editVisibility   = 'visible';  }
+     else        { $editVisibility   = 'collapse'; }
 
     $f['slFil']    = SM_WlSession::langName2Code($f['slFil']);  //Accept language names as well as codes
     $f['levelMin'] = SM_csSess::levelVis2Num($f['levelMin'],'min');
@@ -613,6 +613,23 @@ $ownerListHtml
 
 $checkboxesHtml
 <table id="main">
+<col style='visibility:$idVisibility'>
+<col style='visibility:$viewsVisibility'>
+<col style='visibility:$clicksVisibility'>
+<col style='visibility:$createdVisibility'>
+<col style='visibility:$changedVisibility'>
+<col style='visibility:$licenceVisibility'>
+<col style='visibility:$ownerVisibility'>
+<col style='visibility:$slVisibility'>
+<col style='visibility:$levelVisibility'>
+<col style='visibility:$wordsVisibility'>
+<col style='visibility:$medtypeVisibility'>
+<col style='visibility:$medlenVisibility'>
+<col style='visibility:$buttonsVisibility'>
+<col style='visibility:$filesVisibility'>
+<col style='visibility:$editVisibility'>
+<col style='visibility:$titleVisibility'>
+<col>
 <tr class="row1">
  <td class="id"><a href="./?sortCol=id" title="$T_UnitID_title\n$T_Click_to_sort">$T_UnitID</a></td>
  <td class="views"><a href="./?sortCol=views" title="$T_Views_title\n$T_Click_to_sort">$T_Views</a></td>
@@ -897,39 +914,39 @@ END_tableHtmlBun;
         table#main tr.row4 td { background-color:#e2e2e2;padding-bottom:1px; border-bottom:1px solid #888; font-size:120%; }
         table#main tr.row4 td a:visited { color:#61abac; }
 
-        table#main         td.id      { text-align:right; display:$idDisplay; }
-        table#main         td.views   { text-align:right; display:$viewsDisplay; }
-        table#main         td.clicks  { text-align:right; display:$clicksDisplay; }
-        table#main         td.created { display:$createdDisplay; }
-        table#main         td.changed { display:$changedDisplay; }
-        table#main         td.licence { display:$licenceDisplay; }
-        table#main         td.owner   { display:$ownerDisplay; }
-        table#main         td.sl      { display:$slDisplay; }
-        table#main         td.level   { text-align:center; display:$levelDisplay }
-        table#main         td.words   { text-align:right; display:$wordsDisplay; }
-        table#main         td.medtype { text-align:center; display:$medtypeDisplay; }
-        table#main         td.medlen  { text-align:right; display:$medlenDisplay; }
-        table#main         td.buttons { text-align:right; display:$buttonsDisplay; }
-        table#main         td.files   { text-align:right; display:$filesDisplay; }
-        table#main         td.edit    { display:$editDisplay; }
-        table#main         td.title   { display:$titleDisplay; }
+        table#main         td.id      { text-align:right; }
+        table#main         td.views   { text-align:right; }
+        table#main         td.clicks  { text-align:right; }
+        table#main         td.created { }
+        table#main         td.changed { }
+        table#main         td.licence { }
+        table#main         td.owner   { }
+        table#main         td.sl      { }
+        table#main         td.level   { text-align:center; }
+        table#main         td.words   { text-align:right; }
+        table#main         td.medtype { text-align:center; }
+        table#main         td.medlen  { text-align:right; }
+        table#main         td.buttons { text-align:right; }
+        table#main         td.files   { text-align:right; }
+        table#main         td.edit    { }
+        table#main         td.title   { }
 
-        table#main tr.data td.id      { font-size:75%; padding-top:4px; text-align:right; display:$idDisplay }
-        table#main tr.data td.views   { font-size:75%; padding-top:4px; text-align:right; display:$viewsDisplay; }
-        table#main tr.data td.clicks  { font-size:75%; padding-top:4px; text-align:right; display:$clicksDisplay; }
-        table#main tr.data td.created { font-size:75%; padding-top:4px; color:grey; display:$createdDisplay; }
-        table#main tr.data td.changed { font-size:75%; padding-top:4px; color:grey; display:$changedDisplay; }
-        table#main tr.data td.licence { font-size:75%; padding-top:5px; display:licenceDisplay; }
-        table#main tr.data td.owner   { display:ownerDisplay; }
-        table#main tr.data td.sl      { display:slDisplay; }
-        table#main tr.data td.level   { text-align:center; display:levelDisplay; }
-        table#main tr.data td.words   { font-size:75%; padding-top:4px; text-align:right; display:$wordsDisplay; }
-        table#main tr.data td.medtype { display:$medtypeDisplay; }
-        table#main tr.data td.medlen  { font-size:75%; padding-top:4px; text-align:right; display:$medlenDisplay; }
-        table#main tr.data td.buttons { display:$buttonsDisplay; }
-        table#main tr.data td.files   { display:$filesDisplay; }
-        table#main tr.data td.edit    { display:$editDisplay; }
-        table#main tr.data td.title   { white-space:normal; padding-left:12px; text-indent:-10px; display:titleDisplay; }
+        table#main tr.data td.id      { font-size:75%; padding-top:4px; text-align:right; }
+        table#main tr.data td.views   { font-size:75%; padding-top:4px; text-align:right; }
+        table#main tr.data td.clicks  { font-size:75%; padding-top:4px; text-align:right; }
+        table#main tr.data td.created { font-size:75%; padding-top:4px; color:grey; }
+        table#main tr.data td.changed { font-size:75%; padding-top:4px; color:grey; }
+        table#main tr.data td.licence { font-size:75%; padding-top:5px; }
+        table#main tr.data td.owner   { }
+        table#main tr.data td.sl      { }
+        table#main tr.data td.level   { text-align:center; }
+        table#main tr.data td.words   { font-size:75%; padding-top:4px; text-align:right; }
+        table#main tr.data td.medtype { }
+        table#main tr.data td.medlen  { font-size:75%; padding-top:4px; text-align:right; }
+        table#main tr.data td.buttons { }
+        table#main tr.data td.files   { }
+        table#main tr.data td.edit    { }
+        table#main tr.data td.title   { white-space:normal; padding-left:12px; text-indent:-10px; }
 
         table#main tr.data:nth-child(odd)  { background-color:#eef; }
         table#main tr.data:nth-child(even) { background-color:#fff; }
