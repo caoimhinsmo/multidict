@@ -401,16 +401,9 @@ END_USER2;
     $filesDisplay   = $csSess->display('files');
     $titleDisplay   = $csSess->display('title');
 
-    if ($mode==3) {
-        $deleteDisplay = 'table-cell';
-        $editDisplay   = 'table-cell';
-    } elseif ($mode==2) {
-        $deleteDisplay = 'table-cell';
-        $editDisplay   = 'table-cell';
-    } else {
-        $deleteDisplay = 'none';
-        $editDisplay   = 'none';
-    }
+    if ($mode==3)      { $editDisplay   = 'table-cell'; }
+     elseif ($mode==2) { $editDisplay   = 'table-cell'; }
+     else              { $editDisplay   = 'none';       }
 
     $f['slFil']    = SM_WlSession::langName2Code($f['slFil']);  //Accept language names as well as codes
     $f['levelMin'] = SM_csSess::levelVis2Num($f['levelMin'],'min');
@@ -636,7 +629,6 @@ $checkboxesHtml
  <td class="medlen"><a href="./?sortCol=medlen" title="$T_MedLength_title\n$T_Click_to_sort">$T_MedLength</a></td>
  <td class="buttons"><a href="./?sortCol=buttons" title="$T_Buttons_title\n$T_Click_to_sort">$T_Buttons</a></td>
  <td class="files"><a href="./?sortCol=files" title="$T_Files_title\n$T_Click_to_sort">$T_Files</a></td>
- <td class="delete">&nbsp;</td>
  <td class="edit">&nbsp;</td>
  <td class="title"><a href="./?sortCol=title" title="$T_Click_to_sort">$T_Title</a></td>
  <td>$T_TextOrSummary</td>
@@ -658,7 +650,6 @@ $slOptionsHtml
 <td class="medlen"><input name="medlenMin" type="text" pattern="[0-9]{1,}" $medlenMinVal placeholder="$T_min" title="$T_minimum_media_length" tabindex=66 style="width:3.3em;text-align:right" onchange="submitFForm()"></td>
 <td class="buttons"><input name="buttonsMin" type="text" pattern="[0-9]{1,}" $buttonsMinVal placeholder="$T_min" title="$T_minimum_buttons" tabindex=68 style="width:3.3em;text-align:right" onchange="submitFForm()"></td>
 <td class="files"><input name="filesMin" type="text" pattern="[0-9]{1,}" $filesMinVal placeholder="$T_min" title="$T_minimum_files" tabindex=70 style="width:3.3em;text-align:right" onchange="submitFForm()"></td>
-<td class="delete"></td>
 <td class="edit"></td>
 <td class="title"><input name="title" type="text" $titleVal placeholder="$T_part_placeholder ($T_or_wildcard_pattern) 🔍" title="$T_title_title ($T_or_wildcard_pattern)" tabindex=72 style="width:17em" onchange="submitFForm()"></td>
 <td class="title"><input name="text" type="text" $textVal placeholder="$T_part_placeholder ($T_or_wildcard_pattern) 🔍" title="$T_text_title ($T_or_wildcard_pattern)" tabindex=74 style="min-width:10em;width:95%" onchange="submitFForm()"></td>
@@ -678,7 +669,6 @@ $slOptionsHtml
 <td class="medlen"><input name="medlenMax" type="text" pattern="[0-9]{1,}" $medlenMaxVal placeholder="$T_max" tabindex="67" style="width:3.3em;text-align:right" title="$T_maximum_media_length" onchange="submitFForm()"></td>
 <td class="buttons"><input name="buttonsMax" type="text" pattern="[0-9]{1,}" $buttonsMaxVal placeholder="$T_max" tabindex="69" style="width:3.3em;text-align:right" title="$T_maximum_buttons" onchange="submitFForm()"></td>
 <td class="files"><input name="filesMax" type="text" pattern="[0-9]{1,}" $filesMaxVal placeholder="$T_max" tabindex="71" style="width:3.3em;text-align:right" title="$T_maximum_files" onchange="submitFForm()"></td>
-<td class="delete"></td>
 <td class="edit"></td>
 <td class="title" colspan=2>
  <div class="find">
@@ -767,7 +757,7 @@ END_tableHtmlBarr;
             $ownerHtml    = htmlspecialchars($owner);
             $fullnameHtml = htmlspecialchars($fullname);
             $ownerHtml = "<a href='userinfo.php?user=$ownerHtml' title='$fullnameHtml'>$ownerHtml</a>";
-            $editHtml = $deleteHtml = '';
+            $editHtml = '';
             $cefrHtml = SM_csSess::cefrHtml($level);
             $testHtml  = ( empty($test) ? '' : '<img src="/icons-smo/undConst.gif" alt="" style="padding-left:16px"> ' );
             $titleClass = ( empty($test) ? 'title' : 'title italic' );
@@ -782,9 +772,8 @@ END_tableHtmlBarr;
             $buttonsHtml = ( empty($buttons) ? '' : $buttons );
             $filesHtml   = ( empty($files)   ? '' : $files   );
             if ($user==$owner || $user=='admin')  {
-                $deleteHtml = "<a href=\"delete.php?id=$id\">"
-                  . "<img src='/icons-smo/curAs.png' alt='Delete' title ='$T_Delete_this_unit' class='favicon'></a>";
-                $editHtml = "<a href=\"edit.php?id=$id\">"
+                $editHtml = "<a href='edit.php?id=$id'>"
+                  . "<img src='/icons-smo/curAs.png' alt='Delete' title ='$T_Delete_this_unit' class='favicon'></a>"
                   . "<img src='/icons-smo/peann.png' alt='Edit' title ='$T_Edit_this_unit' class='favicon'></a>";
             }
             $titleHtml = htmlspecialchars($title);
@@ -804,7 +793,6 @@ END_tableHtmlBarr;
                         . "<td class='medlen'>$medlenHtml</td>"
                         . "<td class='buttons'>$buttonsHtml</td>"
                         . "<td class='files'>$filesHtml</td>"
-                        . "<td class='delete'>$deleteHtml</td>"
                         . "<td class='edit'>$editHtml</td>"
                         . "<td class='$titleClass' colspan='2'>$testHtml<a href='/cs/$id' title='$summary'>$titleCool</a></td>"
                         . "</tr>\n";
@@ -924,7 +912,6 @@ END_tableHtmlBun;
         table#main         td.medlen  { text-align:right; display:$medlenDisplay; }
         table#main         td.buttons { text-align:right; display:$buttonsDisplay; }
         table#main         td.files   { text-align:right; display:$filesDisplay; }
-        table#main         td.delete  { display:$deleteDisplay; }
         table#main         td.edit    { display:$editDisplay; }
         table#main         td.title   { display:$titleDisplay; }
 
@@ -942,7 +929,6 @@ END_tableHtmlBun;
         table#main tr.data td.medlen  { font-size:75%; padding-top:4px; text-align:right; display:$medlenDisplay; }
         table#main tr.data td.buttons { display:$buttonsDisplay; }
         table#main tr.data td.files   { display:$filesDisplay; }
-        table#main tr.data td.delete  { display:$deleteDisplay; }
         table#main tr.data td.edit    { display:$editDisplay; }
         table#main tr.data td.title   { white-space:normal; padding-left:12px; text-indent:-10px; display:titleDisplay; }
 

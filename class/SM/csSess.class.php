@@ -300,7 +300,6 @@ setcookie('csSession','',1,'/clilstore/','multidict.net');
                  . $symbolHtml['medlen']
                  . $symbolHtml['buttons']
                  . $symbolHtml['files']
-                 . '<td class="delete"></td>'
                  . '<td class="edit"></td>'
                  . '<td class="nowl"></td>'
                  . $symbolHtml['title'];
