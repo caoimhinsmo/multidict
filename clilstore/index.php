@@ -404,15 +404,12 @@ END_USER2;
     if ($mode==3) {
         $deleteDisplay = 'table-cell';
         $editDisplay   = 'table-cell';
-        $nowlDisplay   = 'table-cell';
     } elseif ($mode==2) {
         $deleteDisplay = 'table-cell';
         $editDisplay   = 'table-cell';
-        $nowlDisplay   = 'none';
     } else {
         $deleteDisplay = 'none';
         $editDisplay   = 'none';
-        $nowlDisplay   = 'none';
     }
 
     $f['slFil']    = SM_WlSession::langName2Code($f['slFil']);  //Accept language names as well as codes
@@ -641,7 +638,6 @@ $checkboxesHtml
  <td class="files"><a href="./?sortCol=files" title="$T_Files_title\n$T_Click_to_sort">$T_Files</a></td>
  <td class="delete">&nbsp;</td>
  <td class="edit">&nbsp;</td>
- <td class="nowl">&nbsp;</td>
  <td class="title"><a href="./?sortCol=title" title="$T_Click_to_sort">$T_Title</a></td>
  <td>$T_TextOrSummary</td>
 </tr>
@@ -664,7 +660,6 @@ $slOptionsHtml
 <td class="files"><input name="filesMin" type="text" pattern="[0-9]{1,}" $filesMinVal placeholder="$T_min" title="$T_minimum_files" tabindex=70 style="width:3.3em;text-align:right" onchange="submitFForm()"></td>
 <td class="delete"></td>
 <td class="edit"></td>
-<td class="nowl"></td>
 <td class="title"><input name="title" type="text" $titleVal placeholder="$T_part_placeholder ($T_or_wildcard_pattern) 🔍" title="$T_title_title ($T_or_wildcard_pattern)" tabindex=72 style="width:17em" onchange="submitFForm()"></td>
 <td class="title"><input name="text" type="text" $textVal placeholder="$T_part_placeholder ($T_or_wildcard_pattern) 🔍" title="$T_text_title ($T_or_wildcard_pattern)" tabindex=74 style="min-width:10em;width:95%" onchange="submitFForm()"></td>
 </tr>
@@ -685,7 +680,6 @@ $slOptionsHtml
 <td class="files"><input name="filesMax" type="text" pattern="[0-9]{1,}" $filesMaxVal placeholder="$T_max" tabindex="71" style="width:3.3em;text-align:right" title="$T_maximum_files" onchange="submitFForm()"></td>
 <td class="delete"></td>
 <td class="edit"></td>
-<td class="nowl"></td>
 <td class="title" colspan=2>
  <div class="find">
      <input type="submit" name="filter" value="$T_Lorg" tabindex=80>&nbsp;&nbsp;
@@ -812,8 +806,6 @@ END_tableHtmlBarr;
                         . "<td class='files'>$filesHtml</td>"
                         . "<td class='delete'>$deleteHtml</td>"
                         . "<td class='edit'>$editHtml</td>"
-                        . "<td class='nowl'><a href='page.php?id=$id'>"
-                        .    '<img src="/favicons/no_wordlink.png" alt="no_wordlink" title="The plain page, not wordlinked" class="favicon"/></a></td>'
                         . "<td class='$titleClass' colspan='2'>$testHtml<a href='/cs/$id' title='$summary'>$titleCool</a></td>"
                         . "</tr>\n";
         }
@@ -934,7 +926,6 @@ END_tableHtmlBun;
         table#main         td.files   { text-align:right; display:$filesDisplay; }
         table#main         td.delete  { display:$deleteDisplay; }
         table#main         td.edit    { display:$editDisplay; }
-        table#main         td.nowl    { display:$nowlDisplay; }
         table#main         td.title   { display:$titleDisplay; }
 
         table#main tr.data td.id      { font-size:75%; padding-top:4px; text-align:right; display:$idDisplay }
@@ -953,7 +944,6 @@ END_tableHtmlBun;
         table#main tr.data td.files   { display:$filesDisplay; }
         table#main tr.data td.delete  { display:$deleteDisplay; }
         table#main tr.data td.edit    { display:$editDisplay; }
-        table#main tr.data td.nowl    { display:$nowlDisplay; }
         table#main tr.data td.title   { white-space:normal; padding-left:12px; text-indent:-10px; display:titleDisplay; }
 
         table#main tr.data:nth-child(odd)  { background-color:#eef; }
