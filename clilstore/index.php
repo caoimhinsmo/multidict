@@ -85,6 +85,7 @@
     $T_minimum_clicks         = $T->h('minimum_clicks');
     $T_maximum_clicks         = $T->h('maximum_clicks');
     $T_start_date             = $T->h('start_date');
+    $T_end_date               = $T->h('end_date');
     $T_minimum_CEFR_level     = $T->h('minimum_CEFR_level');
     $T_maximum_CEFR_level     = $T->h('maximum_CEFR_level');
     $T_minimum_words          = $T->h('minimum_words');
@@ -99,7 +100,12 @@
     $T_title_title            = $T->h('title_title');
     $T_text_title             = $T->h('text_title');
 
-    $T_Click_to_sort          = $T->h('Click_to_sort','hsc');
+    $T_Click_to_sort          = $T->h('Click_to_sort');
+    $T_Click_to_sort_hide     = $T->h('Click_to_sort_hide');
+    $T_Sort_the_column        = $T->h('Sort_the_column');
+    $T_Hide_the_column        = $T->h('Hide_the_column');
+    $T_Restore                = $T->h('Restore');
+    $T_Restore_title          = $T->h('Restore_title');
     $T_min                    = $T->h('min');
     $T_max                    = $T->h('max');
     $T_part_placeholder       = $T->h('part_placeholder');
@@ -127,7 +133,7 @@
 
     $mdNavbar = SM_mdNavbar::mdNavbar($T->domhan);
 
-    $tableHtml = $cookieMessage = '';
+    $dataLists = $tableHtml = $cookieMessage = $avgRow = $totRow = '';
     $limitUnits = $limitInfo = FALSE;
 
     if (!isset($_COOKIE['csSessionId'])) $cookieMessage = <<<EOD_cookieMessage
@@ -150,7 +156,7 @@ EOD_cookieMessage;
     $EUlogo = '/EUlogos/' . SM_T::hl0() . '.jpg';
     if (!file_exists($_SERVER['DOCUMENT_ROOT'] . $EUlogo)) { $EUlogo = '/EUlogos/en.jpg'; }
 
-//    if (isset($_GET['mode']))         { $csSess->setMode($_GET['mode']            ); }
+    if (isset($_GET['mode']))         { $csSess->setMode($_GET['mode']            ); }
     if (!empty($_GET['sortCol']))     { $csSess->sortCol($_GET['sortCol']         ); }
 //    if (!empty($_GET['deleteCol']))   { $csSess->deleteCol($_GET['deleteCol']     ); }
     if (!empty($_GET['addCol']))      { $csSess->addCol($_GET['addCol']           ); }
@@ -171,7 +177,38 @@ EOD_cookieMessage;
     $mode2selected = ( $mode==2 ? 'selected=selected' : '');
     $mode3selected = ( $mode==3 ? 'selected=selected' : '');
     $addColHtml = $csSess->addColHtml();
-    $symbolRowHtml = $csSess->symbolRowHtml();
+
+    $modecol = "m$mode";
+    $pri = $symbol = array();
+    foreach ($csSess->csFilter as $r) {
+        $fd  = $r['fd'];
+        $pr  = $r['sortpri'];
+        if ($r[$modecol]<>0) {
+	    if ($pr<>0) { $pri[$fd] = $pr; }
+            if ($r['sortord']==1) { $symbol[$fd] = '▵'; }
+              else                { $symbol[$fd] = '▿'; }
+	}
+    }
+    $ranks = array_flip($pri);
+    ksort($ranks);
+    $prifd  = array_shift($ranks);  //The sort field
+    $prifd2  = array_shift($ranks); //The secondary sort field
+    if (!empty($prifd))  { if ($symbol[$prifd] =='▵') {$symbol[$prifd]  = '▲';} else {$symbol[$prifd]  = '▼';}  }
+    if (!empty($prifd2)) { if ($symbol[$prifd2]=='▵') {$symbol[$prifd2] = '▴';} else {$symbol[$prifd2] = '▾';}  }
+    $hrefSelf = $_SERVER['PHP_SELF'];
+    if (substr($hrefSelf,-9)=='index.php') { $hrefSelf = substr($hrefSelf,0,strlen($hrefSelf)-9); }
+    foreach ($symbol as $fd=>$sym) {
+        if ($fd<>'title') {
+            $pad = ( $fd=='id' ? '' : '&nbsp;' );
+            $deleteHtml = "<a href='$hrefSelf?deleteCol=$fd' style='color:red;font-size:80%' title='$T_Hide_the_column'>×</a>";
+            $symbolHtml[$fd] = "<td><a href='$hrefSelf?sortCol=$fd' title='$T_Sort_the_column'>$sym$pad</a> $deleteHtml</td>\n";
+        } else {
+            $symbolinfo = '<span style="font-size:65%">⇐ '
+                         . sprintf($T_Click_to_sort_hide, '<span style="color:#55a8eb;font-size:140%">▵</span>', '<span style="color:red;font-size:140%">×</span>')
+                         . " [<a href='$hrefSelf?restoreCols=restore' title='$T_Restore_title' style='font-size:110%'>$T_Restore</a>]</span>";
+            $symbolHtml['title'] = "<td colspan=2 style='vertical-align:bottom'><div style='float:right'>$symbolinfo</div><a href='$hrefSelf?sortCol=title' title='$T_Sort_the_column'>$sym</a></td>\n";
+        }
+    }
 
     $photo = $tabletopChoices = '';
     if ($mode==1) { $photo = '<img src="http://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/Headphones-Sennheiser-HD555.jpg/320px-Headphones-Sennheiser-HD555.jpg" '
@@ -385,25 +422,6 @@ END_USER2;
         }
     }
 
-    $idVisibility      = $csSess->visibility('id');
-    $viewsVisibility   = $csSess->visibility('views');
-    $clicksVisibility  = $csSess->visibility('clicks');
-    $createdVisibility = $csSess->visibility('created');
-    $changedVisibility = $csSess->visibility('changed');
-    $licenceVisibility = $csSess->visibility('licence');
-    $ownerVisibility   = $csSess->visibility('owner');
-    $slVisibility      = $csSess->visibility('sl');
-    $levelVisibility   = $csSess->visibility('level');
-    $wordsVisibility   = $csSess->visibility('words');
-    $medtypeVisibility = $csSess->visibility('medtype');
-    $medlenVisibility  = $csSess->visibility('medlen');
-    $buttonsVisibility = $csSess->visibility('buttons');
-    $filesVisibility   = $csSess->visibility('files');
-    $titleVisibility   = $csSess->visibility('title');
-
-    if ($mode>1) { $editVisibility   = 'visible';  }
-     else        { $editVisibility   = 'collapse'; }
-
     $f['slFil']    = SM_WlSession::langName2Code($f['slFil']);  //Accept language names as well as codes
     $f['levelMin'] = SM_csSess::levelVis2Num($f['levelMin'],'min');
     $f['levelMax'] = SM_csSess::levelVis2Num($f['levelMax'],'max');
@@ -547,7 +565,6 @@ END_USER2;
         $endonym = $lang['endonym'];
         $sl      = $lang['sl'];
         $selected = ( $sl==$slFil ? ' selected' : '');;
-//      $codeInfo = ( $wideChecked ? " ($sl)" : '' );
         $codeInfo = " ($sl)";  //Decided to always include the language code
         $slOptions[] = "<option value='$sl'$selected>$endonym$codeInfo</option>";
     }
@@ -566,9 +583,6 @@ $levelButHtml
 ENDtabletopChoices;
     }
 
-    $mode0commentoutStart  = ( $mode==0 ? '<!--' : '');
-    $mode0commentoutFinish = ( $mode==0 ? '-->'  : '');
-
     $hoverColorOdd  = '#eef';
     $hoverColorEven = '#fff';
     if (empty($user)) { $highlightRow = 0; }
@@ -584,11 +598,134 @@ ENDtabletopChoices;
 
     if ($mode==0 && $f['slFil']=='') { $noTable = true; } else { $noTable = false; }
 
-    if (!$noTable) {
-        $tableHtml = <<<END_tableHtmlBarr
-<form id="filterForm" method="post" onreset="clearFields();"">
-<input type="hidden" name="filterForm" value="1">
+    $columns = $csSess->columns();
+    if (!empty($user)) { array_splice($columns,-2,0,array('edit')); }
 
+    $tableStylesArr = [
+        'id'      => 'text-align:right; font-size:75%; padding-top:4px;',
+        'views'   => 'text-align:right; font-size:75%; padding-top:4px;',
+        'clicks'  => 'text-align:right; font-size:75%; padding-top:4px;',
+        'created' => 'font-size:75%; padding-top:4px; color:grey;',
+        'changed' => 'font-size:75%; padding-top:4px; color:grey;',
+        'licence' => 'font-size:75%; padding-top:5px;',
+        'owner'   => '',
+        'sl'      => '',
+        'level'   => 'text-align:center;',
+        'words'   => 'text-align:right; font-size:75%; padding-top:4px; text-align:right;',
+        'medtype' => 'text-align:center;',
+        'medlen'  => 'text-align:right; font-size:75%; padding-top:4px; text-align:right;',
+        'buttons' => 'text-align:right;',
+        'files'   => 'text-align:right;',
+        'edit'    => '',
+        'title'   => 'white-space:normal; padding-left:12px; text-indent:-10px;',
+	'text'    => '' ];
+    $tableStyles = '';
+    foreach ($columns as $icol=>$fd) {
+        $icol1 = $icol+1;
+        $tableStyle = $tableStylesArr[$fd];
+        $tableStyles .= "        table#main tr:not(.row4) td:nth-child($icol1) { $tableStyle }\n";
+    }
+
+    $row1 = $row2 = $row3 = $row4 = '';
+    foreach ($columns as $fd) {
+        if ($fd=='id') {
+            $row1 .= "<td><a href='./?sortCol=id' title='$T_UnitID_title\n$T_Click_to_sort'>$T_UnitID</a></td>";
+            $row2 .= "<td><input name=id $idVal pattern='[0-9]{1,5}' tabindex=10 autofocus style='width:2.5em;text-align:right'></td>";
+            $row3 .= "<td></td>";
+	    $row4 .= $symbolHtml['id'];
+        } elseif ($fd=='views') {
+            $row1 .= "<td><a href='./?sortCol=views' title='$T_Views_title\n$T_Click_to_sort'>$T_Views</a></td>";
+            $row2 .= "<td><input name=viewsMin pattern='[0-9]{1,}' $viewsMinVal placeholder='$T_min' title='$T_minimum_views' tabindex=14 style='width:3.5em;text-align:right'></td>";
+            $row3 .= "<td><input name=viewsMax pattern='[0-9]{1,}' $viewsMaxVal placeholder='$T_max' tabindex=15 style='width:3.5em;text-align:right' title='$T_maximum_views'></td>";
+	    $row4 .= $symbolHtml['views'];
+        } elseif ($fd=='clicks') {
+            $row1 .= "<td><a href='./?sortCol=clicks' title='$T_Clicks_title\n$T_Click_to_sort'>$T_Clicks</a></td>";
+            $row2 .= "<td><input name=clicksMin pattern='[0-9]{1,}' $clicksMinVal placeholder='$T_min' title='$T_minimum_clicks' tabindex=16 style='width:3.5em;text-align:right'></td>";
+            $row3 .= "<td><input name=clicksMax pattern='[0-9]{1,}' $clicksMaxVal placeholder='$T_max' tabindex=16 style='width:3.5em;text-align:right' title='$T_maximum_clicks'></td>";
+	    $row4 .= $symbolHtml['clicks'];
+        } elseif ($fd=='created') {
+            $row1 .= "<td><a href='./?sortCol=created' title='$T_Created_title\n$T_Click_to_sort'>$T_Created</a></td>";
+            $row2 .= "<td><input name=createdMin type=date $createdMinVal tabindex=20 title='$T_start_date' style='max-width:10em'></td>";
+            $row3 .= "<td><input name=createdMax type=date $createdMaxVal tabindex=21 title='$T_end_date' style='max-width:10em'></td>";
+	    $row4 .= $symbolHtml['created'];
+        } elseif ($fd=='changed') {
+            $row1 .= "<td><a href='./?sortCol=changed' title='$T_Changed_title\n$T_Click_to_sort'>$T_Changed</a></td>";
+            $row2 .= "<td><input name=changedMin type=date $changedMinVal tabindex=30 title='$T_start_date' style='max-width:10em'></td>";
+            $row3 .= "<td><input name=changedMax type=date $changedMaxVal tabindex=31 title='$T_end_date' style='max-width:10em'></td>";
+	    $row4 .= $symbolHtml['changed'];
+        } elseif ($fd=='licence') {
+            $row1 .= "<td><a href='./?sortCol=licence' title='$T_Licence_title\n$T_Click_to_sort'>$T_Licence</a></td>";
+            $row2 .= "<td><input name=licence $licenceVal tabindex=40 list='licenceList' style='width:4.7em'></td>";
+	    $row3 .= "<td></td>";
+	    $row4 .= $symbolHtml['licence'];
+        } elseif ($fd=='owner') {
+            $row1 .= "<td><a href='./?sortCol=owner' title='$T_Owner_title\n$T_Click_to_sort'>$T_Owner</a></td>";
+            $row2 .= "<td><input name=owner $ownerVal tabindex=44 list='ownerList' style='width:10em'></td>";
+	    $row3 .= "<td></td>";
+            $row4 .= $symbolHtml['owner'];
+        } elseif ($fd=='sl') {
+            $row1 .= "<td><a href='./?sortCol=sl' title='$T_Click_to_sort ($T_by_language_code)'>$T_Language</a></td>";
+            $row2 .= "<td><select name=sl style='background-color:$slSelectColor' tabindex=50>$slOptionsHtml</select></td>";
+	    $row3 .= "<td></td>";
+	    $row4 .= $symbolHtml['sl'];
+        } elseif ($fd=='level') {
+            $row1 .=  "<td><a href='./?sortCol=level' title='$T_Level_title\n$T_Click_to_sort'>$T_Level</a></td>";
+            $row2 .= ( $mode==0 ? '<td></td>'
+                     : "<td><input name=levelMin $levelMinVal placeholder='$T_min' list=levelList title='$T_minimum_CEFR_level' tabindex=60 style='width:2.8em;text-align:center'></td>" );
+	    $row3 .= ( $mode==0 ? '<td></td>'
+                     : "<td><input name='levelMax' $levelMaxVal placeholder='$T_max' list=levelList tabindex=61 title='$T_maximum_CEFR_level' style='width:2.8em;text-align:center'></td>" );
+	    $row4 .= $symbolHtml['level'];
+        } elseif ($fd=='words') {
+            $row1 .= "<td><a href='./?sortCol=words' title='$T_Words_title\n$T_Click_to_sort'>$T_Words</a></td>";
+            $row2 .= "<td><input name=wordsMin pattern='[0-9]{1,}' $wordsMinVal placeholder='$T_min' title='$T_minimum_words' tabindex=62 style='width:3.5em;text-align:right'></td>";
+	    $row3 .= "<td><input name='wordsMax' pattern='[0-9]{1,}' $wordsMaxVal placeholder='$T_max' tabindex=63 style='width:3.5em;text-align:right' title='$T_maximum_words'></td>";
+	    $row4 .= $symbolHtml['words'];
+        } elseif ($fd=='medtype') {
+            $row1 .= "<td><a href='./?sortCol=medtype' title='$T_Media_title\n$T_Click_to_sort'>$T_Media</a></td>";
+            $row2 .= ( $mode==0 ? '<td></td>'
+                     : "<td><input name=medtype $medtypeVal pattern='[0-2]' placeholder='0,1,2' title='$T_media_field_title' tabindex=64 style='width:2.1em;text-align:center'></td>" );
+	    $row3 .= "<td></td>";
+	    $row4 .= $symbolHtml['medtype'];
+        } elseif ($fd=='medlen') {
+            $row1 .= "<td><a href='./?sortCol=medlen' title='$T_MedLength_title\n$T_Click_to_sort'>$T_MedLength</a></td>";
+            $row2 .= "<td><input name=medlenMin pattern='[0-9]{1,}' $medlenMinVal placeholder='$T_min' title='$T_minimum_media_length' tabindex=66 style='width:3.3em;text-align:right'></td>";
+	    $row3 .= "<td><input name='medlenMax' pattern='[0-9]{1,}' $medlenMaxVal placeholder='$T_max' tabindex=67 style='width:3.3em;text-align:right' title='$T_maximum_media_length'></td>";
+	    $row4 .= $symbolHtml['medlen'];
+        } elseif ($fd=='buttons') {
+            $row1 .= "<td><a href='./?sortCol=buttons' title='$T_Buttons_title\n$T_Click_to_sort'>$T_Buttons</a></td>";
+            $row2 .= "<td><input name=buttonsMin pattern='[0-9]{1,}' $buttonsMinVal placeholder='$T_min' title='$T_minimum_buttons' tabindex=68 style='width:3.3em;text-align:right'></td>";
+	    $row3 .= "<td><input name=buttonsMax pattern='[0-9]{1,}' $buttonsMaxVal placeholder='$T_max' tabindex=69 style='width:3.3em;text-align:right' title='$T_maximum_buttons'></td>";
+	    $row4 .= $symbolHtml['buttons'];
+        } elseif ($fd=='files') {
+            $row1 .= "<td><a href='./?sortCol=files' title='$T_Files_title\n$T_Click_to_sort'>$T_Files</a></td>";
+            $row2 .= "<td><input name=filesMin pattern='[0-9]{1,}' $filesMinVal placeholder='$T_min' title='$T_minimum_files' tabindex=70 style='width:3.3em;text-align:right'></td>";
+	    $row3 .= "<td><input name=filesMax pattern='[0-9]{1,}' $filesMaxVal placeholder='$T_max' tabindex=71 style='width:3.3em;text-align:right' title='$T_maximum_files'></td>";
+	    $row4 .= $symbolHtml['files'];
+        } elseif ($fd=='edit') {
+            $row1 .= "<td>&nbsp;</td>";
+	    $row2 .= "<td></td>";
+	    $row3 .= "<td></td>";
+	    $row4 .= "<td></td>";
+        } elseif ($fd=='title') {
+            $row1 .= "<td><a href='./?sortCol=title' title='$T_Click_to_sort'>$T_Title</a></td>";
+	    $row2 .= "<td><input name=title $titleVal placeholder='$T_part_placeholder ($T_or_wildcard_pattern) 🔍' title='$T_title_title ($T_or_wildcard_pattern)' tabindex=72 style='width:17em'></td>";
+            $row3 .= <<<END_row3titlecell
+<td class="title" colspan=2>
+ <div id="findDiv">
+     <input type="submit" name="filter" value="$T_Lorg" tabindex=80>&nbsp;&nbsp;
+     <input type="reset" value="$T_Clear_filter" title="$T_Clear_filter_title" tabindex=90>
+ </div>
+</td>
+END_row3titlecell;
+	    $row4 .= $symbolHtml['title'];
+        } elseif ($fd=='text') {
+            $row1 .= "<td>$T_TextOrSummary</td>";
+	    $row2 .= "<td><input name=text $textVal placeholder='$T_part_placeholder ($T_or_wildcard_pattern) 🔍' title='$T_text_title ($T_or_wildcard_pattern)' tabindex=74 style='min-width:10em;width:95%'></td>";
+        }
+    }
+
+    if (!$noTable) {
+        $dataLists = <<<END_dataLists
 <datalist id="levelList">
 <option value="A1">
 <option value="A2">
@@ -612,89 +749,16 @@ $ownerListHtml
 </datalist>
 
 $checkboxesHtml
-<table id="main">
-<col style='visibility:$idVisibility'>
-<col style='visibility:$viewsVisibility'>
-<col style='visibility:$clicksVisibility'>
-<col style='visibility:$createdVisibility'>
-<col style='visibility:$changedVisibility'>
-<col style='visibility:$licenceVisibility'>
-<col style='visibility:$ownerVisibility'>
-<col style='visibility:$slVisibility'>
-<col style='visibility:$levelVisibility'>
-<col style='visibility:$wordsVisibility'>
-<col style='visibility:$medtypeVisibility'>
-<col style='visibility:$medlenVisibility'>
-<col style='visibility:$buttonsVisibility'>
-<col style='visibility:$filesVisibility'>
-<col style='visibility:$editVisibility'>
-<col style='visibility:$titleVisibility'>
-<col>
-<tr class="row1">
- <td class="id"><a href="./?sortCol=id" title="$T_UnitID_title\n$T_Click_to_sort">$T_UnitID</a></td>
- <td class="views"><a href="./?sortCol=views" title="$T_Views_title\n$T_Click_to_sort">$T_Views</a></td>
- <td class="clicks"><a href="./?sortCol=clicks" title="$T_Clicks_title\n$T_Click_to_sort">$T_Clicks</a></td>
- <td class="created"><a href="./?sortCol=created" title="$T_Created_title\n$T_Click_to_sort">$T_Created</a></td>
- <td class="changed"><a href="./?sortCol=changed" title="$T_Changed_title\n$T_Click_to_sort">$T_Changed</a></td>
- <td class="licence"><a href="./?sortCol=licence" title="$T_Licence_title\n$T_Click_to_sort">$T_Licence</a></td>
- <td class="owner"><a href="./?sortCol=owner" title="$T_Owner_title\n$T_Click_to_sort">$T_Owner</a></td>
- <td class="sl"><a href="./?sortCol=sl" title="$T_Click_to_sort ($T_by_language_code)">$T_Language</a></td>
- <td class="level"><a href="./?sortCol=level" title="$T_Level_title\n$T_Click_to_sort">$T_Level</a></td>
- <td class="words"><a href="./?sortCol=words" title="$T_Words_title\n$T_Click_to_sort">$T_Words</a></td>
- <td class="medtype"><a href="./?sortCol=medtype" title="$T_Media_title\n$T_Click_to_sort">$T_Media</a></td>
- <td class="medlen"><a href="./?sortCol=medlen" title="$T_MedLength_title\n$T_Click_to_sort">$T_MedLength</a></td>
- <td class="buttons"><a href="./?sortCol=buttons" title="$T_Buttons_title\n$T_Click_to_sort">$T_Buttons</a></td>
- <td class="files"><a href="./?sortCol=files" title="$T_Files_title\n$T_Click_to_sort">$T_Files</a></td>
- <td class="edit">&nbsp;</td>
- <td class="title"><a href="./?sortCol=title" title="$T_Click_to_sort">$T_Title</a></td>
- <td>$T_TextOrSummary</td>
-</tr>
-<tr class="row2">
-<td class="id"><input name="id" type="text" $idVal pattern="[0-9]{1,5}" tabindex=10 autofocus style="width:2.5em;text-align:right" onchange="submitFForm()"></td>
-<td class="views"><input name="viewsMin" type="text" pattern="[0-9]{1,}" $viewsMinVal placeholder="$T_min" title="$T_minimum_views" tabindex=14 style="width:3.5em;text-align:right" onchange="submitFForm()"></td>
-<td class="clicks"><input name="clicksMin" type="text" pattern="[0-9]{1,}" $clicksMinVal placeholder="$T_min" title="$T_minimum_clicks" tabindex=16 style="width:3.5em;text-align:right" onchange="submitFForm()"></td>
-<td class="created"><input name="createdMin" type="date" $createdMinVal tabindex=20 title="$T_start_date" onchange="submitFForm()"></td>
-<td class="changed"><input name="changedMin" type="date" $changedMinVal tabindex=30 title="$T_start_date" onchange="submitFForm()"></td>
-<td class="licence"><input name="licence" type="text" $licenceVal tabindex=40 list="licenceList" style="width:4.7em" onchange="submitFForm()"></td>
-<td class="owner"><input name="owner" type="text" $ownerVal tabindex=44 list="ownerList" style="width:10em" onchange="submitFForm()"></td>
-<td class="sl">$mode0commentoutStart<select name="sl" style="background-color:$slSelectColor" tabindex=50 onchange="submitFForm()">
-$slOptionsHtml
-</select>$mode0commentoutFinish</td>
-<td class="level">$mode0commentoutStart<input name="levelMin" type="text" $levelMinVal placeholder="$T_min" list="levelList" title="$T_minimum_CEFR_level" tabindex=60 style="width:2.8em;text-align:center" onchange="submitFForm()">$mode0commentoutFinish</td>
-<td class="words"><input name="wordsMin" type="text" pattern="[0-9]{1,}" $wordsMinVal placeholder="$T_min" title="$T_minimum_words" tabindex=62 style="width:3.5em;text-align:right" onchange="submitFForm()"></td>
-<td class="medtype">$mode0commentoutStart<input name="medtype" type="text" $medtypeVal pattern="[0-2]" placeholder="0,1,2" title="$T_media_field_title" tabindex=64 style="width:2.1em;text-align:center" onchange="submitFForm()">$mode0commentoutFinish</td>
-<td class="medlen"><input name="medlenMin" type="text" pattern="[0-9]{1,}" $medlenMinVal placeholder="$T_min" title="$T_minimum_media_length" tabindex=66 style="width:3.3em;text-align:right" onchange="submitFForm()"></td>
-<td class="buttons"><input name="buttonsMin" type="text" pattern="[0-9]{1,}" $buttonsMinVal placeholder="$T_min" title="$T_minimum_buttons" tabindex=68 style="width:3.3em;text-align:right" onchange="submitFForm()"></td>
-<td class="files"><input name="filesMin" type="text" pattern="[0-9]{1,}" $filesMinVal placeholder="$T_min" title="$T_minimum_files" tabindex=70 style="width:3.3em;text-align:right" onchange="submitFForm()"></td>
-<td class="edit"></td>
-<td class="title"><input name="title" type="text" $titleVal placeholder="$T_part_placeholder ($T_or_wildcard_pattern) 🔍" title="$T_title_title ($T_or_wildcard_pattern)" tabindex=72 style="width:17em" onchange="submitFForm()"></td>
-<td class="title"><input name="text" type="text" $textVal placeholder="$T_part_placeholder ($T_or_wildcard_pattern) 🔍" title="$T_text_title ($T_or_wildcard_pattern)" tabindex=74 style="min-width:10em;width:95%" onchange="submitFForm()"></td>
-</tr>
-<tr class="row3" style="background-color:#e2e2e2">
-<td class="id"></td>
-<td class="views"><input name="viewsMax" type="text" pattern="[0-9]{1,}" $viewsMaxVal placeholder="$T_max" tabindex="15" style="width:3.5em;text-align:right" title="$T_maximum_views" onchange="submitFForm()"></td>
-<td class="clicks"><input name="clicksMax" type="text" pattern="[0-9]{1,}" $clicksMaxVal placeholder="$T_max" tabindex="16" style="width:3.5em;text-align:right" title="$T_maximum_clicks" onchange="submitFForm()"></td>
-<td class="created"><input name="createdMax" type="date" $createdMaxVal tabindex=21 title="end date" onchange="submitFForm()"></td>
-<td class="changed"><input name="changedMax" type="date" $changedMaxVal tabindex=31 title="end date" onchange="submitFForm()"></td>
-<td class="licence"></td>
-<td class="owner"></td>
-<td class="sl"></td>
-<td class="level">$mode0commentoutStart<input name="levelMax" type="text" $levelMaxVal placeholder="$T_max" list="levelList" tabindex="61" title="$T_maximum_CEFR_level" style="width:2.8em;text-align:center" onchange="submitFForm()">$mode0commentoutFinish</td>
-<td class="words"><input name="wordsMax" type="text" pattern="[0-9]{1,}" $wordsMaxVal placeholder="$T_max" tabindex="63" style="width:3.5em;text-align:right" title="$T_maximum_words" onchange="submitFForm()"></td>
-<td class="medtype"></td>
-<td class="medlen"><input name="medlenMax" type="text" pattern="[0-9]{1,}" $medlenMaxVal placeholder="$T_max" tabindex="67" style="width:3.3em;text-align:right" title="$T_maximum_media_length" onchange="submitFForm()"></td>
-<td class="buttons"><input name="buttonsMax" type="text" pattern="[0-9]{1,}" $buttonsMaxVal placeholder="$T_max" tabindex="69" style="width:3.3em;text-align:right" title="$T_maximum_buttons" onchange="submitFForm()"></td>
-<td class="files"><input name="filesMax" type="text" pattern="[0-9]{1,}" $filesMaxVal placeholder="$T_max" tabindex="71" style="width:3.3em;text-align:right" title="$T_maximum_files" onchange="submitFForm()"></td>
-<td class="edit"></td>
-<td class="title" colspan=2>
- <div class="find">
-     <input type="submit" name="filter" value="$T_Lorg" tabindex=80>&nbsp;&nbsp;
-     <input type="reset" value="$T_Clear_filter" title="$T_Clear_filter_title" tabindex=90>
- </div>
-</td>
-</tr>
-<tr class="row4">$symbolRowHtml</tr>
+END_dataLists;
+
+        $tableHtml = <<<END_tableHtmlBarr
+<table id=main>
+<tr class=row1>$row1</tr>
+<tr class=row2>$row2</tr>
+<tr class=row2>$row3</tr>
+<tr class=row4>$row4</tr>
 END_tableHtmlBarr;
+
 
         $orderClause = $csSess->orderClause();
         $query = 'SELECT clilstore.id,owner,fullname,sl,endonym,level,words,medtype,medlen,buttons,files,title,summary,created,changed,licence,test,views,clicks'
@@ -734,11 +798,10 @@ END_tableHtmlBarr;
         $nunits = 0;
         $cnt['level'] = $cnt['medlen'] = 0;
         $tot['views'] = $tot['clicks'] = $tot['created'] = $tot['created2'] = $tot['changed'] = $tot['level'] = $tot['words'] = $tot['medlen'] = $tot['buttons'] = $tot['files'] = 0;
-        $totalsRow = $avgRow = '';
        //
         $units = $stmt->fetchAll(PDO::FETCH_ASSOC);~~
         $nunits = count($units);
-        $maxunits = 500;  //The limit unless showAll is set
+        $maxunits = 100;  //The limit unless showAll is set
         $showAll = $_REQUEST['showAll'] ?? '';
         if ($nunits > $maxunits) {
             if ($showAll) { $limitInfo = TRUE; } else { $limitUnits = TRUE; }
@@ -762,7 +825,7 @@ END_tableHtmlBarr;
                 if ($iunit==$maxunits) { $tableHtml .= "<tr><td>[...]</td></tr>\n"; }
                 continue;
             }
-            $summary = htmlspecialchars($summary);
+            $summary = ( $iunit <=100 ? htmlspecialchars($summary) : '');  //Maximum of 100 summaries shown, to save memory
             $createdObj = new DateTime("@$created");
             $createdDate     = date_format($createdObj, 'Y-m-d');
             $createdDateTime = date_format($createdObj, 'Y-m-d H:i:s');
@@ -775,7 +838,7 @@ END_tableHtmlBarr;
             $ownerHtml = "<a href='userinfo.php?user=$ownerHtml' title='$fullnameHtml'>$ownerHtml</a>";
             $editHtml = '';
             $cefrHtml = SM_csSess::cefrHtml($level);
-            $testHtml  = ( empty($test) ? '' : '<img src="/icons-smo/undConst.gif" alt="" style="padding-left:16px"> ' );
+            $testHtml  = ( empty($test) ? '' : '<img src="/icons-smo/undConst.gif" alt="" class=undConst> ' );
             $titleClass = ( empty($test) ? 'title' : 'title italic' );
             if ($sl=='ar') { $titleClass .= ' arabicfont'; }
             $medlenHtml = ( ( empty($medlen) && ($medtype==0 || $owner<>$user  ) )
@@ -788,30 +851,33 @@ END_tableHtmlBarr;
             $buttonsHtml = ( empty($buttons) ? '' : $buttons );
             $filesHtml   = ( empty($files)   ? '' : $files   );
             if ($user==$owner || $user=='admin')  {
-                $editHtml = "<a href='edit.php?id=$id'>"
-                  . "<img src='/icons-smo/curAs.png' alt='Delete' title ='$T_Delete_this_unit' class='favicon'></a>"
-                  . "<img src='/icons-smo/peann.png' alt='Edit' title ='$T_Edit_this_unit' class='favicon'></a>";
+                $editHtml = "<a href='delete.php?id=$id'><img src='/icons-smo/curAs.png' alt='Delete' title ='$T_Delete_this_unit' class='favicon'></a>"
+                          . "<a href='edit.php?id=$id'><img src='/icons-smo/peann.png' alt='Edit' title ='$T_Edit_this_unit' class='favicon'></a>";
             }
             $titleHtml = htmlspecialchars($title);
             $titleCool = strtr($titleHtml,[ "[COOL]" => "<img src='Cool.png' alt='[COOL]' style='padding-right:0.3em'>" ]);
-            $tableHtml .= '<tr class="data">'
-                        . "<td class='id'><a href='/cs/$id' title='$views views'>$id</a></td>"
-                        . "<td class='views'>$views</td>"
-                        . "<td class='clicks'>$clicks</td>"
-                        . "<td class='created' title='$createdDateTime UT'>$createdDate</td>"
-                        . "<td class='changed' title='$changedDateTime UT'>$changedDate</td>"
-                        . "<td class='licence'>$licence</td>"
-                        . "<td class='owner'>$ownerHtml</td>"
-                        . "<td class='sl' title='language code: $sl'>$endonym</td>"
-                        . "<td class='level'>$cefrHtml</td>"
-                        . "<td class='words'>$words</td>"
-                        . "<td class='medtype'>$medtypeHtml</td>"
-                        . "<td class='medlen'>$medlenHtml</td>"
-                        . "<td class='buttons'>$buttonsHtml</td>"
-                        . "<td class='files'>$filesHtml</td>"
-                        . "<td class='edit'>$editHtml</td>"
-                        . "<td class='$titleClass' colspan='2'>$testHtml<a href='/cs/$id' title='$summary'>$titleCool</a></td>"
-                        . "</tr>\n";
+	    $titleHtml  = ( empty($test) ? $titleCool : "<img src='/icons-smo/undConst.gif' alt='' class=undConst> <i>$titleCool</i>" );
+            $row = '<tr>';
+            foreach ($columns as $fd) {
+                if ($fd=='id')            { $row .= "<td><a href='/cs/$id' title='$views views'>$id</a></td>"; }
+                  elseif ($fd=='views')   { $row .= "<td>$views</td>"; }
+                  elseif ($fd=='clicks')  { $row .= "<td>$clicks</td>"; }
+                  elseif ($fd=='created') { $row .= "<td title='$createdDateTime UT'>$createdDate</td>"; }
+                  elseif ($fd=='changed') { $row .= "<td title='$changedDateTime UT'>$changedDate</td>"; }
+                  elseif ($fd=='licence') { $row .= "<td>$licence</td>"; }
+                  elseif ($fd=='owner')   { $row .= "<td>$ownerHtml</td>"; }
+                  elseif ($fd=='sl')      { $row .= "<td title='language code: $sl'>$endonym</td>"; }
+                  elseif ($fd=='level')   { $row .= "<td>$cefrHtml</td>"; }
+                  elseif ($fd=='words')   { $row .= "<td>$words</td>"; }
+                  elseif ($fd=='medtype') { $row .= "<td>$medtypeHtml</td>"; }
+                  elseif ($fd=='medlen')  { $row .= "<td>$medlenHtml</td>"; }
+                  elseif ($fd=='buttons') { $row .= "<td>$buttonsHtml</td>"; }
+                  elseif ($fd=='files')   { $row .= "<td>$filesHtml</td>"; }
+                  elseif ($fd=='edit')    { $row .= "<td>$editHtml</td>"; }
+                  elseif ($fd=='title')   { $row .= "<td colspan=2><a href='/cs/$id' title='$summary'>$titleHtml</a></td>"; }
+            }
+            $row .= "</tr>\n";
+            $tableHtml .= $row;
         }
         $stmt = null;
         $DbMultidict = null;
@@ -849,49 +915,63 @@ END_tableHtmlBarr;
                  $clickRateMessage = rateMessage($clickRate);
                  $totViewRateMessage  = rateMessage($viewRate *$nunits);
                  $totClickRateMessage = rateMessage($clickRate*$nunits);
-                 $totalsRow = '<tr style="font-size:70%;color:grey;background-color:#ddd">'
-                            . "<td class='id'>$T_Total</td>"
-                            . '<td class="views"  title="'.$totViewRateMessage .'">' . $tot['views']  . '</td>'
-                            . '<td class="clicks" title="'.$totClickRateMessage.'">' . $tot['clicks'] . '</td>'
-                            . '<td class="created"></td>'
-                            . '<td class="changed"></td>'
-                            . '<td class="licence"></td>'
-                            . '<td class="owner"></td>'
-                            . '<td class="sl"></td>'
-                            . '<td class="level"></td>'
-                            . '<td class="words">'  . $tot['words']  . '</td>'
-                            . '<td class="medtype"></td>'
-                            . '<td class="medlen">' . SM_csSess::secs2minsecs($tot['medlen']) . '</td>'
-                            . '<td class="buttons">'. $tot['buttons']. '</td>'
-                            . '<td class="files">'  . $tot['files']  . '</td>' 
-                            . '<td colspan="5"></td>'
-                            . '</tr>';
-                 $avgRow    = '<tr style="font-size:70%;color:grey;background-color:#ddd;border-top:solid 1px #888">'
-                            . "<td class='id'>$T_Average</td>"
-                            . '<td class="views"  title="'.$viewRateMessage .'">'   . sprintf('%.1f',$tot['views']/$nunits)    . '</td>'
-                            . '<td class="clicks" title="'.$clickRateMessage.'">'   . sprintf('%.1f',$tot['clicks']/$nunits)   . '</td>'
-                            . "<td class='created' title='$avgCreatedDateTime UT'>$avgCreatedDate</td>"
-                            . "<td class='changed' title='$avgChangedDateTime UT'>$avgChangedDate</td>"
-                            . '<td class="licence"></td>'
-                            . '<td class="owner"></td>'
-                            . '<td class="sl"></td>'
-                            . '<td class="level">'  . $avgLevelHtml  . '</td>'
-                            . '<td class="words">'  . sprintf('%.1f',$tot['words']/$nunits)  . '</td>'
-                            . '<td class="medtype"></td>'
-                            . '<td class="medlen">' . $avgMedlen . '</td>'
-                            . '<td class="buttons">'. sprintf('%.1f',$tot['buttons']/$nunits) . '</td>'
-                            . '<td class="files">'  . sprintf('%.1f',$tot['files']/$nunits)  . '</td>'
-                            . '<td colspan="5"></td>'
-                            . '</tr>';
+		 $totRow = '<tr style="font-size:70%;color:grey;background-color:#ddd">';
+		 $avgRow = '<tr style="font-size:70%;color:grey;background-color:#ddd;border-top:solid 1px #888">';
+                 foreach ($columns as $fd) {
+                     if ($fd=='id') {
+		         $totRow .= "<td>$T_Total</td>";
+			 $avgRow .= "<td>$T_Average</td>";
+		     } elseif ($fd=='views') {
+		         $totRow .= "<td title='$totViewRateMessage'>" . $tot['views']  . '</td>';
+		         $avgRow .= "<td title='$viewRateMessage'>"    . sprintf('%.1f',$tot['views']/$nunits) . '</td>';
+                     } elseif ($fd=='clicks') {
+		         $totRow .= "<td title='$totClickRateMessage'>" . $tot['clicks'] . '</td>';
+			 $avgRow .= "<td title='$clickRateMessage'>"    . sprintf('%.1f',$tot['clicks']/$nunits)   . '</td>';
+		     } elseif ($fd=='created') {
+		         $totRow .= '<td></td>';
+			 $avgRow .= "<td title='$avgCreatedDateTime UT'>$avgCreatedDate</td>";
+		     } elseif ($fd=='changed') {
+		         $totRow .= '<td></td>';
+			 $avgRow .= "<td title='$avgChangedDateTime UT'>$avgChangedDate</td>";
+		     } elseif ($fd=='licence') {
+		         $totRow .= '<td></td>';
+			 $avgRow .= '<td></td>';
+		     } elseif ($fd=='owner') {
+		         $totRow .= '<td></td>';
+			 $avgRow .= '<td></td>';
+		     } elseif ($fd=='sl') {
+		         $totRow .= '<td></td>';
+			 $avgRow .= '<td></td>';
+		     } elseif ($fd=='level') {
+		         $totRow .= '<td></td>';
+			 $avgRow .= "<td>$avgLevelHtml</td>";
+		     } elseif ($fd=='words') {
+		         $totRow .= '<td>'  . $tot['words']  . '</td>';
+			 $avgRow .= '<td>'  . sprintf('%.1f',$tot['words']/$nunits)  . '</td>';
+		     } elseif ($fd=='medtype') {
+		         $totRow .= '<td></td>';
+			 $avgRow .= '<td></td>';
+		     } elseif ($fd=='medlen') {
+		         $totRow .= '<td>' . SM_csSess::secs2minsecs($tot['medlen']) . '</td>';
+			 $avgRow .= "<td>$avgMedlen</td>";
+		     } elseif ($fd=='buttons') {
+		         $totRow .= '<td>'. $tot['buttons']. '</td>';
+			 $avgRow .= '<td>'. sprintf('%.1f',$tot['buttons']/$nunits) . '</td>';
+		     } elseif ($fd=='files') {
+		         $totRow .= '<td>'. $tot['files']. '</td>';
+			 $avgRow .= '<td>'. sprintf('%.1f',$tot['files']/$nunits) . '</td>';
+		     }
+                 }
+		 $totRow .= '<td colspan=3></td></tr>';
+		 $avgRow .= '<td colspan=3></td></tr>';
              }
         }
  
         $tableHtml .= <<<END_tableHtmlBun
 $avgRow
-$totalsRow
+$totRow
 </table>
 $unitsFoundMessage
-</form>
 END_tableHtmlBun;
     }
 
@@ -906,58 +986,39 @@ END_tableHtmlBun;
     <link rel="icon" type="image/png" href="/favicons/clilstore.png">
     <style>
         table#main { border:1px solid #888; border-collapse:collapse; white-space:nowrap; color:#111; }
+        table#main tr td { padding:0 3px; }
+
+        table#main tr.row1 td { background-color:#888; color:white; padding-top:0; border-bottom:2px solid #888; }
+        table#main tr.row1 td a { color:white; }
+        table#main tr.row2 td { background-color:#e2e2e2; }
+        table#main tr.row3 td { padding-top:0; }
+        table#main tr.row4 td { background-color:#e2e2e2; padding-top:0; padding-bottom:1px; border-bottom:1px solid #888; font-size2:120%; text-align:center; }
+        table#main tr.row4 td a:visited { color:#61abac; }
+$tableStyles
+        table#main tr.row1 td:nth-child(n) { font-size:100%; padding-top:0; }
+
+        table#main input { border:1px solid #e2e2e2; background-color:white; border-top:1px; border-bottom:1px; padding:0 2px; }
+        table#main input:focus { border-top:1px solid #222; border-left:1px solid #222; border-bottom:1px solid #aaa; border-right:1px solid #aaa; }
+        table#main input[value] { background-color:yellow; }
+
+        table#main { border:1px solid #888; border-collapse2:collapse; white-space:nowrap; color:#111; }
         table#main tr td { padding:0 3px; vertical-align:top; }
 
-        table#main tr.row1 td { background-color:#888; color:white; border-bottom:2px solid #888; }
-        table#main tr.row2 td { background-color:#e2e2e2; padding-top:6px; }
-        table#main tr.row1 td a { color:white; }
-        table#main tr.row4 td { background-color:#e2e2e2;padding-bottom:1px; border-bottom:1px solid #888; font-size:120%; }
-        table#main tr.row4 td a:visited { color:#61abac; }
+        table#main tr:nth-child(odd)  { background-color:#eef; }
+        table#main tr:nth-child(even) { background-color:#fff; }
+        table#main tr:nth-child(odd):hover  { background-color:$hoverColorOdd; }
+        table#main tr:nth-child(even):hover { background-color:$hoverColorEven; }
 
-        table#main         td.id      { text-align:right; }
-        table#main         td.views   { text-align:right; }
-        table#main         td.clicks  { text-align:right; }
-        table#main         td.created { }
-        table#main         td.changed { }
-        table#main         td.licence { }
-        table#main         td.owner   { }
-        table#main         td.sl      { }
-        table#main         td.level   { text-align:center; }
-        table#main         td.words   { text-align:right; }
-        table#main         td.medtype { text-align:center; }
-        table#main         td.medlen  { text-align:right; }
-        table#main         td.buttons { text-align:right; }
-        table#main         td.files   { text-align:right; }
-        table#main         td.edit    { }
-        table#main         td.title   { }
-
-        table#main tr.data td.id      { font-size:75%; padding-top:4px; text-align:right; }
-        table#main tr.data td.views   { font-size:75%; padding-top:4px; text-align:right; }
-        table#main tr.data td.clicks  { font-size:75%; padding-top:4px; text-align:right; }
-        table#main tr.data td.created { font-size:75%; padding-top:4px; color:grey; }
-        table#main tr.data td.changed { font-size:75%; padding-top:4px; color:grey; }
-        table#main tr.data td.licence { font-size:75%; padding-top:5px; }
-        table#main tr.data td.owner   { }
-        table#main tr.data td.sl      { }
-        table#main tr.data td.level   { text-align:center; }
-        table#main tr.data td.words   { font-size:75%; padding-top:4px; text-align:right; }
-        table#main tr.data td.medtype { }
-        table#main tr.data td.medlen  { font-size:75%; padding-top:4px; text-align:right; }
-        table#main tr.data td.buttons { }
-        table#main tr.data td.files   { }
-        table#main tr.data td.edit    { }
-        table#main tr.data td.title   { white-space:normal; padding-left:12px; text-indent:-10px; }
-
-        table#main tr.data:nth-child(odd)  { background-color:#eef; }
-        table#main tr.data:nth-child(even) { background-color:#fff; }
-        table#main tr.data:nth-child(odd):hover  { background-color:$hoverColorOdd; }
-        table#main tr.data:nth-child(even):hover { background-color:$hoverColorEven; }
-
-        div.find { float:right; margin:4px 0 0 0; background-color2:#fb0; padding:2px 22px 2px 1px; }
+        div.find { float:right; margin:4px 0 0 0; padding:2px 22px 2px 1px; }
         div.find input { font-size:112%; background-color:#888; color:white; font-weight:bold; padding:3px 10px; border:0; border-radius:8px; }
         div.find input:hover { background-color:blue; }
 
+        table#main div#findDiv { float:right; margin:4px 0 0 0; padding:0 22px 0 1px; }
+        table#main div#findDiv input { font-size:100%; background-color:#888; color:white; font-weight:bold; padding:0px 8px; border:0; border-radius:8px; }
+        table#main div#findDiv input:hover { background-color:blue; }
+
         img.favicon { width:16px; height:16px; border:0; margin:2px; }
+	img.undConst { padding-left:16px; }
         a.button { display:block; float:left; margin:1px 7px; background-color:#55a8eb; color:white; font-weight:bold; padding:3px 10px; border:0; border-radius:8px; }
         a.button:hover { background-color:blue; }
         a.mybutton, button { background-color:#55a8eb; color:white; padding:1px 8px; border-radius:8px; white-space:nowrap; }
@@ -1030,7 +1091,6 @@ $mdNavbar
 $cookieMessage
 <div class="smo-body-indent">
 <a><img src=/favicons/restart.png style="float:right" alt="Restart" title="$T_See_as_newbie" onclick="setNewbie();"></a>
-<!--<span style="font-size:50%;color:red;background-color:yellow">News: Service will be down on 20 February 2016 during communications upgrade</span>-->
 
 <h1 style="float:left;margin:10px 12px 0 0"><img src="/icons-smo/clilstore-blue45.png" alt="Clilstore" style="width:184px;height:45px"></h1>
 <p style="margin:22px 0 0 0;font-size:90%;float:left">$T_Teaching_units<br>$T_for_CLIL</p>
@@ -1052,7 +1112,11 @@ $photo
 $userHtml
 
 $tabletopChoices
+$dataLists
+<form id="filterForm" method="post" onreset="clearFields()">
+<input type="hidden" name="filterForm" value="1">
 $tableHtml
+</form>
 
 <div style="min-height:65px;max-width:840px;border:2px solid #47d;margin:8em 0 0.5em 0;border-radius:4px;color:#47d;font-size:95%">
 <div style="float:left;margin-right:1.5em">

@@ -238,98 +238,15 @@ setcookie('csSession','',1,'/clilstore/','multidict.net');
       return $clause;
   }
 
-
-  public function symbolRowHtml() {
-      $T = new SM_T('clilstore/symbolRowHtml');
-      $T_Sort_the_column     = $T->h('Sort_the_column');
-      $T_Hide_the_column     = $T->h('Hide_the_column');
-      $T_Click_to_sort_hide  = $T->h('Click_to_sort_hide');
-      $T_Restore             = $T->h('Restore');
-      $T_Restore_title       = $T->h('Restore_title');
-
-      $csid = $this->csSession->csid;
+  public function columns() {
+  // Returns an array of the columns to be displayed on the Clilstore index page
       $mode = $this->csSession->mode;
-      $modecol = "m$mode";
-      $symbol = $symbolHtml = $pri = array();
-      foreach ($this->csFilter as $r) {
-          $fd  = $r['fd'];
-          $pr  = $r['sortpri'];
-          if ($r[$modecol]==0) {
-              $symbol[$fd] = '.';
-          } else {
-              if ($r['sortord']==1) { $symbol[$fd] = '▵'; }
-                else                { $symbol[$fd] = '▿'; }
-              if ($pr<>0) { $pri[$fd] = $pr; }
-          }
+      $cols = [];
+      foreach ($this->csFilter as $fd=>$row) {
+          if ($row["m$mode"]==1) { $cols[] = $fd; }
       }
-      $ranks = array_flip($pri);
-      ksort($ranks);
-      $prifd  = array_shift($ranks);  //The sort field
-      $prifd2  = array_shift($ranks); //The secondary sort field
-      if (!empty($prifd))  { if ($symbol[$prifd] =='▵') {$symbol[$prifd]  = '▲';} else {$symbol[$prifd]  = '▼';}  }
-      if (!empty($prifd2)) { if ($symbol[$prifd2]=='▵') {$symbol[$prifd2] = '▴';} else {$symbol[$prifd2] = '▾';}  }
-
-      $hrefSelf = $_SERVER['PHP_SELF'];
-      if (substr($hrefSelf,-9)=='index.php') { $hrefSelf = substr($hrefSelf,0,strlen($hrefSelf)-9); }
-      foreach ($symbol as $fd=>$sym) {
-          if ($sym=='.') {
-              $symbolHtml[$fd] = "<td class='$fd'>.</td>\r";
-          } elseif ($fd<>'title') {
-              $pad = ( $fd=='id' ? '' : '&nbsp;' );
-              $deleteHtml = "<a href='$hrefSelf?deleteCol=$fd' style='color:red;font-size:80%' title='$T_Hide_the_column'>×</a>";
-              $symbolHtml[$fd] = "<td class='$fd'><a href='$hrefSelf?sortCol=$fd' title='$T_Sort_the_column'>$sym$pad</a> $deleteHtml</td>\r";
-          } else {
-              $symbolinfo = '<span style="font-size:65%">⇐ '
-                           . sprintf($T_Click_to_sort_hide, '<span style="color:#55a8eb;font-size:140%">▵</span>', '<span style="color:red;font-size:140%">×</span>')
-                           . " [<a href='$hrefSelf?restoreCols=restore' title='$T_Restore_title' style='font-size:110%'>$T_Restore</a>]</span>";
-              $symbolHtml['title'] = "<td class=title colspan=2 style='vertical-align:bottom'><div style='float:right'>$symbolinfo</div><a href='$hrefSelf?sortCol=title' title='$T_Sort_the_column'>$sym</a></td>";
-          }
-      }
-      $symbolHtml_id = $symbolHtml['id'];
-      $symbolRow = $symbolHtml['id']
-                 . $symbolHtml['views']
-                 . $symbolHtml['clicks']
-                 . $symbolHtml['created']
-                 . $symbolHtml['changed']
-                 . $symbolHtml['licence']
-                 . $symbolHtml['owner']
-                 . $symbolHtml['sl']
-                 . $symbolHtml['level']
-                 . $symbolHtml['words']
-                 . $symbolHtml['medtype']
-                 . $symbolHtml['medlen']
-                 . $symbolHtml['buttons']
-                 . $symbolHtml['files']
-                 . '<td class="edit"></td>'
-                 . $symbolHtml['title'];
-      return $symbolRow;
+      return $cols;
   }
-
-
-  public function visibility($fd) {
-  // Returns either 'visible' or 'collapse', depending on whether or not the field should be displayed in the current mode
-  // This ‘visibility’ mechanism should perhaps be replaced by something better
-      $csid = $this->csSession->csid;
-      $mode = $this->csSession->mode;
-      if ($this->csFilter[$fd]["m$mode"]==1) {
-          return 'visible';
-      } else {
-          return 'collapse';
-      }
-  }
-
-
-/* Looks like this can be deleted  --CPD 2020-02-16
-  public function deleteCol($fd) {
-     // Deletes a column from display in the current mode by by setting its display value to 0
-      $csid = $this->csSession->csid;
-      $mode = $this->csSession->mode;
-      $modecol = "m$mode";
-      $this->csFilter[$fd][$modecol] = 0;
-      $this->storeCsFilter();
-  }
-*/
-
 
   public function addCol($fd) {
   // Add a column to display in the current mode by by setting its display value to 1
@@ -506,7 +423,8 @@ END_addColHtml;
       $counts[-1] = $totalCount;
       for ($cefr=-1; $cefr<=5; $cefr++ ) {
           $label = $labels[$cefr];
-          $href = "$hrefSelf?levelBut=$label";
+          $labelEn = ( $cefr==-1 ? 'Any' : $label ); //'Any' in English rather than localized
+          $href = "$hrefSelf?levelBut=$labelEn";
           $count = $counts[$cefr];
           $class = 'levelbutton live';
           if ($count==0) {

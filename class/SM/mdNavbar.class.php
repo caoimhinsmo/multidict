@@ -11,14 +11,15 @@ class SM_mdNavbar {
           'ga'=>'Gaeilge',
           'gd'=>'Gàidhlig',
           'it'=>'Italiano',
+          'sh'=>'Srpskohrvatsk',
+            '----1'=>'',  //Partial translations
           'lt'=>'Lietuvių',
           'pt'=>'Português',
           'bg'=>'Български',
-//            '----1'=>'',  //Partial translations
             '----2'=>'',  //Very partial translations
           'cy'=>'Cymraeg',
           'de'=>'Deutsch',
-          'is'=>'Íslenska');
+          'ru'=>'Русский');
       return $hlArr;
   }
 
@@ -67,9 +68,14 @@ class SM_mdNavbar {
                         );
       $hlArr = self::hlArr();
       $options = '';
+      $hlgrey = 0;
       foreach ($hlArr as $hl=>$hlAinm) {
-          if (substr($hl,0,4)=='----') { $options .= "<option value='' disabled>&nbsp;_{$hlAinm}_</option>/n"; }  //Divider in the list of select options
-            else                       { $options .= "<option value='$hl|en'" . ( $hl==$hl0 ? ' selected' : '' ) . ">$hlAinm</option>\n"; }
+          if (substr($hl,0,4)=='----') {
+              $options .= "<option value='' disabled>&nbsp;_{$hlAinm}_</option>/n";  //Divider in the list of select options
+              $hlgrey = min($hlgrey+4,9); // Increase the greyness, up to a maximum of 9
+          } else {
+              $options .= "<option value='$hl|en'" . ( $hl==$hl0 ? ' selected' : '' ) . " style='color:#$hlgrey$hlgrey$hlgrey'>$hlAinm</option>\n";
+          }
       }
       $selCanan = <<< END_selCanan
 <script>
