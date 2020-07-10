@@ -754,8 +754,8 @@ END_dataLists;
         $tableHtml = <<<END_tableHtmlBarr
 <table id=main>
 <tr class=row1>$row1</tr>
-<tr class=row2>$row2</tr>
-<tr class=row2>$row3</tr>
+<tr class=row2 onchange="submitFForm()">$row2</tr>
+<tr class=row3 onchange="submitFForm()">$row3</tr>
 <tr class=row4>$row4</tr>
 END_tableHtmlBarr;
 
@@ -991,7 +991,7 @@ END_tableHtmlBun;
         table#main tr.row1 td { background-color:#888; color:white; padding-top:0; border-bottom:2px solid #888; }
         table#main tr.row1 td a { color:white; }
         table#main tr.row2 td { background-color:#e2e2e2; }
-        table#main tr.row3 td { padding-top:0; }
+        table#main tr.row3 td { background-color:#e2e2e2; padding-top:0; }
         table#main tr.row4 td { background-color:#e2e2e2; padding-top:0; padding-bottom:1px; border-bottom:1px solid #888; font-size2:120%; text-align:center; }
         table#main tr.row4 td a:visited { color:#61abac; }
 $tableStyles
@@ -1113,7 +1113,7 @@ $userHtml
 
 $tabletopChoices
 $dataLists
-<form id="filterForm" method="post" onreset="clearFields()">
+<form id="filterForm" method="post" onreset="clearFields();">
 <input type="hidden" name="filterForm" value="1">
 $tableHtml
 </form>
