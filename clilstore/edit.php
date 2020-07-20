@@ -204,12 +204,14 @@
       public function __construct ($ord, $but='', $wl=0, $new=0, $link='') {
           $but  = trim(strip_tags($but));
           $link = trim(strip_tags($link));
+/* This now seems like a bad idea. Delete altogether sometime? --CPD 2020-07-20
           if (   !empty($link)
               && strpos($link,'://')==0
               && substr($link,0,7)<>'mailto:'
               && substr($link,0,5)<>'file:'
               && !is_numeric($link)
              ) { $link = "http://$link"; }  //Add http:// on the assumption that it is missing
+*/
           $this->ord  = $ord;
           $this->but  = $but;
           $this->wl   = $wl;
@@ -519,16 +521,8 @@ EOD2;
             $slOptionHtml .= "  <option value=\"$code\"$selectHtml>$name</option>\n";
         }
 
-        if (empty($id)) { //Creating a new unit
-            $submitValue = $T_Publish;
-            $filesButton = '<span class="info">Once you have given this new unit a title, you’ll be able attach files to it for use on buttons or in the body of the unit itself.</span>';
-        } else {
-            $submitValue = $T_Save_unit;
-            $filesButton = <<<EODfilesButton
-<a href="manageFiles.php?id=$id" class="button" title="Upload and manage files attached to this unit" target="_blank">Files…</a>
-<span class="info">Upload and manage files attached to this unit...</span>
-EODfilesButton;
-        }
+        if (empty($id)) { $submitValue = $T_Publish;   }
+          else          { $submitValue = $T_Save_unit; }
         if ($errorMessage) { $errorMessage = "<div class=errorMessage>$errorMessage<br><br>$T_not_saved_errormessage</div>"; }
         $buttonsHtml = '';
         foreach ($buttons as $b) {
@@ -558,6 +552,50 @@ EODbutHtml;
       = $chkLic['BY-NC-ND'] = '';
         $chkLic[$licence] = 'checked';
 
+// Create fileInfoForm
+        $stmtFiles = $DbMultidict->prepare('SELECT fileid, filename, LENGTH(bloigh) AS filesize FROM csFiles WHERE id=:id ORDER BY filename');
+        $stmtFiles->execute(array('id'=>$id));
+        $fileInfoArr = $stmtFiles->fetchAll(PDO::FETCH_ASSOC);
+        $filesHtml = '';
+        foreach ($fileInfoArr as $fileInfo) {
+            extract($fileInfo);
+            if ($filesize<10000) { $filesize .= ' bytes'; } else { $filesize = round($filesize/1024) . 'KB'; }
+            $filesHtml .= <<<EODeditFile
+<tr id="filetr-$fileid">
+<td><span id="filetick-$fileid" class=change>✔<span></td>
+<td><input id="filename-$fileid" value="$filename" title="filesize $filesize" onchange="changeFilename('$fileid')"></td>
+<td><img src="/icons-smo/curAs.png" title="Delete this file (immediately and permanently)" onclick="deleteFile('$fileid')" alt="Delete"></td>
+<td><a id="fileLink-$fileid" href="/cs/$id/$filename"><img src="/icons-smo/td.gif" title="View this file" alt="View"></a></td>
+<td style="font-size:80%" id="fileLinkName-$fileid">/cs/$id/$filename</td>
+</tr>
+EODeditFile;
+        }
+        if (empty($filesHtml)) { $nofilesDisplay = 'block'; $filesDisplay = 'none';  }
+          else                 { $nofilesDisplay = 'none';  $filesDisplay = 'block'; }
+        $fileInfoForm = <<<EODfileInfoForm
+<div id="nofilesDisplay" style="display:$nofilesDisplay">
+<p style="margin:0.2em;font-size:80%">The unit currently has no attached files</p>
+<p class="info" style="margin:0">You can upload files which will be attached to this unit.  Make sure that you name them with the correct filename extension: <b>.html</b> or <b>.docx</b> or <b>.pdf</b> or whatever, as appropriate to their file type.</p>
+</div>
+<fieldset id="filesDisplay" style="display:$filesDisplay;margin:6px;border:1px solid grey;padding:10px;border-radius:5px;background-color:#ffd">
+<legend class=boldleg>Files attached to the unit</legend>
+<form name="fileInfoForm">
+<table id="filesAtt">
+<tbody id="filesAttBody">
+<tr style="font-size:85%;background-color2:#ddf">
+<td></td>
+<td>File <span class="info" style="font-style:italic">(you can edit its name here to change it)</span></td>
+<td>Delete</td>
+<td>View</td>
+<td>Link address <span style="font-size:80%;font-style:italic">(relative url for use in buttons or in the body of the unit)</span></td>
+</tr>
+$filesHtml
+</tbody>
+</table>
+</form>
+</fieldset>
+EODfileInfoForm;
+
         echo <<<EOD1
 <!DOCTYPE html>
 <html lang="en">
@@ -575,6 +613,18 @@ EODbutHtml;
         table#editlinkbuts td:nth-child(2)       { width:1.5em; text-align:center; }
         table#editlinkbuts td:nth-child(3)       { width:1.8em; text-align:center; }
         table#editlinkbuts td:nth-child(4) input { min-width:60em; }
+
+        table#filesAtt { margin-bottom:0.2em; border-collapse:collapse; }
+        table#filesAtt td { padding:2px 4px; } 
+        table#filesAtt td:nth-child(1)       { padding:2px 0; }
+        table#filesAtt td:nth-child(2) input { min-width:20em; background-color:#bfe; color:black; font-size:100%;
+                                                   padding:3px 6px; border:1px solid green; border-radius:4px; }
+        table#filesAtt td:nth-child(3)       { width:1.8em; text-align:center; }
+        table#filesAtt td:nth-child(4)       { width:1.5em; text-align:center; }
+        table#filesAtt td:nth-child(5)       { padding-left:1em; color:green; }
+        table#filesAtt td:nth-child(2).newFile input { background-color:#9fb; }
+
+        legend.boldleg { font-weight:bold; color:white; background-color:grey; border-radius:4px; border:1px solid grey; }
         label.rad { border:1px solid black; padding:1px 3px; border-radius:3px; background-color:#ffd; }
         label.highlighted    { background-color:#ff4; }
         label.bithighlighted { background-color:#ff9; }
@@ -718,6 +768,124 @@ EODbutHtml;
                     }
                 }
         }
+
+        function banChars(oldname) {
+            //Returns a new filename, with all non-advisable characters in oldname converted to to _
+            //after issuing an alert
+            var newnameArr = oldname.split('');
+            var bannedChars = '#%&{}\\\\<>*? $!\\'":@+`|='.split('');
+            for (var i=0;i<newnameArr.length;i++) {
+                for (var j=0;j<bannedChars.length;j++) {
+                    if (newnameArr[i]==bannedChars[j]) { newnameArr[i] = '_'; } //Covert banned characters to _
+                }
+            }
+            var newname = newnameArr.join('');
+            if (newname!=oldname) {
+                alert('Non-advisable characters in the filename have been replaced by _'
+                    + '\\n\\n' + oldname + ' →\\n' + newname);
+            }
+            return newname;
+        }
+
+        function makeNiceFilename(value) {
+            var nicename = value.split("\\\\").pop().split("/").pop();
+            var el = document.getElementById('filenameUpload');
+            el.value = banChars(nicename);
+            document.getElementById('nicenameDiv').style.display = 'block';
+        }
+
+        function changeFilename(fileid) {
+            var filenameEl = document.getElementById('filename-'+fileid);
+            var newname = banChars(filenameEl.value);
+            filenameEl.value = newname;
+            var fileLinkName = '/cs/$id/'+newname;
+            document.getElementById('fileLink-'+fileid).href = fileLinkName;
+            document.getElementById('fileLinkName-'+fileid).innerHTML = fileLinkName;
+
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.onload = function() {
+                if (this.status!=200 || this.responseText!='OK') { 
+                    alert('$T_Error_in changeFilename:'+this.status+' '+this.responseText); return;
+                } else {
+                    var tickel = document.getElementById('filetick-'+fileid);
+                    tickel.classList.remove('changed'); //Remove the class (if required) and add again after a tiny delay, to restart the animation
+                    setTimeout(function(){tickel.classList.add('changed');},50);
+                }
+            }
+            xmlhttp.open('GET', 'ajax/changeFile.php?fileid=' + fileid + '&filename=' + newname);
+            xmlhttp.send();
+        }
+
+        function deleteFile(fileid) {
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.onload = function() {
+                if (this.status!=200 || this.responseText!='OK') { 
+                    alert('$T_Error_in deleteFile:'+this.status+' '+this.responseText); return;
+                } else {
+                    var filetr = document.getElementById('filetr-'+fileid);
+                    var parent = filetr.parentNode;
+                    parent.removeChild(filetr);
+                    if (parent.childElementCount==1) {
+                        document.getElementById('nofilesDisplay').style.display = 'block';
+                        document.getElementById('filesDisplay').style.display   = 'none';
+                    }
+                }
+            }
+            xmlhttp.open('GET', 'ajax/changeFile.php?fileid=' + fileid + '&delete=');
+            xmlhttp.send();
+        }
+
+        function uploadOnsubmit(event) {
+            event.preventDefault();
+            var uploadForm = document.getElementById('uploadForm');
+            var file = document.getElementById('bloigh').files[0]; //If multiple files selected, retain only the first
+            if (typeof(file)=='undefined') { alert('You need to select a file first'); return; }
+            if (file.size>3000000) { alert('File size exceeds Clilstore’s 3MB upload limit'); return; }
+            if (file.size>1000000) { alert('This file is very big'); }
+            uploadStatus.innerHTML = 'Uploading...';
+            var formData = new FormData();
+            filenameUpload = document.getElementById('filenameUpload').value; 
+            formData.append('bloigh', file, filenameUpload);
+            formData.append('id','$id');
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', 'ajax/uploadHandling.php');
+            xhr.onload = function () {
+                if (this.status!=200 || this.responseText.substring(0,3)!='OK-') { 
+                    uploadStatus.innerHTML = 'Upload error. Try again.';
+                    alert('$T_Error_in uploadOnsubmit:'+this.status+'\\n\\n'+this.responseText+'\\n\\n'); return;
+                } else {
+                    uploadStatus.innerHTML = '';
+                    var fileid = this.responseText.substring(3);
+                    document.getElementById('nofilesDisplay').style.display = 'none';
+                    document.getElementById('filesDisplay').style.display   = 'block';
+                    var trNew = document.createElement('tr');
+                    trNew.id = 'filetr-' + fileid;
+                    var inner =
+'<td><span id="filetick-_fileid_" class=change>✔<span></td>' +
+'<td class=newFile><input id="filename-_fileid_" value="_filename_" title="filesize $filesize" onchange=changeFilename("_fileid_")></td>' +
+'<td><img src="/icons-smo/curAs.png" title="Delete this file (immediately and permanently)" onclick=deleteFile("_fileid_") alt="Delete"></td>' +
+'<td><a id="fileLink-_fileid_" href="/cs/$id/_filename_"><img src="/icons-smo/td.gif" title="View this file" alt="View"></a></td>' +
+'<td style="font-size:80%" id="fileLinkName-_fileid_">/cs/$id/_filename_</td>';
+                    inner = inner.replace(/_filename_/g,filenameUpload);
+                    inner = inner.replace(/_fileid_/g,fileid);
+                    var filesTableBody = document.getElementById('filesAttBody');
+                    trNew.innerHTML = inner;
+                    filesTableBody.appendChild(trNew);
+                    uploadForm.reset();
+                    document.getElementById('nicenameDiv').style.display = 'none';
+                }
+            };
+            xhr.send(formData);
+        }
+
+/* example - Sgudal - delete
+    // Check the file type
+    if (!file.type.match('image.*')) {
+        statusP.innerHTML = 'The file selected is not an image.';
+        return;
+    }
+*/
+
     </script>
 
 $tinymceScript
@@ -761,7 +929,6 @@ $T_Text <span class="info" style="padding-left:2em">$textAdvice</span><br>
 </tr>
 $buttonsHtml
 </table>
-$filesButton
 </fieldset>
 </fieldset>
 
@@ -876,6 +1043,27 @@ $T_I_grant_use
 
 <input type="hidden" name="owner" value="$owner">
 </form>
+
+<div style="margin-top:4em;border-top:0.25em solid #5ae;padding:1px;background-color2:#9cf">
+$fileInfoForm
+
+<fieldset style="margin:6px;border:1px solid grey;padding:10px;border-radius:5px;background-color:#ffd"> 
+<legend class=boldleg>Upload a file</legend>
+<form id="uploadForm" action="ajax/uploadHandling.php" method="post" onsubmit="uploadOnsubmit(event)">
+<div>
+    <label for="bloigh">Choose a file on your computer:</label>
+    <input type="file" name="bloigh" id="bloigh" style="width:16em" onchange="makeNiceFilename(this.value)">
+</div>
+<div style="display:none" id="nicenameDiv">
+    <label for="filenameUpload">and the name it will have in Clilstore</legend>
+    <input id="filenameUpload" style="width:16em"> <span class="info">You can change this, but the name should be something sensible for a computer file<br>&nbsp;</span>
+    <input type="submit" value="Upload">
+    <span class="info">Remember that you must not upload copyrighted material</span>
+</div>
+<p id="uploadStatus"></p>
+</form>
+</fieldset>
+</div>
 
 </div>
 $mdNavbar

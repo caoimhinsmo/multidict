@@ -26,6 +26,10 @@ span.fann     { color:#777; }
 span.pdf      { font-size:80%; }
 span.rabhadh  { color:red; font-size:80%; }
 
+span.change { opacity:0; color:white; }
+span.change.changed { color:green; animation:appearFade 5s; }
+@keyframes appearFade { from { opacity:1; background-color:yellow; } 20% { opacity:0.8; background-color:white; } to { opacity:0; } }
+
 p.tiotal { margin-bottom:1px; font-weight:bold; }
 ul.dluth { margin-top:0px; }
 

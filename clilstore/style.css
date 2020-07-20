@@ -30,5 +30,5 @@ ul.linkbuts li a:focus  { background-color:#00c; color:white; }
 input:focus, checkbox:focus  { background-color:#eef; color:blue; }
 input[type="password"]:focus { background-color:#fef; }
 input:focus:invalid { background-color:#fdd; }
-input[type=submit], a.button { font-size:112%; background-color:#55a8eb; color:white; font-weight:bold; padding:3px 10px; border:0; border-radius:8px; }
+input[type=submit], a.button { font-size:112%; background-color:#55a8eb; color:white; font-weight:bold; padding:3px 10px; border:0; border-radius:12px; }
 input[type=submit]:hover, a.button:hover { background-color:blue; }

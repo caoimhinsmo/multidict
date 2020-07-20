@@ -28,9 +28,6 @@
         table#opttab tr td:first-child { text-align:right; vertical-align:top; }
         table#transferTable { border-collapse:collapse; }
         table#transferTable td { padding:5px; }
-        span.change { opacity:0; color:white; }
-        span.change.changed { color:green; animation:appearFade 5s; }
-        @keyframes appearFade { from { opacity:1; background-color:yellow; } 20% { opacity:0.8; background-color:white; } to { opacity:0; } }
     </style>
     <script>
         function changeUserOption(user,option,value) {

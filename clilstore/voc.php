@@ -150,9 +150,6 @@ EOD;
         table#vocab td:nth-child(2) a:hover { color:white; background-color:black; }
         table#vocab td:nth-child(3) { padding:0; }
         table#vocab tr + tr > td { border-left:1px solid #aaa; }
-        span.change { opacity:0; color:white; }
-        span.change.changed { color:green; animation:appearFade 5s; }
-        @keyframes appearFade { from { opacity:1; background-color:yellow; } 20% { opacity:0.8; background-color:transparent; } to { opacity:0; } }
         a.langbutton { margin:1px 7px; background-color:#55a8eb; color:white; font-weight:bold; padding:2px 8px; border:1px solid white; border-radius:8px; }
         a.langbutton.selected { border-color:#55a8eb; background-color:yellow; color:#55a8eb; }
         a.langbutton.live:hover { background-color:blue; }

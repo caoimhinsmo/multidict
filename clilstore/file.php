@@ -18,10 +18,10 @@
         //multiple ranges could be specified at the same time, but for simplicity only serve the first range
         $rangeArr = explode(',',$range_orig);
         $range = $rangeArr[0];
+        list($start_byte, $end_byte) = explode('-', $range, 2); //figure out download piece from range (if set)
     } else {
         $range = '';
     }
-    list($start_byte, $end_byte) = explode('-', $range, 2); //figure out download piece from range (if set)
 
     $DbMultidict = SM_DbMultidictPDO::singleton('r');
     $stmt = $DbMultidict->prepare('SELECT bloigh,mime FROM csFiles WHERE id=:id AND filename=:filename');
