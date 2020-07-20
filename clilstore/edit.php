@@ -602,8 +602,8 @@ EODfileInfoForm;
 <head>
     <meta charset="UTF-8">
     <title>$legend</title>
-    <link rel="stylesheet" href="/css/smo.css">
-    <link rel="stylesheet" href="style.css?version=2014-05-15">
+    <link rel="stylesheet" href="/css/smo.css?version=rubbishToForceReload">
+    <link rel="stylesheet" href="style.css?version=rubbishToForceReload">
     <link rel="icon" type="image/png" href="/favicons/clilstore.png">
     <meta name="robots" content="noindex">
     <style>
