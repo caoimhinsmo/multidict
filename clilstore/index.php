@@ -221,9 +221,9 @@ EOD_cookieMessage;
         $incTestChecked = ( $incTest ? 'checked' : '' );
         $wideChecked    = ( $mode==3 ? 'checked' : '' );
         $checkboxesHtml = <<<CHECKBOXES
-<input type="checkbox" name="incTest" id="incTest" $incTestChecked tabindex=2 title="include test units" onclick="submitFForm()">
+<input type="checkbox" name="incTest" id="incTest" form="filterForm" $incTestChecked tabindex=2 title="include test units" onclick="submitFForm()">
 <label for="incTest" style="padding-right:2em">$incTestLabel</label>
-<input type="checkbox" name="wide" id="wide" $wideChecked tabindex=4 title="include all columns" onclick="submitFForm()">
+<input type="checkbox" name="wide" id="wide" form="filterForm" $wideChecked tabindex=4 title="include all columns" onclick="submitFForm()">
 <label for="wide">$T_More_options</label>
 CHECKBOXES;
     }
