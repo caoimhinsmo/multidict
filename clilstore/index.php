@@ -404,8 +404,6 @@ END_USER2;
 //        $f['titleFil']   =
 //        $f['textFil']    =
         '';
-//        if (empty($f['slFil'])) { $csSess->csFilter['sl']['m0'] = 1; }
-//         else                   { $csSess->csFilter['sl']['m0'] = 0; }  // No need to display Language if it is being filtered for
         $csSess->csFilter['sl']['m0'] = 0;  // No need to display Language because it is always filtered for in mode 0
        // Set up checked values for level radio buttons
         $level = $csSess->csFilter['level']['val1'];

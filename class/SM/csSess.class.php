@@ -146,7 +146,8 @@ setcookie('csSession','',1,'/clilstore/','multidict.net');
           }
           if ($mode==0 || $mode==1) { $this->csSession->incTest = 0; } //student modes - no test units
       }
-      if ($mode<>0 && $mode<>1 && $mode<>2 && $mode<>3) { throw new SM_Exception("Invalid mode: $mode"); }  // Paranoid security check on $mode since it is used to construct field names
+      if ($mode<>0 && $mode<>1 && $mode<>2 && $mode<>3)
+          { throw new SM_Exception("Invalid mode: $mode"); }  // Paranoid security check on $mode since it is used to construct field names
       $modecol = "m$mode";
 
       if (!empty($_GET['deleteCol'])) { $this->csFilter[$_GET['deleteCol']][$modecol] = 0; }

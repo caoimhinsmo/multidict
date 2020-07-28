@@ -47,30 +47,13 @@
         } else { throw new SM_MDexception('Invalid offerSubmit parameter '.htmlspecialchars($offerSubmit)); }
      }
 
-    $query = 'SELECT sl,level,owner,medtype,medlen,title,summary,langnotes,words,created,changed,licence,views,clicks,offer,offerTime,fullname'
+    $query = 'SELECT sl,level,owner,medtype,medlen,title,summary,langnotes,words,created,changed,licence,views,clicks,likes,offer,offerTime,fullname'
             .' FROM clilstore, users WHERE id=:id AND clilstore.owner=users.user';
     $stmt = $DbMultidict->prepare($query);
     $stmt->bindParam(':id', $id, PDO::PARAM_INT);
     $stmt->execute();
-    if (!($r = $stmt->fetch(PDO::FETCH_OBJ))) { throw new SM_MDexception("No unit exists for id=$id"); }
-    $stmt = null;
-    $sl       = $r->sl;
-    $level    = $r->level;
-    $owner    = $r->owner;
-    $medtype  = $r->medtype;
-    $medlen   = $r->medlen;
-    $title    = $r->title;
-    $summary  = $r->summary;
-    $langnotes= $r->langnotes;
-    $words    = $r->words;
-    $created  = $r->created;
-    $changed  = $r->changed;
-    $licence  = $r->licence;
-    $views    = $r->views;
-    $clicks   = $r->clicks;
-    $offer    = $r->offer;
-    $offerTime= $r->offerTime;
-    $fullname = $r->fullname;
+    if (!($r = $stmt->fetch(PDO::FETCH_ASSOC))) { throw new SM_MDexception("No unit exists for id=$id"); }
+    extract($r);
     $tl = ( $sl=='en' ? 'es' : 'en'); //airson Google Translate
 
     $summary   = htmlspecialchars($summary);
@@ -103,6 +86,16 @@
 <li><a href="/cs/$id" title="Back to Unit $id">Unit $id</a></li>
 </ul>
 EOBUT;
+
+    $stmtLikeUsers = $DbMultidict->prepare('SELECT user FROM user_unit WHERE unit=:id AND likes>0 ORDER BY user');
+    $stmtLikeUsers->execute([':id'=>$id]);
+    $likeUsersArr = $stmtLikeUsers->fetchAll(PDO::FETCH_COLUMN);
+    $likeUsers = htmlspecialchars(implode(', ',$likeUsersArr));
+
+    $likeUsersTitle = ( $likeUsers
+                      ? "TITLE='Liked by: $likeUsers'"
+                      : ''
+                      );
 
     if (!empty($user)) {
         $abuseParams =  '&amp;name=' . $myCLIL->fullname()
@@ -190,6 +183,7 @@ $errorMessage
 <tr><td>Licence:</td><td>Creative Commons $licence</td></tr>
 <tr><td>Views:</td><td>$views</td></tr>
 <tr><td>Clicks on words:</td><td>$clicks$clicksMessage - <a href='unitwordclicks.php?id=$id'>List of clicked words</a></td></tr>
+<tr><td>Likes:</td><td $likeUsersTitle>$likes</td</tr>
 </table>
 
 <p><a href="page.php?id=$id">Raw unit</a> <i>(unwordlinked)</i>

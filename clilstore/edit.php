@@ -624,7 +624,7 @@ EODfileInfoForm;
         table#filesAtt td:nth-child(5)       { padding-left:1em; color:green; }
         table#filesAtt td:nth-child(2).newFile input { background-color:#9fb; }
 
-        legend.boldleg { font-weight:bold; color:white; background-color:grey; border-radius:4px; border:1px solid grey; }
+        legend.boldleg { font-weight:bold; color:white; background-color:grey; border:1px solid grey; }
         label.rad { border:1px solid black; padding:1px 3px; border-radius:3px; background-color:#ffd; }
         label.highlighted    { background-color:#ff4; }
         label.bithighlighted { background-color:#ff9; }
@@ -804,7 +804,7 @@ EODfileInfoForm;
 
             var xmlhttp = new XMLHttpRequest();
             xmlhttp.onload = function() {
-                if (this.status!=200 || this.responseText!='OK') { 
+                if (this.status!=200 || this.responseText!='OK') {
                     alert('$T_Error_in changeFilename:'+this.status+' '+this.responseText); return;
                 } else {
                     var tickel = document.getElementById('filetick-'+fileid);
@@ -862,7 +862,7 @@ EODfileInfoForm;
                     trNew.id = 'filetr-' + fileid;
                     var inner =
 '<td><span id="filetick-_fileid_" class=change>✔<span></td>' +
-'<td class=newFile><input id="filename-_fileid_" value="_filename_" title="filesize $filesize" onchange=changeFilename("_fileid_")></td>' +
+'<td class=newFile><input id="filename-_fileid_" value="_filename_" title="filesize '+file.size+'" onchange=changeFilename("_fileid_")></td>' +
 '<td><img src="/icons-smo/curAs.png" title="Delete this file (immediately and permanently)" onclick=deleteFile("_fileid_") alt="Delete"></td>' +
 '<td><a id="fileLink-_fileid_" href="/cs/$id/_filename_"><img src="/icons-smo/td.gif" title="View this file" alt="View"></a></td>' +
 '<td style="font-size:80%" id="fileLinkName-_fileid_">/cs/$id/_filename_</td>';

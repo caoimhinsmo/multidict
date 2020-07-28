@@ -12,6 +12,13 @@
   }
   if (isset($_GET['user'])) { $user = $_GET['user']; } //for generating edit button
 
+  $T = new SM_T('clilstore/page');
+
+  $T_Error_in            = $T->j('Error_in');
+
+  $hl0 = $T->hl0();
+error_log("\$hl0=$hl0");
+
   try {
     if (!isset($_GET['id'])) { throw new SM_MDexception('No id parameter'); }
     $id = $_GET['id'];
@@ -36,7 +43,7 @@
 
     //Prepare media (or picture)
     if ($medfloat=='') { $medfloat = 'none'; }
-    $scroll = $recordVocHtml = '';
+    $scroll = $recordVocHtml = $likeHtml = '';
     if ($medfloat=='scroll') { $medfloat = 'none'; $scroll='scroll'; }
     $medembedHtml = ( empty($medembed) ? '' : "<div class=\"$medfloat\">$medembed</div>" );
 
@@ -73,6 +80,12 @@
                         ."<img src='/favicons/recordOn.png' alt='VocOn' title='Vocabulary recording is currently enabled - Click to disable'>"
                         ."</span></li>"
                         ."<li class=right><a class=$vocClass href='voc.php?user=$user&amp;sl=$sl' nowordlink target=voctab title='Open your vocabulary list in a separate tab'>V</a>";
+       $stmtGetLike = $DbMultidict->prepare('SELECT likes FROM user_unit WHERE user=:user AND unit=:id');
+       $stmtGetLike->execute([':user'=>$user,':id'=>$id]);
+//$likes = $stmtGetLike->fetchColumn();
+//error_log("\$likes=$likes");
+       if ($stmtGetLike->fetchColumn()>0) { $likeClass = 'liked'; } else { $likeClass = 'unliked'; }
+       $likeHtml = "<li id=likeLI class=$likeClass onclick=likeClicked()><img id=heartUnliked src='/favicons/heartUnliked.png' alt='unlike'><img id=heartLiked src='/favicons/heartLiked.png' alt='like'>";
     }
     $sharebuttonFB = "<iframe src='https://www.facebook.com/plugins/share_button.php?href=$serverhome/cs/$id&layout=button&size=small&mobile_iframe=true&width=60&height=20&appId [www.facebook.com]' width='60' height='20' style='border:none;overflow:hidden' scrolling='no' frameborder='0' allowTransparency='true'></iframe>";
     $shareTitle = 'Clilstore unit: ' . urlencode($title);
@@ -86,6 +99,7 @@
 <li>$sharebuttonFB
 <li>$sharebuttonTw
 <li>$sharebuttonWA
+$likeHtml
 <li class="right"><a href="unitinfo.php?id=$id" class="nowordlink" target="_top"
     title="Summary and other details on this unit">Unit info</a></li>
 $buttonedit
@@ -142,15 +156,32 @@ EOD_NB2;
         span.vocOn  img:nth-child(1) { display:none; }
         span.vocOn  img:nth-child(2) { display:inline; }
         a.vocOff { display:none; }
+        li#likeLI.liked   #heartLiked   { display:inline; }
+        li#likeLI.liked   #heartUnliked { display:none;   }
+        li#likeLI.unliked #heartLiked   { display:none;   }
+        li#likeLI.unliked #heartUnliked { display:inline; }
     </style>
     <script>
+        function likeClicked() {
+            var likeEl = document.getElementById('likeLI');
+            var newLikeStatus = 'unliked';
+            if (likeEl.className=='unliked') { newLikeStatus = 'liked'; }
+            var xhr = new XMLHttpRequest();
+            xhr.onload = function() {
+                if (this.status!=200 || this.responseText!='OK') { alert('$T_Error_in likeClicked:'+this.status+' '+this.responseText); return; }
+                likeEl.className = newLikeStatus;
+            }
+            xhr.open('GET', '/clilstore/ajax/setLike.php?unit=$id&newLikeStatus=' + newLikeStatus);
+            xhr.send();
+        }
+
         function vocClicked(cl) {
             var clnew, i;
             if (cl=='vocOff') { clnew = 'vocOn';  }
                          else { clnew = 'vocOff'; }
             var vocTogReq = new XMLHttpRequest();
             vocTogReq.onload = function() {
-                if (this.status!=200) { alert('Error in vocClicked:'+this.status); return; }
+                if (this.status!=200 || this.responseText!='OK') { alert('$T_Error_in vocClicked:'+this.status+' '+this.responseText); return; }
                 var vocEls = document.getElementsByClassName(cl);
                 while (vocEls.length>0) { vocEls[0].className = clnew; }
             }
