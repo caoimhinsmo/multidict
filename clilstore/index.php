@@ -51,6 +51,7 @@
     $T_UnitID                 = $T->h('csCol_id');
     $T_Views                  = $T->h('csCol_views');
     $T_Clicks                 = $T->h('csCol_clicks');
+    $T_Likes                  = $T->h('csCol_likes');
     $T_Created                = $T->h('csCol_created');
     $T_Changed                = $T->h('csCol_changed');
     $T_Licence                = $T->h('csCol_licence');
@@ -84,6 +85,8 @@
     $T_maximum_views          = $T->h('maximum_views');
     $T_minimum_clicks         = $T->h('minimum_clicks');
     $T_maximum_clicks         = $T->h('maximum_clicks');
+    $T_minimum_likes          = $T->h('minimum_likes');
+    $T_maximum_likes          = $T->h('maximum_likes');
     $T_start_date             = $T->h('start_date');
     $T_end_date               = $T->h('end_date');
     $T_minimum_CEFR_level     = $T->h('minimum_CEFR_level');
@@ -184,10 +187,10 @@ EOD_cookieMessage;
         $fd  = $r['fd'];
         $pr  = $r['sortpri'];
         if ($r[$modecol]<>0) {
-	    if ($pr<>0) { $pri[$fd] = $pr; }
+        if ($pr<>0) { $pri[$fd] = $pr; }
             if ($r['sortord']==1) { $symbol[$fd] = '▵'; }
               else                { $symbol[$fd] = '▿'; }
-	}
+        }
     }
     $ranks = array_flip($pri);
     ksort($ranks);
@@ -328,6 +331,8 @@ END_USER2;
     $f['viewsMax']   =
     $f['clicksMin']  =
     $f['clicksMax']  =
+    $f['likesMin']   =
+    $f['likesMax']   =
     $f['createdMin'] =
     $f['createdMax'] =
     $f['changedMin'] =
@@ -359,6 +364,8 @@ END_USER2;
     if (isset($_REQUEST['viewsMax']))   { $f['viewsMax']   = $_REQUEST['viewsMax'];   }
     if (isset($_REQUEST['clicksMin']))  { $f['clicksMin']  = $_REQUEST['clicksMin'];  }
     if (isset($_REQUEST['clicksMax']))  { $f['clicksMax']  = $_REQUEST['clicksMax'];  }
+    if (isset($_REQUEST['likesMin']))   { $f['likesMin']   = $_REQUEST['likesMin'];  }
+    if (isset($_REQUEST['likesMax']))   { $f['likesMax']   = $_REQUEST['likesMax'];  }
     if (isset($_REQUEST['createdMin'])) { $f['createdMin'] = $_REQUEST['createdMin']; }
     if (isset($_REQUEST['createdMax'])) { $f['createdMax'] = $_REQUEST['createdMax']; }
     if (isset($_REQUEST['changedMin'])) { $f['changedMin'] = $_REQUEST['changedMin']; }
@@ -386,6 +393,8 @@ END_USER2;
         $f['viewsMax']   =
         $f['clicksMin']  =
         $f['clicksMax']  =
+        $f['likesMin']   =
+        $f['likesMax']   =
         $f['createdMin'] =
         $f['createdMax'] =
         $f['changedMin'] =
@@ -430,6 +439,8 @@ END_USER2;
     if ($f['viewsMax']<>'')   { $whereClauses['viewsMax']   = 'views<=?';           }
     if ($f['clicksMin']<>'')  { $whereClauses['clicksMin']  = 'clicks>=?';          }
     if ($f['clicksMax']<>'')  { $whereClauses['clicksMax']  = 'clicks<=?';          }
+    if ($f['likesMin']<>'')   { $whereClauses['likesMin']   = 'likes>=?';           }
+    if ($f['likesMax']<>'')   { $whereClauses['likesMax']   = 'likes<=?';           }
     if ($f['createdMin']<>'') { $whereClauses['createdMin'] = 'created>=?';         }
     if ($f['createdMax']<>'') { $whereClauses['createdMax'] = 'created<=?';         }
     if ($f['changedMin']<>'') { $whereClauses['changedMin'] = 'changed>=?';         }
@@ -469,6 +480,8 @@ END_USER2;
     $viewsMax   = $f['viewsMax'];
     $clicksMin  = $f['clicksMin'];
     $clicksMax  = $f['clicksMax'];
+    $likesMin   = $f['likesMin'];
+    $likesMax   = $f['likesMax'];
     $createdMin = $f['createdMin'];
     $createdMax = $f['createdMax'];
     $changedMin = $f['changedMin'];
@@ -505,6 +518,8 @@ END_USER2;
     $viewsMaxVal   =
     $clicksMinVal  =
     $clicksMaxVal  =
+    $likesMinVal   =
+    $likesMaxVal   =
     $createdMinVal =
     $createdMaxVal =
     $changedMinVal =
@@ -531,6 +546,8 @@ END_USER2;
     if (!empty($viewsMax))   { $viewsMaxVal   = "value='$viewsMax'";   }
     if (!empty($clicksMin))  { $clicksMinVal  = "value='$clicksMin'";  }
     if (!empty($clicksMax))  { $clicksMaxVal  = "value='$clicksMax'";  }
+    if (!empty($likesMin))   { $likesMinVal   = "value='$likesMin'";   }
+    if (!empty($likesMax))   { $likesMaxVal   = "value='$likesMax'";   }
     if (!empty($createdMin)) { $createdMinVal = "value='$createdMin'"; }
     if (!empty($createdMax)) { $createdMaxVal = "value='$createdMax'"; }
     if (!empty($changedMin)) { $changedMinVal = "value='$changedMin'"; }
@@ -603,6 +620,7 @@ ENDtabletopChoices;
         'id'      => 'text-align:right; font-size:75%; padding-top:4px;',
         'views'   => 'text-align:right; font-size:75%; padding-top:4px;',
         'clicks'  => 'text-align:right; font-size:75%; padding-top:4px;',
+        'likes'   => 'text-align:right; font-size:75%; padding-top:4px;',
         'created' => 'font-size:75%; padding-top:4px; color:grey;',
         'changed' => 'font-size:75%; padding-top:4px; color:grey;',
         'licence' => 'font-size:75%; padding-top:5px;',
@@ -616,7 +634,7 @@ ENDtabletopChoices;
         'files'   => 'text-align:right;',
         'edit'    => '',
         'title'   => 'white-space:normal; padding-left:12px; text-indent:-10px;',
-	'text'    => '' ];
+        'text'    => '' ];
     $tableStyles = '';
     foreach ($columns as $icol=>$fd) {
         $icol1 = $icol+1;
@@ -630,83 +648,88 @@ ENDtabletopChoices;
             $row1 .= "<td><a href='./?sortCol=id' title='$T_UnitID_title\n$T_Click_to_sort'>$T_UnitID</a></td>";
             $row2 .= "<td><input name=id $idVal pattern='[0-9]{1,5}' tabindex=10 autofocus style='width:2.5em;text-align:right'></td>";
             $row3 .= "<td></td>";
-	    $row4 .= $symbolHtml['id'];
+            $row4 .= $symbolHtml['id'];
         } elseif ($fd=='views') {
             $row1 .= "<td><a href='./?sortCol=views' title='$T_Views_title\n$T_Click_to_sort'>$T_Views</a></td>";
-            $row2 .= "<td><input name=viewsMin pattern='[0-9]{1,}' $viewsMinVal placeholder='$T_min' title='$T_minimum_views' tabindex=14 style='width:3.5em;text-align:right'></td>";
+            $row2 .= "<td><input name=viewsMin pattern='[0-9]{1,}' $viewsMinVal placeholder='$T_min' tabindex=14 title='$T_minimum_views' style='width:3.5em;text-align:right'></td>";
             $row3 .= "<td><input name=viewsMax pattern='[0-9]{1,}' $viewsMaxVal placeholder='$T_max' tabindex=15 style='width:3.5em;text-align:right' title='$T_maximum_views'></td>";
-	    $row4 .= $symbolHtml['views'];
+            $row4 .= $symbolHtml['views'];
         } elseif ($fd=='clicks') {
             $row1 .= "<td><a href='./?sortCol=clicks' title='$T_Clicks_title\n$T_Click_to_sort'>$T_Clicks</a></td>";
-            $row2 .= "<td><input name=clicksMin pattern='[0-9]{1,}' $clicksMinVal placeholder='$T_min' title='$T_minimum_clicks' tabindex=16 style='width:3.5em;text-align:right'></td>";
-            $row3 .= "<td><input name=clicksMax pattern='[0-9]{1,}' $clicksMaxVal placeholder='$T_max' tabindex=16 style='width:3.5em;text-align:right' title='$T_maximum_clicks'></td>";
-	    $row4 .= $symbolHtml['clicks'];
+            $row2 .= "<td><input name=clicksMin pattern='[0-9]{1,}' $clicksMinVal placeholder='$T_min' tabindex=16 title='$T_minimum_clicks' style='width:3.5em;text-align:right'></td>";
+            $row3 .= "<td><input name=clicksMax pattern='[0-9]{1,}' $clicksMaxVal placeholder='$T_max' tabindex=17 style='width:3.5em;text-align:right' title='$T_maximum_clicks'></td>";
+            $row4 .= $symbolHtml['clicks'];
+        } elseif ($fd=='likes') {
+            $row1 .= "<td><a href='./?sortCol=likes' title='$T_Click_to_sort'>$T_Likes</a></td>";
+            $row2 .= "<td><input name=likesMin pattern='[0-9]{1,}' $likesMinVal placeholder='$T_min' tabindex=18 title='$T_minimum_likes' style='width:3.5em;text-align:right'></td>";
+            $row3 .= "<td><input name=likesMax pattern='[0-9]{1,}' $likesMaxVal placeholder='$T_max' tabindex=19 style='width:3.5em;text-align:right' title='$T_maximum_likes'></td>";
+            $row4 .= $symbolHtml['likes'];
         } elseif ($fd=='created') {
             $row1 .= "<td><a href='./?sortCol=created' title='$T_Created_title\n$T_Click_to_sort'>$T_Created</a></td>";
             $row2 .= "<td><input name=createdMin type=date $createdMinVal tabindex=20 title='$T_start_date' style='max-width:10em'></td>";
             $row3 .= "<td><input name=createdMax type=date $createdMaxVal tabindex=21 title='$T_end_date' style='max-width:10em'></td>";
-	    $row4 .= $symbolHtml['created'];
+            $row4 .= $symbolHtml['created'];
         } elseif ($fd=='changed') {
             $row1 .= "<td><a href='./?sortCol=changed' title='$T_Changed_title\n$T_Click_to_sort'>$T_Changed</a></td>";
             $row2 .= "<td><input name=changedMin type=date $changedMinVal tabindex=30 title='$T_start_date' style='max-width:10em'></td>";
             $row3 .= "<td><input name=changedMax type=date $changedMaxVal tabindex=31 title='$T_end_date' style='max-width:10em'></td>";
-	    $row4 .= $symbolHtml['changed'];
+            $row4 .= $symbolHtml['changed'];
         } elseif ($fd=='licence') {
             $row1 .= "<td><a href='./?sortCol=licence' title='$T_Licence_title\n$T_Click_to_sort'>$T_Licence</a></td>";
             $row2 .= "<td><input name=licence $licenceVal tabindex=40 list='licenceList' style='width:4.7em'></td>";
-	    $row3 .= "<td></td>";
-	    $row4 .= $symbolHtml['licence'];
+            $row3 .= "<td></td>";
+            $row4 .= $symbolHtml['licence'];
         } elseif ($fd=='owner') {
             $row1 .= "<td><a href='./?sortCol=owner' title='$T_Owner_title\n$T_Click_to_sort'>$T_Owner</a></td>";
             $row2 .= "<td><input name=owner $ownerVal tabindex=44 list='ownerList' style='width:10em'></td>";
-	    $row3 .= "<td></td>";
+            $row3 .= "<td></td>";
             $row4 .= $symbolHtml['owner'];
         } elseif ($fd=='sl') {
             $row1 .= "<td><a href='./?sortCol=sl' title='$T_Click_to_sort ($T_by_language_code)'>$T_Language</a></td>";
             $row2 .= "<td><select name=sl style='background-color:$slSelectColor' tabindex=50>$slOptionsHtml</select></td>";
-	    $row3 .= "<td></td>";
-	    $row4 .= $symbolHtml['sl'];
+            $row3 .= "<td></td>";
+            $row4 .= $symbolHtml['sl'];
         } elseif ($fd=='level') {
             $row1 .=  "<td><a href='./?sortCol=level' title='$T_Level_title\n$T_Click_to_sort'>$T_Level</a></td>";
             $row2 .= ( $mode==0 ? '<td></td>'
                      : "<td><input name=levelMin $levelMinVal placeholder='$T_min' list=levelList title='$T_minimum_CEFR_level' tabindex=60 style='width:2.8em;text-align:center'></td>" );
-	    $row3 .= ( $mode==0 ? '<td></td>'
+            $row3 .= ( $mode==0 ? '<td></td>'
                      : "<td><input name='levelMax' $levelMaxVal placeholder='$T_max' list=levelList tabindex=61 title='$T_maximum_CEFR_level' style='width:2.8em;text-align:center'></td>" );
-	    $row4 .= $symbolHtml['level'];
+            $row4 .= $symbolHtml['level'];
         } elseif ($fd=='words') {
             $row1 .= "<td><a href='./?sortCol=words' title='$T_Words_title\n$T_Click_to_sort'>$T_Words</a></td>";
             $row2 .= "<td><input name=wordsMin pattern='[0-9]{1,}' $wordsMinVal placeholder='$T_min' title='$T_minimum_words' tabindex=62 style='width:3.5em;text-align:right'></td>";
-	    $row3 .= "<td><input name='wordsMax' pattern='[0-9]{1,}' $wordsMaxVal placeholder='$T_max' tabindex=63 style='width:3.5em;text-align:right' title='$T_maximum_words'></td>";
-	    $row4 .= $symbolHtml['words'];
+            $row3 .= "<td><input name='wordsMax' pattern='[0-9]{1,}' $wordsMaxVal placeholder='$T_max' tabindex=63 style='width:3.5em;text-align:right' title='$T_maximum_words'></td>";
+            $row4 .= $symbolHtml['words'];
         } elseif ($fd=='medtype') {
             $row1 .= "<td><a href='./?sortCol=medtype' title='$T_Media_title\n$T_Click_to_sort'>$T_Media</a></td>";
             $row2 .= ( $mode==0 ? '<td></td>'
                      : "<td><input name=medtype $medtypeVal pattern='[0-2]' placeholder='0,1,2' title='$T_media_field_title' tabindex=64 style='width:2.1em;text-align:center'></td>" );
-	    $row3 .= "<td></td>";
-	    $row4 .= $symbolHtml['medtype'];
+            $row3 .= "<td></td>";
+            $row4 .= $symbolHtml['medtype'];
         } elseif ($fd=='medlen') {
             $row1 .= "<td><a href='./?sortCol=medlen' title='$T_MedLength_title\n$T_Click_to_sort'>$T_MedLength</a></td>";
             $row2 .= "<td><input name=medlenMin pattern='[0-9]{1,}' $medlenMinVal placeholder='$T_min' title='$T_minimum_media_length' tabindex=66 style='width:3.3em;text-align:right'></td>";
-	    $row3 .= "<td><input name='medlenMax' pattern='[0-9]{1,}' $medlenMaxVal placeholder='$T_max' tabindex=67 style='width:3.3em;text-align:right' title='$T_maximum_media_length'></td>";
-	    $row4 .= $symbolHtml['medlen'];
+            $row3 .= "<td><input name='medlenMax' pattern='[0-9]{1,}' $medlenMaxVal placeholder='$T_max' tabindex=67 style='width:3.3em;text-align:right' title='$T_maximum_media_length'></td>";
+            $row4 .= $symbolHtml['medlen'];
         } elseif ($fd=='buttons') {
             $row1 .= "<td><a href='./?sortCol=buttons' title='$T_Buttons_title\n$T_Click_to_sort'>$T_Buttons</a></td>";
             $row2 .= "<td><input name=buttonsMin pattern='[0-9]{1,}' $buttonsMinVal placeholder='$T_min' title='$T_minimum_buttons' tabindex=68 style='width:3.3em;text-align:right'></td>";
-	    $row3 .= "<td><input name=buttonsMax pattern='[0-9]{1,}' $buttonsMaxVal placeholder='$T_max' tabindex=69 style='width:3.3em;text-align:right' title='$T_maximum_buttons'></td>";
-	    $row4 .= $symbolHtml['buttons'];
+            $row3 .= "<td><input name=buttonsMax pattern='[0-9]{1,}' $buttonsMaxVal placeholder='$T_max' tabindex=69 style='width:3.3em;text-align:right' title='$T_maximum_buttons'></td>";
+            $row4 .= $symbolHtml['buttons'];
         } elseif ($fd=='files') {
             $row1 .= "<td><a href='./?sortCol=files' title='$T_Files_title\n$T_Click_to_sort'>$T_Files</a></td>";
             $row2 .= "<td><input name=filesMin pattern='[0-9]{1,}' $filesMinVal placeholder='$T_min' title='$T_minimum_files' tabindex=70 style='width:3.3em;text-align:right'></td>";
-	    $row3 .= "<td><input name=filesMax pattern='[0-9]{1,}' $filesMaxVal placeholder='$T_max' tabindex=71 style='width:3.3em;text-align:right' title='$T_maximum_files'></td>";
-	    $row4 .= $symbolHtml['files'];
+            $row3 .= "<td><input name=filesMax pattern='[0-9]{1,}' $filesMaxVal placeholder='$T_max' tabindex=71 style='width:3.3em;text-align:right' title='$T_maximum_files'></td>";
+            $row4 .= $symbolHtml['files'];
         } elseif ($fd=='edit') {
             $row1 .= "<td>&nbsp;</td>";
-	    $row2 .= "<td></td>";
-	    $row3 .= "<td></td>";
-	    $row4 .= "<td></td>";
+            $row2 .= "<td></td>";
+            $row3 .= "<td></td>";
+            $row4 .= "<td></td>";
         } elseif ($fd=='title') {
             $row1 .= "<td><a href='./?sortCol=title' title='$T_Click_to_sort'>$T_Title</a></td>";
-	    $row2 .= "<td><input name=title $titleVal placeholder='$T_part_placeholder ($T_or_wildcard_pattern) 🔍' title='$T_title_title ($T_or_wildcard_pattern)' tabindex=72 style='width:17em'></td>";
+            $row2 .= "<td><input name=title $titleVal placeholder='$T_part_placeholder ($T_or_wildcard_pattern) 🔍' title='$T_title_title ($T_or_wildcard_pattern)' tabindex=72 style='width:17em'></td>";
             $row3 .= <<<END_row3titlecell
 <td class="title" colspan=2>
  <div id="findDiv">
@@ -715,10 +738,10 @@ ENDtabletopChoices;
  </div>
 </td>
 END_row3titlecell;
-	    $row4 .= $symbolHtml['title'];
+            $row4 .= $symbolHtml['title'];
         } elseif ($fd=='text') {
             $row1 .= "<td>$T_TextOrSummary</td>";
-	    $row2 .= "<td><input name=text $textVal placeholder='$T_part_placeholder ($T_or_wildcard_pattern) 🔍' title='$T_text_title ($T_or_wildcard_pattern)' tabindex=74 style='min-width:10em;width:95%'></td>";
+            $row2 .= "<td><input name=text $textVal placeholder='$T_part_placeholder ($T_or_wildcard_pattern) 🔍' title='$T_text_title ($T_or_wildcard_pattern)' tabindex=74 style='min-width:10em;width:95%'></td>";
         }
     }
 
@@ -759,7 +782,7 @@ END_tableHtmlBarr;
 
 
         $orderClause = $csSess->orderClause();
-        $query = 'SELECT clilstore.id,owner,fullname,sl,endonym,level,words,medtype,medlen,buttons,files,title,summary,created,changed,licence,test,views,clicks'
+        $query = 'SELECT clilstore.id,owner,fullname,sl,endonym,level,words,medtype,medlen,buttons,files,title,summary,created,changed,licence,test,views,clicks,likes'
                 .' FROM clilstore,users,lang'
                 ." WHERE $whereClause ORDER BY $orderClause"
                 .' LIMIT 0,4000';
@@ -770,6 +793,8 @@ END_tableHtmlBarr;
         if (!empty($whereClauses['viewsMax']))   { $stmt->bindParam($i++,$viewsMax);    }
         if (!empty($whereClauses['clicksMin']))  { $stmt->bindParam($i++,$clicksMin);   }
         if (!empty($whereClauses['clicksMax']))  { $stmt->bindParam($i++,$clicksMax);   }
+        if (!empty($whereClauses['likesMin']))   { $stmt->bindParam($i++,$likesMin);    }
+        if (!empty($whereClauses['likesMax']))   { $stmt->bindParam($i++,$likesMax);    }
         if (!empty($whereClauses['createdMin'])) { $stmt->bindParam($i++,$createdMinQ); }
         if (!empty($whereClauses['createdMax'])) { $stmt->bindParam($i++,$createdMaxQ); }
         if (!empty($whereClauses['changedMin'])) { $stmt->bindParam($i++,$changedMinQ); }
@@ -795,7 +820,7 @@ END_tableHtmlBarr;
        //Initialise statistics
         $nunits = 0;
         $cnt['level'] = $cnt['medlen'] = 0;
-        $tot['views'] = $tot['clicks'] = $tot['created'] = $tot['created2'] = $tot['changed'] = $tot['level'] = $tot['words'] = $tot['medlen'] = $tot['buttons'] = $tot['files'] = 0;
+        $tot['views'] = $tot['clicks'] = $tot['likes'] = $tot['created'] = $tot['created2'] = $tot['changed'] = $tot['level'] = $tot['words'] = $tot['medlen'] = $tot['buttons'] = $tot['files'] = 0;
        //
         $units = $stmt->fetchAll(PDO::FETCH_ASSOC);~~
         $nunits = count($units);
@@ -809,6 +834,7 @@ END_tableHtmlBarr;
            //Increment statistics
             $tot['views']   += $views;
             $tot['clicks']  += $clicks;
+            $tot['likes']   += $likes;
             $tot['created'] += $created;
             $tot['created2']+= max($created,1395144000); //Adjusted for click count time, which only started on 2014-03-18
             $tot['changed'] += $changed;
@@ -854,12 +880,13 @@ END_tableHtmlBarr;
             }
             $titleHtml = htmlspecialchars($title);
             $titleCool = strtr($titleHtml,[ "[COOL]" => "<img src='Cool.png' alt='[COOL]' style='padding-right:0.3em'>" ]);
-	    $titleHtml  = ( empty($test) ? $titleCool : "<img src='/icons-smo/undConst.gif' alt='' class=undConst> <i>$titleCool</i>" );
+            $titleHtml  = ( empty($test) ? $titleCool : "<img src='/icons-smo/undConst.gif' alt='' class=undConst> <i>$titleCool</i>" );
             $row = '<tr>';
             foreach ($columns as $fd) {
                 if ($fd=='id')            { $row .= "<td><a href='/cs/$id' title='$views views'>$id</a></td>"; }
                   elseif ($fd=='views')   { $row .= "<td>$views</td>"; }
                   elseif ($fd=='clicks')  { $row .= "<td>$clicks</td>"; }
+                  elseif ($fd=='likes')   { $row .= "<td>$likes</td>"; }
                   elseif ($fd=='created') { $row .= "<td title='$createdDateTime UT'>$createdDate</td>"; }
                   elseif ($fd=='changed') { $row .= "<td title='$changedDateTime UT'>$changedDate</td>"; }
                   elseif ($fd=='licence') { $row .= "<td>$licence</td>"; }
@@ -913,55 +940,58 @@ END_tableHtmlBarr;
                  $clickRateMessage = rateMessage($clickRate);
                  $totViewRateMessage  = rateMessage($viewRate *$nunits);
                  $totClickRateMessage = rateMessage($clickRate*$nunits);
-		 $totRow = '<tr style="font-size:70%;color:grey;background-color:#ddd">';
-		 $avgRow = '<tr style="font-size:70%;color:grey;background-color:#ddd;border-top:solid 1px #888">';
+                 $totRow = '<tr style="font-size:70%;color:grey;background-color:#ddd">';
+                 $avgRow = '<tr style="font-size:70%;color:grey;background-color:#ddd;border-top:solid 1px #888">';
                  foreach ($columns as $fd) {
                      if ($fd=='id') {
-		         $totRow .= "<td>$T_Total</td>";
-			 $avgRow .= "<td>$T_Average</td>";
-		     } elseif ($fd=='views') {
-		         $totRow .= "<td title='$totViewRateMessage'>" . $tot['views']  . '</td>';
-		         $avgRow .= "<td title='$viewRateMessage'>"    . sprintf('%.1f',$tot['views']/$nunits) . '</td>';
+                         $totRow .= "<td>$T_Total</td>";
+                         $avgRow .= "<td>$T_Average</td>";
+                     } elseif ($fd=='views') {
+                         $totRow .= "<td title='$totViewRateMessage'>" . $tot['views']  . '</td>';
+                         $avgRow .= "<td title='$viewRateMessage'>"    . sprintf('%.1f',$tot['views']/$nunits) . '</td>';
                      } elseif ($fd=='clicks') {
-		         $totRow .= "<td title='$totClickRateMessage'>" . $tot['clicks'] . '</td>';
-			 $avgRow .= "<td title='$clickRateMessage'>"    . sprintf('%.1f',$tot['clicks']/$nunits)   . '</td>';
-		     } elseif ($fd=='created') {
-		         $totRow .= '<td></td>';
-			 $avgRow .= "<td title='$avgCreatedDateTime UT'>$avgCreatedDate</td>";
-		     } elseif ($fd=='changed') {
-		         $totRow .= '<td></td>';
-			 $avgRow .= "<td title='$avgChangedDateTime UT'>$avgChangedDate</td>";
-		     } elseif ($fd=='licence') {
-		         $totRow .= '<td></td>';
-			 $avgRow .= '<td></td>';
-		     } elseif ($fd=='owner') {
-		         $totRow .= '<td></td>';
-			 $avgRow .= '<td></td>';
-		     } elseif ($fd=='sl') {
-		         $totRow .= '<td></td>';
-			 $avgRow .= '<td></td>';
-		     } elseif ($fd=='level') {
-		         $totRow .= '<td></td>';
-			 $avgRow .= "<td>$avgLevelHtml</td>";
-		     } elseif ($fd=='words') {
-		         $totRow .= '<td>'  . $tot['words']  . '</td>';
-			 $avgRow .= '<td>'  . sprintf('%.1f',$tot['words']/$nunits)  . '</td>';
-		     } elseif ($fd=='medtype') {
-		         $totRow .= '<td></td>';
-			 $avgRow .= '<td></td>';
-		     } elseif ($fd=='medlen') {
-		         $totRow .= '<td>' . SM_csSess::secs2minsecs($tot['medlen']) . '</td>';
-			 $avgRow .= "<td>$avgMedlen</td>";
-		     } elseif ($fd=='buttons') {
-		         $totRow .= '<td>'. $tot['buttons']. '</td>';
-			 $avgRow .= '<td>'. sprintf('%.1f',$tot['buttons']/$nunits) . '</td>';
-		     } elseif ($fd=='files') {
-		         $totRow .= '<td>'. $tot['files']. '</td>';
-			 $avgRow .= '<td>'. sprintf('%.1f',$tot['files']/$nunits) . '</td>';
-		     }
+                         $totRow .= "<td title='$totClickRateMessage'>" . $tot['clicks'] . '</td>';
+                         $avgRow .= "<td title='$clickRateMessage'>"    . sprintf('%.1f',$tot['clicks']/$nunits)   . '</td>';
+                     } elseif ($fd=='likes') {
+                         $totRow .= "<td>" . $tot['likes'] . '</td>';
+                         $avgRow .= "<td>" . sprintf('%.1f',$tot['likes']/$nunits)   . '</td>';
+                     } elseif ($fd=='created') {
+                         $totRow .= '<td></td>';
+                         $avgRow .= "<td title='$avgCreatedDateTime UT'>$avgCreatedDate</td>";
+                     } elseif ($fd=='changed') {
+                         $totRow .= '<td></td>';
+                         $avgRow .= "<td title='$avgChangedDateTime UT'>$avgChangedDate</td>";
+                     } elseif ($fd=='licence') {
+                         $totRow .= '<td></td>';
+                         $avgRow .= '<td></td>';
+                     } elseif ($fd=='owner') {
+                         $totRow .= '<td></td>';
+                         $avgRow .= '<td></td>';
+                     } elseif ($fd=='sl') {
+                         $totRow .= '<td></td>';
+                         $avgRow .= '<td></td>';
+                     } elseif ($fd=='level') {
+                         $totRow .= '<td></td>';
+                         $avgRow .= "<td>$avgLevelHtml</td>";
+                     } elseif ($fd=='words') {
+                         $totRow .= '<td>'  . $tot['words']  . '</td>';
+                         $avgRow .= '<td>'  . sprintf('%.1f',$tot['words']/$nunits)  . '</td>';
+                     } elseif ($fd=='medtype') {
+                         $totRow .= '<td></td>';
+                         $avgRow .= '<td></td>';
+                     } elseif ($fd=='medlen') {
+                         $totRow .= '<td>' . SM_csSess::secs2minsecs($tot['medlen']) . '</td>';
+                         $avgRow .= "<td>$avgMedlen</td>";
+                     } elseif ($fd=='buttons') {
+                         $totRow .= '<td>'. $tot['buttons']. '</td>';
+                         $avgRow .= '<td>'. sprintf('%.1f',$tot['buttons']/$nunits) . '</td>';
+                     } elseif ($fd=='files') {
+                         $totRow .= '<td>'. $tot['files']. '</td>';
+                         $avgRow .= '<td>'. sprintf('%.1f',$tot['files']/$nunits) . '</td>';
+                     }
                  }
-		 $totRow .= '<td colspan=3></td></tr>';
-		 $avgRow .= '<td colspan=3></td></tr>';
+                 $totRow .= '<td colspan=3></td></tr>';
+                 $avgRow .= '<td colspan=3></td></tr>';
              }
         }
  
@@ -1016,7 +1046,7 @@ $tableStyles
         table#main div#findDiv input:hover { background-color:blue; }
 
         img.favicon { width:16px; height:16px; border:0; margin:2px; }
-	img.undConst { padding-left:16px; }
+        img.undConst { padding-left:16px; }
         a.button { display:block; float:left; margin:1px 7px; background-color:#55a8eb; color:white; font-weight:bold; padding:3px 10px; border:0; border-radius:8px; }
         a.button:hover { background-color:blue; }
         a.mybutton, button { background-color:#55a8eb; color:white; padding:1px 8px; border-radius:8px; white-space:nowrap; }
@@ -1075,10 +1105,10 @@ $tableStyles
 
         function setNewbie() {
             alert('$T_setNewbieAlert');
-	    document.cookie = "myCLIL_authentication=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-	    document.cookie = "csSessionId=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/clilstore/;";
-	    document.cookie = "wlUser=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-	    document.cookie = "Thl=; expires=Thu, 01 Jan 2019 00:00:00 UTC; path=/;";
+            document.cookie = "myCLIL_authentication=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+            document.cookie = "csSessionId=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/clilstore/;";
+            document.cookie = "wlUser=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+            document.cookie = "Thl=; expires=Thu, 01 Jan 2019 00:00:00 UTC; path=/;";
             window.location = window.location.href;
         }
 </script>
