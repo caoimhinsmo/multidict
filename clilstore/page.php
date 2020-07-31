@@ -108,12 +108,8 @@ $recordVocHtml
 EOD_NB1;
     $navbar2 = <<<EOD_NB2
 <ul class="linkbuts">
-<li><a href="./" class="nowordlink" target="_top" title="Clilstore index page">Clilstore</a></li>
+<li><a href="./" class="nowordlink" target="_top" title="Clilstore index page">C</a></li>
 $buttonsHtml
-<li class="right"><a href="unitinfo.php?id=$id" class="nowordlink" target="_top"
-    title="Summary and other details on this unit">Unit info</a></li>
-$buttonedit
-$recordVocHtml
 </ul>
 EOD_NB2;
 
