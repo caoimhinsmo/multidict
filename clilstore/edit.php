@@ -19,7 +19,6 @@
   $T_Title_info_4_120    = $T->h('Title_info_4_120');
   $T_Language            = $T->h('Language');
   $T_Embed_code_legend   = $T->h('Embed_code_legend');
-  $T_Float_or_scroll     = $T->h('Float_or_scroll');
   $T_Left                = $T->h('Left');
   $T_Right               = $T->h('Right');
   $T_Scroll_text         = $T->h('Scroll_text');
@@ -86,7 +85,6 @@
   $T_CC_NC_message       = $T->j('CC_NC_message');
   $T_Error_in            = $T->j('Error_in');
 
-  $T_Choose_the_placement      = $T->h('Choose_the_placement');
   $T_Clone_this_unit_title     = $T->h('Clone_this_unit_title');
   $T_Creating_Clilstore_unit_d = $T->h('Creating_Clilstore_unit_d');
   $T_Editing_Clilstore_unit_d  = $T->h('Editing_Clilstore_unit_d');
@@ -297,7 +295,7 @@ EODtinyMCE;
         $br        =@$_POST['br'];        $br = ( empty($br) ? 0 : 1 );
         $text      = $_POST['text'];
         $medembed  = $_POST['medembed'];
-        $medfloat  = $_POST['medfloat'];  $medfload = trim(strip_tags($medfloat));
+        $medfloat = ( isset($_POST['scrollText']) ? 'scroll' : 'none' );
         $medtype   = $_POST['medtype'];
         $medlen    =@$_POST['medlen'];    $medlen= ( isset($medlen) ? $medlen : 0 );
         $summary   = $_POST['summary'];
@@ -503,12 +501,7 @@ EOD2;
                           ? $T_Text_Advice_html
                           : $T_Text_Advice_new );
         }
-        $floatnone = $floatleft = $floatright = $floatscroll = '';
-        if      ($medfloat=='none')  { $floatnone  = ' selected'; }
-         elseif ($medfloat=='left')  { $floatleft  = ' selected'; }
-         elseif ($medfloat=='right') { $floatright = ' selected'; }
-         elseif ($medfloat=='scroll'){ $floatscroll= ' selected'; }
-         else                        { $floatscroll= ' selected'; }
+        $scrollChecked = ( $medfloat=='scroll' ? 'checked' : '' );
 
         $slArr = SM_WlSession::slArr();
         foreach ($slArr as $lang=>$langInfo) { $slArray[$lang] = $langInfo['endonym']; }
@@ -906,15 +899,10 @@ $editorsMessage
 $cloneHtml</div>
 <div>$T_Title<br>
 <input id=title name="title" value="$titleSC" autofocus "required pattern=".{4,120}" title="$T_Title_info_4_120" style="width:99%"></div>
-<div style="margin-top:6px">$T_Embed_code_legend <span style="font-size:80%;padding-left:3em">$T_Float_or_scroll
-<select name="medfloat" title="$T_Choose_the_placement">
-  <option value="none"$floatnone> </option>
-  <option value="left"$floatleft>$T_Left</option>
-  <option value="right"$floatright>$T_Right</option>
-  <option value="scroll"$floatscroll>$T_Scroll_text</option>
-</select>
-</span>
-<input name="medembed" value="$medembedHtml" style="width:99%"></div>
+<div style="margin-top:6px">$T_Embed_code_legend
+<input name="medembed" value="$medembedHtml" style="width:99%"><br>
+<input type="checkbox" id="scrollText" name="scrollText" value="scroll" $scrollChecked><label for="scrollText">$T_Scroll_text</label>
+</div>
 <div style="margin-top:6px">
 $T_Text <span class="info" style="padding-left:2em">$textAdvice</span><br>
 <textarea name="text" id="text" placeholder="$T_Text_placeholder" style="width:100%;height:400px">$text</textarea></div>
