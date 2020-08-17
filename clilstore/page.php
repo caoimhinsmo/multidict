@@ -14,10 +14,11 @@
 
   $T = new SM_T('clilstore/page');
 
+  $T_total               = $T->h('total');
   $T_Error_in            = $T->j('Error_in');
+  $T_totalj              = $T->j('total');
 
   $hl0 = $T->hl0();
-error_log("\$hl0=$hl0");
 
   try {
     if (!isset($_GET['id'])) { throw new SM_MDexception('No id parameter'); }
@@ -80,12 +81,15 @@ error_log("\$hl0=$hl0");
                         ."<img src='/favicons/recordOn.png' alt='VocOn' title='Vocabulary recording is currently enabled - Click to disable'>"
                         ."</span></li>"
                         ."<li class=right><a class=$vocClass href='voc.php?user=$user&amp;sl=$sl' nowordlink target=voctab title='Open your vocabulary list in a separate tab'>V</a>";
-       $stmtGetLike = $DbMultidict->prepare('SELECT likes FROM user_unit WHERE user=:user AND unit=:id');
-       $stmtGetLike->execute([':user'=>$user,':id'=>$id]);
-//$likes = $stmtGetLike->fetchColumn();
-//error_log("\$likes=$likes");
+       $stmtGetLike  = $DbMultidict->prepare('SELECT likes FROM user_unit WHERE unit=:id AND user=:user');
+       $stmtGetLikes = $DbMultidict->prepare('SELECT SUM(likes) FROM user_unit WHERE unit=:id');
+       $stmtGetLike->execute([':id'=>$id,':user'=>$user]);
+       $stmtGetLikes->execute([':id'=>$id]);
        if ($stmtGetLike->fetchColumn()>0) { $likeClass = 'liked'; } else { $likeClass = 'unliked'; }
-       $likeHtml = "<li id=likeLI class=$likeClass onclick=likeClicked()><img id=heartUnliked src='/favicons/heartUnliked.png' alt='unlike'><img id=heartLiked src='/favicons/heartLiked.png' alt='like'>";
+       $likes = $stmtGetLikes->fetchColumn();
+       $likeHtml = "<li id=likeLI class=$likeClass onclick=likeClicked() title='$likes $T_total'>"
+                  ."<img id=heartUnliked src='/favicons/heartUnliked.png' alt='unlike'>"
+                  ."<img id=heartLiked src='/favicons/heartLiked.png' alt='like'>";
     }
     $sharebuttonFB = "<iframe src='https://www.facebook.com/plugins/share_button.php?href=$serverhome/cs/$id&layout=button&size=small&mobile_iframe=true&width=60&height=20&appId [www.facebook.com]' width='60' height='20' style='border:none;overflow:hidden' scrolling='no' frameborder='0' allowTransparency='true'></iframe>";
     $shareTitle = 'Clilstore unit: ' . urlencode($title);
@@ -160,12 +164,13 @@ EOD_NB2;
     <script>
         function likeClicked() {
             var likeEl = document.getElementById('likeLI');
-            var newLikeStatus = 'unliked';
-            if (likeEl.className=='unliked') { newLikeStatus = 'liked'; }
+            var newLikeStatus = 'unliked', increment = -1;
+            if (likeEl.className=='unliked') { newLikeStatus = 'liked'; increment = 1; }
             var xhr = new XMLHttpRequest();
             xhr.onload = function() {
                 if (this.status!=200 || this.responseText!='OK') { alert('$T_Error_in likeClicked:'+this.status+' '+this.responseText); return; }
                 likeEl.className = newLikeStatus;
+                likeEl.title = (parseInt(likeEl.title,10) + increment) + ' $T_totalj';
             }
             xhr.open('GET', '/clilstore/ajax/setLike.php?unit=$id&newLikeStatus=' + newLikeStatus);
             xhr.send();
