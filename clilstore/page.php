@@ -89,7 +89,8 @@
        $likes = $stmtGetLikes->fetchColumn();
        $likeHtml = "<li id=likeLI class=$likeClass onclick=likeClicked() title='$likes $T_total'>"
                   ."<img id=heartUnliked src='/favicons/heartUnliked.png' alt='unlike'>"
-                  ."<img id=heartLiked src='/favicons/heartLiked.png' alt='like'>";
+                  ."<img id=heartLiked src='/favicons/heartLiked.png' alt='like'>"
+                  ."<span id='likesBadge' class='badge'>$likes</span>";
     }
     $sharebuttonFB = "<iframe src='https://www.facebook.com/plugins/share_button.php?href=$serverhome/cs/$id&layout=button&size=small&mobile_iframe=true&width=60&height=20&appId [www.facebook.com]' width='60' height='20' style='border:none;overflow:hidden' scrolling='no' frameborder='0' allowTransparency='true'></iframe>";
     $shareTitle = 'Clilstore unit: ' . urlencode($title);
@@ -160,6 +161,7 @@ EOD_NB2;
         li#likeLI.liked   #heartUnliked { display:none;   }
         li#likeLI.unliked #heartLiked   { display:none;   }
         li#likeLI.unliked #heartUnliked { display:inline; }
+        span#likesBadge { background-color:red; color white; }
     </style>
     <script>
         function likeClicked() {
@@ -171,6 +173,8 @@ EOD_NB2;
                 if (this.status!=200 || this.responseText!='OK') { alert('$T_Error_in likeClicked:'+this.status+' '+this.responseText); return; }
                 likeEl.className = newLikeStatus;
                 likeEl.title = (parseInt(likeEl.title,10) + increment) + ' $T_totalj';
+                var lbEl = document.getElementById('likesBadge');
+                lbEl.innerHTML = parseInt(lbEl.innerHTML,10) + increment;
             }
             xhr.open('GET', '/clilstore/ajax/setLike.php?unit=$id&newLikeStatus=' + newLikeStatus);
             xhr.send();
