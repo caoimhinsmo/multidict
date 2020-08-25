@@ -493,7 +493,12 @@ EOD2;
         $T_Text_Advice_new = strtr( $T_Text_Advice_new, [ '{%s}'=> "(<input type=checkbox name=br id=br $brch> <label for=br>$T_Text_Advice_new_br</label>).&nbsp;&nbsp;&nbsp;&nbsp;" ] );
 
         $medembedHtml = htmlspecialchars($medembed);
-        if ($id>0) { $cloneHtml = "<input type=checkbox name=clone id=clone $clonech> <label for=clone>$T_Clone_as_a_new_unit</label>"; }
+        if ($id>0) { $cloneHtml = <<<END_cloneHtml
+<label class=toggle-switchy for=clone data-size=xs>
+  <input type=checkbox id=clone name=clone $clonech><span class=toggle><span class=switch></span></span>
+  <span class=label>$T_Clone_as_a_new_unit</span>
+</label>
+END_cloneHtml; }
         if ($editor=='new') {
             $textAdvice = $T_Text_Advice;
         } else {
@@ -597,6 +602,7 @@ EODfileInfoForm;
     <title>$legend</title>
     <link rel="stylesheet" href="/css/smo.css?version=rubbishToForceReload">
     <link rel="stylesheet" href="style.css?version=rubbishToForceReload">
+    <link rel="stylesheet" href="/css/toggle-switchy.css?version=rubbishToForceReload">
     <link rel="icon" type="image/png" href="/favicons/clilstore.png">
     <meta name="robots" content="noindex">
     <style>
@@ -901,7 +907,10 @@ $cloneHtml</div>
 <input id=title name="title" value="$titleSC" autofocus "required pattern=".{4,120}" title="$T_Title_info_4_120" style="width:99%"></div>
 <div style="margin-top:6px">$T_Embed_code_legend
 <input name="medembed" value="$medembedHtml" style="width:99%"><br>
-<input type="checkbox" id="scrollText" name="scrollText" value="scroll" $scrollChecked><label for="scrollText">$T_Scroll_text</label>
+<label class=toggle-switchy for=scrollText data-size=xs>
+  <input type=checkbox id=scrollText name=scrollText value=scroll $scrollChecked><span class=toggle><span class=switch></span></span>
+  <span class=label>$T_Scroll_text</span>
+</label>
 </div>
 <div style="margin-top:6px">
 $T_Text <span class="info" style="padding-left:2em">$textAdvice</span><br>
@@ -971,16 +980,26 @@ $T_Language_notes: <span class="info">($T_1000_character_max)</span>
 <textarea name="langnotes" style="width:99%;height:2.5em;margin:2px;padding:0.4em;border:1px solid;border-radius:0.4em">$langnotes</textarea>
 </div>
 
-<div style="margin-top:7px">
-<input type="checkbox" name="test" id="test" $testch onClick="testClick(this)">
-<label for="test">$T_Tick_if_test_unit</label>
-</div>
+<label class=toggle-switchy for=test data-size=xs>
+  <input type=checkbox id=test name=test $testch><span class=toggle><span class=switch></span></span>
+  <span class=label>$T_Tick_if_test_unit</span>
+</label>
 
+<!--
 <table id=ownertab><tr>
 <td>$T_Owner: <span style="font-size:120%;text-decoration:underline;padding-right:0.35em">$owner</span></td>
 <td><input  type="checkbox" name="permis" id="permis" required $permisch onChange="permisChange();"></td>
 <td><label for="permis">$T_I_am_the_author<br>$T_I_agree_to_copyleft</td>
 </tr></table>
+-->
+
+<div style="margin:1em 0 0.4em 0">
+$T_Owner: <span style="font-size:120%;text-decoration:underline;padding-right:0.35em">$owner</span>
+<label class=toggle-switchy for=permis data-size=xs>
+  <input type=checkbox id=permis name=permis $permisch required onChange="permisChange()"><span class=toggle><span class=switch></span></span>
+  <span class=label>$T_I_am_the_author<br>$T_I_agree_to_copyleft</span>
+</label>
+</div>
 
 <div style="margin-left2:5em" id="ccdiv">
 $T_I_grant_use
