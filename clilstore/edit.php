@@ -498,7 +498,8 @@ EOD2;
   <input type=checkbox id=clone name=clone $clonech><span class=toggle><span class=switch></span></span>
   <span class=label>$T_Clone_as_a_new_unit</span>
 </label>
-END_cloneHtml; }
+END_cloneHtml;
+        }
         if ($editor=='new') {
             $textAdvice = $T_Text_Advice;
         } else {
