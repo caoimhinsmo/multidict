@@ -224,10 +224,16 @@ EOD_cookieMessage;
         $incTestChecked = ( $incTest ? 'checked' : '' );
         $wideChecked    = ( $mode==3 ? 'checked' : '' );
         $checkboxesHtml = <<<CHECKBOXES
-<input type="checkbox" name="incTest" id="incTest" form="filterForm" $incTestChecked tabindex=2 title="include test units" onclick="submitFForm()">
-<label for="incTest" style="padding-right:2em">$incTestLabel</label>
-<input type="checkbox" name="wide" id="wide" form="filterForm" $wideChecked tabindex=4 title="include all columns" onclick="submitFForm()">
-<label for="wide">$T_More_options</label>
+<label class=toggle-switchy for=incTest data-size=xs style="padding-right:2em" onclick="submitFForm()">
+  <input type=checkbox id=incTest name=incTest form="filterForm" $incTestChecked>
+  <span class=toggle><span class=switch></span></span>
+  <span class=label>$incTestLabel</span>
+</label>
+<label class=toggle-switchy for=wide data-size=xs title="include more columns" onclick="submitFForm()">
+  <input type=checkbox name=wide id=wide form=filterForm $wideChecked>
+  <span class=toggle><span class=switch></span></span>
+  <span class=label>$T_More_options</span>
+</label>
 CHECKBOXES;
     }
     $checkboxesHtml = <<<CHECKBOXES2
@@ -1010,6 +1016,7 @@ END_tableHtmlBun;
     <meta charset="UTF-8">
     <title>Clilstore - $T_Teaching_units $T_for_CLIL</title>
     <link rel="StyleSheet" href="/css/smo.css">
+    <link rel="StyleSheet" href="/css/toggle-switchy.css">
     <link rel="StyleSheet" href="style.css">
     <link rel="icon" type="image/png" href="/favicons/clilstore.png">
     <style>
