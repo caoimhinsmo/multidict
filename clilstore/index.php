@@ -217,7 +217,8 @@ error_log("\$clearFilter=$clearFilter");
 
     $tabletopChoices = '';
     $photo = ( $mode<2 ? 'StudentsBoard.png' : 'TeacherBoard.png' );
-    $photo = "<img src='/clilstore/$photo' style='float:left;padding-left:20px' alt=''>";
+    $newMode = ($mode+2)%4;
+    $photo = "<a href='/clilstore/?mode=$newMode'><img src='/clilstore/$photo' style='float:left;padding-left:20px' alt=''></a>";
 
     if ($mode<=1) { $checkboxesHtml = "<span style='color:green;font-size:80%'>$T_Add_a_column_info</span>"; } else {
         $incTestLabel = ( empty($user)

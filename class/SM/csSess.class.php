@@ -20,7 +20,6 @@ class SM_csSess {
       }
   }
 
-
   public function fetchCsSession() {
      // Fetches the session record from table csSession into the object $csSession
      // Returns 1 if found ok; returns 0 otherwise
