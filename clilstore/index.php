@@ -166,6 +166,8 @@ EOD_cookieMessage;
     if (!empty($_GET['restoreCols'])) { $csSess->restoreCols($_GET['restoreCols'] ); }
 
     $mode    = $csSess->getCsSession()->mode;
+$clearFilter = $_REQUEST['clearFilter'] ?? 'notset';
+error_log("\$clearFilter=$clearFilter");
     $filterForm = ( isset($_REQUEST['filterForm']) ? 1 : 0 );
     if ($filterForm && $mode>1) {
        if (isset($_REQUEST['incTest'])) { $csSess->setIncTest(1); } else { $csSess->setIncTest(0); }
@@ -213,9 +215,9 @@ EOD_cookieMessage;
         }
     }
 
-    $photo = $tabletopChoices = '';
-    if ($mode==1) { $photo = '<img src="http://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/Headphones-Sennheiser-HD555.jpg/320px-Headphones-Sennheiser-HD555.jpg" '
-                                . 'style="float:left;padding-left:20px;width:80px;height:60px" alt="">'; }
+    $tabletopChoices = '';
+    $photo = ( $mode<2 ? 'StudentsBoard.png' : 'TeacherBoard.png' );
+    $photo = "<img src='/clilstore/$photo' style='float:left;padding-left:20px' alt=''>";
 
     if ($mode<=1) { $checkboxesHtml = "<span style='color:green;font-size:80%'>$T_Add_a_column_info</span>"; } else {
         $incTestLabel = ( empty($user)
@@ -739,8 +741,8 @@ ENDtabletopChoices;
             $row3 .= <<<END_row3titlecell
 <td class="title" colspan=2>
  <div id="findDiv">
-     <input type="submit" name="filter" value="$T_Lorg" tabindex=80>&nbsp;&nbsp;
-     <input type="reset" value="$T_Clear_filter" title="$T_Clear_filter_title" tabindex=90>
+     <input type="submit" name=filter value="$T_Lorg" tabindex=80>&nbsp;&nbsp;
+     <input type="submit" name=clearFilter value="$T_Clear_filter" title="$T_Clear_filter_title" tabindex=90 onclick="clearFields()">
  </div>
 </td>
 END_row3titlecell;
@@ -1131,7 +1133,6 @@ $cookieMessage
 <p style="margin:22px 0 0 0;font-size:90%;float:left">$T_Teaching_units<br>$T_for_CLIL</p>
 <a href="help.php" class="button">$T_Help</a>
 <a href="about.php" class="button">$T_About_Clilstore</a>
-$photo
 
 <div style="width:100%;min-height:1px;clear:both">
 
@@ -1143,6 +1144,7 @@ $photo
 <option $mode3selected value="3" title="$T_For_teachers_more_info">$T_For_teachers - $T_more_options</option>
 </select>
 </form>
+$photo
 
 $userHtml
 
