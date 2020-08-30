@@ -166,8 +166,7 @@ EOD_cookieMessage;
     if (!empty($_GET['restoreCols'])) { $csSess->restoreCols($_GET['restoreCols'] ); }
 
     $mode    = $csSess->getCsSession()->mode;
-$clearFilter = $_REQUEST['clearFilter'] ?? 'notset';
-error_log("\$clearFilter=$clearFilter");
+    if (!empty($_REQUEST['clearFilter'])) { $csSess->clearFilter($mode); }
     $filterForm = ( isset($_REQUEST['filterForm']) ? 1 : 0 );
     if ($filterForm && $mode>1) {
        if (isset($_REQUEST['incTest'])) { $csSess->setIncTest(1); } else { $csSess->setIncTest(0); }
@@ -743,7 +742,7 @@ ENDtabletopChoices;
 <td class="title" colspan=2>
  <div id="findDiv">
      <input type="submit" name=filter value="$T_Lorg" tabindex=80>&nbsp;&nbsp;
-     <input type="submit" name=clearFilter value="$T_Clear_filter" title="$T_Clear_filter_title" tabindex=90 onclick="clearFields()">
+     <input type="submit" name=clearFilter value="$T_Clear_filter" title="$T_Clear_filter_title" tabindex=90 onclick2="clearFields()">
  </div>
 </td>
 END_row3titlecell;
@@ -1024,7 +1023,7 @@ END_tableHtmlBun;
     <link rel="icon" type="image/png" href="/favicons/clilstore.png">
     <style>
         table#main { border:1px solid #888; border-collapse:collapse; white-space:nowrap; color:#111; }
-        table#main tr td { padding:0 3px; }
+        table#main tr td { padding:0 3px; border-right:1px solid #aaa; }
 
         table#main tr.row1 td { background-color:#888; color:white; padding-top:0; border-bottom:2px solid #888; }
         table#main tr.row1 td a { color:white; }

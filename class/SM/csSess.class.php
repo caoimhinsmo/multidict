@@ -347,6 +347,17 @@ END_addColHtml;
   }
 
 
+  public function clearFilter($mode) {
+     // Clears the filter on all fields (except sl and level in mode 0)
+      $DbMultidict = SM_DbMultidictPDO::singleton('rw');
+      $csid = $this->csSession->csid;
+      $query = "UPDATE csFilter SET val1='', val2='' WHERE csid=:csid";
+      if ($mode==0) { $query .= " AND fd NOT IN ('sl','level')"; }
+      $stmtCL = $DbMultidict->prepare($query);
+      $stmtCL->execute([':csid'=>$csid]);
+  }
+
+
   public static function levelVis2Num ($lev,$minOrMax) {
      // Converts a CEFR level (A1..C2) to a numeric value appropriate for a minimum or maximum.
      // Leaves numeric values unchanged.  Converts illegal values to ''.
