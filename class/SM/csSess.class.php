@@ -371,7 +371,9 @@ END_addColHtml;
       $csid = $this->csSession->csid;
       $stmt = $DbMultidict->prepare("SELECT fd FROM csFilter WHERE csid=:csid AND (val1<>'' OR val2<>'') AND m$mode=0");
       $stmt->execute([':csid'=>$csid]);
-      return $stmt->fetchAll(PDO::FETCH_COLUMN);
+      $hiddenFilters = $stmt->fetchAll(PDO::FETCH_COLUMN);
+      if ($mode==0) { $hiddenFilters = array_diff ( $hiddenFilters, ['sl','level'] ); }
+      return $hiddenFilters;
   }
 
 

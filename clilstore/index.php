@@ -410,7 +410,9 @@ END_USER2;
     if (isset($_REQUEST['title']))      { $f['titleFil']   = $_REQUEST['title'];      }
     if (isset($_REQUEST['text']))       { $f['textFil']    = $_REQUEST['text'];       }
 
-    if ($mode==0) {  // Keep things really simple for mode 0, basic student mode
+    if ($mode==0) {
+/* The following was to keep things really simple for mode 0, basic student mode 
+However, it longer necessary now that we have improved Clear filter, and also have warnings about filters on hidden columns
         $f['idFil']      =
         $f['viewsMin']   =
         $f['viewsMax']   =
@@ -436,6 +438,7 @@ END_USER2;
 //        $f['titleFil']   =
 //        $f['textFil']    =
         '';
+*/
         $csSess->csFilter['sl']['m0'] = 0;  // No need to display Language because it is always filtered for in mode 0
        // Set up checked values for level radio buttons
         $level = $csSess->csFilter['level']['val1'];
