@@ -257,6 +257,13 @@ setcookie('csSession','',1,'/clilstore/','multidict.net');
       $this->storeCsFilter();
   }
 
+  public function clearFilterField($fd) {
+  // Clear the filter conditions on field $fd in index.php
+      $csid = $this->csSession->csid;
+      $DbMultidict = SM_DbMultidictPDO::singleton('rw');
+      $stmt = $DbMultidict->prepare("UPDATE csFilter SET val1='', val2='' WHERE csid=:csid AND fd=:fd");
+      $stmt->execute([':csid'=>$csid,':fd'=>$fd]);  
+  }
 
   public function restoreCols() {
      // Restores columns to their default display and sort order for the mode
@@ -347,7 +354,7 @@ END_addColHtml;
   }
 
 
-  public function clearFilter($mode) {
+  public function clearFilter ($mode) {
      // Clears the filter on all fields (except sl and level in mode 0)
       $DbMultidict = SM_DbMultidictPDO::singleton('rw');
       $csid = $this->csSession->csid;
@@ -355,6 +362,16 @@ END_addColHtml;
       if ($mode==0) { $query .= " AND fd NOT IN ('sl','level')"; }
       $stmtCL = $DbMultidict->prepare($query);
       $stmtCL->execute([':csid'=>$csid]);
+  }
+
+
+  public function hiddenFilters ($mode) {
+     // Returns an array containing the names of fields having Filter conditions but which are not visible in the current mode
+      $DbMultidict = SM_DbMultidictPDO::singleton('');
+      $csid = $this->csSession->csid;
+      $stmt = $DbMultidict->prepare("SELECT fd FROM csFilter WHERE csid=:csid AND (val1<>'' OR val2<>'') AND m$mode=0");
+      $stmt->execute([':csid'=>$csid]);
+      return $stmt->fetchAll(PDO::FETCH_COLUMN);
   }
 
 

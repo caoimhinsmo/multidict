@@ -136,7 +136,7 @@
 
     $mdNavbar = SM_mdNavbar::mdNavbar($T->domhan);
 
-    $dataLists = $tableHtml = $cookieMessage = $avgRow = $totRow = '';
+    $dataLists = $hiddenFiltersWarning = $tableHtml = $cookieMessage = $avgRow = $totRow = '';
     $limitUnits = $limitInfo = FALSE;
 
     if (!isset($_COOKIE['csSessionId'])) $cookieMessage = <<<EOD_cookieMessage
@@ -218,6 +218,21 @@ EOD_cookieMessage;
     $photo = ( $mode<2 ? 'StudentsBoard.png' : 'TeacherBoard.png' );
     $newMode = ($mode+2)%4;
     $photo = "<a href='/clilstore/?mode=$newMode'><img src='/clilstore/$photo' style='float:left;padding-left:20px' alt=''></a>";
+
+    $hiddenFilters = $csSess->hiddenFilters($mode);
+    if ($hiddenFilters) {
+        $message = ( count($hiddenFilters)==1
+                   ? 'A filter is currently being applied on a hidden column:'
+                   : 'Filters are currently being applied on hidden columns:' );
+        foreach ($hiddenFilters as $i=>$fd) {
+            $fdHtml = $T->h("csCol_$fd");
+            $fdHtml = "<a class=hiddenFilterField title='$T_Clear_filter' onclick=clearFilterField('$fd')>$fdHtml</a>";
+            $hiddenFilters[$i] = $fdHtml;
+        }
+        $hiddenFiltersWarning = implode(' ',$hiddenFilters);
+        $hiddenFiltersWarning = "$message $hiddenFiltersWarning (click to clear filter)";
+        $hiddenFiltersWarning = "<p style='margin:3px 0'><span style='color:red'>Warning:</span> $hiddenFiltersWarning</p>";
+    }
 
     if ($mode<=1) { $checkboxesHtml = "<span style='color:green;font-size:80%'>$T_Add_a_column_info</span>"; } else {
         $incTestLabel = ( empty($user)
@@ -742,7 +757,7 @@ ENDtabletopChoices;
 <td class="title" colspan=2>
  <div id="findDiv">
      <input type="submit" name=filter value="$T_Lorg" tabindex=80>&nbsp;&nbsp;
-     <input type="submit" name=clearFilter value="$T_Clear_filter" title="$T_Clear_filter_title" tabindex=90 onclick2="clearFields()">
+     <input type="submit" name=clearFilter value="$T_Clear_filter" title="$T_Clear_filter_title" tabindex=90>
  </div>
 </td>
 END_row3titlecell;
@@ -777,6 +792,7 @@ END_row3titlecell;
 $ownerListHtml
 </datalist>
 
+$hiddenFiltersWarning
 $checkboxesHtml
 END_dataLists;
 
@@ -1076,31 +1092,14 @@ $tableStyles
         .arabicfont { font-family:"Times Roman","Times New Roman"; font-size:130%; }
         p.noUnits { color:red; background-color:yellow; }
         span.fann { color:grey; font-size:65%; }
+        a.hiddenFilterField { padding:0 6px; background-color:yellow; border:1px solid black; border-radius:4px; }
+        a.hiddenFilterField:hover { background-color:blue; color:yellow; }
     </style>
     <script>
-        function clearFields () {
-            var el,elType;
-            form = document.getElementById('filterForm');
-            for(i=0; i<form.elements.length; i++) {
-                el = form.elements[i];
-                if (el.name=='incTest') continue;
-                if (el.name=='wide')    continue;
-                elType = el.type.toLowerCase();
-                if (elType=='text' || elType=='date') {
-                    el.value = '';
-                    delete el.value; //All that is needed for Opera; the rest is for other browsers
-                } else if (elType=='checkbox') {
-                    el.checked = '';
-                } else if (elType=='select-one') {
-                    el.selectedIndex = 0;
-                }
-            }
-            form.submit();
-        }
-
         function submitFForm () {
             document.getElementById('filterForm').submit();
         }
+
 
         function addColChange(fd) {
             var xmlhttp = new XMLHttpRequest();
@@ -1111,6 +1110,18 @@ $tableStyles
             xmlhttp.open('GET', 'ajax/addCol.php?fd=' + fd);
             xmlhttp.send();
         }
+
+
+        function clearFilterField(fd) {
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.onload = function() {
+                if (this.status!=200) { alert('Error in clearFilterField:'+this.status); return; }
+                window.location.href = window.location.href;
+            }
+            xmlhttp.open('GET', 'ajax/clearFilterField.php?fd=' + fd);
+            xmlhttp.send();
+        }
+
 
         function setNewbie() {
             alert('$T_setNewbieAlert');
@@ -1150,7 +1161,7 @@ $userHtml
 
 $tabletopChoices
 $dataLists
-<form id="filterForm" method="post" onreset="clearFields();">
+<form id="filterForm" method="post">
 <input type="hidden" name="filterForm" value="1">
 $tableHtml
 </form>
