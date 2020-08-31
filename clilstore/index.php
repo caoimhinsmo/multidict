@@ -168,18 +168,30 @@ EOD_cookieMessage;
     $mode    = $csSess->getCsSession()->mode;
     if (!empty($_REQUEST['clearFilter'])) { $csSess->clearFilter($mode); }
     $filterForm = ( isset($_REQUEST['filterForm']) ? 1 : 0 );
-    if ($filterForm && $mode>1) {
-       if (isset($_REQUEST['incTest'])) { $csSess->setIncTest(1); } else { $csSess->setIncTest(0); }
-       if (isset($_REQUEST['wide']))    { $csSess->setMode(3);    } else { $csSess->setMode(2);    }
+    if ($filterForm) {
+        if (isset($_REQUEST['incTest']) && $mode>1) { $csSess->setIncTest(1); } else { $csSess->setIncTest(0); }
+        if (isset($_REQUEST['wide'])) {
+            $mode = ( $mode<2 ? 1 : 3 );
+        } else {
+            $mode = ( $mode<2 ? 0 : 2 );
+        }
+        $csSess->setMode($mode);
     }
 
     $mode    = $csSess->getCsSession()->mode;
     
     $incTest = $csSess->getCsSession()->incTest;
+/*
     $mode0selected = ( $mode==0 ? 'selected=selected' : '');
     $mode1selected = ( $mode==1 ? 'selected=selected' : '');
     $mode2selected = ( $mode==2 ? 'selected=selected' : '');
     $mode3selected = ( $mode==3 ? 'selected=selected' : '');
+*/
+    $modeSselected = $modeTselected = '';
+    if      ($mode==0) { $modeS = 0; $modeT = 2; $modeSselected = 'selected=selected'; }
+     elseif ($mode==1) { $modeS = 1; $modeT = 3; $modeSselected = 'selected=selected'; }
+     elseif ($mode==2) { $modeS = 0; $modeT = 2; $modeTselected = 'selected=selected'; }
+     elseif ($mode==3) { $modeS = 1; $modeT = 3; $modeTselected = 'selected=selected'; }
     $addColHtml = $csSess->addColHtml();
 
     $modecol = "m$mode";
@@ -217,7 +229,7 @@ EOD_cookieMessage;
     $tabletopChoices = '';
     $photo = ( $mode<2 ? 'StudentsBoard.png' : 'TeacherBoard.png' );
     $newMode = ($mode+2)%4;
-    $photo = "<a href='/clilstore/?mode=$newMode'><img src='/clilstore/$photo' style='float:left;padding-left:20px' alt=''></a>";
+    $photo = "<a href='/clilstore/?mode=$newMode'><img src='/clilstore/$photo' style='float:left;padding-right:25px' alt=''></a>";
 
     $hiddenFilters = $csSess->hiddenFilters($mode);
     if ($hiddenFilters) {
@@ -234,22 +246,17 @@ EOD_cookieMessage;
         $hiddenFiltersWarning = "<p style='margin:3px 0'><span style='color:red'>Warning:</span> $hiddenFiltersWarning</p>";
     }
 
+    $wideChecked = ( $mode%2==1 ? 'checked' : '');
     if ($mode<=1) { $checkboxesHtml = "<span style='color:green;font-size:80%'>$T_Add_a_column_info</span>"; } else {
         $incTestLabel = ( empty($user)
                         ? "$T_Include_test_units"
                         : "$T_Include_test_units_o" );
         $incTestChecked = ( $incTest ? 'checked' : '' );
-        $wideChecked    = ( $mode==3 ? 'checked' : '' );
         $checkboxesHtml = <<<CHECKBOXES
 <label class=toggle-switchy for=incTest data-size=xs style="padding-right:2em" onclick="submitFForm()">
   <input type=checkbox id=incTest name=incTest form="filterForm" $incTestChecked>
   <span class=toggle><span class=switch></span></span>
   <span class=label>$incTestLabel</span>
-</label>
-<label class=toggle-switchy for=wide data-size=xs title="include more columns" onclick="submitFForm()">
-  <input type=checkbox name=wide id=wide form=filterForm $wideChecked>
-  <span class=toggle><span class=switch></span></span>
-  <span class=label>$T_More_options</span>
 </label>
 CHECKBOXES;
     }
@@ -849,7 +856,7 @@ END_tableHtmlBarr;
         $cnt['level'] = $cnt['medlen'] = 0;
         $tot['views'] = $tot['clicks'] = $tot['likes'] = $tot['created'] = $tot['created2'] = $tot['changed'] = $tot['level'] = $tot['words'] = $tot['medlen'] = $tot['buttons'] = $tot['files'] = 0;
        //
-        $units = $stmt->fetchAll(PDO::FETCH_ASSOC);~~
+        $units = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $nunits = count($units);
         $maxunits = 100;  //The limit unless showAll is set
         $showAll = $_REQUEST['showAll'] ?? '';
@@ -1150,15 +1157,18 @@ $cookieMessage
 
 <div style="width:100%;min-height:1px;clear:both">
 
-<form id="modeForm" method="get" style="float:left;padding:10px 0">
+$photo
+<form id="modeForm" method="get" style="padding:10px 0">
 <select name="mode" style="background-color:white" onchange="document.getElementById('modeForm').submit();">
-<option $mode0selected value="0" title="$T_For_students_info">$T_For_students</option>
-<option $mode1selected value="1" title="$T_For_students_more_info">$T_For_students - $T_more_options</option>
-<option $mode2selected value="2" title="$T_For_teachers_info">$T_For_teachers</option>
-<option $mode3selected value="3" title="$T_For_teachers_more_info">$T_For_teachers - $T_more_options</option>
+<option $modeSselected value="$modeS" title="$T_For_students_info">$T_For_students</option>
+<option $modeTselected value="$modeT" title="$T_For_teachers_info">$T_For_teachers</option>
 </select>
 </form>
-$photo
+<label class=toggle-switchy for=wide data-size=xs title="include more columns" onclick="submitFForm()">
+  <input type=checkbox name=wide id=wide form=filterForm $wideChecked>
+  <span class=toggle><span class=switch></span></span>
+  <span class=label>$T_More_options</span>
+</label>
 
 $userHtml
 
