@@ -20,9 +20,12 @@
     $T_Help                   = $T->h('Cobhair');
     $T_About_Clilstore        = $T->h('mu_Clilstore');
     $T_Select_lang_level      = $T->h('Select_lang_level');
+    $T_Options                = $T->h('Options');
     $T_My_options             = $T->h('My_options');
     $T_My_units               = $T->h('My_units');
+    $T_Vocabulary             = $T->h('Vocabulary');
     $T_My_vocabulary          = $T->h('My_vocabulary');
+    $T_Portfolio              = $T->h('Portfolio');
     $T_Add_a_column_info      = $T->h('Add_a_column_info');
     $T_See_as_newbie          = $T->h('See_as_newbie');
     $T_Create_a_unit          = $T->h('Create_a_unit') . '…';
@@ -313,7 +316,8 @@ END_USER1;
             $createButton = "<a href='edit.php?id=0' class=mybutton style='margin-right:2px'>$T_Create_a_unit</a>";
         }
         if ($mode<=1) { $mybuttons = <<<END_MYBUTTONSstud
-<a href="voc.php?user=$user" class="mybutton" style="margin-left:0;margin-right:1px">$T_My_vocabulary</a>
+<a href="voc.php?user=$user" class="mybutton" style="margin-left:0;margin-right:1px" title="$T_My_vocabulary">$T_Vocabulary</a>
+<a href="portfolio.php" class="mybutton">$T_Portfolio</a>
 END_MYBUTTONSstud;
         } else { $mybuttons = <<<END_MYBUTTONSteach
 <a href="./?owner=$user" class="mybutton" style="margin-left:0;margin-right:1px">$T_My_units</a>
@@ -321,10 +325,10 @@ $createButton
 END_MYBUTTONSteach;
         }
         $userHtml = <<<END_USER2
-<div style="clear:both;float:left;margin:0.5em 0 1.8em 0;padding:2px 4px;background-color:#def">
+<div style="clear:both;float:left;margin:0.8em 0 1.8em 0;padding:2px 4px;background-color:#d8e9ff">
 <p style="margin:2px 3px">$T_Logged_in_as <b>$user</b>
 <a href="logout.php" title="$T_Logout_from_Clilstore" class="mybutton" style="margin-right:5px">$T_Logout <img src="/icons-smo/logout.png" alt=""></a>
-<a href="options.php?user=$user" title="Change your Clilstore options or password" class="mybutton" style="margin-right:2.5em">$T_My_options</a>
+<a href="options.php?user=$user" title="Change your Clilstore options or password" class="mybutton" style="margin-right:2.5em">$T_Options</a>
 $mybuttons
 </p>
 $incUnitMessage
