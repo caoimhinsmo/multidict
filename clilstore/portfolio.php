@@ -76,13 +76,22 @@ END_pfTableHtml;
                 $learnedHtml .= "<li>$learned\n";
             }
             $learnedHtml = "<ul>\n$learnedHtml\n</ul>\n";
+            $stmtPfuW = $DbMultidict->prepare('SELECT id AS pfuW, work, url AS workurl FROM cspfUnitWork WHERE pfu=:pfu');
+            $stmtPfuW->execute([':pfu'=>$pfu]);
+            $workHtml = '';
+            $pfuWRows = $stmtPfuW->fetchAll(PDO::FETCH_ASSOC);
+            foreach ($pfuWRows as $pfuWRow) {
+                extract ($pfuWRow);
+                $workHtml .= "<li><a href='$workurl'>$work</a>\n";
+            }
+            $workHtml = "<ul>\n$workHtml\n</ul>\n";
             $pfHtml .= <<<END_pfHtml
 <tr id=row$pfu>
 <td><img src='/icons-smo/curAs.png' alt='Delete' title='$T_Delete_instantaneously' onclick="deleteVocWord('$pfu')"></td>
 <td><a href='/cs/$csUnit'>$csUnit</a></td>
 <td>$csTitle</td>
 <td>$learnedHtml <!-- <span id="\$vocid-tick" class=change>✔<span> --></td>
-<td></td>
+<td>$workHtml</td>
 </tr>
 END_pfHtml;
         }

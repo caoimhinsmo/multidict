@@ -44,7 +44,7 @@
 
     //Prepare media (or picture)
     if ($medfloat=='') { $medfloat = 'none'; }
-    $scroll = $recordVocHtml = $likeHtml = '';
+    $scroll = $recordVocHtml = $portfolioHtml = $likeHtml = '';
     if ($medfloat=='scroll') { $medfloat = 'none'; $scroll='scroll'; }
     $medembedHtml = ( empty($medembed) ? '' : "<div class=\"$medfloat\">$medembed</div>" );
 
@@ -80,7 +80,13 @@
                         ."<img src='/favicons/recordOff.png' alt='VocOff' title='Vocabulary recording is currently disabled - Click to enable'>"
                         ."<img src='/favicons/recordOn.png' alt='VocOn' title='Vocabulary recording is currently enabled - Click to disable'>"
                         ."</span></li>"
-                        ."<li class=right><a class=$vocClass href='voc.php?user=$user&amp;sl=$sl' nowordlink target=voctab title='Open your vocabulary list in a separate tab'>V</a>";
+                        ."<li class=right><a class=$vocClass href='voc.php?user=$user&amp;sl=$sl' data-nowordlink target=voctab title='Open your vocabulary list in a separate tab'>V</a>";
+       $stmt = $DbMultidict->prepare('SELECT pf FROM cspf WHERE user=:user ORDER BY prio DESC LIMIT 1');
+       $stmt->execute([':user'=>$user]);
+       if ($row  = $stmt->fetch(PDO::FETCH_ASSOC)) {
+           extract($row);
+           $portfolioHtml = "<li class=right><a href='portfolio.php?unit=$id' data-nowordlink target=pftab>P</a>";
+       }
        $stmtGetLike  = $DbMultidict->prepare('SELECT likes FROM user_unit WHERE unit=:id AND user=:user');
        $stmtGetLikes = $DbMultidict->prepare('SELECT SUM(likes) FROM user_unit WHERE unit=:id');
        $stmtGetLike->execute([':id'=>$id,':user'=>$user]);
@@ -109,6 +115,7 @@ $likeHtml
     title="Summary and other details on this unit">Unit info</a></li>
 $buttonedit
 $recordVocHtml
+$portfolioHtml
 </ul>
 EOD_NB1;
     $navbar2 = <<<EOD_NB2
