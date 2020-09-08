@@ -47,16 +47,38 @@
             if (!$stmt2->fetch()) { throw new SM_MDexception('You do not have read access to this portfolio'); }
         }
     }
+    $edit = ( $user==$loggedinUser ? 1 : 0 ); //$edit=1 indicates that the user has edit rights over the portfolio
 
-    $userSC = htmlspecialchars($user);
+    $userSC = htmlspecialchars($user) ?? '';
 
-    if ($pf==0) { $title = 'Create a new portfolio'; }
-    $titleHtml = '<br>' . htmlspecialchars($title);
+    if ($pf==0) { $h1 = 'Create a new portfolio'; }
+      else      { $h1 = "<span style='font-size:75%;font-style:italic'>$T_Portfolio_for_user_ <span style='color:brown'>$user</span></span><br>" . htmlspecialchars($title); }
 
     if ($pf==0) {
 
         $pfTableHtml = <<<END_pfTableHtml
-<p>(There will be a form here to create a new Portfolio)</p>
+<p style="margin-left:3em;text-indent:-1.5em;color:green;font-size:85%">You can create a portfolio to show your teacher:<br>
+- what Clilstore units you have worked on,<br>
+- what you have learned from them,<br>
+- any work you have produced yourself.</p>
+
+<form method=post action="createPortfolio.php">
+<div>
+Title of your portfolio<br>
+<input id=createTitle value='Portfolio' style="width:80%;max-width:50em">
+</div>
+
+<table style="margin-top:1em"><tr style="vertical-align:top">
+<td>Your teacher’s Clilstore id<br>
+<input id=createTeacher style="width:16em"></td>
+<td style="padding-left:0.5em">
+<span style="margin:0;color:green;font-size:80%">
+This is optional and can be added later.<br>
+Your teacher will be able to see your portfolio.</span></span>
+</tr></table>
+
+<p style="margin:1em 0 3em 0"><a class=button onClick="createClicked()">Create</a></p>
+</form>
 END_pfTableHtml;
 
     } else {
@@ -95,6 +117,10 @@ END_pfTableHtml;
 </tr>
 END_pfHtml;
         }
+        if (empty($pfHtml) && $edit) { $pfHtml = <<<END_pfHtmlNoUnits
+<tr><td colspan=4>You can add Clilstore units to your portfolio by clicking the ‘P’ button at the top of a unt.</td></tr>
+END_pfHtmlNoUnits;
+       }
 
         $pfTableHtml = <<<END_pfTable
 <table id=pftab>
@@ -107,7 +133,7 @@ END_pfTable;
 
     $HTML = <<<EOD
 <p style="color:red;margin:0">This facility is still under development</p>
-<h1 style="font-size:140%;margin:0;padding-top:0.5em">$T_Portfolio_for_user_ <span style="color:brown">$user</span>$titleHtml</h1>
+<h1 style="font-size:140%;margin:0.5em 0">$h1</h1>
 
 $pfTableHtml
 EOD;
@@ -124,61 +150,33 @@ EOD;
     <link rel="stylesheet" href="style.css">
     <link rel="icon" type="image/png" href="/favicons/clilstore.png">
     <style>
-        span.callcount { font-size:75%; color:grey; }
-        table#pftab { border-collapse:collapse; border:1px solid grey; margin-bottom:0.5em; white-space:nowrap; }
+        table#pftab { border-collapse:collapse; border:1px solid grey; margin-bottom:0.5em; }
         table#pftab tr#pftabhead { background-color:grey; color:white; font-weight:bold; }
         table#pftab tr:nth-child(odd)  { background-color:#ddf; }
         table#pftab tr:nth-child(even) { background-color:#fff; }
         table#pftab tr:nth-child(odd):hover  { background-color:#fe6; }
         table#pftab tr:nth-child(even):hover { background-color:#fe6; }
-        table#pftab td { padding:0px 3px; }
-        table#pftab td:nth-child(1) { padding:0 0.4em; }
-        table#pftab td:nth-child(2) a:hover { color:white; background-color:black; }
-        table#pftab td:nth-child(3) { padding:0; }
+        table#pftab td { padding:0 4px; }
         table#pftab tr + tr > td { border-left:1px solid #aaa; }
-        a#emptyBut { border:0; padding:1px 3px; border-radius:6px; background-color:#27b; color:white; text-decoration:none; }
-        a#emptyBut:hover,
-        a#emptyBut:active,
-        a#emptyBut:focus  { background-color:#f00; color:white; }
     </style>
     <script>
-        function deleteVocWord(vocid) {
+        function createClicked() {
+            var title   = document.getElementById('createTitle').value;
+            var teacher = document.getElementById('createTeacher').value;
             var xhttp = new XMLHttpRequest();
-            xhttp.onload = function() {
-                var resp = this.responseText;
-                if (resp!='OK') { alert('$T_Error_in deleteVocWord:'+resp); return; }
-                var el = document.getElementById('row'+vocid);
-                el.parentNode.removeChild(el);
-            }
-            xhttp.open('GET', 'ajax/deleteVocWord.php?vocid=' + vocid);
-            xhttp.send();
-        }
-        function changeMeaning(vocid,meaning) {
-            var xhttp = new XMLHttpRequest();
-            xhttp.onload = function() {
-                var resp = this.responseText;
-                if (resp!='OK') { alert('$T_Error_in changeMeaning:'+resp); return; }
-                var tickel = document.getElementById(vocid+'-tick');
-                tickel.classList.remove('changed'); //Remove the class (if required) and add again after a tiny delay, to restart the animation
-                setTimeout(function(){tickel.classList.add('changed');},50);
-            }
-            xhttp.open('GET', 'ajax/changeMeaning.php?vocid=' + vocid + '&meaning=' + encodeURI(meaning));
-            xhttp.send();
-        }
-        function emptyVocList(user,sl) {
-            var confirmMessage = "Empty_voc_list_confirm".replace('[sl]','‘'+sl+'’');
-            var r = confirm(confirmMessage);
-            if (r==true) {
-                var xhttp = new XMLHttpRequest();
-                xhttp.onload = function() {
+            xhttp.onreadystatechange = function() {
+                if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
                     var resp = this.responseText;
-                    if (resp!='OK') { alert('$T_Error_in emptyVocList:'+resp); return; }
-                    location.reload();
+                    if       (resp=='OK')     { window.location.href = '/clilstore/portfolio.php'; }
+                     else if (resp=='nouser') { alert('There is no such Clilstore userid as '+teacher); }
+                     else                     { alert('Error in pfCreate: '+resp); }
                 }
-                xhttp.open('GET', 'ajax/emptyVocList.php?user='+user+'&sl=' +sl,true);
-                xhttp.send();
-                return false;
             }
+            var formData = new FormData();
+            formData.append('title',title);
+            formData.append('teacher',teacher);
+            xhttp.open('POST', 'ajax/pfCreate.php');
+            xhttp.send(formData);
         }
     </script>
 </head>

@@ -26,6 +26,7 @@
     $T_Vocabulary             = $T->h('Vocabulary');
     $T_My_vocabulary          = $T->h('My_vocabulary');
     $T_Portfolio              = $T->h('Portfolio');
+    $T_Portfolios             = $T->h('Portfolios');
     $T_Add_a_column_info      = $T->h('Add_a_column_info');
     $T_See_as_newbie          = $T->h('See_as_newbie');
     $T_Create_a_unit          = $T->h('Create_a_unit') . '…';
@@ -139,7 +140,7 @@
 
     $mdNavbar = SM_mdNavbar::mdNavbar($T->domhan);
 
-    $dataLists = $hiddenFiltersWarning = $tableHtml = $cookieMessage = $avgRow = $totRow = '';
+    $dataLists = $hiddenFiltersWarning = $tableHtml = $cookieMessage = $avgRow = $totRow = $portfoliosButton = '';
     $limitUnits = $limitInfo = FALSE;
 
     if (!isset($_COOKIE['csSessionId'])) $cookieMessage = <<<EOD_cookieMessage
@@ -315,13 +316,21 @@ END_USER1;
             $incUnitMessage = '';
             $createButton = "<a href='edit.php?id=0' class=mybutton style='margin-right:2px'>$T_Create_a_unit</a>";
         }
-        if ($mode<=1) { $mybuttons = <<<END_MYBUTTONSstud
+        if ($mode<=1) {
+            $mybuttons = <<<END_MYBUTTONSstud
 <a href="voc.php?user=$user" class="mybutton" style="margin-left:0;margin-right:1px" title="$T_My_vocabulary">$T_Vocabulary</a>
 <a href="portfolio.php" class="mybutton">$T_Portfolio</a>
 END_MYBUTTONSstud;
-        } else { $mybuttons = <<<END_MYBUTTONSteach
+        } else {
+            $stmtPfs = $DbMultidict->prepare('SELECT pf FROM cspfPermit WHERE teacher=:teacher');
+            $stmtPfs->execute([':teacher'=>$user]);
+            if ($stmtPfs->fetch()) {
+                $portfoliosButton = "<a href='portfolios.php?teacher=$user' class=mybutton style='margin-left:2em'>$T_Portfolios</a>";
+            }
+            $mybuttons = <<<END_MYBUTTONSteach
 <a href="./?owner=$user" class="mybutton" style="margin-left:0;margin-right:1px">$T_My_units</a>
 $createButton
+$portfoliosButton
 END_MYBUTTONSteach;
         }
         $userHtml = <<<END_USER2

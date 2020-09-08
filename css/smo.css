@@ -25,6 +25,7 @@ div.exception { clear:both; margin:1em 0.5em; padding:1em; border:3px solid red;
 span.fann     { color:#777; }
 span.pdf      { font-size:80%; }
 span.rabhadh  { color:red; font-size:80%; }
+<span.fios>   { color:green; font-size:80%; }
 
 span.change { opacity:0; color:white; }
 span.change.changed { color:green; animation:appearFade 5s; }
