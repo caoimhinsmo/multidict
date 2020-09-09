@@ -80,11 +80,7 @@ END_unitsTableHtml;
 
     } else {
 
-        $unitToAdd = $_REQUEST['unit'] ?? 0;
-        if ($unitToAdd) {
-            $stmtAddUnit = $DbMultidict->prepare('INSERT IGNORE INTO cspfUnit (pf,unit) VALUES (:pf,:unit)');
-            $stmtAddUnit->execute([ ':pf'=>$pf, ':unit'=>$unitToAdd ]);
-        }
+        $unitToHighlight = $_REQUEST['unit'] ?? 0;
 
         $stmtPfu = $DbMultidict->prepare('SELECT cspfUnit.pfu, cspfUnit.unit AS csUnit, clilstore.title AS csTitle FROM cspfUnit,clilstore'
                                     . ' WHERE pf=:pf AND unit=clilstore.id');
@@ -96,7 +92,7 @@ END_unitsTableHtml;
             $stmtPfuL->execute([':pfu'=>$pfu]);
             $learnedHtml = '';
             $unitidHtml = "<a href='/cs/$csUnit'>$csUnit</a>";
-            $rowClass = ( $csUnit==$unitToAdd ? 'class=highlight' : '');
+            $rowClass = ( $csUnit==$unitToHighlight ? 'class=highlight' : '');
             if ($edit) {
                 $removeUnitHtml = "<img src='/icons-smo/curAs.png' alt='Remove' title='Remove this unit from the portfolio' onclick=\"removeUnit('$pfu')\">";
                 $unitidHtml = "$removeUnitHtml $unitidHtml";
@@ -146,8 +142,13 @@ END_unitsTable;
             if ($edit) { $editHtml = "<img src='/icons-smo/curAs.png' alt='Remove' title='Remove permission from this teacher' onclick=\"removePermit('$permitId')\">"; }
             $permitTableHtml = "<tr><td>$editHtml $teacher ($fullname)</td></tr>\n";
         }
+        $nTeachers = count($rows);
+        if      ($nTeachers==0) { $teachersMessage = 'No teachers can yet view this portfolio';            }
+         elseif ($nTeachers==1) { $teachersMessage = 'The following teacher can view this portfolio';      }
+         elseif ($nTeachers==2) { $teachersMessage = 'The following two teachers can view this portfolio'; }
+         else                   { $teachersMessage = 'The following teachers can view this portfolio';     }
         $permitTableHtml = <<<END_pt
-<p style="margin:1.7em 0 0 0">The following teacher(s) can view this portfolio</p>
+<p style="margin:1.7em 0 0 0.5em">$teachersMessage</p>
 <table style="margin-left:2em">
 $permitTableHtml
 <tr><td><input name=addTeacher placeholder="userid" style="margin-left:1em"> Add a teacher</td></tr>
@@ -161,10 +162,11 @@ END_pt;
             $n=0;
             foreach ($rows as $row) {
                 $n++;
-                $promoteHtml = ( $n>1 ? "<a style='font-size:70%' title='Promote to current portfolio'>↑ Promote</a>" : '');
+                if ($n==1) { $promoteHtml = '- active portfolio'; }
+                 else      { $promoteHtml = "<a title='Promote to active portfolio'>↑ Promote</a>"; }
                 extract($row);
                 $editHtml = "<img src='/icons-smo/curAs.png' alt='Delete' title='Delete this portfolio' onclick=\"deletePf('$pf')\">";
-                $pfsTableHtml .= "<tr><td>$editHtml <a href='./portfolio.php?pf=$pf'>$title</a> $promoteHtml</td></tr>\n";
+                $pfsTableHtml .= "<tr><td>$editHtml <a href='./portfolio.php?pf=$pf'>$title</a> <span style='font-size:75%'>$promoteHtml</span></td></tr>\n";
             }
             $pfsTableHtml = <<<END_pfstab
 <p style="margin:1.7em 0 0 0; border-top:2px solid grey">My portfolios</p>
@@ -197,16 +199,16 @@ EOD;
     <link rel="stylesheet" href="style.css">
     <link rel="icon" type="image/png" href="/favicons/clilstore.png">
     <style>
-        table#unitstab { border-collapse:collapse; border:1px solid grey; margin-bottom:0.5em; }
+        table#unitstab { border-collapse:collapse; border:2px solid grey; margin-bottom:0.5em; }
         table#unitstab tr#unitstabhead { background-color:grey; color:white; font-weight:bold; }
         table#unitstab tr#unitstabhead td { padding-left:0.7em; }
-        table#unitstab tr:nth-child(odd)  { background-color:#ddf; }
+        table#unitstab tr:nth-child(odd)  { background-color:#eef; }
         table#unitstab tr:nth-child(even) { background-color:#fff; }
         table#unitstab tr:nth-child(odd):hover  { background-color:#fe6; }
         table#unitstab tr:nth-child(even):hover { background-color:#fe6; }
         table#unitstab tr.highlight { background-color:#ffc; border:2px solid orange; }
         table#unitstab td { padding:0 4px; }
-        table#unitstab tr + tr > td { border-left:1px solid #aaa; }
+        table#unitstab tr + tr > td { border-left:1px solid #aaa; border-top:1px solid #999; }
         a#emptyBut { border:0; padding:1px 3px; border-radius:6px; background-color:#27b; color:white; text-decoration:none; }
         a#emptyBut:hover,
         a#emptyBut:active,

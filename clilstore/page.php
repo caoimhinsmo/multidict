@@ -85,7 +85,8 @@
        $stmt->execute([':user'=>$user]);
        if ($row  = $stmt->fetch(PDO::FETCH_ASSOC)) {
            extract($row);
-           $portfolioHtml = "<li class=right><a href='portfolio.php?unit=$id' data-nowordlink target=pftab>P</a>";
+//           $portfolioHtml = "<li class=right><a href='portfolio.php?unit=$id' data-nowordlink target=pftab>P</a>";
+           $portfolioHtml = "<li class=right><a onClick=\"pfAddUnit('$id')\">P</a>";
        }
        $stmtGetLike  = $DbMultidict->prepare('SELECT likes FROM user_unit WHERE unit=:id AND user=:user');
        $stmtGetLikes = $DbMultidict->prepare('SELECT SUM(likes) FROM user_unit WHERE unit=:id');
@@ -199,6 +200,16 @@ EOD_NB2;
             }
             vocTogReq.open('GET', '/clilstore/ajax/setVocRecord.php?vocRecord=' + clnew);
             vocTogReq.send();
+        }
+
+        function pfAddUnit(unit) {
+            var xhr = new XMLHttpRequest();
+            xhr.onload = function() {
+                if (this.status!=200 || this.responseText!='OK') { alert('$T_Error_in pfAddUnit:'+this.status+' '+this.responseText); return; }
+                window.open('$serverhome/clilstore/portfolio.php?unit='+unit,'pftab');
+            }
+            xhr.open('GET', '/clilstore/ajax/pfAddUnit.php?unit='+unit);
+            xhr.send();
         }
 
         function sizeTextDiv() {
