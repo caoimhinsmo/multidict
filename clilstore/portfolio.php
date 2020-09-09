@@ -140,7 +140,7 @@ END_unitsTable;
             extract($row);
             $editHtml = '';
             if ($edit) { $editHtml = "<img src='/icons-smo/curAs.png' alt='Remove' title='Remove permission from this teacher' onclick=\"removePermit('$permitId')\">"; }
-            $permitTableHtml = "<tr><td>$editHtml $teacher ($fullname)</td></tr>\n";
+            $permitTableHtml .= "<tr><td>$editHtml $teacher ($fullname)</td></tr>\n";
         }
         $nTeachers = count($rows);
         if      ($nTeachers==0) { $teachersMessage = 'No teachers can yet view this portfolio';            }
