@@ -23,15 +23,14 @@
 
   try {
     $myCLIL->dearbhaich();
-    $loggedinUser = $myCLIL->id;
+    $loggedinUser = $user = $myCLIL->id;
 
     $DbMultidict = SM_DbMultidictPDO::singleton('rw');
 
-    $pfHtml = $titleHtml = '';
+    $unitsHtml = $titleHtml = '';
 
     $pf = $_REQUEST['pf'] ?? -1;
     if ($pf == -1) {
-        $user = $loggedinUser;
         $stmt = $DbMultidict->prepare('SELECT pf,title FROM cspf WHERE user=:user ORDER BY prio DESC LIMIT 1');
         $stmt->execute([':user'=>$user]);
         if (!($row = $stmt->fetch(PDO::FETCH_ASSOC))) { $pf = 0; }
@@ -56,16 +55,15 @@
 
     if ($pf==0) {
 
-        $pfTableHtml = <<<END_pfTableHtml
+        $unitsTableHtml = <<<END_unitsTableHtml
 <p style="margin-left:3em;text-indent:-1.5em;color:green;font-size:85%">You can create a portfolio to show your teacher:<br>
 - what Clilstore units you have worked on,<br>
 - what you have learned from them,<br>
 - any work you have produced yourself.</p>
 
-<form method=post action="createPortfolio.php">
 <div>
 Title of your portfolio<br>
-<input id=createTitle value='Portfolio' style="width:80%;max-width:50em">
+<input id=createTitle value='Portfolio' required style="width:80%;max-width:50em">
 </div>
 
 <table style="margin-top:1em"><tr style="vertical-align:top">
@@ -78,20 +76,31 @@ Your teacher will be able to see your portfolio.</span></span>
 </tr></table>
 
 <p style="margin:1em 0 3em 0"><a class=button onClick="createClicked()">Create</a></p>
-</form>
-END_pfTableHtml;
+END_unitsTableHtml;
 
     } else {
+
+        $unitToAdd = $_REQUEST['unit'] ?? 0;
+        if ($unitToAdd) {
+            $stmtAddUnit = $DbMultidict->prepare('INSERT IGNORE INTO cspfUnit (pf,unit) VALUES (:pf,:unit)');
+            $stmtAddUnit->execute([ ':pf'=>$pf, ':unit'=>$unitToAdd ]);
+        }
 
         $stmtPfu = $DbMultidict->prepare('SELECT cspfUnit.pfu, cspfUnit.unit AS csUnit, clilstore.title AS csTitle FROM cspfUnit,clilstore'
                                     . ' WHERE pf=:pf AND unit=clilstore.id');
         $stmtPfu->execute([':pf'=>$pf]);
-        $pfRows = $stmtPfu->fetchAll(PDO::FETCH_ASSOC);
-        foreach ($pfRows as $pfRow) {
-            extract($pfRow);
+        $pfuRows = $stmtPfu->fetchAll(PDO::FETCH_ASSOC);
+        foreach ($pfuRows as $pfuRow) {
+            extract($pfuRow);
             $stmtPfuL = $DbMultidict->prepare('SELECT id AS pfuL, learned FROM cspfUnitLearned WHERE pfu=:pfu');
             $stmtPfuL->execute([':pfu'=>$pfu]);
             $learnedHtml = '';
+            $unitidHtml = "<a href='/cs/$csUnit'>$csUnit</a>";
+            $rowClass = ( $csUnit==$unitToAdd ? 'class=highlight' : '');
+            if ($edit) {
+                $removeUnitHtml = "<img src='/icons-smo/curAs.png' alt='Delete' title='Remove this unit from the portfolio' onclick=\"removeUnit('$pfu')\">";
+                $unitidHtml = "$removeUnitHtml $unitidHtml";
+            }
             $pfuLRows = $stmtPfuL->fetchAll(PDO::FETCH_ASSOC);
             foreach ($pfuLRows as $pfuLRow) {
                 extract ($pfuLRow);
@@ -107,27 +116,26 @@ END_pfTableHtml;
                 $workHtml .= "<li><a href='$workurl'>$work</a>\n";
             }
             $workHtml = "<ul>\n$workHtml\n</ul>\n";
-            $pfHtml .= <<<END_pfHtml
-<tr id=row$pfu>
-<td><img src='/icons-smo/curAs.png' alt='Delete' title='$T_Delete_instantaneously' onclick="deleteVocWord('$pfu')"></td>
-<td><a href='/cs/$csUnit'>$csUnit</a></td>
+            $unitsHtml .= <<<END_unitsHtml
+<tr id=row$pfu $rowClass>
+<td>$unitidHtml</td>
 <td>$csTitle</td>
 <td>$learnedHtml <!-- <span id="\$vocid-tick" class=change>✔<span> --></td>
 <td>$workHtml</td>
 </tr>
-END_pfHtml;
+END_unitsHtml;
         }
-        if (empty($pfHtml) && $edit) { $pfHtml = <<<END_pfHtmlNoUnits
-<tr><td colspan=4>You can add Clilstore units to your portfolio by clicking the ‘P’ button at the top of a unt.</td></tr>
-END_pfHtmlNoUnits;
+        if (empty($unitsHtml) && $edit) { $unitsHtml = <<<END_nounitsHtml
+<tr><td colspan=3>You can add Clilstore units to your portfolio by clicking the ‘P’ button at the top of a unt.</td></tr>
+END_nounitsHtml;
        }
 
-        $pfTableHtml = <<<END_pfTable
-<table id=pftab>
-<tr id=pftabhead><td></td><td>Unit</td><td>Title</td><td>What I have learned</td><td>Links to my work</td></tr>
-$pfHtml
+        $unitsTableHtml = <<<END_unitsTable
+<table id=unitstab>
+<tr id=unitstabhead><td>Unit</td><td>Title</td><td>What I have learned</td><td>Links to my work</td></tr>
+$unitsHtml
 </table>
-END_pfTable;
+END_unitsTable;
 
     }
 
@@ -135,7 +143,7 @@ END_pfTable;
 <p style="color:red;margin:0">This facility is still under development</p>
 <h1 style="font-size:140%;margin:0.5em 0">$h1</h1>
 
-$pfTableHtml
+$unitsTableHtml
 EOD;
 
   } catch (Exception $e) { $HTML = $e; }
@@ -150,19 +158,26 @@ EOD;
     <link rel="stylesheet" href="style.css">
     <link rel="icon" type="image/png" href="/favicons/clilstore.png">
     <style>
-        table#pftab { border-collapse:collapse; border:1px solid grey; margin-bottom:0.5em; }
-        table#pftab tr#pftabhead { background-color:grey; color:white; font-weight:bold; }
-        table#pftab tr:nth-child(odd)  { background-color:#ddf; }
-        table#pftab tr:nth-child(even) { background-color:#fff; }
-        table#pftab tr:nth-child(odd):hover  { background-color:#fe6; }
-        table#pftab tr:nth-child(even):hover { background-color:#fe6; }
-        table#pftab td { padding:0 4px; }
-        table#pftab tr + tr > td { border-left:1px solid #aaa; }
+        table#unitstab { border-collapse:collapse; border:1px solid grey; margin-bottom:0.5em; }
+        table#unitstab tr#unitstabhead { background-color:grey; color:white; font-weight:bold; }
+        table#unitstab tr#unitstabhead td { padding-left:0.7em; }
+        table#unitstab tr:nth-child(odd)  { background-color:#ddf; }
+        table#unitstab tr:nth-child(even) { background-color:#fff; }
+        table#unitstab tr:nth-child(odd):hover  { background-color:#fe6; }
+        table#unitstab tr:nth-child(even):hover { background-color:#fe6; }
+        table#unitstab tr.highlight { background-color:#ffc; border:2px solid orange; }
+        table#unitstab td { padding:0 4px; }
+        table#unitstab tr + tr > td { border-left:1px solid #aaa; }
+        a#emptyBut { border:0; padding:1px 3px; border-radius:6px; background-color:#27b; color:white; text-decoration:none; }
+        a#emptyBut:hover,
+        a#emptyBut:active,
+        a#emptyBut:focus  { background-color:#f00; color:white; }
     </style>
     <script>
         function createClicked() {
-            var title   = document.getElementById('createTitle').value;
-            var teacher = document.getElementById('createTeacher').value;
+            var title   = document.getElementById('createTitle').value.trim();
+            var teacher = document.getElementById('createTeacher').value.trim();
+            if (title=='') { alert('You must give your portfolio a name'); return; }
             var xhttp = new XMLHttpRequest();
             xhttp.onreadystatechange = function() {
                 if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
@@ -177,6 +192,12 @@ EOD;
             formData.append('teacher',teacher);
             xhttp.open('POST', 'ajax/pfCreate.php');
             xhttp.send(formData);
+        }
+
+        function removeUnit (pfu) {
+            if (confirm('Completely remove the unit from the portfolio?')) {
+                alert('The unit should now have been removed, if the programming for this been had finished');
+            }
         }
     </script>
 </head>
