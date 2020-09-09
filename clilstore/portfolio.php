@@ -27,7 +27,7 @@
 
     $DbMultidict = SM_DbMultidictPDO::singleton('rw');
 
-    $unitsHtml = $titleHtml = '';
+    $unitsHtml = $titleHtml = $permitTableHtml = $pfsTableHtml = '';
 
     $pf = $_REQUEST['pf'] ?? -1;
     if ($pf == -1) {
@@ -75,7 +75,7 @@ This is optional and can be added later.<br>
 Your teacher will be able to see your portfolio.</span></span>
 </tr></table>
 
-<p style="margin:1em 0 3em 0"><a class=button onClick="createClicked()">Create</a></p>
+<p style="margin:1em 0 3em 0"><a class=button onClick="createPortfolio()">Create</a></p>
 END_unitsTableHtml;
 
     } else {
@@ -98,7 +98,7 @@ END_unitsTableHtml;
             $unitidHtml = "<a href='/cs/$csUnit'>$csUnit</a>";
             $rowClass = ( $csUnit==$unitToAdd ? 'class=highlight' : '');
             if ($edit) {
-                $removeUnitHtml = "<img src='/icons-smo/curAs.png' alt='Delete' title='Remove this unit from the portfolio' onclick=\"removeUnit('$pfu')\">";
+                $removeUnitHtml = "<img src='/icons-smo/curAs.png' alt='Remove' title='Remove this unit from the portfolio' onclick=\"removeUnit('$pfu')\">";
                 $unitidHtml = "$removeUnitHtml $unitidHtml";
             }
             $pfuLRows = $stmtPfuL->fetchAll(PDO::FETCH_ASSOC);
@@ -117,7 +117,7 @@ END_unitsTableHtml;
             }
             $workHtml = "<ul>\n$workHtml\n</ul>\n";
             $unitsHtml .= <<<END_unitsHtml
-<tr id=row$pfu $rowClass>
+<tr id=pfuRow$pfu $rowClass>
 <td>$unitidHtml</td>
 <td>$csTitle</td>
 <td>$learnedHtml <!-- <span id="\$vocid-tick" class=change>✔<span> --></td>
@@ -137,13 +137,52 @@ $unitsHtml
 </table>
 END_unitsTable;
 
+        $stmtPermit = $DbMultidict->prepare('SELECT cspfPermit.id AS permitId, teacher,fullname FROM cspfPermit,users WHERE teacher=user AND pf=:pf ORDER BY teacher');
+        $stmtPermit->execute([':pf'=>$pf]);
+        $rows = $stmtPermit->fetchall(PDO::FETCH_ASSOC);
+        foreach ($rows as $row) {
+            extract($row);
+            $editHtml = '';
+            if ($edit) { $editHtml = "<img src='/icons-smo/curAs.png' alt='Remove' title='Remove permission from this teacher' onclick=\"removePermit('$permitId')\">"; }
+            $permitTableHtml = "<tr><td>$editHtml $teacher ($fullname)</td></tr>\n";
+        }
+        $permitTableHtml = <<<END_pt
+<p style="margin:1.7em 0 0 0">The following teacher(s) can view this portfolio</p>
+<table style="margin-left:2em">
+$permitTableHtml
+<tr><td><input name=addTeacher placeholder="userid" style="margin-left:1em"> Add a teacher</td></tr>
+</table>
+END_pt;
+
+        if ($edit) {
+            $stmtPfs = $DbMultidict->prepare('SELECT pf,title FROM cspf WHERE user=:user ORDER BY prio DESC');
+            $stmtPfs->execute([':user'=>$user]);
+            $rows = $stmtPfs->fetchAll(PDO::FETCH_ASSOC);
+            $n=0;
+            foreach ($rows as $row) {
+                $n++;
+                $promoteHtml = ( $n>1 ? "<a style='font-size:70%' title='Promote to current portfolio'>↑ Promote</a>" : '');
+                extract($row);
+                $editHtml = "<img src='/icons-smo/curAs.png' alt='Delete' title='Delete this portfolio' onclick=\"deletePf('$pf')\">";
+                $pfsTableHtml .= "<tr><td>$editHtml <a href='./portfolio.php?pf=$pf'>$title</a> $promoteHtml</td></tr>\n";
+            }
+            $pfsTableHtml = <<<END_pfstab
+<p style="margin:1.7em 0 0 0; border-top:2px solid grey">My portfolios</p>
+<table style="margin-left:2em">
+$pfsTableHtml
+<tr><td><a class=button href="portfolio.php?pf=0" style="font-size:75%">Create a new portfolio</a></td></tr>
+</table>
+END_pfstab;
+        }
     }
 
     $HTML = <<<EOD
-<p style="color:red;margin:0">This facility is still under development</p>
+<p style="color:red;margin:0;font-size:90%">The student portfolio facility is still under development</p>
 <h1 style="font-size:140%;margin:0.5em 0">$h1</h1>
 
 $unitsTableHtml
+$permitTableHtml
+$pfsTableHtml
 EOD;
 
   } catch (Exception $e) { $HTML = $e; }
@@ -174,7 +213,7 @@ EOD;
         a#emptyBut:focus  { background-color:#f00; color:white; }
     </style>
     <script>
-        function createClicked() {
+        function createPortfolio() {
             var title   = document.getElementById('createTitle').value.trim();
             var teacher = document.getElementById('createTeacher').value.trim();
             if (title=='') { alert('You must give your portfolio a name'); return; }
@@ -196,7 +235,15 @@ EOD;
 
         function removeUnit (pfu) {
             if (confirm('Completely remove the unit from the portfolio?')) {
-                alert('The unit should now have been removed, if the programming for this been had finished');
+                var xhttp = new XMLHttpRequest();
+                xhttp.onload = function() {
+                    var resp = this.responseText;
+                    if (resp!='OK') { alert('$T_Error_in portfolio.php removeUnit:'+resp); return; }
+                    var el = document.getElementById('pfuRow'+pfu);
+                    el.parentNode.removeChild(el);
+                }
+                xhttp.open('GET', 'ajax/pfRemoveUnit.php?pfu='+pfu);
+                xhttp.send();
             }
         }
     </script>
