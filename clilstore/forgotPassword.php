@@ -6,6 +6,21 @@
   try {
     $myCLIL = SM_myCLIL::singleton();
 
+    $T = new SM_T('clilstore/forgotPassword');
+
+    $T_Email           = $T->h('E-mail:');
+    $T_Send_reset_link = $T->h('Send_reset_link');
+    $T_No_such_user    = $T->h('No_such_user');
+
+    $T_Forgotten_your_password           = $T->h('Forgotten_your_password');
+    $T_forgotPassword_email_request_info = $T->h('forgotPassword_email_request_info');
+    $T_forgotPassword_junkmail_reminder  = $T->h('forgotPassword_junkmail_reminder');
+    $T_email_registered_with_Clilstore   = $T->h('email_registered_with_Clilstore');
+    $T_or_your_userid                    = $T->h('or_your_userid');
+    $T_Link_sent_confirmation            = $T->h('Link_sent_confirmation');
+
+    $mdNavbar = SM_mdNavbar::mdNavbar($T->domhan);
+
     echo <<<EOD_barr
 <!DOCTYPE html>
 <html lang="en">
@@ -22,13 +37,11 @@
 </head>
 <body>
 
-<ul class="smo-navlist">
-<li><a href="./">Clilstore</a></li>
-</ul>
+$mdNavbar
 <div class="smo-body-indent">
 
-<h1 style="margin-bottom:0.2em">Forgotten your password?</h1>
-<p style="margin-top:0.2em">You can ask for a link to be e-mailed to you which will allow you to reset your password</p>
+<h1 style="margin-bottom:0.2em">$T_Forgotten_your_password</h1>
+<p style="margin-top:0.2em">$T_forgotPassword_email_request_info<br>&nbsp;$T_forgotPassword_junkmail_reminder</p>
 
 EOD_barr;
 
@@ -41,7 +54,7 @@ EOD_barr;
         $stmt = $DbMultidict->prepare('SELECT user,email FROM users WHERE (user=:user OR email=:email) AND email IS NOT NULL');
         $stmt->execute(array('user'=>$findme,'email'=>$findme));
         if (!($row=$stmt->fetch())) {
-            $errorMessage = 'There’s no user with this e-mail address or userid';
+            $errorMessage = $T_No_such_user;
         } else {
             $user = $row['user'];
             $email= $row['email'];
@@ -50,7 +63,7 @@ EOD_barr;
             $servername = SM_myCLIL::servername();
             $link = "http://$servername/clilstore/changePassword.php?user=$user&t=$utime&md5=$md5";
             mail($email,'Clilstore - link to reset password (valid for 24 hours)',$link,"From:no-reply@multidict.net\r\n");
-            echo '<p style="color:green"><span style="font-size:200%">✔</span> A link allowing you to reset your password has been sent to your e-mail address. This will be valid for 24 hours.</p>' ."\n";
+            echo "<p style='color:green'><span style='font-size:200%'>✔</span> $T_Link_sent_confirmation</p>\n";
             $formRequired = FALSE;
         }
     }
@@ -60,13 +73,13 @@ EOD_barr;
         echo <<<ENDform
 <div class="errorMessage">$errorMessage</div>
 <form method="POST">
-<table>
+<table style="margin:2em 0 1em 0">
 <tr style="vertical-align:top">
- <td>E-mail:</td>
+ <td>$T_Email</td>
  <td><input name="findme" value="$findmeSC" required utofocus style="width:21em"></td>
- <td rowspan=2 style="color:green">The e-mail address you registered with Clilstore <span style="font-size:85%;font-style:italic">(or your userid is also acceptable)</span></td>
+ <td rowspan=2 style="color:green">$T_email_registered_with_Clilstore <span style="font-size:85%;font-style:italic">($T_or_your_userid)</span></td>
 </tr>
-<tr><td></td><td><input name="sendLink" type="submit" value="Send reset link"></td></tr>
+<tr><td></td><td><input name="sendLink" type="submit" value="$T_Send_reset_link"></td></tr>
 </table>
 </form>
 ENDform;
@@ -76,9 +89,7 @@ ENDform;
 
   echo <<<EOD_bonn
 </div>
-<ul class="smo-navlist">
-<li><a href="./">Clilstore</a></li>
-</ul>
+$mdNavbar
 
 </body>
 </html>
