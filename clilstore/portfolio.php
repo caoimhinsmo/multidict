@@ -162,11 +162,13 @@ END_pt;
             $n=0;
             foreach ($rows as $row) {
                 $n++;
-                if ($n==1) { $promoteHtml = '- active portfolio'; }
+                if ($n==1) { $promoteHtml = '- <b>active portfolio</b>';
+                             $title = "<b>$title</b>"; }
                  else      { $promoteHtml = "<a title='Promote to active portfolio'>↑ Promote</a>"; }
                 extract($row);
-                $editHtml = "<img src='/icons-smo/curAs.png' alt='Delete' title='Delete this portfolio' onclick=\"deletePf('$pf')\">";
-                $pfsTableHtml .= "<tr><td>$editHtml <a href='./portfolio.php?pf=$pf'>$title</a> <span style='font-size:75%'>$promoteHtml</span></td></tr>\n";
+                $editHtml = "<img src='/icons-smo/curAs.png' alt='Delete' title='Delete this portfolio' onclick=\"pfDelete('$pf','$n')\">";
+                $promoteHtml = "<span style='font-size:75%'>$promoteHtml</span>";
+                $pfsTableHtml .= "<tr id=pfsRow$pf><td>$editHtml <a href='./portfolio.php?pf=$pf'>$title</a> $promoteHtml</td></tr>\n";
             }
             $pfsTableHtml = <<<END_pfstab
 <p style="margin:1.7em 0 0 0; border-top:2px solid grey">My portfolios</p>
@@ -236,17 +238,34 @@ EOD;
         }
 
         function removeUnit (pfu) {
-            if (confirm('Completely remove the unit from the portfolio?')) {
+            if (confirm('Completely remove this unit from the portfolio?')) {
                 var xhttp = new XMLHttpRequest();
                 xhttp.onload = function() {
                     var resp = this.responseText;
-                    if (resp!='OK') { alert('$T_Error_in portfolio.php removeUnit:'+resp); return; }
+                    if (resp!='OK') { alert('$T_Error_in portfolio.php removeUnit\\r\\n\\r\\n'+resp); return; }
                     var el = document.getElementById('pfuRow'+pfu);
                     el.parentNode.removeChild(el);
                 }
                 xhttp.open('GET', 'ajax/pfRemoveUnit.php?pfu='+pfu);
                 xhttp.send();
             }
+        }
+
+        function pfDelete (pf,n) {
+            var pfsRow = document.getElementById('pfsRow'+pf);
+            pfsRow.style.backgroundColor = 'pink';
+            if (confirm('Completely delete this whole portfolio?')) {
+                var xhttp = new XMLHttpRequest();
+                xhttp.onload = function() {
+                    var resp = this.responseText;
+                    var nl = '\\r\\n'; //newline
+                    if (resp!='OK') { alert('$T_Error_in portfolio.php pfDelete'+nl+nl+resp+nl); return; }
+                    if (n==1) { window.location.href = 'portfolio.php'; }
+                     else     { pfsRow.parentNode.removeChild(pfsRow); }
+                }
+                xhttp.open('GET', 'ajax/pfDelete.php?pf='+pf);
+                xhttp.send();
+            } else { pfsRow.style.backgroundColor = ''; }
         }
     </script>
 </head>
