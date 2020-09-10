@@ -156,19 +156,18 @@ $permitTableHtml
 END_pt;
 
         if ($edit) {
-            $stmtPfs = $DbMultidict->prepare('SELECT pf,title FROM cspf WHERE user=:user ORDER BY prio DESC');
+            $stmtPfs = $DbMultidict->prepare('SELECT pf AS portf,title FROM cspf WHERE user=:user ORDER BY prio DESC');
             $stmtPfs->execute([':user'=>$user]);
             $rows = $stmtPfs->fetchAll(PDO::FETCH_ASSOC);
-            $n=0;
-            foreach ($rows as $row) {
-                $n++;
-                if ($n==1) { $promoteHtml = '- <b>active portfolio</b>';
-                             $title = "<b>$title</b>"; }
-                 else      { $promoteHtml = "<a title='Promote to active portfolio'>↑ Promote</a>"; }
+            foreach ($rows as $n=>$row) {
                 extract($row);
-                $editHtml = "<img src='/icons-smo/curAs.png' alt='Delete' title='Delete this portfolio' onclick=\"pfDelete('$pf','$n')\">";
+                if ($n==0) { $promoteHtml = '- <b>active portfolio</b>';
+                             $title = "<b>$title</b>"; }
+                 else      { $promoteHtml = "<a title='Promote to active portfolio' onClick=\"pfPromote('$portf')\">↑ Promote</a>"; }
+                $editHtml = "<img src='/icons-smo/curAs.png' alt='Delete' title='Delete this portfolio' onclick=\"pfDelete('$portf','$pf','$n')\">";
+                if ($portf==$pf) { $promoteHtml .= ' &nbsp; [this portfolio]'; }
                 $promoteHtml = "<span style='font-size:75%'>$promoteHtml</span>";
-                $pfsTableHtml .= "<tr id=pfsRow$pf><td>$editHtml <a href='./portfolio.php?pf=$pf'>$title</a> $promoteHtml</td></tr>\n";
+                $pfsTableHtml .= "<tr id=pfsRow$portf><td>$editHtml <a href='./portfolio.php?pf=$portf'>$title</a> $promoteHtml</td></tr>\n";
             }
             $pfsTableHtml = <<<END_pfstab
 <p style="margin:1.7em 0 0 0; border-top:2px solid grey">My portfolios</p>
@@ -251,7 +250,9 @@ EOD;
             }
         }
 
-        function pfDelete (pf,n) {
+        function pfDelete (pf,thisPf,n) {
+//alert('pf='+pf + ',thisPf='+thisPf + ',n='+n);
+//return;
             var pfsRow = document.getElementById('pfsRow'+pf);
             pfsRow.style.backgroundColor = 'pink';
             if (confirm('Completely delete this whole portfolio?')) {
@@ -260,12 +261,25 @@ EOD;
                     var resp = this.responseText;
                     var nl = '\\r\\n'; //newline
                     if (resp!='OK') { alert('$T_Error_in portfolio.php pfDelete'+nl+nl+resp+nl); return; }
-                    if (n==1) { window.location.href = 'portfolio.php'; }
-                     else     { pfsRow.parentNode.removeChild(pfsRow); }
+                    if (pf==thisPf) { window.location.href = 'portfolio.php'; } //this portfolio has now been deleted
+                     else if (n==0) { window.location.href = 'portfolio.php?pf='+thisPf; } // the active portfolio has now been delete, but but not this one
+                     else           { pfsRow.parentNode.removeChild(pfsRow); }
                 }
                 xhttp.open('GET', 'ajax/pfDelete.php?pf='+pf);
                 xhttp.send();
             } else { pfsRow.style.backgroundColor = ''; }
+        }
+
+        function pfPromote (pf) {
+                var xhttp = new XMLHttpRequest();
+                xhttp.onload = function() {
+                    var resp = this.responseText;
+                    var nl = '\\r\\n'; //newline
+                    if (resp!='OK') { alert('$T_Error_in portfolio.php pfPromote'+nl+nl+resp+nl); return; }
+                    window.location.href = 'portfolio.php';
+                }
+                xhttp.open('GET', 'ajax/pfPromote.php?pf='+pf);
+                xhttp.send();
         }
     </script>
 </head>
