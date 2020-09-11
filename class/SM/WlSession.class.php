@@ -839,8 +839,9 @@ EOD;
       //If the url looks like that of a Clilstore unit, return the unit number. Otherwise return 0, or return -1 if no url at all.
       $url = $this->url;
       if (empty($url)) return -1;
-      if (!preg_match('|//(.*)multidict\.(.*)/clilstore/page\.php\?id=(\d+)|',$url,$matches)) return 0; //Not a Clilstore unit
-      return $matches[3];
+      if (preg_match('|//(.*)multidict\.(.*)/clilstore/page\.php\?id=(\d+)|',$url,$matches)) return return $matches[3];
+      if (preg_match('|//(.*)clilstore\.(.*)/clilstore/page\.php\?id=(\d+)|',$url,$matches)) return return $matches[3];
+      return 0
   }
 
   public function csClickCounter() {
