@@ -151,7 +151,7 @@ END_unitsTable;
 <p style="margin:1.7em 0 0 0.5em">$teachersMessage</p>
 <table style="margin-left:2em">
 $permitTableHtml
-<tr><td><input name=addTeacher placeholder="userid" style="margin-left:1em"> Add a teacher</td></tr>
+<tr><td><input id=addTeacher placeholder="userid" style="margin-left:1em" onChange="pfAddTeacher('$pf')"> Add a teacher</td></tr>
 </table>
 END_pt;
 
@@ -251,8 +251,6 @@ EOD;
         }
 
         function pfDelete (pf,thisPf,n) {
-//alert('pf='+pf + ',thisPf='+thisPf + ',n='+n);
-//return;
             var pfsRow = document.getElementById('pfsRow'+pf);
             pfsRow.style.backgroundColor = 'pink';
             if (confirm('Completely delete this whole portfolio?')) {
@@ -271,15 +269,36 @@ EOD;
         }
 
         function pfPromote (pf) {
-                var xhttp = new XMLHttpRequest();
-                xhttp.onload = function() {
+            var xhttp = new XMLHttpRequest();
+            xhttp.onload = function() {
+                var resp = this.responseText;
+                var nl = '\\r\\n'; //newline
+                if (resp!='OK') { alert('$T_Error_in portfolio.php pfPromote'+nl+nl+resp+nl); return; }
+                window.location.href = 'portfolio.php';
+            }
+            xhttp.open('GET', 'ajax/pfPromote.php?pf='+pf);
+            xhttp.send();
+        }
+
+        function pfAddTeacher (pf) {
+            var teacher = document.getElementById('addTeacher').value.trim();
+            if (teacher=='') { return; }
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function() {
+                if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
                     var resp = this.responseText;
                     var nl = '\\r\\n'; //newline
-                    if (resp!='OK') { alert('$T_Error_in portfolio.php pfPromote'+nl+nl+resp+nl); return; }
-                    window.location.href = 'portfolio.php';
+                    if       (resp=='OK')        { window.location.href = location.href; }
+                     else if (resp=='nouser')    { alert('There is no such Clilstore userid as '+teacher); }
+                     else if (resp=='duplicate') { alert('This teacher already has access'); }
+                     else                        { alert('Error in pfAddTeacher.php'+nl+nl+resp+nl); }
                 }
-                xhttp.open('GET', 'ajax/pfPromote.php?pf='+pf);
-                xhttp.send();
+            }
+            var formData = new FormData();
+            formData.append('pf',pf);
+            formData.append('teacher',teacher);
+            xhttp.open('POST', 'ajax/pfAddTeacher.php'); //Safer to use POST in case of rubbish in teacher userid
+            xhttp.send(formData);
         }
     </script>
 </head>
