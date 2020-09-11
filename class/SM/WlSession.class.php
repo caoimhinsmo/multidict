@@ -841,7 +841,7 @@ EOD;
       if (empty($url)) return -1;
       if (preg_match('|//(.*)multidict\.(.*)/clilstore/page\.php\?id=(\d+)|',$url,$matches)) return $matches[3];
       if (preg_match('|//(.*)clilstore\.(.*)/clilstore/page\.php\?id=(\d+)|',$url,$matches)) return $matches[3];
-      return 0
+      return 0;
   }
 
   public function csClickCounter() {
