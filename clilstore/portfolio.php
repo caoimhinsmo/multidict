@@ -139,8 +139,10 @@ END_unitsTable;
         foreach ($rows as $row) {
             extract($row);
             $editHtml = '';
-            if ($edit) { $editHtml = "<img src='/icons-smo/curAs.png' alt='Remove' title='Remove permission from this teacher' onclick=\"removePermit('$permitId')\">"; }
-            $permitTableHtml .= "<tr><td>$editHtml $teacher ($fullname)</td></tr>\n";
+            if ($edit) {
+                $editHtml = "<img src='/icons-smo/curAs.png' alt='Remove' title='Remove permission from this teacher' onclick=\"pfRemovePermit('$permitId')\">";
+            }
+            $permitTableHtml .= "<tr id=permitRow$permitId><td>$editHtml $teacher ($fullname)</td></tr>\n";
         }
         $nTeachers = count($rows);
         if      ($nTeachers==0) { $teachersMessage = 'No teachers can yet view this portfolio';            }
@@ -299,6 +301,19 @@ EOD;
             formData.append('teacher',teacher);
             xhttp.open('POST', 'ajax/pfAddTeacher.php'); //Safer to use POST in case of rubbish in teacher userid
             xhttp.send(formData);
+        }
+
+        function pfRemovePermit (permitId) {
+            var xhttp = new XMLHttpRequest();
+            var permitRow = document.getElementById('permitRow'+permitId);
+            xhttp.onload = function() {
+                var resp = this.responseText;
+                var nl = '\\r\\n'; //newline
+                if (resp!='OK') { alert('$T_Error_in portfolio.php pfRemovePermit'+nl+nl+resp+nl); return; }
+                 else           { permitRow.parentNode.removeChild(permitRow); }
+            }
+            xhttp.open('GET', 'ajax/pfRemovePermit.php?permitId='+permitId);
+            xhttp.send();
         }
     </script>
 </head>
