@@ -80,7 +80,7 @@ END_unitsTableHtml;
 
     } else {
 
-        $unitToHighlight = $_REQUEST['unit'] ?? 0;
+        $unitToEdit = $_REQUEST['unit'] ?? 0;
 
         $stmtPfu = $DbMultidict->prepare('SELECT cspfUnit.pfu, cspfUnit.unit AS csUnit, clilstore.title AS csTitle FROM cspfUnit,clilstore'
                                     . ' WHERE pf=:pf AND unit=clilstore.id');
@@ -91,18 +91,28 @@ END_unitsTableHtml;
             $stmtPfuL = $DbMultidict->prepare('SELECT id AS pfuL, learned FROM cspfUnitLearned WHERE pfu=:pfu');
             $stmtPfuL->execute([':pfu'=>$pfu]);
             $learnedHtml = '';
-            $unitidHtml = "<a href='/cs/$csUnit'>$csUnit</a>";
-            $rowClass = ( $csUnit==$unitToHighlight ? 'class=highlight' : '');
+            $unitidHtml = str_pad($csUnit, 5, '_', STR_PAD_LEFT);
+            $unitidHtml = str_replace('_','&nbsp;',$unitidHtml);
+            $unitidHtml = "<a href='/cs/$csUnit'>$unitidHtml</a>";
+            $rowClass = ( $csUnit==$unitToEdit ? 'class=edit' : '');
             if ($edit) {
                 $removeUnitHtml = "<img src='/icons-smo/curAs.png' alt='Remove' title='Remove this unit from the portfolio' onclick=\"removeUnit('$pfu')\">";
-                $unitidHtml = "$removeUnitHtml $unitidHtml";
+                $editUnitHtml   = "<img src='/icons-smo/peann.png' alt='Edit' onClick=\"toggleUnitEdit('$pfu')\">";
+                $unitidHtml = "$removeUnitHtml &nbsp;&nbsp; $editUnitHtml<br>$unitidHtml";
             }
             $pfuLRows = $stmtPfuL->fetchAll(PDO::FETCH_ASSOC);
             foreach ($pfuLRows as $pfuLRow) {
                 extract ($pfuLRow);
                 $learnedHtml .= "<li>$learned\n";
             }
-            $learnedHtml = "<ul>\n$learnedHtml\n</ul>\n";
+            if ($edit) { $newLearnedItem = "<input id=pfuLnew class=edit placeholder='Add an item' onChange=\"pfuLadd('$pfu')\">"; }
+             else      { $newLearnedItem = ''; }
+            $learnedHtml = <<<END_learnedHtml
+<ul id=pfuLul$pfu>
+$learnedHtml
+</ul>
+$newLearnedItem
+END_learnedHtml;
             $stmtPfuW = $DbMultidict->prepare('SELECT id AS pfuW, work, url AS workurl FROM cspfUnitWork WHERE pfu=:pfu');
             $stmtPfuW->execute([':pfu'=>$pfu]);
             $workHtml = '';
@@ -111,7 +121,13 @@ END_unitsTableHtml;
                 extract ($pfuWRow);
                 $workHtml .= "<li><a href='$workurl'>$work</a>\n";
             }
-            $workHtml = "<ul>\n$workHtml\n</ul>\n";
+            if ($edit) { $newWorkItem = "<span class=edit><input placeholder='Name'><br><input placeholder='URL'></span>"; }
+            $workHtml = <<<END_workHtml
+<ul>
+$workHtml
+</ul>
+$newWorkItem
+END_workHtml;
             $unitsHtml .= <<<END_unitsHtml
 <tr id=pfuRow$pfu $rowClass>
 <td>$unitidHtml</td>
@@ -214,9 +230,13 @@ EOD;
         table#unitstab tr:nth-child(even) { background-color:#fff; }
         table#unitstab tr:nth-child(odd):hover  { background-color:#fe6; }
         table#unitstab tr:nth-child(even):hover { background-color:#fe6; }
-        table#unitstab tr.highlight { background-color:#ffc; border:2px solid orange; }
+        table#unitstab tr.edit { background-color:#ffc; border:2px solid red; }
         table#unitstab td { padding:0 4px; }
+        table#unitstab td:first-child { text-align:center; }
         table#unitstab tr + tr > td { border-left:1px solid #aaa; border-top:1px solid #999; }
+        table#unitstab tr      td .edit { display:none; }
+        table#unitstab tr.edit td .edit { display:inline; }
+        table#unitstab input { width:90%; min-width:20em; }
         a#emptyBut { border:0; padding:1px 3px; border-radius:6px; background-color:#27b; color:white; text-decoration:none; }
         a#emptyBut:hover,
         a#emptyBut:active,
@@ -319,6 +339,33 @@ EOD;
             }
             xhttp.open('GET', 'ajax/pfRemovePermit.php?permitId='+permitId);
             xhttp.send();
+        }
+
+        function toggleUnitEdit(pfu) {
+            rowEl = document.getElementById('pfuRow'+pfu);
+            rowEl.classList.toggle('edit');
+        }
+
+        function pfuLadd(pfu) {
+            var xhttp = new XMLHttpRequest();
+            var inputEl = document.getElementById('pfuLnew');
+            var newText = inputEl.value;
+            xhttp.onreadystatechange = function() {
+                if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+                    var resp = this.responseText;
+                    var nl = '\\r\\n'; //newline
+                    if (resp!='OK') { alert('Error in pfAddTeacher.php'+nl+nl+resp+nl); return; }
+                    var newLI = document.createElement('li');
+                    newLI.innerHTML = newText;
+                    document.getElementById('pfuLul$pfu').appendChild(newLI);
+                    inputEl.value = '';
+                }
+            }
+            var formData = new FormData();
+            formData.append('pfu',pfu);
+            formData.append('newText',newText);
+            xhttp.open('POST', 'ajax/pfuLadd.php'); //Safer to use POST in case of rubbish in the text
+            xhttp.send(formData);
         }
     </script>
 </head>
