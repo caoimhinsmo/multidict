@@ -27,7 +27,7 @@
 
     $DbMultidict = SM_DbMultidictPDO::singleton('rw');
 
-    $unitsHtml = $titleHtml = $permitTableHtml = $pfsTableHtml = '';
+    $unitsHtml = $titleHtml = $permitTableHtml = $pfsTableHtml = $addTeacherHtml = '';
 
     $pf = $_REQUEST['pf'] ?? -1;
     if ($pf == -1) {
@@ -121,9 +121,10 @@ END_unitsTableHtml;
 </tr>
 END_unitsHtml;
         }
-        if (empty($unitsHtml) && $edit) { $unitsHtml = <<<END_nounitsHtml
-<tr><td colspan=3>You can add Clilstore units to your portfolio by clicking the ‘P’ button at the top of a unt.</td></tr>
-END_nounitsHtml;
+        if (empty($unitsHtml)) {
+            if ($edit) { $unitsHtml = "You can add Clilstore units to your portfolio by clicking the ‘P’ button at the top of a unit."; }
+             else      { $unitsHtml = "This portfolio contains no units yet."; }
+           $unitsHtml = "<tr><td colspan=4>$unitsHtml</td></tr>";
        }
 
         $unitsTableHtml = <<<END_unitsTable
@@ -149,11 +150,15 @@ END_unitsTable;
          elseif ($nTeachers==1) { $teachersMessage = 'The following teacher can view this portfolio';      }
          elseif ($nTeachers==2) { $teachersMessage = 'The following two teachers can view this portfolio'; }
          else                   { $teachersMessage = 'The following teachers can view this portfolio';     }
+        if ($edit) { $addTeacherHtml = <<<END_addTeacher
+<tr><td><input id=addTeacher placeholder="userid" style="margin-left:1em" onChange="pfAddTeacher('$pf')"> Add a teacher</td></tr>
+END_addTeacher;
+        }
         $permitTableHtml = <<<END_pt
 <p style="margin:1.7em 0 0 0.5em">$teachersMessage</p>
 <table style="margin-left:2em">
 $permitTableHtml
-<tr><td><input id=addTeacher placeholder="userid" style="margin-left:1em" onChange="pfAddTeacher('$pf')"> Add a teacher</td></tr>
+$addTeacherHtml
 </table>
 END_pt;
 
