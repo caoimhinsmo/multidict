@@ -105,7 +105,7 @@ END_unitsTableHtml;
                 extract ($pfuLRow);
                 $learnedHtml .= "<li>$learned\n";
             }
-            if ($edit) { $newLearnedItem = "<input id=pfuLnew class=edit placeholder='Add an item' onChange=\"pfuLadd('$pfu')\">"; }
+            if ($edit) { $newLearnedItem = "<input id=pfuLnew$pfu class=edit placeholder='Add an item' onChange=\"pfuLadd('$pfu')\">"; }
              else      { $newLearnedItem = ''; }
             $learnedHtml = <<<END_learnedHtml
 <ul id=pfuLul$pfu>
@@ -347,16 +347,16 @@ EOD;
 
         function pfuLadd(pfu) {
             var xhttp = new XMLHttpRequest();
-            var inputEl = document.getElementById('pfuLnew');
+            var inputEl = document.getElementById('pfuLnew'+pfu);
             var newText = inputEl.value;
             xhttp.onreadystatechange = function() {
                 if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
                     var resp = this.responseText;
                     var nl = '\\r\\n'; //newline
-                    if (resp!='OK') { alert('Error in pfAddTeacher.php'+nl+nl+resp+nl); return; }
+                    if (resp!='OK') { alert('Error in pfuLadd.php'+nl+nl+resp+nl); return; }
                     var newLI = document.createElement('li');
                     newLI.innerHTML = newText;
-                    document.getElementById('pfuLul$pfu').appendChild(newLI);
+                    document.getElementById('pfuLul'+pfu).appendChild(newLI);
                     inputEl.value = '';
                 }
             }
