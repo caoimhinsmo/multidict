@@ -96,9 +96,9 @@ END_unitsTableHtml;
             $unitidHtml = "<a href='/cs/$csUnit'>$unitidHtml</a>";
             $rowClass = ( $csUnit==$unitToEdit ? 'class=edit' : '');
             if ($edit) {
-                $removeUnitHtml = "<img src='/icons-smo/curAs.png' alt='Remove' title='Remove this unit from the portfolio' onclick=\"removeUnit('$pfu')\">";
+                $removeUnitHtml = "<img src='/icons-smo/bin.png' alt='Remove' title='Remove this unit from the portfolio' onclick=\"removeUnit('$pfu')\">";
                 $editUnitHtml   = "<img src='/icons-smo/peann.png' alt='Edit' onClick=\"toggleUnitEdit('$pfu')\">";
-                $unitidHtml = "$removeUnitHtml &nbsp;&nbsp; $editUnitHtml<br>$unitidHtml";
+                $editToolsHtml = "$removeUnitHtml &nbsp;&nbsp; $editUnitHtml";
             }
             $pfuLRows = $stmtPfuL->fetchAll(PDO::FETCH_ASSOC);
             foreach ($pfuLRows as $pfuLRow) {
@@ -130,8 +130,7 @@ $newWorkItem
 END_workHtml;
             $unitsHtml .= <<<END_unitsHtml
 <tr id=pfuRow$pfu $rowClass>
-<td>$unitidHtml</td>
-<td>$csTitle</td>
+<td>$unitidHtml<br>$csTitle<br>$editToolsHtml</td>
 <td>$learnedHtml <!-- <span id="\$vocid-tick" class=change>✔<span> --></td>
 <td>$workHtml</td>
 </tr>
@@ -140,12 +139,13 @@ END_unitsHtml;
         if (empty($unitsHtml)) {
             if ($edit) { $unitsHtml = "You can add Clilstore units to your portfolio by clicking the ‘P’ button at the top of a unit."; }
              else      { $unitsHtml = "This portfolio contains no units yet."; }
-           $unitsHtml = "<tr><td colspan=4>$unitsHtml</td></tr>";
+           $unitsHtml = "<tr><td colspan=3>$unitsHtml</td></tr>";
        }
 
         $unitsTableHtml = <<<END_unitsTable
 <table id=unitstab>
-<tr id=unitstabhead><td>Unit</td><td>Title</td><td>What I have learned</td><td>Links to my work</td></tr>
+<col style="width:25%"><col><col>
+<tr id=unitstabhead><td>Clilstore unit</td><td>What I have learned</td><td>Links to my work</td></tr>
 $unitsHtml
 </table>
 END_unitsTable;
@@ -231,8 +231,7 @@ EOD;
         table#unitstab tr:nth-child(odd):hover  { background-color:#fe6; }
         table#unitstab tr:nth-child(even):hover { background-color:#fe6; }
         table#unitstab tr.edit { background-color:#ffc; border:2px solid red; }
-        table#unitstab td { padding:0 4px; }
-        table#unitstab td:first-child { text-align:center; }
+        table#unitstab td { padding:0 4px; vertical-align:top; }
         table#unitstab tr + tr > td { border-left:1px solid #aaa; border-top:1px solid #999; }
         table#unitstab tr      td .edit { display:none; }
         table#unitstab tr.edit td .edit { display:inline; }
