@@ -14,7 +14,10 @@
   $DbMultidict = SM_DbMultidictPDO::singleton('rw');
   $stmt = $DbMultidict->prepare('REPLACE INTO user_unit(user,unit,likes) VALUES (:user,:unit,:likes)');
   $stmt->execute([':user'=>$user,':unit'=>$unit,':likes'=>$likes]);
-  $stmtTotal = $DbMultidict->prepare('UPDATE clilstore SET likes = (SELECT SUM(likes) FROM user_unit WHERE unit=:unit) WHERE id=:unit');
-  $stmtTotal->execute([':unit'=>$unit]); 
-  echo 'OK';
+  $stmtSetTotal = $DbMultidict->prepare('UPDATE clilstore SET likes = (SELECT SUM(likes) FROM user_unit WHERE unit=:unit) WHERE id=:unit');
+  $stmtSetTotal->execute([':unit'=>$unit]); 
+  $stmtGetTotal = $DbMultidict->prepare('SELECT likes FROM clilstore WHERE id=:unit');
+  $stmtGetTotal->execute([':unit'=>$unit]); 
+  $likesTotal = $stmtGetTotal->fetchColumn();
+  echo "OK:$likesTotal";
 ?>

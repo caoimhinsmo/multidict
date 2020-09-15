@@ -103,7 +103,7 @@ END_unitsTableHtml;
             $pfuLRows = $stmtPfuL->fetchAll(PDO::FETCH_ASSOC);
             foreach ($pfuLRows as $pfuLRow) {
                 extract ($pfuLRow);
-                $learnedHtml .= "<li>$learned\n";
+                $learnedHtml .= "<li id=pfuL$pfuL>$learned\n";
             }
             if ($edit) { $newLearnedItem = "<input id=pfuLnew$pfu class=edit placeholder='Add an item' onChange=\"pfuLadd('$pfu')\">"; }
              else      { $newLearnedItem = ''; }
@@ -351,9 +351,11 @@ EOD;
             var newText = inputEl.value;
             xhttp.onreadystatechange = function() {
                 if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
-                    var resp = this.responseText;
                     var nl = '\\r\\n'; //newline
-                    if (resp!='OK') { alert('Error in pfuLadd.php'+nl+nl+resp+nl); return; }
+                    var resp = this.responseText;
+                    var found = resp.match(/^OK:(\d+)$/)
+                    if (!found) { alert('Error in pfuLadd.php'+nl+nl+resp+nl); return; }
+var id = found[1];
                     var newLI = document.createElement('li');
                     newLI.innerHTML = newText;
                     document.getElementById('pfuLul'+pfu).appendChild(newLI);

@@ -93,10 +93,11 @@
        $stmtGetLikes->execute([':id'=>$id]);
        if ($stmtGetLike->fetchColumn()>0) { $likeClass = 'liked'; } else { $likeClass = 'unliked'; }
        $likes = $stmtGetLikes->fetchColumn();
+       $likesHtml = ( $likes ? $likes : '');
        $likeHtml = "<li id=likeLI class=$likeClass onclick=likeClicked() title='$likes $T_total'>"
                   ."<img id=heartUnliked src='/favicons/heartUnliked.png' alt='unlike'>"
                   ."<img id=heartLiked src='/favicons/heartLiked.png' alt='like'>"
-                  ."<span id='likesBadge' class='badge'>$likes</span>";
+                  ."<span id='likesBadge' class='badge'>$likesHtml</span>";
     }
     $sharebuttonFB = "<iframe src='https://www.facebook.com/plugins/share_button.php?href=$serverhome/cs/$id&layout=button&size=small&mobile_iframe=true&width=60&height=20&appId [www.facebook.com]' width='60' height='20' style='border:none;overflow:hidden' scrolling='no' frameborder='0' allowTransparency='true'></iframe>";
     $shareTitle = 'Clilstore unit: ' . urlencode($title);
@@ -168,7 +169,7 @@ EOD_NB2;
         li#likeLI.liked   #heartUnliked { display:none;   }
         li#likeLI.unliked #heartLiked   { display:none;   }
         li#likeLI.unliked #heartUnliked { display:inline; }
-        span#likesBadge { background-color:red; color white; }
+        span#likesBadge { color:red; }
     </style>
     <script>
         function likeClicked() {
@@ -177,11 +178,14 @@ EOD_NB2;
             if (likeEl.className=='unliked') { newLikeStatus = 'liked'; increment = 1; }
             var xhr = new XMLHttpRequest();
             xhr.onload = function() {
-                if (this.status!=200 || this.responseText!='OK') { alert('$T_Error_in likeClicked:'+this.status+' '+this.responseText); return; }
+                var found;
+                if ( this.status!=200 || !(found = this.responseText.match(/^OK:(\d+)$/)) )
+                    { alert('$T_Error_in likeClicked:'+this.status+' '+this.responseText); return; }
+                var likesTotal = found[1];
                 likeEl.className = newLikeStatus;
-                likeEl.title = (parseInt(likeEl.title,10) + increment) + ' $T_totalj';
+                likeEl.title = likesTotal + ' $T_totalj';
                 var lbEl = document.getElementById('likesBadge');
-                lbEl.innerHTML = parseInt(lbEl.innerHTML,10) + increment;
+                lbEl.innerHTML = likesTotal;
             }
             xhr.open('GET', '/clilstore/ajax/setLike.php?unit=$id&newLikeStatus=' + newLikeStatus);
             xhr.send();

@@ -13,5 +13,6 @@
   $result = $stmt->execute([ ':pfu'=>$pfu, ':learned'=>$newText ]);
   if (!$result) { die('pfuLadd failed to insert the new text'); }
   
-  echo 'OK';
+  $id = $DbMultidict->lastInsertId();
+  echo "OK:$id";
 ?>
