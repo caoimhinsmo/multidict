@@ -27,7 +27,7 @@
 
     $DbMultidict = SM_DbMultidictPDO::singleton('rw');
 
-    $unitsHtml = $titleHtml = $permitTableHtml = $pfsTableHtml = $addTeacherHtml = '';
+    $unitsHtml = $titleHtml = $permitTableHtml = $pfsTableHtml = $addTeacherHtml = $itemEditHtml = '';
 
     $pf = $_REQUEST['pf'] ?? -1;
     if ($pf == -1) {
@@ -46,7 +46,8 @@
             if (!$stmt2->fetch()) { throw new SM_MDexception('You do not have read access to this portfolio'); }
         }
     }
-    $edit = ( $user==$loggedinUser ? 1 : 0 ); //$edit=1 indicates that the user has edit rights over the portfolio
+    $edit = ( in_array($loggedinUser, [$user,'admin']) ? 1 : 0 ); //$edit=1 indicates that the user has edit rights over the portfolio
+    if ($edit) { $itemEditHtml = "<img src='/icons-smo/curAs.png' alt='Delete' title='Delete this item' onClick='itemDelete(this)'>"; }
 
     $userSC = htmlspecialchars($user) ?? '';
 
@@ -90,7 +91,7 @@ END_unitsTableHtml;
             extract($pfuRow);
             $stmtPfuL = $DbMultidict->prepare('SELECT id AS pfuL, learned FROM cspfUnitLearned WHERE pfu=:pfu');
             $stmtPfuL->execute([':pfu'=>$pfu]);
-            $learnedHtml = '';
+            $learnedHtml = $workHtml = $newLearnedItem = $newWorkItem = '';
             $unitidHtml = str_pad($csUnit, 5, '_', STR_PAD_LEFT);
             $unitidHtml = str_replace('_','&nbsp;',$unitidHtml);
             $unitidHtml = "<a href='/cs/$csUnit'>$unitidHtml</a>";
@@ -103,10 +104,9 @@ END_unitsTableHtml;
             $pfuLRows = $stmtPfuL->fetchAll(PDO::FETCH_ASSOC);
             foreach ($pfuLRows as $pfuLRow) {
                 extract ($pfuLRow);
-                $learnedHtml .= "<li id=pfuL$pfuL>$learned\n";
+                $learnedHtml .= "<li id=pfuL$pfuL>$learned <span class='edit'>$itemEditHtml</span>\n";
             }
             if ($edit) { $newLearnedItem = "<input id=pfuLnew$pfu class=edit placeholder='Add an item' onChange=\"pfuLadd('$pfu')\">"; }
-             else      { $newLearnedItem = ''; }
             $learnedHtml = <<<END_learnedHtml
 <ul id=pfuLul$pfu>
 $learnedHtml
@@ -115,15 +115,17 @@ $newLearnedItem
 END_learnedHtml;
             $stmtPfuW = $DbMultidict->prepare('SELECT id AS pfuW, work, url AS workurl FROM cspfUnitWork WHERE pfu=:pfu');
             $stmtPfuW->execute([':pfu'=>$pfu]);
-            $workHtml = '';
             $pfuWRows = $stmtPfuW->fetchAll(PDO::FETCH_ASSOC);
             foreach ($pfuWRows as $pfuWRow) {
                 extract ($pfuWRow);
-                $workHtml .= "<li><a href='$workurl'>$work</a>\n";
+                $workHtml .= "<li id=pfuW$pfuW><a href='$workurl'>$work</a> <span class='edit'>$itemEditHtml</span>\n";
             }
-            if ($edit) { $newWorkItem = "<span class=edit><input placeholder='Name'><br><input placeholder='URL'></span>"; }
+            if ($edit) {
+                $newWorkItem = "<input placeholder='Work' id=pfuWnewWork$pfu><br><input placeholder='URL' id=pfuWnewURL$pfu>";
+                $newWorkItem = "<span class=edit onChange=\"pfuWadd('$pfu')\">$newWorkItem</span>";
+            }
             $workHtml = <<<END_workHtml
-<ul>
+<ul id=pfuWul$pfu>
 $workHtml
 </ul>
 $newWorkItem
@@ -348,16 +350,16 @@ EOD;
         function pfuLadd(pfu) {
             var xhttp = new XMLHttpRequest();
             var inputEl = document.getElementById('pfuLnew'+pfu);
-            var newText = inputEl.value;
+            var newText = inputEl.value.trim();
             xhttp.onreadystatechange = function() {
                 if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
                     var nl = '\\r\\n'; //newline
                     var resp = this.responseText;
                     var found = resp.match(/^OK:(\d+)$/)
                     if (!found) { alert('Error in pfuLadd.php'+nl+nl+resp+nl); return; }
-var id = found[1];
                     var newLI = document.createElement('li');
-                    newLI.innerHTML = newText;
+                    newLI.id = 'pfuL' + found[1];
+                    newLI.innerHTML = newText + ' ' + "$itemEditHtml";
                     document.getElementById('pfuLul'+pfu).appendChild(newLI);
                     inputEl.value = '';
                 }
@@ -367,6 +369,47 @@ var id = found[1];
             formData.append('newText',newText);
             xhttp.open('POST', 'ajax/pfuLadd.php'); //Safer to use POST in case of rubbish in the text
             xhttp.send(formData);
+        }
+
+        function pfuWadd(pfu) {
+            var xhttp = new XMLHttpRequest();
+            var workEl = document.getElementById('pfuWnewWork'+pfu);
+            var urlEl  = document.getElementById('pfuWnewURL'+pfu);
+            var newWork = workEl.value.trim();
+            var newURL  = urlEl.value.trim();
+            if (newWork=='' || newURL=='') return;
+            xhttp.onreadystatechange = function() {
+                if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+                    var nl = '\\r\\n'; //newline
+                    var resp = this.responseText;
+                    var found = resp.match(/^OK:(\d+)$/)
+                    if (!found) { alert('Error in pfuWadd.php'+nl+nl+resp+nl); return; }
+                    var newLI = document.createElement('li');
+                    newLI.id = 'pfuL' + found[1];
+                    newLI.innerHTML = '<a href="' + newURL + '">' + newWork + '</a> ' + "$itemEditHtml";
+                    document.getElementById('pfuWul'+pfu).appendChild(newLI);
+                    workEl.value = '';
+                    urlEl.value  = '';
+                }
+            }
+            var formData = new FormData();
+            formData.append('pfu',pfu);
+            formData.append('newWork',newWork);
+            formData.append('newURL',newURL);
+            xhttp.open('POST', 'ajax/pfuWadd.php'); //Safer to use POST in case of rubbish in the text
+            xhttp.send(formData);
+        }
+
+        function itemDelete(el) {
+            var liEl = el.closest('li');
+            var xhttp = new XMLHttpRequest()
+            xhttp.onload = function() {
+                var resp = this.responseText;
+                if (resp!='OK') { alert('$T_Error_in pfItemDelete.php\\r\\n\\r\\n'+resp); return; }
+                liEl.parentNode.removeChild(liEl);
+            }
+            xhttp.open('GET', 'ajax/pfItemDelete.php?liId='+liEl.id);
+            xhttp.send();
         }
     </script>
 </head>
