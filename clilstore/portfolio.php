@@ -47,7 +47,7 @@
         }
     }
     $edit = ( in_array($loggedinUser, [$user,'admin']) ? 1 : 0 ); //$edit=1 indicates that the user has edit rights over the portfolio
-    if ($edit) { $itemEditHtml = "<img src='/icons-smo/curAs.png' alt='Delete' title='Delete this item' onClick='itemDelete(this)'>"; }
+    if ($edit) { $itemEditHtml = "<span class=edit><img src='/icons-smo/curAs.png' alt='Delete' title='Delete this item' onClick='itemDelete(this)'></span>"; }
 
     $userSC = htmlspecialchars($user) ?? '';
 
@@ -104,7 +104,7 @@ END_unitsTableHtml;
             $pfuLRows = $stmtPfuL->fetchAll(PDO::FETCH_ASSOC);
             foreach ($pfuLRows as $pfuLRow) {
                 extract ($pfuLRow);
-                $learnedHtml .= "<li id=pfuL$pfuL>$learned <span class='edit'>$itemEditHtml</span>\n";
+                $learnedHtml .= "<li id=pfuL$pfuL>$learned $itemEditHtml\n";
             }
             if ($edit) { $newLearnedItem = "<input id=pfuLnew$pfu class=edit placeholder='Add an item' onChange=\"pfuLadd('$pfu')\">"; }
             $learnedHtml = <<<END_learnedHtml
@@ -118,7 +118,7 @@ END_learnedHtml;
             $pfuWRows = $stmtPfuW->fetchAll(PDO::FETCH_ASSOC);
             foreach ($pfuWRows as $pfuWRow) {
                 extract ($pfuWRow);
-                $workHtml .= "<li id=pfuW$pfuW><a href='$workurl'>$work</a> <span class='edit'>$itemEditHtml</span>\n";
+                $workHtml .= "<li id=pfuW$pfuW><a href='$workurl'>$work</a> $itemEditHtml\n";
             }
             if ($edit) {
                 $newWorkItem = "<input placeholder='Work' id=pfuWnewWork$pfu><br><input placeholder='URL' id=pfuWnewURL$pfu>";
@@ -385,7 +385,7 @@ EOD;
                     var found = resp.match(/^OK:(\d+)$/)
                     if (!found) { alert('Error in pfuWadd.php'+nl+nl+resp+nl); return; }
                     var newLI = document.createElement('li');
-                    newLI.id = 'pfuL' + found[1];
+                    newLI.id = 'pfuW' + found[1];
                     newLI.innerHTML = '<a href="' + newURL + '">' + newWork + '</a> ' + "$itemEditHtml";
                     document.getElementById('pfuWul'+pfu).appendChild(newLI);
                     workEl.value = '';
