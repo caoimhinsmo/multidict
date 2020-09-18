@@ -132,7 +132,7 @@ $newWorkItem
 END_workHtml;
             $unitsHtml .= <<<END_unitsHtml
 <tr id=pfuRow$pfu $rowClass>
-<td>$unitidHtml<br>$csTitle<br>$editToolsHtml</td>
+<td><p style="margin:0">$unitidHtml<br>$csTitle</p><p style="margin:0.7em 0 0.3em 0.7em">$editToolsHtml</p></td>
 <td>$learnedHtml <!-- <span id="\$vocid-tick" class=change>✔<span> --></td>
 <td>$workHtml</td>
 </tr>
@@ -377,10 +377,20 @@ EOD;
             var urlEl  = document.getElementById('pfuWnewURL'+pfu);
             var newWork = workEl.value.trim();
             var newURL  = urlEl.value.trim();
+            var nl = '\\r\\n'; //newline
+            var validURLpattern = new RegExp('^http://|^https://','i');
+            if ( newURL!='' && !validURLpattern.test(newURL) ) {
+                if ( ! /\//.test(newURL) ) { newURL = '/' + newURL; } //Add a leading / to newURL if necessary
+                newURL = 'http:/' + newURL;
+                urlEl.value = newURL;
+                var message = 'A URL must begin with http:// or https://' + nl+nl
+                            + 'We have changed your URL to' + nl+nl + newURL + nl+nl 
+                            + 'Is this OK?';
+                if (!confirm(message)) { return; }
+            }
             if (newWork=='' || newURL=='') return;
             xhttp.onreadystatechange = function() {
                 if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
-                    var nl = '\\r\\n'; //newline
                     var resp = this.responseText;
                     var found = resp.match(/^OK:(\d+)$/)
                     if (!found) { alert('Error in pfuWadd.php'+nl+nl+resp+nl); return; }
