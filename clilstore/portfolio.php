@@ -47,7 +47,14 @@
         }
     }
     $edit = ( in_array($loggedinUser, [$user,'admin']) ? 1 : 0 ); //$edit=1 indicates that the user has edit rights over the portfolio
-    if ($edit) { $itemEditHtml = "<span class=edit><img src='/icons-smo/curAs.png' alt='Delete' title='Delete this item' onClick='itemDelete(this)'></span>"; }
+    if ($edit) {
+        $itemEditHtml = "<img src='/icons-smo/curAs.png' alt='Delete' title='Delete this item' onClick='itemDelete(this)'>";
+        $LitemEditHtml = "<img src='/icons-smo/peann.png' class=editIcon alt='Edit' title='Edit this item' onClick='LitemEdit(this)'>"
+                       . "<img src='/icons-smo/floppydisk.png' class=saveIcon alt='Save' title='Save your edits' onClick='LitemSave(this)'>"
+                       . $itemEditHtml;
+        $itemEditHtml  = "<span class=edit>$itemEditHtml</span>";
+        $LitemEditHtml = "<span class=edit>$LitemEditHtml</span>";
+    }
 
     $userSC = htmlspecialchars($user) ?? '';
 
@@ -104,7 +111,7 @@ END_unitsTableHtml;
             $pfuLRows = $stmtPfuL->fetchAll(PDO::FETCH_ASSOC);
             foreach ($pfuLRows as $pfuLRow) {
                 extract ($pfuLRow);
-                $learnedHtml .= "<li id=pfuL$pfuL>$learned $itemEditHtml\n";
+                $learnedHtml .= "<li id=pfuL$pfuL><span id=pfuLtext$pfuL onKeypress='keypress(event)'>$learned</span> $LitemEditHtml\n";
             }
             if ($edit) { $newLearnedItem = "<input id=pfuLnew$pfu class=edit placeholder='Add an item' onChange=\"pfuLadd('$pfu')\">"; }
             $learnedHtml = <<<END_learnedHtml
@@ -242,6 +249,11 @@ EOD;
         a#emptyBut:hover,
         a#emptyBut:active,
         a#emptyBut:focus  { background-color:#f00; color:white; }
+        li img.editIcon { display:inline; }
+        li img.saveIcon { display:none; }
+        li.editing span:first-child { background-color:white; padding:0 0.3em; border:1px solid black; }
+        li.editing img.editIcon { display:none; }
+        li.editing img.saveIcon { display:inline; }
     </style>
     <script>
         function createPortfolio() {
@@ -358,8 +370,9 @@ EOD;
                     var found = resp.match(/^OK:(\d+)$/)
                     if (!found) { alert('Error in pfuLadd.php'+nl+nl+resp+nl); return; }
                     var newLI = document.createElement('li');
-                    newLI.id = 'pfuL' + found[1];
-                    newLI.innerHTML = newText + ' ' + "$itemEditHtml";
+                    var pfuL = found[1];
+                    newLI.id = 'pfuL' + pfuL;
+                    newLI.innerHTML = '<span id=pfuLtext' + pfuL + ' onKeypress=keypress(event)>' + newText + '</span> ' + "$LitemEditHtml";
                     document.getElementById('pfuLul'+pfu).appendChild(newLI);
                     inputEl.value = '';
                 }
@@ -412,7 +425,7 @@ EOD;
 
         function itemDelete(el) {
             var liEl = el.closest('li');
-            var xhttp = new XMLHttpRequest()
+            var xhttp = new XMLHttpRequest();
             xhttp.onload = function() {
                 var resp = this.responseText;
                 if (resp!='OK') { alert('$T_Error_in pfItemDelete.php\\r\\n\\r\\n'+resp); return; }
@@ -420,6 +433,38 @@ EOD;
             }
             xhttp.open('GET', 'ajax/pfItemDelete.php?liId='+liEl.id);
             xhttp.send();
+        }
+
+        function LitemEdit(el) {
+            var liEl = el.closest('li');
+            var pfuL = liEl.id.substring(4);
+            var textEl = document.getElementById('pfuLtext'+pfuL);
+            liEl.classList.add('editing');
+            textEl.setAttribute('contenteditable','true');
+        }
+
+        function LitemSave(el) {
+            var liEl = el.closest('li');
+            var pfuL = liEl.id.substring(4);
+            var textEl = document.getElementById('pfuLtext'+pfuL);
+            var xhttp = new XMLHttpRequest();
+            xhttp.onload = function() {
+                var resp = this.responseText;
+                if (resp!='OK') { alert('$T_Error_in pfuLsave.php\\r\\n\\r\\n'+resp); return; }
+                liEl.classList.remove('editing');
+                textEl.setAttribute('contenteditable','false');
+            }
+            var formData = new FormData();
+            formData.append('pfuL',pfuL);
+            formData.append('text',textEl.innerText);
+            xhttp.open('POST', 'ajax/pfuLsave.php'); //Safer to use POST in case of rubbish in the text
+            xhttp.send(formData);
+        }
+
+        function keypress(event) {
+            if (event.keyCode === 13) {
+                event.preventDefault();
+            }
         }
     </script>
 </head>
