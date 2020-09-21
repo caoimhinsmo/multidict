@@ -48,9 +48,11 @@
     }
     $edit = ( in_array($loggedinUser, [$user,'admin']) ? 1 : 0 ); //$edit=1 indicates that the user has edit rights over the portfolio
     if ($edit) {
-        $itemEditHtml = "<img src='/icons-smo/curAs.png' alt='Delete' title='Delete this item' onClick='itemDelete(this)'>";
+        $itemEditHtml = "<span class=upArrow onClick=moveUp(this)>⇧</span>"
+                      . "<span class=downArrow onClick=moveDown(this)>⇩</span> "
+                      . "<img src='/icons-smo/curAs.png' alt='Delete' title='Delete this item' onClick='itemDelete(this)'>";
         $LitemEditHtml = "<img src='/icons-smo/peann.png' class=editIcon alt='Edit' title='Edit this item' onClick='LitemEdit(this)'>"
-                       . "<img src='/icons-smo/floppydisk.png' class=saveIcon alt='Save' title='Save your edits' onClick='LitemSave(this)'>"
+                       . "<img src='/icons-smo/floppydisk.png' class=saveIcon alt='Save' title='Save your edits' onClick='LitemSave(this)'> "
                        . $itemEditHtml;
         $itemEditHtml  = "<span class=edit>$itemEditHtml</span>";
         $LitemEditHtml = "<span class=edit>$LitemEditHtml</span>";
@@ -111,7 +113,7 @@ END_unitsTableHtml;
             $pfuLRows = $stmtPfuL->fetchAll(PDO::FETCH_ASSOC);
             foreach ($pfuLRows as $pfuLRow) {
                 extract ($pfuLRow);
-                $learnedHtml .= "<li id=pfuL$pfuL><span id=pfuLtext$pfuL onKeypress='keypress(event)'>$learned</span> $LitemEditHtml\n";
+                $learnedHtml .= "<li id=pfuL$pfuL><span id=pfuLtext$pfuL onKeypress='keypress(event,this)'>$learned</span> $LitemEditHtml\n";
             }
             if ($edit) { $newLearnedItem = "<input id=pfuLnew$pfu class=edit placeholder='Add an item' onChange=\"pfuLadd('$pfu')\">"; }
             $learnedHtml = <<<END_learnedHtml
@@ -254,6 +256,8 @@ EOD;
         li.editing span:first-child { background-color:white; padding:0 0.3em; border:1px solid black; }
         li.editing img.editIcon { display:none; }
         li.editing img.saveIcon { display:inline; }
+        li:first-child span.upArrow { display:none; }
+        li:last-child span.downArrow { display:none; }
     </style>
     <script>
         function createPortfolio() {
@@ -461,10 +465,23 @@ EOD;
             xhttp.send(formData);
         }
 
-        function keypress(event) {
+        function keypress(event,el) {
             if (event.keyCode === 13) {
                 event.preventDefault();
+                LitemSave(el);
             }
+        }
+
+        function moveUp(el) {
+            var liEl = el.closest('li');
+            var prevEl = liEl.previousElementSibling;
+            if (prevEl != null) { liEl.parentNode.insertBefore(liEl,prevEl); }
+        }
+
+        function moveDown(el) {
+            var liEl = el.closest('li');
+            var nextEl = liEl.nextElementSibling;
+            if (nextEl != null) { liEl.parentNode.insertBefore(nextEl,liEl); }
         }
     </script>
 </head>
