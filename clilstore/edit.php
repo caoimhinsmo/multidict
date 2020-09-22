@@ -306,6 +306,7 @@ EODtinyMCE;
         $created = $changed  = time();
         $butArr  = $_POST['but'];
         $linkArr = $_POST['link'];
+        foreach ($linkArr as $i=>$link) { if (substr($link,0,3)=='cs/') { $linkArr[$i] = "/$link"; } }
         $buttons = array();  foreach ($butArr as $i=>$but) { $buttons[$i] = new button( $i, $butArr[$i], 0, 0, $linkArr[$i] ); }
         if (isset($_POST['wl'])) {
             foreach ($_POST['wl'] as $ord) {
