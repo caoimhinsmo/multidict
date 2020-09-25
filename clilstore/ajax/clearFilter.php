@@ -4,6 +4,6 @@
   if (!isset($_REQUEST['fd']))   { die('fd is not set'); }
   $fd = $_REQUEST['fd'];
   $csSess   = SM_csSess::singleton();
-  $csSess->clearFilterField($fd);
+  $csSess->clearFilter($fd);
   echo 'OK';
 ?>

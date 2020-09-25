@@ -323,7 +323,7 @@ $schemeSwopHtml
 <div class="formItem" style="width:35%;max-width:300px"><input type="hidden" name="sid" value="$sid">
 <div class="label">$T_Word &nbsp;<input type="submit" name="go" value="$T_Search" style="padding:0 3px;height:1.5em;line-height:1em">
 $pageNav</div>
-<input type="text" name="word" value="$word" title="The word to lookup in the dictionary" placeholder="$T_Word_to_translate" style="width:94%">
+<input type="text" name="word" value="$word" title="The word to lookup in the dictionary" placeholder="     $T_Word_to_translate" style="width:94%">
 </div>
 $wordformHtmlFull
 </div>

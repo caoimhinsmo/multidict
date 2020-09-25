@@ -304,7 +304,7 @@ EOD;
                     var nl = '\\r\\n'; //newline
                     if (resp!='OK') { alert('$T_Error_in portfolio.php pfDelete'+nl+nl+resp+nl); return; }
                     if (pf==thisPf) { window.location.href = 'portfolio.php'; } //this portfolio has now been deleted
-                     else if (n==0) { window.location.href = 'portfolio.php?pf='+thisPf; } // the active portfolio has now been delete, but but not this one
+                     else if (n==0) { window.location.href = 'portfolio.php?pf='+thisPf; } // the active portfolio has now been deleted, but but not this one
                      else           { pfsRow.parentNode.removeChild(pfsRow); }
                 }
                 xhttp.open('GET', 'ajax/pfDelete.php?pf='+pf);

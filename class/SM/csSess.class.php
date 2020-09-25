@@ -257,12 +257,20 @@ setcookie('csSession','',1,'/clilstore/','multidict.net');
       $this->storeCsFilter();
   }
 
-  public function clearFilterField($fd) {
-  // Clear the filter conditions on field $fd in index.php
+  public function clearFilter($fd) {
+  // Clear the filter conditions on field $fd in index.php (or on all fields *)
       $csid = $this->csSession->csid;
+      $mode = $this->csSession->mode;
       $DbMultidict = SM_DbMultidictPDO::singleton('rw');
-      $stmt = $DbMultidict->prepare("UPDATE csFilter SET val1='', val2='' WHERE csid=:csid AND fd=:fd");
-      $stmt->execute([':csid'=>$csid,':fd'=>$fd]);  
+      if ($fd=='*') {
+          $query = "UPDATE csFilter SET val1='', val2='' WHERE csid=:csid";
+          if ($mode==0) { $query .= " AND fd NOT IN ('sl','level')"; }
+          $stmtCL = $DbMultidict->prepare($query);
+          $stmtCL->execute([':csid'=>$csid]);
+      } else {
+          $stmt = $DbMultidict->prepare("UPDATE csFilter SET val1='', val2='' WHERE csid=:csid AND fd=:fd");
+          $stmt->execute([':csid'=>$csid,':fd'=>$fd]);
+      }
   }
 
   public function restoreCols() {
@@ -351,17 +359,6 @@ END_addColHtml;
               $f[$fd.'Max'] = $val2;
           }
       }
-  }
-
-
-  public function clearFilter ($mode) {
-     // Clears the filter on all fields (except sl and level in mode 0)
-      $DbMultidict = SM_DbMultidictPDO::singleton('rw');
-      $csid = $this->csSession->csid;
-      $query = "UPDATE csFilter SET val1='', val2='' WHERE csid=:csid";
-      if ($mode==0) { $query .= " AND fd NOT IN ('sl','level')"; }
-      $stmtCL = $DbMultidict->prepare($query);
-      $stmtCL->execute([':csid'=>$csid]);
   }
 
 

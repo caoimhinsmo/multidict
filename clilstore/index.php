@@ -170,7 +170,6 @@ EOD_cookieMessage;
     if (!empty($_GET['restoreCols'])) { $csSess->restoreCols($_GET['restoreCols'] ); }
 
     $mode    = $csSess->getCsSession()->mode;
-    if (!empty($_REQUEST['clearFilter'])) { $csSess->clearFilter($mode); }
     $filterForm = ( isset($_REQUEST['filterForm']) ? 1 : 0 );
     if ($filterForm) {
         if (isset($_REQUEST['incTest']) && $mode>1) { $csSess->setIncTest(1); } else { $csSess->setIncTest(0); }
@@ -242,7 +241,7 @@ EOD_cookieMessage;
                    : 'Filters are currently being applied on hidden columns:' );
         foreach ($hiddenFilters as $i=>$fd) {
             $fdHtml = $T->h("csCol_$fd");
-            $fdHtml = "<a class=hiddenFilterField title='$T_Clear_filter' onclick=clearFilterField('$fd')>$fdHtml</a>";
+            $fdHtml = "<a class=hiddenFilterField title='$T_Clear_filter' onclick=clearFilter('$fd')>$fdHtml</a>";
             $hiddenFilters[$i] = $fdHtml;
         }
         $hiddenFiltersWarning = implode(' ',$hiddenFilters);
@@ -780,7 +779,7 @@ ENDtabletopChoices;
 <td class="title" colspan=2>
  <div id="findDiv">
      <input type="submit" name=filter value="$T_Lorg" tabindex=80>&nbsp;&nbsp;
-     <input type="submit" name=clearFilter value="$T_Clear_filter" title="$T_Clear_filter_title" tabindex=90>
+     <input type=button value=$T_Clear_filter title="$T_Clear_filter_title" onclick="clearFilter('*')" tabindex=90>
  </div>
 </td>
 END_row3titlecell;
@@ -1135,13 +1134,13 @@ $tableStyles
         }
 
 
-        function clearFilterField(fd) {
+        function clearFilter(fd) {
             var xmlhttp = new XMLHttpRequest();
             xmlhttp.onload = function() {
-                if (this.status!=200) { alert('Error in clearFilterField:'+this.status); return; }
+                if (this.status!=200) { alert('Error in clearFilter:'+this.status+' '+this.responseText); return; }
                 window.location.href = window.location.href;
             }
-            xmlhttp.open('GET', 'ajax/clearFilterField.php?fd=' + fd);
+            xmlhttp.open('GET', 'ajax/clearFilter.php?fd=' + fd);
             xmlhttp.send();
         }
 
