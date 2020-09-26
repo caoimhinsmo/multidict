@@ -11,8 +11,9 @@
 
   $DbMultidict = SM_DbMultidictPDO::singleton('rw');
 
-  $stmt = $DbMultidict->prepare('INSERT INTO cspfUnitWork (pfu,work,url) VALUES (:pfu,:work,:url)');
-  $result = $stmt->execute([ ':pfu'=>$pfu, ':work'=>$newWork, ':url'=>$newURL ]);
+  $utime = time();
+  $stmt = $DbMultidict->prepare('INSERT INTO cspfUnitWork (pfu,work,url,ord) VALUES (:pfu,:work,:url,:ord)');
+  $result = $stmt->execute([ ':pfu'=>$pfu, ':work'=>$newWork, ':url'=>$newURL, ':ord'=>$utime ]);
   if (!$result) { die('pfuWadd failed to insert the new text'); }
   
   $id = $DbMultidict->lastInsertId();

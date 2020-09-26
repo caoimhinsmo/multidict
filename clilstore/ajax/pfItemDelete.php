@@ -1,5 +1,5 @@
 <?php
-//Adds a new learned item to portfolio-unit pfu
+//Adds a new learned item or work item to portfolio-unit pfu
   if (!include('autoload.inc.php')) { die('include autoload failed'); }
 
   if (empty($_REQUEST['liId'])) { die('Missing liId parameter');      }

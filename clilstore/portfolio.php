@@ -48,8 +48,8 @@
     }
     $edit = ( in_array($loggedinUser, [$user,'admin']) ? 1 : 0 ); //$edit=1 indicates that the user has edit rights over the portfolio
     if ($edit) {
-        $itemEditHtml = "<span class=upArrow onClick=moveUp(this)>⇧</span>"
-                      . "<span class=downArrow onClick=moveDown(this)>⇩</span> "
+        $itemEditHtml = "<span class=upArrow onClick=moveItem(this,'up')>⇧</span>"
+                      . "<span class=downArrow onClick=moveItem(this,'down')>⇩</span> "
                       . "<img src='/icons-smo/curAs.png' alt='Delete' title='Delete this item' onClick='itemDelete(this)'>";
         $LitemEditHtml = "<img src='/icons-smo/peann.png' class=editIcon alt='Edit' title='Edit this item' onClick='LitemEdit(this)'>"
                        . "<img src='/icons-smo/floppydisk.png' class=saveIcon alt='Save' title='Save your edits' onClick='LitemSave(this)'> "
@@ -98,7 +98,7 @@ END_unitsTableHtml;
         $pfuRows = $stmtPfu->fetchAll(PDO::FETCH_ASSOC);
         foreach ($pfuRows as $pfuRow) {
             extract($pfuRow);
-            $stmtPfuL = $DbMultidict->prepare('SELECT id AS pfuL, learned FROM cspfUnitLearned WHERE pfu=:pfu');
+            $stmtPfuL = $DbMultidict->prepare('SELECT id AS pfuL, learned FROM cspfUnitLearned WHERE pfu=:pfu ORDER BY ord');
             $stmtPfuL->execute([':pfu'=>$pfu]);
             $learnedHtml = $workHtml = $newLearnedItem = $newWorkItem = '';
             $unitidHtml = str_pad($csUnit, 5, '_', STR_PAD_LEFT);
@@ -122,7 +122,7 @@ $learnedHtml
 </ul>
 $newLearnedItem
 END_learnedHtml;
-            $stmtPfuW = $DbMultidict->prepare('SELECT id AS pfuW, work, url AS workurl FROM cspfUnitWork WHERE pfu=:pfu');
+            $stmtPfuW = $DbMultidict->prepare('SELECT id AS pfuW, work, url AS workurl FROM cspfUnitWork WHERE pfu=:pfu ORDER BY ord');
             $stmtPfuW->execute([':pfu'=>$pfu]);
             $pfuWRows = $stmtPfuW->fetchAll(PDO::FETCH_ASSOC);
             foreach ($pfuWRows as $pfuWRow) {
@@ -264,8 +264,8 @@ EOD;
             var title   = document.getElementById('createTitle').value.trim();
             var teacher = document.getElementById('createTeacher').value.trim();
             if (title=='') { alert('You must give your portfolio a name'); return; }
-            var xhttp = new XMLHttpRequest();
-            xhttp.onreadystatechange = function() {
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function() {
                 if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
                     var resp = this.responseText;
                     if       (resp=='OK')     { window.location.href = '/clilstore/portfolio.php'; }
@@ -276,21 +276,21 @@ EOD;
             var formData = new FormData();
             formData.append('title',title);
             formData.append('teacher',teacher);
-            xhttp.open('POST', 'ajax/pfCreate.php');
-            xhttp.send(formData);
+            xhr.open('POST', 'ajax/pfCreate.php');
+            xhr.send(formData);
         }
 
         function removeUnit (pfu) {
             if (confirm('Completely remove this unit from the portfolio?')) {
-                var xhttp = new XMLHttpRequest();
-                xhttp.onload = function() {
+                var xhr = new XMLHttpRequest();
+                xhr.onload = function() {
                     var resp = this.responseText;
                     if (resp!='OK') { alert('$T_Error_in portfolio.php removeUnit\\r\\n\\r\\n'+resp); return; }
                     var el = document.getElementById('pfuRow'+pfu);
                     el.parentNode.removeChild(el);
                 }
-                xhttp.open('GET', 'ajax/pfRemoveUnit.php?pfu='+pfu);
-                xhttp.send();
+                xhr.open('GET', 'ajax/pfRemoveUnit.php?pfu='+pfu);
+                xhr.send();
             }
         }
 
@@ -298,8 +298,8 @@ EOD;
             var pfsRow = document.getElementById('pfsRow'+pf);
             pfsRow.style.backgroundColor = 'pink';
             if (confirm('Completely delete this whole portfolio?')) {
-                var xhttp = new XMLHttpRequest();
-                xhttp.onload = function() {
+                var xhr = new XMLHttpRequest();
+                xhr.onload = function() {
                     var resp = this.responseText;
                     var nl = '\\r\\n'; //newline
                     if (resp!='OK') { alert('$T_Error_in portfolio.php pfDelete'+nl+nl+resp+nl); return; }
@@ -307,28 +307,28 @@ EOD;
                      else if (n==0) { window.location.href = 'portfolio.php?pf='+thisPf; } // the active portfolio has now been deleted, but but not this one
                      else           { pfsRow.parentNode.removeChild(pfsRow); }
                 }
-                xhttp.open('GET', 'ajax/pfDelete.php?pf='+pf);
-                xhttp.send();
+                xhr.open('GET', 'ajax/pfDelete.php?pf='+pf);
+                xhr.send();
             } else { pfsRow.style.backgroundColor = ''; }
         }
 
         function pfPromote (pf) {
-            var xhttp = new XMLHttpRequest();
-            xhttp.onload = function() {
+            var xhr = new XMLHttpRequest();
+            xhr.onload = function() {
                 var resp = this.responseText;
                 var nl = '\\r\\n'; //newline
                 if (resp!='OK') { alert('$T_Error_in portfolio.php pfPromote'+nl+nl+resp+nl); return; }
                 window.location.href = 'portfolio.php';
             }
-            xhttp.open('GET', 'ajax/pfPromote.php?pf='+pf);
-            xhttp.send();
+            xhr.open('GET', 'ajax/pfPromote.php?pf='+pf);
+            xhr.send();
         }
 
         function pfAddTeacher (pf) {
             var teacher = document.getElementById('addTeacher').value.trim();
             if (teacher=='') { return; }
-            var xhttp = new XMLHttpRequest();
-            xhttp.onreadystatechange = function() {
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function() {
                 if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
                     var resp = this.responseText;
                     var nl = '\\r\\n'; //newline
@@ -341,21 +341,21 @@ EOD;
             var formData = new FormData();
             formData.append('pf',pf);
             formData.append('teacher',teacher);
-            xhttp.open('POST', 'ajax/pfAddTeacher.php'); //Safer to use POST in case of rubbish in teacher userid
-            xhttp.send(formData);
+            xhr.open('POST', 'ajax/pfAddTeacher.php'); //Safer to use POST in case of rubbish in teacher userid
+            xhr.send(formData);
         }
 
         function pfRemovePermit (permitId) {
-            var xhttp = new XMLHttpRequest();
+            var xhr = new XMLHttpRequest();
             var permitRow = document.getElementById('permitRow'+permitId);
-            xhttp.onload = function() {
+            xhr.onload = function() {
                 var resp = this.responseText;
                 var nl = '\\r\\n'; //newline
                 if (resp!='OK') { alert('$T_Error_in portfolio.php pfRemovePermit'+nl+nl+resp+nl); return; }
                  else           { permitRow.parentNode.removeChild(permitRow); }
             }
-            xhttp.open('GET', 'ajax/pfRemovePermit.php?permitId='+permitId);
-            xhttp.send();
+            xhr.open('GET', 'ajax/pfRemovePermit.php?permitId='+permitId);
+            xhr.send();
         }
 
         function toggleUnitEdit(pfu) {
@@ -364,10 +364,10 @@ EOD;
         }
 
         function pfuLadd(pfu) {
-            var xhttp = new XMLHttpRequest();
+            var xhr = new XMLHttpRequest();
             var inputEl = document.getElementById('pfuLnew'+pfu);
             var newText = inputEl.value.trim();
-            xhttp.onreadystatechange = function() {
+            xhr.onreadystatechange = function() {
                 if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
                     var nl = '\\r\\n'; //newline
                     var resp = this.responseText;
@@ -384,12 +384,12 @@ EOD;
             var formData = new FormData();
             formData.append('pfu',pfu);
             formData.append('newText',newText);
-            xhttp.open('POST', 'ajax/pfuLadd.php'); //Safer to use POST in case of rubbish in the text
-            xhttp.send(formData);
+            xhr.open('POST', 'ajax/pfuLadd.php'); //Safer to use POST in case of rubbish in the text
+            xhr.send(formData);
         }
 
         function pfuWadd(pfu) {
-            var xhttp = new XMLHttpRequest();
+            var xhr = new XMLHttpRequest();
             var workEl = document.getElementById('pfuWnewWork'+pfu);
             var urlEl  = document.getElementById('pfuWnewURL'+pfu);
             var newWork = workEl.value.trim();
@@ -406,7 +406,7 @@ EOD;
                 if (!confirm(message)) { return; }
             }
             if (newWork=='' || newURL=='') return;
-            xhttp.onreadystatechange = function() {
+            xhr.onreadystatechange = function() {
                 if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
                     var resp = this.responseText;
                     var found = resp.match(/^OK:(\d+)$/)
@@ -423,20 +423,20 @@ EOD;
             formData.append('pfu',pfu);
             formData.append('newWork',newWork);
             formData.append('newURL',newURL);
-            xhttp.open('POST', 'ajax/pfuWadd.php'); //Safer to use POST in case of rubbish in the text
-            xhttp.send(formData);
+            xhr.open('POST', 'ajax/pfuWadd.php'); //Safer to use POST in case of rubbish in the text
+            xhr.send(formData);
         }
 
         function itemDelete(el) {
             var liEl = el.closest('li');
-            var xhttp = new XMLHttpRequest();
-            xhttp.onload = function() {
+            var xhr = new XMLHttpRequest();
+            xhr.onload = function() {
                 var resp = this.responseText;
                 if (resp!='OK') { alert('$T_Error_in pfItemDelete.php\\r\\n\\r\\n'+resp); return; }
                 liEl.parentNode.removeChild(liEl);
             }
-            xhttp.open('GET', 'ajax/pfItemDelete.php?liId='+liEl.id);
-            xhttp.send();
+            xhr.open('GET', 'ajax/pfItemDelete.php?liId='+liEl.id);
+            xhr.send();
         }
 
         function LitemEdit(el) {
@@ -451,8 +451,8 @@ EOD;
             var liEl = el.closest('li');
             var pfuL = liEl.id.substring(4);
             var textEl = document.getElementById('pfuLtext'+pfuL);
-            var xhttp = new XMLHttpRequest();
-            xhttp.onload = function() {
+            var xhr = new XMLHttpRequest();
+            xhr.onload = function() {
                 var resp = this.responseText;
                 if (resp!='OK') { alert('$T_Error_in pfuLsave.php\\r\\n\\r\\n'+resp); return; }
                 liEl.classList.remove('editing');
@@ -461,8 +461,8 @@ EOD;
             var formData = new FormData();
             formData.append('pfuL',pfuL);
             formData.append('text',textEl.innerText);
-            xhttp.open('POST', 'ajax/pfuLsave.php'); //Safer to use POST in case of rubbish in the text
-            xhttp.send(formData);
+            xhr.open('POST', 'ajax/pfuLsave.php'); //Safer to use POST in case of rubbish in the text
+            xhr.send(formData);
         }
 
         function keypress(event,el) {
@@ -472,15 +472,44 @@ EOD;
             }
         }
 
-        function moveUp(el) {
+        function moveItem(el,direction) {
+            var liEl = el.closest('li');
+            if       (direction=='up')   { var swopEl = liEl.previousElementSibling; }
+             else if (direction=='down') { var swopEl = liEl.nextElementSibling;     }
+             else { alert('Error in moveItem. Invalid direction:'+direction); }
+            if (swopEl == null) { return; } //This shouldn’t happen anyway
+            var id = liEl.id;
+            var swopId = swopEl.id;
+            var xhr = new XMLHttpRequest();
+            xhr.onload = function() {
+                var resp = this.responseText;
+                if (resp!='OK') { alert('$T_Error_in pfItemSwop.php\\r\\n\\r\\n'+resp); return; }
+                if (direction=='up') { liEl.parentNode.insertBefore(liEl,swopEl); }
+                 else                { liEl.parentNode.insertBefore(swopEl,liEl); }
+            }
+            xhr.open('GET', 'ajax/pfItemSwop.php?id='+id+'&swopId='+swopId);
+            xhr.send();
+
+        }
+
+        function moveUp(el,direction) {
             var liEl = el.closest('li');
             var prevEl = liEl.previousElementSibling;
+            if (prevEl == null) { return; } //This shouldn’t happen anyway
+            var id = liEl.id;
+            var prevId = prevEl.id;
+alert('id='+id+' prevId='+prevId);
+alert('direction='+direction); return;
             if (prevEl != null) { liEl.parentNode.insertBefore(liEl,prevEl); }
         }
 
-        function moveDown(el) {
+        function moveDown(el,direction) {
             var liEl = el.closest('li');
             var nextEl = liEl.nextElementSibling;
+            if (nextEl == null) { return; } //This shouldn’t happen anyway
+            var id = liEl.id;
+            var nextId = nextEl.id;
+alert('id='+id+' nextId='+nextId); return;
             if (nextEl != null) { liEl.parentNode.insertBefore(nextEl,liEl); }
         }
     </script>
