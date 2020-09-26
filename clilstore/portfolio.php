@@ -14,10 +14,49 @@
 
   $T = new SM_T('clilstore/portfolio');
 
-  $T_Error_in = $T->h('Error_in');
+  $T_Clilstore_unit = $T->h('Clilstore_unit');
+  $T_userid         = $T->h('userid');
+  $T_Add_a_teacher  = $T->h('Add_a_teacher');
+  $T_My_portfolios  = $T->h('My_portfolios');
+  $T_Create         = $T->h('Create');
+  $T_Promote        = $T->h('Promote');
+  $T_Move_up        = $T->h('Move_up');
+  $T_Move_down      = $T->h('Move_down');
+  $T_Error_in       = $T->j('Error_in');
+  $T_Is_this_OK     = $T->j('Is_this_OK');
 
-  $T_Portfolio_for_user_       = $T->h('Portfolio_for_user_');
-  $T_Delete_instantaneously    = $T->h('Delete_instantaneously');
+  $T_Portfolio_for_user_     = $T->h('Portfolio_for_user_');
+  $T_What_I_have_learned     = $T->h('What_I_have_learned');
+  $T_Links_to_my_work        = $T->h('Links_to_my_work');
+  $T_Delete_instantaneously  = $T->h('Delete_instantaneously');
+  $T_Create_a_new_portfolio  = $T->h('Create_a_new_portfolio');
+  $T_Title_of_your_portfolio = $T->h('Title_of_your_portfolio');
+  $T_New_portfolio_advice    = strtr( $T->h('New_portfolio_advice'), ['&lt;br&gt;'=>'<br>'] );
+  $T_New_teacher_advice      = strtr( $T->h('New_teacher_advice'),   ['&lt;br&gt;'=>'<br>'] );
+  $T_active_portfolio        = $T->h('active_portfolio');
+  $T_this_portfolio          = $T->h('this_portfolio');
+  $T_Delete_this_portfolio   = $T->h('Delete_this_portfolio');
+  $T_Delete_this_item        = $T->h('Delete_this_item');
+  $T_Edit_unit_in_portfolio  = $T->h('Edit_unit_in_portfolio');
+  $T_Completely_remove_unit  = $T->h('Completely_remove_unit');
+  $T_A_URL_must_begin_with_  = $T->j('A_URL_must_begin_with_');
+  $T_No_such_userid_as_      = $T->j('No_such_userid_as_');
+  $T_Have_changed_URL_to_    = $T->j('Have_changed_URL_to_');
+
+  $T_No_teachers_can_yet_view       = $T->h('No_teachers_can_yet_view');
+  $T_Following_teacher_can_view     = $T->h('Following_teacher_can_view');
+  $T_Following_2_teachers_can_view  = $T->h('Following_2_teachers_can_view');
+  $T_Following_teachers_can_view    = $T->h('Following_teachers_can_view');
+  $T_Your_teachers_Clilstore_id     = $T->h('Your_teachers_Clilstore_id');
+  $T_Promote_to_active_portfolio    = $T->h('Promote_to_active_portfolio');
+  $T_Portfolio__does_not_exist      = $T->h('Portfolio__does_not_exist');
+  $T_You_do_not_have_read_access    = $T->h('You_do_not_have_read_access');
+  $T_Portfolio_contains_no_units    = $T->h('Portfolio_contains_no_units');
+  $T_You_can_add_Clilstore_units    = $T->h('You_can_add_Clilstore_units');
+  $T_Remove_permission_from_teacher = $T->h('Remove_permission_from_teacher');
+  $T_Remove_unit_from_portfolio     = $T->h('Remove_unit_from_portfolio');
+  $T_Completely_delete_portfolio    = $T->j('Completely_delete_portfolio');
+  $T_Teacher_already_has_access     = $T->j('Teacher_already_has_access');
 
   $mdNavbar = SM_mdNavbar::mdNavbar($T->domhan);
 
@@ -38,19 +77,19 @@
     } elseif ( $pf <> 0 ) {
         $stmt = $DbMultidict->prepare('SELECT title,user FROM cspf WHERE pf=:pf');
         $stmt->execute([':pf'=>$pf]);
-        if (!($row = $stmt->fetch(PDO::FETCH_ASSOC))) { throw new SM_MDexception(sprintf("Portfolio $pf does not exist")); }
+        if (!($row = $stmt->fetch(PDO::FETCH_ASSOC))) { throw new SM_MDexception(strtr("$T_Portfolio__does_not_exist",['{pf}'=>$pf])); }
         extract($row);
         if ($user<>$loggedinUser) {
             $stmt2 = $DbMultidict->prepare('SELECT id FROM cspfPermit WHERE pf=:pf AND teacher=:teacher');
             $stmt2->execute([':pf'=>$pf,':teacher'=>$loggedinUser]);
-            if (!$stmt2->fetch()) { throw new SM_MDexception('You do not have read access to this portfolio'); }
+            if (!$stmt2->fetch()) { throw new SM_MDexception("$T_You_do_not_have_read_access"); }
         }
     }
     $edit = ( in_array($loggedinUser, [$user,'admin']) ? 1 : 0 ); //$edit=1 indicates that the user has edit rights over the portfolio
     if ($edit) {
-        $itemEditHtml = "<span class=upArrow onClick=moveItem(this,'up')>⇧</span>"
-                      . "<span class=downArrow onClick=moveItem(this,'down')>⇩</span> "
-                      . "<img src='/icons-smo/curAs.png' alt='Delete' title='Delete this item' onClick='itemDelete(this)'>";
+        $itemEditHtml = "<span class=upArrow title='$T_Move_up' onClick=moveItem(this,'up')>⇧</span>"
+                      . "<span class=downArrow title='$T_Move_down' onClick=moveItem(this,'down')>⇩</span> "
+                      . "<img src='/icons-smo/curAs.png' alt='Delete' title='$T_Delete_this_item' onClick='itemDelete(this)'>";
         $LitemEditHtml = "<img src='/icons-smo/peann.png' class=editIcon alt='Edit' title='Edit this item' onClick='LitemEdit(this)'>"
                        . "<img src='/icons-smo/floppydisk.png' class=saveIcon alt='Save' title='Save your edits' onClick='LitemSave(this)'> "
                        . $itemEditHtml;
@@ -60,32 +99,30 @@
 
     $userSC = htmlspecialchars($user) ?? '';
 
-    if ($pf==0) { $h1 = 'Create a new portfolio'; }
+    if ($pf==0) { $h1 = $T_Create_a_new_portfolio; }
       else      { $h1 = "<span style='font-size:75%;font-style:italic'>$T_Portfolio_for_user_ <span style='color:brown'>$user</span></span><br>" . htmlspecialchars($title); }
 
     if ($pf==0) {
 
         $unitsTableHtml = <<<END_unitsTableHtml
-<p style="margin-left:3em;text-indent:-1.5em;color:green;font-size:85%">You can create a portfolio to show your teacher:<br>
-- what Clilstore units you have worked on,<br>
-- what you have learned from them,<br>
-- any work you have produced yourself.</p>
+<div style="float:left;margin:0 0 1em 5em;border:1px solid green;background-color:#dfd;border-radius:0.3em">
+<p style="margin:0;padding:0.5em 0.5em 0.5em 2em;text-indent:-1.5em;color:green;font-size:85%">$T_New_portfolio_advice</p>
+</div>
 
-<div>
-Title of your portfolio<br>
-<input id=createTitle value='Portfolio' required style="width:80%;max-width:50em">
+<div style="clear:both">
+$T_Title_of_your_portfolio<br>
+<input id=createTitle required style="width:80%;max-width:50em">
 </div>
 
 <table style="margin-top:1em"><tr style="vertical-align:top">
-<td>Your teacher’s Clilstore id<br>
+<td>$T_Your_teachers_Clilstore_id<br>
 <input id=createTeacher style="width:16em"></td>
 <td style="padding-left:0.5em">
-<span style="margin:0;color:green;font-size:80%">
-This is optional and can be added later.<br>
-Your teacher will be able to see your portfolio.</span></span>
+<div style="float:left;border:1px solid green;border-radius:0.3em;padding:0.2em 0.4em;margin:0;color:green;font-size:80%;background-color:#dfd">
+$T_New_teacher_advice</div>
 </tr></table>
 
-<p style="margin:1em 0 3em 0"><a class=button onClick="createPortfolio()">Create</a></p>
+<p style="margin:1em 0 3em 0"><a class=button onClick="createPortfolio()">$T_Create</a></p>
 END_unitsTableHtml;
 
     } else {
@@ -106,8 +143,8 @@ END_unitsTableHtml;
             $unitidHtml = "<a href='/cs/$csUnit'>$unitidHtml</a>";
             $rowClass = ( $csUnit==$unitToEdit ? 'class=edit' : '');
             if ($edit) {
-                $removeUnitHtml = "<img src='/icons-smo/bin.png' alt='Remove' title='Remove this unit from the portfolio' onclick=\"removeUnit('$pfu')\">";
-                $editUnitHtml   = "<img src='/icons-smo/peann.png' alt='Edit' onClick=\"toggleUnitEdit('$pfu')\">";
+                $removeUnitHtml = "<img src='/icons-smo/bin.png' alt='Remove' title='$T_Remove_unit_from_portfolio' onclick=\"removeUnit('$pfu')\">";
+                $editUnitHtml   = "<img src='/icons-smo/peann.png' alt='Edit' title='$T_Edit_unit_in_portfolio' onClick=\"toggleUnitEdit('$pfu')\">";
                 $editToolsHtml = "$removeUnitHtml &nbsp;&nbsp; $editUnitHtml";
             }
             $pfuLRows = $stmtPfuL->fetchAll(PDO::FETCH_ASSOC);
@@ -148,15 +185,15 @@ END_workHtml;
 END_unitsHtml;
         }
         if (empty($unitsHtml)) {
-            if ($edit) { $unitsHtml = "You can add Clilstore units to your portfolio by clicking the ‘P’ button at the top of a unit."; }
-             else      { $unitsHtml = "This portfolio contains no units yet."; }
+            if ($edit) { $unitsHtml = "<i>$T_You_can_add_Clilstore_units</i>"; }
+             else      { $unitsHtml = "<i>$T_Portfolio_contains_no_units</i>"; }
            $unitsHtml = "<tr><td colspan=3>$unitsHtml</td></tr>";
        }
 
         $unitsTableHtml = <<<END_unitsTable
 <table id=unitstab>
 <col style="width:25%"><col><col>
-<tr id=unitstabhead><td>Clilstore unit</td><td>What I have learned</td><td>Links to my work</td></tr>
+<tr id=unitstabhead><td>$T_Clilstore_unit</td><td>$T_What_I_have_learned</td><td>$T_Links_to_my_work</td></tr>
 $unitsHtml
 </table>
 END_unitsTable;
@@ -168,17 +205,17 @@ END_unitsTable;
             extract($row);
             $editHtml = '';
             if ($edit) {
-                $editHtml = "<img src='/icons-smo/curAs.png' alt='Remove' title='Remove permission from this teacher' onclick=\"pfRemovePermit('$permitId')\">";
+                $editHtml = "<img src='/icons-smo/curAs.png' alt='Remove' title='$T_Remove_permission_from_teacher' onclick=\"pfRemovePermit('$permitId')\">";
             }
             $permitTableHtml .= "<tr id=permitRow$permitId><td>$editHtml $teacher ($fullname)</td></tr>\n";
         }
         $nTeachers = count($rows);
-        if      ($nTeachers==0) { $teachersMessage = 'No teachers can yet view this portfolio';            }
-         elseif ($nTeachers==1) { $teachersMessage = 'The following teacher can view this portfolio';      }
-         elseif ($nTeachers==2) { $teachersMessage = 'The following two teachers can view this portfolio'; }
-         else                   { $teachersMessage = 'The following teachers can view this portfolio';     }
+        if      ($nTeachers==0) { $teachersMessage = "$T_No_teachers_can_yet_view";      }
+         elseif ($nTeachers==1) { $teachersMessage = "$T_Following_teacher_can_view";    }
+         elseif ($nTeachers==2) { $teachersMessage = "$T_Following_2_teachers_can_view"; }
+         else                   { $teachersMessage = "$T_Following_teachers_can_view";   }
         if ($edit) { $addTeacherHtml = <<<END_addTeacher
-<tr><td><input id=addTeacher placeholder="userid" style="margin-left:1em" onChange="pfAddTeacher('$pf')"> Add a teacher</td></tr>
+<tr><td><input id=addTeacher placeholder="$T_userid" style="margin-left:1em" onChange="pfAddTeacher('$pf')"> $T_Add_a_teacher</td></tr>
 END_addTeacher;
         }
         $permitTableHtml = <<<END_pt
@@ -195,26 +232,25 @@ END_pt;
             $rows = $stmtPfs->fetchAll(PDO::FETCH_ASSOC);
             foreach ($rows as $n=>$row) {
                 extract($row);
-                if ($n==0) { $promoteHtml = '- <b>active portfolio</b>';
+                if ($n==0) { $promoteHtml = "- <b>$T_active_portfolio</b>";
                              $title = "<b>$title</b>"; }
-                 else      { $promoteHtml = "<a title='Promote to active portfolio' onClick=\"pfPromote('$portf')\">↑ Promote</a>"; }
-                $editHtml = "<img src='/icons-smo/curAs.png' alt='Delete' title='Delete this portfolio' onclick=\"pfDelete('$portf','$pf','$n')\">";
-                if ($portf==$pf) { $promoteHtml .= ' &nbsp; [this portfolio]'; }
+                 else      { $promoteHtml = "<a title='$T_Promote_to_active_portfolio' onClick=\"pfPromote('$portf')\">↑ $T_Promote</a>"; }
+                $editHtml = "<img src='/icons-smo/curAs.png' alt='Delete' title='$T_Delete_this_portfolio' onclick=\"pfDelete('$portf','$pf','$n')\">";
+                if ($portf==$pf) { $promoteHtml .= " &nbsp; [$T_this_portfolio]"; }
                 $promoteHtml = "<span style='font-size:75%'>$promoteHtml</span>";
                 $pfsTableHtml .= "<tr id=pfsRow$portf><td>$editHtml <a href='./portfolio.php?pf=$portf'>$title</a> $promoteHtml</td></tr>\n";
             }
             $pfsTableHtml = <<<END_pfstab
-<p style="margin:1.7em 0 0 0; border-top:2px solid grey">My portfolios</p>
+<p style="margin:1.7em 0 0 0; border-top:2px solid grey">$T_My_portfolios</p>
 <table style="margin-left:2em">
 $pfsTableHtml
-<tr><td><a class=button href="portfolio.php?pf=0" style="font-size:75%">Create a new portfolio</a></td></tr>
+<tr><td><a class=button href="portfolio.php?pf=0" style="font-size:75%">$T_Create_a_new_portfolio</a></td></tr>
 </table>
 END_pfstab;
         }
     }
 
     $HTML = <<<EOD
-<p style="color:red;margin:0;font-size:90%">The student portfolio facility is still under development</p>
 <h1 style="font-size:140%;margin:0.5em 0">$h1</h1>
 
 $unitsTableHtml
@@ -270,7 +306,7 @@ EOD;
                     var resp = this.responseText;
                     if       (resp=='OK')     { window.location.href = '/clilstore/portfolio.php'; }
                      else if (resp=='nouser') { alert('There is no such Clilstore userid as '+teacher); }
-                     else                     { alert('Error in pfCreate: '+resp); }
+                     else                     { alert('$T_Error_in pfCreate: '+resp); }
                 }
             }
             var formData = new FormData();
@@ -281,7 +317,7 @@ EOD;
         }
 
         function removeUnit (pfu) {
-            if (confirm('Completely remove this unit from the portfolio?')) {
+            if (confirm('$T_Completely_remove_unit')) {
                 var xhr = new XMLHttpRequest();
                 xhr.onload = function() {
                     var resp = this.responseText;
@@ -297,7 +333,7 @@ EOD;
         function pfDelete (pf,thisPf,n) {
             var pfsRow = document.getElementById('pfsRow'+pf);
             pfsRow.style.backgroundColor = 'pink';
-            if (confirm('Completely delete this whole portfolio?')) {
+            if (confirm('$T_Completely_delete_portfolio')) {
                 var xhr = new XMLHttpRequest();
                 xhr.onload = function() {
                     var resp = this.responseText;
@@ -333,9 +369,9 @@ EOD;
                     var resp = this.responseText;
                     var nl = '\\r\\n'; //newline
                     if       (resp=='OK')        { window.location.href = location.href; }
-                     else if (resp=='nouser')    { alert('There is no such Clilstore userid as '+teacher); }
-                     else if (resp=='duplicate') { alert('This teacher already has access'); }
-                     else                        { alert('Error in pfAddTeacher.php'+nl+nl+resp+nl); }
+                     else if (resp=='nouser')    { alert('$T_No_such_userid_as_'.replace('{userid}',teacher)); }
+                     else if (resp=='duplicate') { alert('$T_Teacher_already_has_access'); }
+                     else                        { alert('$T_Error_in pfAddTeacher.php'+nl+nl+resp+nl); }
                 }
             }
             var formData = new FormData();
@@ -372,7 +408,7 @@ EOD;
                     var nl = '\\r\\n'; //newline
                     var resp = this.responseText;
                     var found = resp.match(/^OK:(\d+)$/)
-                    if (!found) { alert('Error in pfuLadd.php'+nl+nl+resp+nl); return; }
+                    if (!found) { alert('$T_Error_in pfuLadd.php'+nl+nl+resp+nl); return; }
                     var newLI = document.createElement('li');
                     var pfuL = found[1];
                     newLI.id = 'pfuL' + pfuL;
@@ -400,9 +436,9 @@ EOD;
                 if ( ! /\//.test(newURL) ) { newURL = '/' + newURL; } //Add a leading / to newURL if necessary
                 newURL = 'http:/' + newURL;
                 urlEl.value = newURL;
-                var message = 'A URL must begin with http:// or https://' + nl+nl
-                            + 'We have changed your URL to' + nl+nl + newURL + nl+nl 
-                            + 'Is this OK?';
+                var message = '$T_A_URL_must_begin_with_'.replace('{http}','http://').replace('{https}','https;//') + nl+nl
+                            + '$T_Have_changed_URL_to_' + nl+nl + newURL + nl+nl 
+                            + '$T_Is_this_OK';
                 if (!confirm(message)) { return; }
             }
             if (newWork=='' || newURL=='') return;
@@ -410,7 +446,7 @@ EOD;
                 if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
                     var resp = this.responseText;
                     var found = resp.match(/^OK:(\d+)$/)
-                    if (!found) { alert('Error in pfuWadd.php'+nl+nl+resp+nl); return; }
+                    if (!found) { alert('$T_Error_in pfuWadd.php'+nl+nl+resp+nl); return; }
                     var newLI = document.createElement('li');
                     newLI.id = 'pfuW' + found[1];
                     newLI.innerHTML = '<a href="' + newURL + '">' + newWork + '</a> ' + "$itemEditHtml";
@@ -476,7 +512,7 @@ EOD;
             var liEl = el.closest('li');
             if       (direction=='up')   { var swopEl = liEl.previousElementSibling; }
              else if (direction=='down') { var swopEl = liEl.nextElementSibling;     }
-             else { alert('Error in moveItem. Invalid direction:'+direction); }
+             else { alert('$T_Error_in moveItem. Invalid direction:'+direction); }
             if (swopEl == null) { return; } //This shouldn’t happen anyway
             var id = liEl.id;
             var swopId = swopEl.id;
@@ -489,28 +525,6 @@ EOD;
             }
             xhr.open('GET', 'ajax/pfItemSwop.php?id='+id+'&swopId='+swopId);
             xhr.send();
-
-        }
-
-        function moveUp(el,direction) {
-            var liEl = el.closest('li');
-            var prevEl = liEl.previousElementSibling;
-            if (prevEl == null) { return; } //This shouldn’t happen anyway
-            var id = liEl.id;
-            var prevId = prevEl.id;
-alert('id='+id+' prevId='+prevId);
-alert('direction='+direction); return;
-            if (prevEl != null) { liEl.parentNode.insertBefore(liEl,prevEl); }
-        }
-
-        function moveDown(el,direction) {
-            var liEl = el.closest('li');
-            var nextEl = liEl.nextElementSibling;
-            if (nextEl == null) { return; } //This shouldn’t happen anyway
-            var id = liEl.id;
-            var nextId = nextEl.id;
-alert('id='+id+' nextId='+nextId); return;
-            if (nextEl != null) { liEl.parentNode.insertBefore(nextEl,liEl); }
         }
     </script>
 </head>

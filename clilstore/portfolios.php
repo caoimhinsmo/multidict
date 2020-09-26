@@ -12,9 +12,16 @@
       $myCLIL->toradh = $e->getMessage();
   }
 
-  $T = new SM_T('clilstore/portfolio');
+  $T = new SM_T('clilstore/portfolios');
 
-  $T_Error_in = $T->h('Error_in');
+  $T_Portfolio    = $T->h('Portfolio');
+  $T_Hide         = $T->h('Hide');
+  $T_hideShow     = $T->h('hideShow');
+  $T_Student_id   = $T->h('Student_id');
+  $T_Student_name = $T->h('Student_name');
+  $T_Error_in     = $T->j('Error_in');
+  $T_Portfolios_viewable_by = $T->h('Portfolios_viewable_by');
+  $T_Show_hidden_portfolios = $T->h('Show_hidden_portfolios');
 
   $mdNavbar = SM_mdNavbar::mdNavbar($T->domhan);
 
@@ -47,7 +54,7 @@
 <td>
 <label class=toggle-switchy for=hidden$pid data-size=xxs onChange="toggleHidden('$pid')">
   <input type=checkbox id=hidden$pid $hiddenChecked>
-  <span class=toggle><span class=switch></span></span>
+  <span class=toggle title='$T_hideShow'><span class=switch></span></span>
 </label>
 </td>
 <td><a href="userinfo.php?user=$student">$studentSC</a></td>
@@ -59,20 +66,19 @@ END_pfHtml;
 
     $pfTableHtml = <<<END_pfTable
 <table id=pftab class=hiding>
-<tr id=pftabhead><td style="font-size:70%;font-weight:normal;text-align:center">Hide</td><td>Student id</td><td>Student name</td><td>Portfolio</td></tr>
+<tr id=pftabhead><td style="font-size:70%;font-weight:normal;text-align:center">$T_Hide</td><td>$T_Student_id</td><td>$T_Student_name</td><td>$T_Portfolio</td></tr>
 $pfHtml
 </table>
 END_pfTable;
 
     $HTML = <<<EOD
-<p style="color:red;margin:0">This facility is still under development</p>
-<h1 style="font-size:140%;margin:0.5em 0">Student portfolios which are viewable by <span style="color:brown">$userSC</span></h1>
+<h1 style="font-size:140%;margin:0.5em 0">$T_Portfolios_viewable_by <span style="color:brown">$userSC</span></h1>
 
 $pfTableHtml
 <label class=toggle-switchy for=showHidden data-size=xxs style="margin:1em 0 1.5em 0" onChange="toggleHiding()">
   <input type=checkbox id=showHidden>
   <span class=toggle><span class=switch></span></span>
-  <span class=label style="font-size:70%">Show any portfolios you may have hidden</span>
+  <span class=label style="font-size:70%">$T_Show_hidden_portfolios</span>
 </label>
 EOD;
 
@@ -83,7 +89,7 @@ EOD;
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Portfolios permitted to user $user</title>
+    <title>$T_Portfolios_viewable_by $userSC</title>
     <link rel="stylesheet" href="/css/smo.css">
     <link rel="stylesheet" href="style.css">
     <link rel="StyleSheet" href="/css/toggle-switchy.css">
