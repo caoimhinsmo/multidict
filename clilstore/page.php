@@ -92,7 +92,7 @@
        $stmtGetLike->execute([':id'=>$id,':user'=>$user]);
        $stmtGetLikes->execute([':id'=>$id]);
        if ($stmtGetLike->fetchColumn()>0) { $likeClass = 'liked'; } else { $likeClass = 'unliked'; }
-       $likes = $stmtGetLikes->fetchColumn();
+       $likes = $stmtGetLikes->fetchColumn() ?? 0;
        $likesHtml = ( $likes ? $likes : '');
        $likeHtml = "<li id=likeLI class=$likeClass onclick=likeClicked() title='$likes $T_total'>"
                   ."<img id=heartUnliked src='/favicons/heartUnliked.png' alt='unlike'>"
@@ -169,7 +169,8 @@ EOD_NB2;
         li#likeLI.liked   #heartUnliked { display:none;   }
         li#likeLI.unliked #heartLiked   { display:none;   }
         li#likeLI.unliked #heartUnliked { display:inline; }
-        span#likesBadge { color:red; }
+        li.liked   span.badge { color:red;  }
+        li.unliked span.badge { color:grey; }
     </style>
     <script>
         function likeClicked() {
