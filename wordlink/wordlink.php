@@ -150,8 +150,10 @@ END_COMPOSE;
     $mode    = $wlSession->mode;
     $wordpreg= $wlSession->wordpreg;
 
-    $sbCheckResult = SM_WlSession::checkSafeBrowsing($url);
-    if (!empty($sbCheckResult)) { header("Location:$wlhome/safeBrowsingError.php?result=$sbCheckResult&url=$url"); }
+// Removed this check meantime, since GoogleSafeBrowsing had stopped working after new version of GSB.
+// It ought to be put working again soon --CPD 2020-09-28
+//    $sbCheckResult = SM_WlSession::checkSafeBrowsing($url);
+//    if (!empty($sbCheckResult)) { header("Location:$wlhome/safeBrowsingError.php?result=$sbCheckResult&url=$url"); }
 
     $ftErrMess = '';  //Check $url does not end in .pdf or .docx or suchlike
     if     ( preg_match('|\.pdf$|i', $url) ) { $ftErrMess = "This is a pdf<br><br>$url<br><br>"; }

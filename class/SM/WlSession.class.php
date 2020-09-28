@@ -953,6 +953,8 @@ EOD;
   }
 
   public static function checkSafeBrowsing($url) {
+// This is not working, following new version of GoogleSafeBrowsing, and is no longer used.
+// It ought to be put working again soon.  --CPD 2020-09-28
       // Checks a url for suspected malware or phishing using the Google Safe Browsing API
       // Returns null string '' if no problem found or if the lookup times out.
       // Returns 'phishing' | 'malware' | 'phishing,malware' if Google Safe Browsing reports this.
@@ -961,7 +963,7 @@ EOD;
       if (empty($url)) { return ''; }
       if (preg_match('|multidict.net/|',$url)) { return ''; }  // multidict.net itself is always assumed to be safe
       if (preg_match('|smo.uhi.ac.uk/|',$url)) { return ''; }  // smo.uhi.ac.uk is also always assumed to be safe
-      $safebrowsing['api_key'] = 'AIzaSyDrOymFQlhg1apRMV-nl4lFiFrxbv0hpTw';
+//      $safebrowsing['a //(key should be stored safely off-site along with database connectors)
       $safebrowsing['api_url'] = 'https://sb-ssl.google.com/safebrowsing/api/lookup?pver=3.1&';
       $sbUrl = $safebrowsing['api_url'] . 'client=multidict-net&' . 'key='.$safebrowsing['api_key'] . '&appver=1.0&';
       $sbUrl .= 'url='.urlencode($url);
