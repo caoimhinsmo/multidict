@@ -8,7 +8,7 @@
 
     $T = new SM_T('clilstore/forgotPassword');
 
-    $T_Email           = $T->h('E-mail:');
+    $T_Email           = $T->h('E-mail');
     $T_Send_reset_link = $T->h('Send_reset_link');
     $T_No_such_user    = $T->h('No_such_user');
 

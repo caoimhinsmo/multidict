@@ -426,10 +426,10 @@ END_addColHtml;
       $T_Level    = $T->h('csCol_level');
       $T_Basic    = $T->h('Basic');
       $T_Advanced = $T->h('Advanced');
-      $T_Any      = $T->h('Any');
+      $T_All      = $T->h('All');
       $T_units    = $T->h('units');
 
-      $labels = array(-1=>"$T_Any",0=>'A1',1=>'A2',2=>'B1',3=>'B2',4=>'C1',5=>'C2');
+      $labels = array(-1=>"$T_All",0=>'A1',1=>'A2',2=>'B1',3=>'B2',4=>'C1',5=>'C2');
       $counts = array(-1=>0, 0=>0, 1=>0, 2=>0, 3=>0, 4=>0, 5=>0 );
       $hrefSelf = $_SERVER['PHP_SELF'];
       $sl    = $this->csFilter['sl']['val1'];

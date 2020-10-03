@@ -16,7 +16,7 @@
     $T_About_Clilstore_text4  = $T->h('About_Clilstore_text4');
     $T_About_Clilstore_text5  = $T->h('About_Clilstore_text5');
     $T_About_Clilstore_text6  = $T->h('About_Clilstore_text6');
-    $T_About_Clilstore_text7  = $T->h('About_Clilstore_text7');
+    $T_About_Clilstore_text7  = $T->h('CS_is_well_behaved');
     $T_Denmark                = $T->h('Denmark');
     $T_Ireland                = $T->h('Ireland');
     $T_Lithuania              = $T->h('Lithuania');
