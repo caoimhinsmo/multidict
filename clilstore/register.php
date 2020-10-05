@@ -5,8 +5,13 @@
   header("Cache-Control:max-age=0");
 
   $T = new SM_T('clilstore/register');
+  $T_UserID   = $T->h('UserID');
+  $T_Email    = $T->h('E-mail');
   $T_Password = $T->h('Password');
   $T_Fullname = $T->h('Fullname');
+  $T_UserID_advice   = $T->h('UserID_advice');
+  $T_Fullname_advice = $T->h('Fullname_advice');
+  $T_Email_advice    = $T->h('Email_advice');
 
   $mdNavbar = SM_mdNavbar::mdNavbar($T->domhan);
 
@@ -56,6 +61,7 @@
     <link rel="icon" type="image/png" href="/favicons/clilstore.png">
     <style>
         span.info { color:green; font-size:70%; }
+        table#formTable td:first-child { text-align:right; }
     </style>
 </head>
 <body>
@@ -123,10 +129,10 @@ ENDsuccess;
     if ($formRequired) { echo <<<ENDform
 <div style="color:red">$errorMessage</div>
 <form method="POST">
-<table style="margin-bottom:2em">
-<tr><td>UserID</td><td><input name="user" value="$userSC" required pattern=".{3,16}" autofocus placeholder="Choose a unique userid"> <span class="info">At least three characters long, preferably more (but not more that 16)</span></td></tr>
-<tr><td>$T_Fullname</td><td><input name="fullname" value="$fullnameSC" required pattern=".{8,}" placeholder="Your full name" style="width:22em"> <span class="info">Your real name - This will be visible to other users</span></td></tr>
-<tr><td>Email:</td><td><input type="email" name="email" value="$emailSC" style="width:22em"> <span class="info">This is kept private</span></td></tr>
+<table id=formTable style="margin-bottom:2em">
+<tr><td>$T_UserID</td><td><input name="user" value="$userSC" required pattern=".{3,16}" autofocus placeholder="Choose a unique userid"> <span class="info">$T_UserID_advice</span></td></tr>
+<tr><td>$T_Fullname</td><td><input name="fullname" value="$fullnameSC" required pattern=".{8,}" placeholder="Your full name" style="width:22em"> <span class="info">$T_Fullname_advice</span></td></tr>
+<tr><td>$T_Email</td><td><input type="email" name="email" value="$emailSC" style="width:22em"> <span class="info">$T_Email_advice</span></td></tr>
 <tr><td>$T_Password</td><td><input type="password" name="password"  value="$passwordSC"  required pattern=".{8,}"> <span class="info">Set a password (at least 8 characters long)</span></td></tr>
 <tr><td>$T_Password</td><td><input type="password" name="password2" value="$password2SC" required pattern=".{8,}" placeholder="Retype to confirm"> <span class="info">Reenter the password</span></td></tr>
 <tr><td></td><td><input type="submit" value="Register"></td></tr>
