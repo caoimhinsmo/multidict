@@ -164,7 +164,6 @@ EOD_cookieMessage;
 
     if (isset($_GET['mode']))         { $csSess->setMode($_GET['mode']            ); }
     if (!empty($_GET['sortCol']))     { $csSess->sortCol($_GET['sortCol']         ); }
-//    if (!empty($_GET['deleteCol']))   { $csSess->deleteCol($_GET['deleteCol']     ); }
     if (!empty($_GET['addCol']))      { $csSess->addCol($_GET['addCol']           ); }
     if (!empty($_GET['restoreCols'])) { $csSess->restoreCols($_GET['restoreCols'] ); }
 
@@ -172,23 +171,11 @@ EOD_cookieMessage;
     $filterForm = ( isset($_REQUEST['filterForm']) ? 1 : 0 );
     if ($filterForm) {
         if (isset($_REQUEST['incTest']) && $mode>1) { $csSess->setIncTest(1); } else { $csSess->setIncTest(0); }
-        if (isset($_REQUEST['wide'])) {
-            $mode = ( $mode<2 ? 1 : 3 );
-        } else {
-            $mode = ( $mode<2 ? 0 : 2 );
-        }
-        $csSess->setMode($mode);
     }
 
     $mode    = $csSess->getCsSession()->mode;
-    
     $incTest = $csSess->getCsSession()->incTest;
-/*
-    $mode0selected = ( $mode==0 ? 'selected=selected' : '');
-    $mode1selected = ( $mode==1 ? 'selected=selected' : '');
-    $mode2selected = ( $mode==2 ? 'selected=selected' : '');
-    $mode3selected = ( $mode==3 ? 'selected=selected' : '');
-*/
+
     $modeSselected = $modeTselected = '';
     if      ($mode==0) { $modeS = 0; $modeT = 2; $modeSselected = 'selected=selected'; }
      elseif ($mode==1) { $modeS = 1; $modeT = 3; $modeSselected = 'selected=selected'; }
@@ -429,34 +416,6 @@ END_USER2;
     if (isset($_REQUEST['text']))       { $f['textFil']    = $_REQUEST['text'];       }
 
     if ($mode==0) {
-/* The following was to keep things really simple for mode 0, basic student mode 
-However, it longer necessary now that we have improved Clear filter, and also have warnings about filters on hidden columns
-        $f['idFil']      =
-        $f['viewsMin']   =
-        $f['viewsMax']   =
-        $f['clicksMin']  =
-        $f['clicksMax']  =
-        $f['likesMin']   =
-        $f['likesMax']   =
-        $f['createdMin'] =
-        $f['createdMax'] =
-        $f['changedMin'] =
-        $f['changedMax'] =
-        $f['licenceFil'] =
-        $f['ownerFil']   =
-        $f['wordsMin']   =
-        $f['wordsMax']   =
-        $f['medtypeFil'] =
-        $f['medlenMin']  =
-        $f['medlenMax']  =
-        $f['buttonsMin'] =
-        $f['buttonsMax'] =
-        $f['filesMin']   =
-        $f['filesMax']   =
-//        $f['titleFil']   =
-//        $f['textFil']    =
-        '';
-*/
         $csSess->csFilter['sl']['m0'] = 0;  // No need to display Language because it is always filtered for in mode 0
        // Set up checked values for level radio buttons
         $level = $csSess->csFilter['level']['val1'];
@@ -1152,6 +1111,14 @@ $tableStyles
             document.cookie = "Thl=; expires=Thu, 01 Jan 2019 00:00:00 UTC; path=/;";
             window.location = window.location.href;
         }
+
+        function toggleWide(mode) {
+            mode = parseInt(mode);
+            var newMode;
+            if (mode%2 == 1) { newMode = mode-1; }
+             else            { newMode = mode+1; }
+            window.location = window.location.href + '?mode=' + newMode;
+        }
 </script>
 </head>
 <body onload="history.pushState('','',location.pathname);">
@@ -1175,7 +1142,7 @@ $photo
 <option $modeTselected value="$modeT" title="$T_For_teachers_info">$T_For_teachers</option>
 </select>
 </form>
-<label class=toggle-switchy for=wide data-size=xs title="include more columns" onclick="submitFForm()">
+<label class=toggle-switchy for=wide data-size=xs title="include more columns" onChange="toggleWide('$mode')">
   <input type=checkbox name=wide id=wide form=filterForm $wideChecked>
   <span class=toggle><span class=switch></span></span>
   <span class=label>$T_More_options</span>
