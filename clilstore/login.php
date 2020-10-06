@@ -10,6 +10,19 @@
     $servername = SM_myCLIL::servername();
     $serverhome = SM_myCLIL::serverhome();
 
+    $T = new SM_T('clilstore/login');
+    $T_Email    = $T->h('E-mail');
+    $T_UserID   = $T->h('UserID');
+    $T_Password = $T->h('Password');
+    $T_Login    = $T->h('Log_air');
+    $T_Register = $T->h('Register');
+    $T_No_account_yet          = $T->h('No_account_yet');
+    $T_Forgotten_your_password = $T->h('Forgotten_your_password');
+    $T_Recover_it              = $T->h('Recover_it');
+    $T_Login_to_Clilstore      = $T->h('Login_to_Clilstore');
+
+    $mdNavbar = SM_mdNavbar::mdNavbar($T->domhan);
+
     $formRequired = TRUE;
     $successMessage = $refreshHeader = $formHtml = '';
     $userAsTyped = $passwordAsTyped = $userAutofocus = $passwordAutofocus = '';
@@ -71,15 +84,17 @@ ENDfailure;
         if (empty($userSC)) { $userAutofocus = 'autofocus'; } else { $passwordAutofocus = 'autofocus'; }
         $formHtml = <<<ENDform
 <form method="POST">
-<table>
-<tr><td>Userid:</td><td><input name="user" value="$userSC" required $userAutofocus>
-<span class="info">You can also use your e-mail address to login</span></td></tr>
-<tr><td>Password:</td><td><input type="password" name="password" value="$passwordSC" required $passwordAutofocus> <a href="forgotPassword.php" style="font-size:80%">Forgotten your password?</a></td></tr>
-<tr><td></td><td><input type="submit" value="Login"></td></tr>
+<table id=formTable>
+<tr><td>$T_Email / $T_UserID</td><td><input name="user" value="$userSC" required $userAutofocus>
+<tr><td>$T_Password</td><td><input type="password" name="password" value="$passwordSC" required $passwordAutofocus></td></tr>
+<tr><td></td><td><input type="submit" value="$T_Login"></td></tr>
 </table>
 </form>
 
-<p style="margin-top:3em">(Or else <a href="register.php">register</a> a new userid)</p>
+<div id=extra>
+<p>$T_No_account_yet <a href="register.php">$T_Register</a></p>
+<p>$T_Forgotten_your_password <a href="forgotPassword.php">$T_Recover_it</a></p>
+</div>
 ENDform;
     }
  
@@ -88,32 +103,31 @@ ENDform;
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Login to Clilstore</title>
+    <title>$T_Login_to_Clilstore</title>
     <link rel="stylesheet" href="/css/smo.css">
     <link rel="stylesheet" href="style.css?version=2014-04-15">
     <link rel="icon" type="image/png" href="/favicons/clilstore.png">
     <style>
-        span.info { color:green; font-size:70%; font-style:italic; }
+        table#formTable { border-collapse: collapse; }
+        table#formTable td { padding:0.3em; }
+        table#formTable td:first-child { text-align:right; }
+        div#extra { margin-top:3em; font-size:90%; }
+        div#extra p { margin:0.4em 0; }
+        div#extra a { border:1px solid grey; padding:1px 3px; border-radius:3px; font-weight:bold; }
     </style>
 $refreshHeader
 </head>
 <body>
-
-<ul class="smo-navlist">
-<li><a href="./">Clilstore</a></li>
-</ul>
+$mdNavbar
 <div class="smo-body-indent">
 
-<h1>Login to Clilstore</h1>
+<h1>$T_Login_to_Clilstore</h1>
 
 $successMessage
 $formHtml
 
 </div>
-<ul class="smo-navlist">
-<li><a href="./">Clilstore</a></li>
-</ul>
-
+$mdNavbar
 </body>
 </html>
 EOD;

@@ -109,7 +109,7 @@ EOD1;
         } elseif ($stmtEmail->execute() && $stmtEmail->bindColumn(1,$prevUser) && $stmtEmail->fetch()) {
             $User_exists_for_email_1 = strtr( $T_User_exists_for_email_1, ['[xxxxxx]' => "<b>$prevUser</b>"] );
             $User_exists_for_email_2 = strtr( $T_User_exists_for_email_2,
-                                             ['[xxxxxx]' => $prevUser,
+                                             ['[xxxxxx]' => "<b>$prevUser</b>",
                                               '{' => "<a href=\"login.php?user=$prevUser\" style='border:1px solid;border-radius:3px;padding:0 3px'>",
                                               '}' => '</a>'] );
             $User_exists_for_email_3 = strtr( $T_User_exists_for_email_3, ['{'=>'<i>','}'=>'</i>'] );
