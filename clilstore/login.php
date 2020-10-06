@@ -20,6 +20,8 @@
     $T_Forgotten_your_password = $T->h('Forgotten_your_password');
     $T_Recover_it              = $T->h('Recover_it');
     $T_Login_to_Clilstore      = $T->h('Login_to_Clilstore');
+    $T_Successfully_logged_in  = $T->h('Successfully_logged_in');
+    $T_Userid_or_pw_incorrect  = $T->h('Userid_or_pw_incorrect');
 
     $mdNavbar = SM_mdNavbar::mdNavbar($T->domhan);
 
@@ -40,12 +42,6 @@
         if  ($stmt1->execute()
           && $stmt1->fetch()
           && (crypt($passwordAsTyped,$password)==$password || $password=='')) {
-//------- Temporary measure to reset about 20 passwords accidentally set to null.  Just set the password to the first password the user attempts.
-if ($password=='' && strlen($passwordAsTyped)>3) {
-    $passwordCrypt = crypt($passwordAsTyped,'$2a$07$rudeiginLanLanAmaideach');
-    $stmt2 = $DbMultidict->prepare('UPDATE users SET password=:password WHERE user=:user');
-    $stmt2->execute([':password'=>$passwordCrypt,':user'=>$user]);
-}
            //Copy filter parameters from the most recent previous Clilstore session (if any) for this user. Remember the new csid.
             $newCsid = $_COOKIE['csSessionId'];
             if (!empty($csid)) {
@@ -66,14 +62,14 @@ if ($password=='' && strlen($passwordAsTyped)>3) {
             $csSess->setUser($user);  //Remember $user, to make the next login easier
             SM_csSess::logWrite($user,'login');
             $successMessage = <<<ENDsuccess
-<p style="color:green"><span style="font-size:200%">✔</span> You have successfully logged in.</p>
+<p style="color:green"><span style="font-size:200%">✔</span> $T_Successfully_logged_in</p>
 <p style="margin-left:1em">⇨ Go to <a href="./" style="font-weight:bold">Clilstore</a></p>
 ENDsuccess;
             $formRequired = FALSE;
             $refreshHeader =  "<meta http-equiv=\"refresh\" content=\"1; url=$serverhome/clilstore/\">";
         } elseif (!isset($_GET['user'])) {
             $successMessage = <<<ENDfailure
-<p style="color:red">Userid or password incorrect</p>
+<p style="color:red">$T_Userid_or_pw_incorrect</p>
 ENDfailure;
         }
     }
@@ -85,7 +81,7 @@ ENDfailure;
         $formHtml = <<<ENDform
 <form method="POST">
 <table id=formTable>
-<tr><td>$T_Email / $T_UserID</td><td><input name="user" value="$userSC" required $userAutofocus>
+<tr><td>$T_Email / $T_UserID </td><td><input name="user" value="$userSC" required $userAutofocus>
 <tr><td>$T_Password</td><td><input type="password" name="password" value="$passwordSC" required $passwordAutofocus></td></tr>
 <tr><td></td><td><input type="submit" value="$T_Login"></td></tr>
 </table>
