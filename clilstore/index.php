@@ -601,19 +601,6 @@ $levelButHtml
 ENDtabletopChoices;
     }
 
-    $hoverColorOdd  = '#eef';
-    $hoverColorEven = '#fff';
-    if (empty($user)) { $highlightRow = 0; }
-    else {
-        $stmt = $DbMultidict->prepare('SELECT highlightRow FROM users WHERE user=:user');
-        $stmt->execute(array(':user'=>$user));
-        $highlightRow = $stmt->fetchObject()->highlightRow;
-    }
-    if ($highlightRow==1 || ($highlightRow==0 && $mode==3)) {
-        $hoverColorOdd  = '#fe6';
-        $hoverColorEven = '#fe6';
-    }
-
     if ($mode==0 && $f['slFil']=='') { $noTable = true; } else { $noTable = false; }
 
     $columns = $csSess->columns();
@@ -1039,8 +1026,8 @@ $tableStyles
 
         table#main tr:nth-child(odd)  { background-color:#eef; }
         table#main tr:nth-child(even) { background-color:#fff; }
-        table#main tr:nth-child(odd):hover  { background-color:$hoverColorOdd; }
-        table#main tr:nth-child(even):hover { background-color:$hoverColorEven; }
+        table#main tr:nth-child(odd):hover  { background-color:#fe9; }
+        table#main tr:nth-child(even):hover { background-color:#fe9; }
 
         div.find { float:right; margin:4px 0 0 0; padding:2px 22px 2px 1px; }
         div.find input { font-size:112%; background-color:#888; color:white; font-weight:bold; padding:3px 10px; border:0; border-radius:8px; }

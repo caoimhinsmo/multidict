@@ -8,7 +8,7 @@
   $user   = $_REQUEST['user'];
   $option = $_REQUEST['option'];
   $value  = $_REQUEST['value'];
-  if (!in_array($option,['unitLang','highlightRow','record','fullname','email'])) { die("invalid option $option"); }
+  if (!in_array($option,['unitLang','record','fullname','email'])) { die("invalid option $option"); }
   $myCLIL = SM_myCLIL::singleton();
   if (!$myCLIL->cead("$user|admin")) { die('not authorized'); }
   $DbMultidict = SM_DbMultidictPDO::singleton('rw');

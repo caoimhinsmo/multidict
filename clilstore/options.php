@@ -11,12 +11,33 @@
       $myCLIL->toradh = $e->getMessage();
   }
 
+  $T = new SM_T('clilstore/options');
+  $T_Vocabulary = $T->h('Vocabulary');
+  $T_Options    = $T->h('Options');
+  $T_Fullname   = $T->h('Fullname');
+  $T_Email      = $T->h('E-mail');
+  $T_Verified   = $T->h('Verified');
+  $T_Reverify   = $T->h('Reverify');
+  $T_Unverified = $T->h('Unverified');
+  $T_Verify_now = $T->h('Verify_now');
+  $T_Options_for_user = $T->h('Options_for_user');
+  $T_My_vocabulary    = $T->h('My_vocabulary');
+  $T_Change_password  = $T->h('Change_password');
+  $T_Fullname_advice  = $T->h('Fullname_advice');
+  $T_Email_advice     = $T->h('Email_advice');
+  $T_Add_words_to_vocabulary     = $T->h('Add_words_to_vocabulary');
+  $T_Add_words_to_vocabulary_No  = $T->h('Add_words_to_vocabulary:No');
+  $T_Add_words_to_vocabulary_Yes = $T->h('Add_words_to_vocabulary:Yes');
+  $T_Default_language_for_units  = $T->h('Default_language_for_units');
+
+  $mdNavbar = SM_mdNavbar::mdNavbar($T->domhan);
+
   echo <<<EOD_BARR
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Clilstore options for user</title>
+    <title>$T_Options_for_user</title>
     <link rel="stylesheet" href="/css/smo.css">
     <link rel="stylesheet" href="style.css?version=2014-04-15">
     <link rel="icon" type="image/png" href="/favicons/clilstore.png">
@@ -66,10 +87,7 @@
     </script>
 </head>
 <body>
-
-<ul class="smo-navlist">
-<li><a href="./">Clilstore</a></li>
-</ul>
+$mdNavbar
 <div class="smo-body-indent">
 EOD_BARR;
 
@@ -135,21 +153,21 @@ $transferHtml
 EODtransferHtml;
     }
 
-    $stmt = $DbMultidict->prepare('SELECT fullname,email,emailVerUtime,unitLang,highlightRow,record FROM users WHERE user=:user');
+    $stmt = $DbMultidict->prepare('SELECT fullname,email,emailVerUtime,unitLang,record FROM users WHERE user=:user');
     $stmt->execute(array('user'=>$user));
     if (!($row = $stmt->fetch(PDO::FETCH_ASSOC))) { throw new SM_MDexception("Failed to fetch information on user $userSC"); }
     extract($row);
     $fullnameSC = htmlspecialchars($fullname);
     $emailSC    = htmlspecialchars($email);
     if ($emailVerUtime==0) {
-        $verMessage = "<span id=verMess style='color:red'>Unverified</span>";
-        $verLink = 'Verify now';
+        $verMessage = "<span id=verMess style='color:red'>$T_Unverified</span>";
+        $verLink = $T_Verify_now;
     } else {
         date_default_timezone_set('UTC');
         $verTimeObj = new DateTime("@$emailVerUtime");
         $verDateTime = date_format($verTimeObj, 'Y-m-d H:i:s');
-        $verMessage = "<span id=verMess title='Verified at $verDateTime UT'><span style='color:green'>✓</span> Verified</span>";
-        $verLink = 'Reverify';
+        $verMessage = "<span id=verMess title='Verified at $verDateTime UT'><span style='color:green'>✓</span> $T_Verified</span>";
+        $verLink = $T_Reverify;
     }
     $verLink = "<a class=button style='padding:0 10px;margin-left:0.5em;font-weight:normal' onclick=verifyEmail('$email')>$verLink</a>";
     $verMessage = "<span style='font-size:80%;padding-left:0.8em'>$verMessage $verLink</span>";
@@ -172,56 +190,45 @@ EODtransferHtml;
     while ($stmt3->fetch()) { $langArr[$id] = "$endonym ($id)"; }
     $unitLangHtml = optionsHtml($langArr,$unitLang);
 
-    $highlightRowArr = array(
-        '-1' => 'Never',
-         '0' => 'Only in “Author page - more options”',
-         '1' => 'Always'); 
-    $highlightRowHtml = optionsHtml($highlightRowArr,$highlightRow);
     $recordArr = array(
-         '0' => 'No',
-         '1' => 'Yes');
+         '0' => $T_Add_words_to_vocabulary_No,
+         '1' => $T_Add_words_to_vocabulary_Yes);
     $recordHtml = optionsHtml($recordArr,$record);
 
     $errorMessage   = ( empty($errorMessage)   ? '' : '<div class="message" style="color:red">' . $errorMessage   . '<br>No changes saved</div>' );
     $successMessage = ( empty($successMessage) ? '' : '<div class="message" style="color:green"><span style="font-size:200%">✔</span> ' . $successMessage . '</div>' );
 
     echo <<<ENDform
-<h1 class="smo">Clilstore options for user <span style="color:brown">$user</span></h1>
+<h1 class="smo">$T_Options_for_user <span style="color:brown">$userSC</span></h1>
 
 $errorMessage
 $successMessage
 
 <p style="margin:1.7em 0">
-<a class="button" href="voc.php?user=$user" style="margin:1em 3em 1em 1.5em">My vocabulary…</a>
-<a class="button" href="changePassword.php?user=$user">Change password…</a>
+<a class="button" href="voc.php?user=$user" style="margin:1em 3em 1em 6em" title="$T_My_vocabulary">{$T_Vocabulary}…</a>
+<a class="button" href="changePassword.php?user=$user">{$T_Change_password}…</a>
 </p>
 
 <form method="POST" id=optForm>
 <fieldset class="opts">
-<legend>Options</legend>
+<legend>$T_Options</legend>
 <table id="opttab">
-<tr><td>Default language code for units you create</td><td>
+<tr><td>$T_Default_language_for_units</td><td>
 <select name="unitLang" onchange="changeUserOption('$user','unitLang',this.value)">
 $unitLangHtml
 </select>
 <span id=unitLangChanged class="change">✔ changed<span>
 </td></tr>
-<tr><td>Highlight row of Clilstore index on mouse hover?</td><td>
-<select name="highlightRow" onchange="changeUserOption('$user','highlightRow',this.value)">
-$highlightRowHtml
-</select>
-<span id=highlightRowChanged class="change">✔ changed</span>
-</td></tr>
-<tr><td>Add words you click to your vocabulary list?</td><td>
+<tr><td>$T_Add_words_to_vocabulary</td><td>
 <select name="record" onchange="changeUserOption('$user','record',this.value)">
 $recordHtml
 </select>
 <span id=recordChanged class="change">✔ changed</span>
 </td></tr>
-<tr><td>Full name</td><td><input value="$fullnameSC" pattern=".{8,}" title="Your real name (visible to other users)"  style="width:22em" onchange="changeUserOption('$user','fullname',this.value)">
+<tr><td>$T_Fullname</td><td><input value="$fullnameSC" pattern=".{8,}" title="$T_Fullname_advice"  style="width:22em" onchange="changeUserOption('$user','fullname',this.value)">
 <span id=fullnameChanged class="change">✔ changed</span>
 </td></tr>
-<tr><td>Email address</td><td><input value="$emailSC" style="width:22em" pattern="^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" onchange="changeUserOption('$user','email',this.value)">
+<tr><td>$T_Email</td><td><input value="$emailSC" style="width:22em" pattern="^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" onchange="changeUserOption('$user','email',this.value)" title="$T_Email_advice">
 <span id=emailChanged class="change">✔ changed</span>
 <br>$verMessage
 </td></tr>
@@ -236,10 +243,7 @@ ENDform;
 
   echo <<<EOD_BONN
 </div>
-<ul class="smo-navlist">
-<li><a href="./">Clilstore</a></li>
-</ul>
-
+$mdNavbar
 </body>
 </html>
 EOD_BONN;

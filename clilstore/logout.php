@@ -10,6 +10,9 @@
     $servername = SM_myCLIL::servername();
     $serverhome = SM_myCLIL::serverhome();
 
+    $T = new SM_T('clilstore/logout');
+    $T_You_have_been_logged_out = $T->h('You_have_been_logged_out');
+
     echo <<<EOD1
 <!DOCTYPE html>
 <html lang="en">
@@ -21,7 +24,7 @@
 </head>
 <body>
 
-<p><img src="/icons-smo/wave.gif" alt=""> You have been logged out from Clilstore</p>
+<p><img src="/icons-smo/wave.gif" alt=""> $T_You_have_been_logged_out</p>
 
 </body>
 </html>

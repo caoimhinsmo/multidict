@@ -16,6 +16,7 @@
     $T_Password = $T->h('Password');
     $T_Login    = $T->h('Log_air');
     $T_Register = $T->h('Register');
+    $T_Go_to    = $T->h('Go_to');
     $T_No_account_yet          = $T->h('No_account_yet');
     $T_Forgotten_your_password = $T->h('Forgotten_your_password');
     $T_Recover_it              = $T->h('Recover_it');
@@ -63,7 +64,7 @@
             SM_csSess::logWrite($user,'login');
             $successMessage = <<<ENDsuccess
 <p style="color:green"><span style="font-size:200%">✔</span> $T_Successfully_logged_in</p>
-<p style="margin-left:1em">⇨ Go to <a href="./" style="font-weight:bold">Clilstore</a></p>
+<p style="margin-left:1em">⇨ $T_Go_to <a href="./" style="font-weight:bold">Clilstore</a></p>
 ENDsuccess;
             $formRequired = FALSE;
             $refreshHeader =  "<meta http-equiv=\"refresh\" content=\"1; url=$serverhome/clilstore/\">";
