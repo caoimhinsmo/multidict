@@ -4,6 +4,11 @@
 
   header('Cache-Control:max-age=0');
 
+  $T = new SM_T('clilstore/changePassword');
+  $T_Change_password_for_user = $T->h('Change_password_for_user_');
+
+  $mdNavbar = SM_mdNavbar::mdNavbar($T->domhan);
+
   try {
 
     echo <<<EOD_barr
@@ -21,10 +26,7 @@
     </style>
 </head>
 <body>
-
-<ul class="smo-navlist">
-<li><a href="./">Clilstore</a></li>
-</ul>
+$mdNavbar
 <div class="smo-body-indent">
 EOD_barr;
 
@@ -94,7 +96,7 @@ ENDsuccess;
         $passwordSC  = htmlspecialchars($password);
         $password2SC = htmlspecialchars($password2);
         echo <<<ENDform
-<h1 class="smo">Change password for user $user</h1>
+<h1 class="smo">$T_Change_password_for_user $user</h1>
 <div class="errorMessage">$errorMessage</div>
 
 <form method="POST">
@@ -112,10 +114,7 @@ ENDform;
 
     echo <<<EOD_bonn
 </div>
-<ul class="smo-navlist">
-<li><a href="./">Clilstore</a></li>
-</ul>
-
+$mdNavbar
 </body>
 </html>
 EOD_bonn;

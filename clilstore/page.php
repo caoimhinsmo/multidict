@@ -14,11 +14,16 @@
 
   $T = new SM_T('clilstore/page');
 
-  $T_total               = $T->h('total');
-  $T_Error_in            = $T->j('Error_in');
-  $T_totalj              = $T->j('total');
-
-  $hl0 = $T->hl0();
+  $T_total      = $T->h('total');
+  $T_Unit_info  = $T->h('Unit_info');
+  $T_Edit       = $T->h('Edit');
+  $T_Error_in   = $T->j('Error_in');
+  $T_totalj     = $T->j('total');
+  $T_Voc_Click_to_enable  = $T->h('Voc_Click_to_enable');
+  $T_Voc_Click_to_disable = $T->h('Voc_Click_to_disable');
+  $T_Edit_this_unit       = $T->h('Edit_this_unit');
+  $T_Unit_info_title      = $T->h('Unit_info_title');
+  $T_Open_vocabulary_list = $T->h('Open_vocabulary_list');
 
   try {
     if (!isset($_GET['id'])) { throw new SM_MDexception('No id parameter'); }
@@ -30,14 +35,8 @@
     $stmt = $DbMultidict->prepare('SELECT sl,owner,title,text,medembed,medfloat FROM clilstore WHERE id=:id');
     $stmt->bindParam(':id', $id, PDO::PARAM_INT);
     $stmt->execute();
-    if (!($r = $stmt->fetch(PDO::FETCH_OBJ))) { throw new SM_MDexception("No unit exists for id=$id"); }
-    $stmt = null;
-    $sl       = $r->sl;
-    $owner    = $r->owner;
-    $title    = $r->title;
-    $text     = $r->text;
-    $medembed = $r->medembed;
-    $medfloat = $r->medfloat;
+    if (!($r = $stmt->fetch(PDO::FETCH_ASSOC))) { throw new SM_MDexception("No unit exists for id=$id"); }
+    extract($r);
 
     if ($sl<>'ar') { $left = 'left';  $right = 'right'; }
      else          { $left = 'right'; $right = 'left';  }
@@ -69,7 +68,7 @@
     }
     $buttonedit = ( $user<>$owner && $user<>'admin'
                   ? ''
-                  : "<li class=right><a href=\"edit.php?id=$id&amp;view\" class=\"nowordlink\" target=\"_top\"><img src=\"/icons-smo/peann.png\" alt=\"Edit\" title=\"Edit this unit\"></a></li>"
+                  : "<li class=right><a href='edit.php?id=$id&amp;view' class='nowordlink' target='_top'><img src='/icons-smo/peann.png' alt='$T_Edit' title='$T_Edit_this_unit'></a></li>"
                   );
     $stmt = $DbMultidict->prepare('SELECT record FROM users WHERE user=:user');
     $stmt->execute([':user'=>$user]);
@@ -77,10 +76,10 @@
         $record = $stmt->fetch(PDO::FETCH_COLUMN);
         $vocClass = ( $record ? 'vocOn' : 'vocOff');
         $recordVocHtml = "<li class=right><span class=$vocClass onclick='vocClicked(this.className);'>"
-                        ."<img src='/favicons/recordOff.png' alt='VocOff' title='Vocabulary recording is currently disabled - Click to enable'>"
-                        ."<img src='/favicons/recordOn.png' alt='VocOn' title='Vocabulary recording is currently enabled - Click to disable'>"
+        ."<img src='/favicons/recordOff.png' alt='VocOff' title='$T_Voc_Click_to_enable'>"
+                        ."<img src='/favicons/recordOn.png' alt='VocOn' title='$T_Voc_Click_to_disable'>"
                         ."</span></li>"
-                        ."<li class=right><a class=$vocClass href='voc.php?user=$user&amp;sl=$sl' data-nowordlink target=voctab title='Open your vocabulary list in a separate tab'>V</a>";
+                        ."<li class=right><a class=$vocClass href='voc.php?user=$user&amp;sl=$sl' data-nowordlink target=voctab title='$T_Open_vocabulary_list'>V</a>";
        $stmt = $DbMultidict->prepare('SELECT pf FROM cspf WHERE user=:user ORDER BY prio DESC LIMIT 1');
        $stmt->execute([':user'=>$user]);
        if ($row  = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -113,7 +112,7 @@
 <li>$sharebuttonWA
 $likeHtml
 <li class="right"><a href="unitinfo.php?id=$id" class="nowordlink" target="_top"
-    title="Summary and other details on this unit">Unit info</a></li>
+    title="$T_Unit_info_title">$T_Unit_info</a></li>
 $buttonedit
 $recordVocHtml
 $portfolioHtml

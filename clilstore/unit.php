@@ -26,10 +26,13 @@
     $stmt->bindColumn(1,$sl);
     if (!$stmt->fetch()) { throw new SM_MDexception("No unit exists for id=$id"); }
     $stmt = null;
+
+    $T = new SM_T('clilstore/unit');
+    $hl0 = $T->hl0();
     
     $serverhome = SM_myCLIL::serverhome();
     $userparam = ( empty($user) ? '' : "{and}user=$user" ); //Send userparam to generate edit button (since Wordlink doesn't do cookies)
-    header("Location:$serverhome/wordlink/?navsize=1&sl=$sl&url=$serverhome/clilstore/page.php?id=$id$userparam");
+    header("Location:$serverhome/wordlink/?navsize=1&sl=$sl&url=$serverhome/clilstore/page.php?id=$id$userparam{and}hl=$hl0");
 
   } catch (Exception $e) { echo $e; }
 
