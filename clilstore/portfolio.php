@@ -130,7 +130,7 @@ END_unitsTableHtml;
         $unitToEdit = $_REQUEST['unit'] ?? 0;
 
         $stmtPfu = $DbMultidict->prepare('SELECT cspfUnit.pfu, cspfUnit.unit AS csUnit, clilstore.title AS csTitle FROM cspfUnit,clilstore'
-                                    . ' WHERE pf=:pf AND unit=clilstore.id');
+                                    . ' WHERE pf=:pf AND unit=clilstore.id ORDER BY ord');
         $stmtPfu->execute([':pf'=>$pf]);
         $pfuRows = $stmtPfu->fetchAll(PDO::FETCH_ASSOC);
         foreach ($pfuRows as $pfuRow) {
@@ -145,7 +145,9 @@ END_unitsTableHtml;
             if ($edit) {
                 $removeUnitHtml = "<img src='/icons-smo/bin.png' alt='Remove' title='$T_Remove_unit_from_portfolio' onclick=\"removeUnit('$pfu')\">";
                 $editUnitHtml   = "<img src='/icons-smo/peann.png' alt='Edit' title='$T_Edit_unit_in_portfolio' onClick=\"toggleUnitEdit('$pfu')\">";
-                $editToolsHtml = "$removeUnitHtml &nbsp;&nbsp; $editUnitHtml";
+                $moveUnitHtml   = "<span class=upArrowUnit title='$T_Move_up' onClick=moveUnit(this,'up')>⇧</span>"
+                                . "<span class=downArrowUnit title='$T_Move_down' onClick=moveUnit(this,'down')>⇩</span>";
+                $editToolsHtml = "$editUnitHtml &nbsp;&nbsp; <span class=edit>$moveUnitHtml &nbsp;&nbsp; $removeUnitHtml</span>";
             }
             $pfuLRows = $stmtPfuL->fetchAll(PDO::FETCH_ASSOC);
             foreach ($pfuLRows as $pfuLRow) {
@@ -241,7 +243,7 @@ END_pt;
                 $pfsTableHtml .= "<tr id=pfsRow$portf><td>$editHtml <a href='./portfolio.php?pf=$portf'>$title</a> $promoteHtml</td></tr>\n";
             }
             $pfsTableHtml = <<<END_pfstab
-<p style="margin:1.7em 0 0 0; border-top:2px solid grey">$T_My_portfolios</p>
+<p style="margin:3em 0 0 0; border-top:2px solid grey; font-weight:bold">$T_My_portfolios</p>
 <table style="margin-left:2em">
 $pfsTableHtml
 <tr><td><a class=button href="portfolio.php?pf=0" style="font-size:75%">$T_Create_a_new_portfolio</a></td></tr>
@@ -294,6 +296,8 @@ EOD;
         li.editing img.saveIcon { display:inline; }
         li:first-child span.upArrow { display:none; }
         li:last-child span.downArrow { display:none; }
+        tr:nth-child(2) span.upArrowUnit { display:none; }
+        tr:last-child span.downArrowUnit { display:none; }
     </style>
     <script>
         function createPortfolio() {
@@ -524,6 +528,25 @@ EOD;
                  else                { liEl.parentNode.insertBefore(swopEl,liEl); }
             }
             xhr.open('GET', 'ajax/pfItemSwop.php?id='+id+'&swopId='+swopId);
+            xhr.send();
+        }
+
+        function moveUnit(el,direction) {
+            var trEl = el.closest('tr');
+            if       (direction=='up')   { var swopEl = trEl.previousElementSibling; }
+             else if (direction=='down') { var swopEl = trEl.nextElementSibling;     }
+             else { alert('$T_Error_in moveItem. Invalid direction:'+direction); }
+            if (swopEl == null) { return; } //This shouldn’t happen anyway
+            var id = trEl.id;
+            var swopId = swopEl.id;
+            var xhr = new XMLHttpRequest();
+            xhr.onload = function() {
+                var resp = this.responseText;
+                if (resp!='OK') { alert('$T_Error_in pfItemSwop.php\\r\\n\\r\\n'+resp); return; }
+                if (direction=='up') { trEl.parentNode.insertBefore(trEl,swopEl); }
+                 else                { trEl.parentNode.insertBefore(swopEl,trEl); }
+            }
+            xhr.open('GET', 'ajax/pfUnitSwop.php?id='+id+'&swopId='+swopId);
             xhr.send();
         }
     </script>

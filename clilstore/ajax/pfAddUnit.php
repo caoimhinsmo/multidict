@@ -18,8 +18,9 @@
   if (!$pf) { die('You have no portfolio'); }
 
  //Add the unit
-  $stmtAddUnit = $DbMultidict->prepare('INSERT IGNORE INTO cspfUnit (pf,unit) VALUES (:pf,:unit)');
-  $stmtAddUnit->execute([ ':pf'=>$pf, ':unit'=>$unit ]);
+  $ord = time();
+  $stmtAddUnit = $DbMultidict->prepare('INSERT IGNORE INTO cspfUnit (pf,unit,ord) VALUES (:pf,:unit,:ord)');
+  $stmtAddUnit->execute([ ':pf'=>$pf, ':unit'=>$unit, ':ord'=>$ord ]);
   
   echo 'OK';
 ?>
