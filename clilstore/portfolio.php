@@ -140,7 +140,6 @@ END_unitsTableHtml;
             $learnedHtml = $workHtml = $newLearnedItem = $newWorkItem = '';
             $unitidHtml = str_pad($csUnit, 5, '_', STR_PAD_LEFT);
             $unitidHtml = str_replace('_','&nbsp;',$unitidHtml);
-            $unitidHtml = "<a href='/cs/$csUnit'>$unitidHtml</a>";
             $rowClass = ( $csUnit==$unitToEdit ? 'class=edit' : '');
             if ($edit) {
                 $removeUnitHtml = "<img src='/icons-smo/bin.png' alt='Remove' title='$T_Remove_unit_from_portfolio' onclick=\"removeUnit('$pfu')\">";
@@ -180,7 +179,7 @@ $newWorkItem
 END_workHtml;
             $unitsHtml .= <<<END_unitsHtml
 <tr id=pfuRow$pfu $rowClass>
-<td><p style="margin:0">$unitidHtml<br>$csTitle</p><p style="margin:0.7em 0 0.3em 0.7em">$editToolsHtml</p></td>
+<td><p style="margin:0"><a href='/cs/$csUnit'>$unitidHtml<br>$csTitle</a></p><p style="margin:0.7em 0 0.3em 0.7em">$editToolsHtml</p></td>
 <td>$learnedHtml <!-- <span id="\$vocid-tick" class=change>✔<span> --></td>
 <td>$workHtml</td>
 </tr>
@@ -194,6 +193,7 @@ END_unitsHtml;
 
         $unitsTableHtml = <<<END_unitsTable
 <table id=unitstab>
+<caption>$h1</caption>
 <col style="width:25%"><col><col>
 <tr id=unitstabhead><td>$T_Clilstore_unit</td><td>$T_What_I_have_learned</td><td>$T_Links_to_my_work</td></tr>
 $unitsHtml
@@ -273,15 +273,16 @@ EOD;
     <link rel="icon" type="image/png" href="/favicons/clilstore.png">
     <style>
         table#unitstab { border-collapse:collapse; border:2px solid grey; margin-bottom:0.5em; }
-        table#unitstab tr#unitstabhead { background-color:grey; color:white; font-weight:bold; }
+        table#unitstab tr#unitstabhead { background-color:grey; color:white; font-weight:bold; font-size:120% }
         table#unitstab tr#unitstabhead td { padding-left:0.7em; }
-        table#unitstab tr:nth-child(odd)  { background-color:#eef; }
+        table#unitstab tr:nth-child(odd)  { background-color:#f8f8ff; }
         table#unitstab tr:nth-child(even) { background-color:#fff; }
-        table#unitstab tr:nth-child(odd):hover  { background-color:#fe6; }
-        table#unitstab tr:nth-child(even):hover { background-color:#fe6; }
+        table#unitstab tr:nth-child(odd):hover  { background-color:#eff; }
+        table#unitstab tr:nth-child(even):hover { background-color:#eff; }
         table#unitstab tr.edit { background-color:#ffc; border:2px solid red; }
+        table#unitstab tr.edit { background-color:#ffb; }
         table#unitstab td { padding:0 4px; vertical-align:top; }
-        table#unitstab tr + tr > td { border-left:1px solid #aaa; border-top:1px solid #999; }
+        table#unitstab tr + tr > td { border-left:1px solid #aaa; border-top:1px solid #333; }
         table#unitstab tr      td .edit { display:none; }
         table#unitstab tr.edit td .edit { display:inline; }
         table#unitstab input { width:90%; min-width:20em; }

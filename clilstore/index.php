@@ -320,7 +320,7 @@ END_MYBUTTONSteach;
         }
         $userHtml = <<<END_USER2
 <div style="clear:both;float:left;margin:0.8em 0 1.8em 0;padding:2px 4px;background-color:#d8e9ff">
-<p style="margin:2px 3px">$T_Logged_in_as <b>$user</b>
+<p style="margin:2px 3px"><span title="$T_Logged_in_as $user" style="padding-right:1.5em"><img src="/favicons/duine.png"> <b>$user</b></span>
 <a href="logout.php" title="$T_Logout_from_Clilstore" class="mybutton" style="margin-right:5px">$T_Logout <img src="/icons-smo/logout.png" alt=""></a>
 <a href="options.php?user=$user" title="Change your Clilstore options or password" class="mybutton" style="margin-right:2.5em">$T_Options</a>
 $mybuttons

@@ -24,6 +24,7 @@
   $T_Edit_this_unit       = $T->h('Edit_this_unit');
   $T_Unit_info_title      = $T->h('Unit_info_title');
   $T_Open_vocabulary_list = $T->h('Open_vocabulary_list');
+  $T_Add_to_portfolio     = $T->h('Add_to_portfolio');
 
   try {
     if (!isset($_GET['id'])) { throw new SM_MDexception('No id parameter'); }
@@ -84,7 +85,7 @@
        $stmt->execute([':user'=>$user]);
        if ($row  = $stmt->fetch(PDO::FETCH_ASSOC)) {
            extract($row);
-           $portfolioHtml = "<li class=right><a href=portfolio.php?unit=$id target=pftab onClick=\"pfAddUnit('$id');\">P</a>";
+           $portfolioHtml = "<li class=right><a href=portfolio.php?unit=$id target=pftab  onClick=\"pfAddUnit('$id');\" title='$T_Add_to_portfolio'>P</a>";
        }
        $stmtGetLike  = $DbMultidict->prepare('SELECT likes FROM user_unit WHERE unit=:id AND user=:user');
        $stmtGetLikes = $DbMultidict->prepare('SELECT SUM(likes) FROM user_unit WHERE unit=:id');
