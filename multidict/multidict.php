@@ -238,7 +238,7 @@ POPUPHTML;
     }
     if ($sl=='ar') { $word = strtr($word, array(json_decode('"\u0640"')=>'')); }  //Remove tatweel characters from Arabic words
 
-    if (preg_match('|^\[(.*)\]$|',$word,$matches)) {  //$word is really a dictionary code, not a word
+    if (preg_match('|^\(\((.*)\)\)$|',$word,$matches)) {  //$word is really a dictionary code enclosed in double brackets ((..)), not a word
         $code    = $matches[1];
         $url     = str_replace('{code}',$code,$urlc);
         $pparams = '';

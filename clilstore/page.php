@@ -25,6 +25,9 @@
   $T_Unit_info_title      = $T->h('Unit_info_title');
   $T_Open_vocabulary_list = $T->h('Open_vocabulary_list');
   $T_Add_to_portfolio     = $T->h('Add_to_portfolio');
+$hl = $T->hl();
+error_log("\$hl=$hl");
+error_log("\$T_Add_to_portfolio=$T_Add_to_portfolio");
 
   try {
     if (!isset($_GET['id'])) { throw new SM_MDexception('No id parameter'); }
