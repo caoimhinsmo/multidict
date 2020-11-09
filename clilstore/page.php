@@ -17,6 +17,7 @@
   $T_total      = $T->h('total');
   $T_Unit_info  = $T->h('Unit_info');
   $T_Edit       = $T->h('Edit');
+  $T_Short_url  = $T->h('Short_url');
   $T_Error_in   = $T->j('Error_in');
   $T_totalj     = $T->j('total');
   $T_Voc_Click_to_enable  = $T->h('Voc_Click_to_enable');
@@ -280,7 +281,7 @@ $text
 
 </div>
 $navbar2
-<p style="clear:both;font-size:70%;margin:0;text-align:center">Short url:&nbsp;&nbsp; $serverhome/cs/$id</p>
+<p style="clear:both;font-size:70%;margin:0;text-align:center">$T_Short_url: &nbsp; <a data-nowordlink>$serverhome/cs/$id</a></p>
 </body>
 </html>
 EOD1;
