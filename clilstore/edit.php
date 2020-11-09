@@ -234,7 +234,7 @@
         $hlTiny = $hl0;
         $langdirTiny = $_SERVER['DOCUMENT_ROOT'] . '/tinymce/langs/';
         $hlTinyTra = ['af'=>'af_ZA', 'azj'=>'az', 'bg'=>'bg_BG', 'bn'=>'bn_BD', 'en'=>'en_GB', 'ekk'=>'et', 'pes'=>'fa',
-                     'fr'=>'fr_FR', 'he'=>'he_IL', 'hu'=>'hu_HU', 'kab'=>'kab', 'ka'=>'ka_GE', 'km'=>'km_KH', 'ko'=>'ko_KR',
+                     'fr'=>'fr_FR', 'he'=>'he_IL', 'hu'=>'hu_HU', 'it'=>'it_IT', 'kab'=>'kab', 'ka'=>'ka_GE', 'km'=>'km_KH', 'ko'=>'ko_KR',
                      'lvs'=>'lv', 'nb'=>'nb_NO', 'pt'=>'pt_PT', 'sv'=>'sv_SE', 'th'=>'th_TH', 'zh-Hans'=>'zh_CN', 'zh-Hant'=>'zh_TW'];
         if ( !file_exists("{$langdirTiny}{$hlTiny}.js") ) { $hlTiny = $hlTinyTra[$hlTiny] ?? $hlTiny; }
         $tinymceScript = <<<EODtinyMCE
