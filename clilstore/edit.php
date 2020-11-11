@@ -106,6 +106,8 @@
   $T_May_only_edit_own_units   = $T->h('May_only_edit_own_units');
   $T_You_have_Javascript_off   = $T->h('You_have_Javascript_off');
 
+  $editorsMessage = $tinymceScriptHead = $tinymceScriptBody  = '';
+
   $hl0 = $T->hl0();
   $mdNavbar = SM_mdNavbar::mdNavbar($T->domhan);
 
@@ -229,7 +231,7 @@
         $editorsMessage = strtr($T_editorsMessage, [ '{' => "<a href='$oldEditorLink'>", '}' => '</a>' ] );
         $editorsMessage = "<p style='margin:1em 0;color:green;font-size:80%'>$editorsMessage</p>";
 //      $tinymceCSS = '/clilstore/tinymce.css?bogus=' . time();  //Bogus parameter to thwart browser cache and ensure refresh while under development
-        $tinymceCSS = '/clilstore/tinymce.css';
+//        $tinymceCSS = '/clilstore/tinymce.css';
 
         $hlTiny = $hl0;
         $langdirTiny = $_SERVER['DOCUMENT_ROOT'] . '/tinymce/langs/';
@@ -237,36 +239,19 @@
                      'fr'=>'fr_FR', 'he'=>'he_IL', 'hu'=>'hu_HU', 'it'=>'it_IT', 'kab'=>'kab', 'ka'=>'ka_GE', 'km'=>'km_KH', 'ko'=>'ko_KR',
                      'lvs'=>'lv', 'nb'=>'nb_NO', 'pt'=>'pt_PT', 'sv'=>'sv_SE', 'th'=>'th_TH', 'zh-Hans'=>'zh_CN', 'zh-Hant'=>'zh_TW'];
         if ( !file_exists("{$langdirTiny}{$hlTiny}.js") ) { $hlTiny = $hlTinyTra[$hlTiny] ?? $hlTiny; }
-        $tinymceScript = <<<EODtinyMCE
-    <script src="/tinymce/tinymce.min.js"></script>
-    <script>
+        $tinymceScriptHead = <<<END_tinymceScriptHead
+<script src="https://cdn.tiny.cloud/1/dxnggerdund5rb10s6xi2iempu5ez5q17cceotkni6rx6b7e/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+END_tinymceScriptHead;
+        $tinymceScriptBody = <<<END_tinymceScriptBody
+  <script>
     tinymce.init({
-        selector: "textarea#text",
-        language: "$hlTiny",
-        entity_encoding: "raw",
-        plugins: [
-             "advlist autolink link image lists charmap preview hr anchor spellchecker",
-             "searchreplace wordcount visualblocks visualchars code fullscreen media nonbreaking",
-             "save table directionality emoticons template paste"
-       ],
-       content_css: "$tinymceCSS",
-       toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | print preview media fullpage | forecolor backcolor", 
-       style_formats: [
-            {title: 'Bold text', inline: 'b'},
-            {title: 'Red text', inline: 'span', styles: {color: '#ff0000'}},
-            {title: 'Red header', block: 'h1', styles: {color: '#ff0000'}},
-            {title: 'Example 1', inline: 'span', classes: 'example1'},
-            {title: 'Example 2', inline: 'span', classes: 'example2'},
-            {title: 'Table styles'},
-            {title: 'Table row 1', selector: 'tr', classes: 'tablerow1'}
-        ]
-     }); 
-    </script>
-EODtinyMCE;
-
-    } else {
-        $editorsMessage = '';
-        $tinymceScript  = '';
+      selector: 'textarea.tinymce',
+      plugins: 'advlist autolink lists link image charmap print preview hr anchor pagebreak',
+      language: "$hlTiny",
+      toolbar_mode: 'floating',
+    });
+  </script>
+END_tinymceScriptBody;
     }
 
     $DbMultidict = SM_DbMultidictPDO::singleton('rw');
@@ -871,17 +856,9 @@ EODfileInfoForm;
             xhr.send(formData);
         }
 
-/* example - Sgudal - delete
-    // Check the file type
-    if (!file.type.match('image.*')) {
-        statusP.innerHTML = 'The file selected is not an image.';
-        return;
-    }
-*/
-
     </script>
 
-$tinymceScript
+$tinymceScriptHead
 
 </head>
 <body onload="setLevel($level); medlenDisp($medtype); licenceChange('$licence'); permisChange(); $insistOnTitleJS">
@@ -908,7 +885,8 @@ $cloneHtml</div>
 </div>
 <div style="margin-top:6px">
 $T_Text <span class="info" style="padding-left:2em">$textAdvice</span><br>
-<textarea name="text" id="text" placeholder="$T_Text_placeholder" style="width:100%;height:400px">$text</textarea></div>
+<textarea name="text" id="text" class=tinymce placeholder="$T_Text_placeholder" style="width:100%;height:400px">$text</textarea></div>
+$tinymceScriptBody
 <fieldset style="margin:6px 0 0 0;border:1px solid green;padding:5px;corner-radius:5px">
 <legend>$T_Link_buttons</legend>
 <table id="editlinkbuts">
