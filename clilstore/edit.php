@@ -246,9 +246,11 @@ END_tinymceScriptHead;
   <script>
     tinymce.init({
       selector: 'textarea.tinymce',
-      plugins: 'advlist autolink lists link image charmap print preview hr anchor pagebreak',
+      plugins: [ 'advlist anchor autolink charmap code directionality emoticons fullscreen hr image imagetools',
+                 'link lists media nonbreaking paste print preview quickbars save searchreplace table visualblocks visualchars wordcount'
+      ],
       language: "$hlTiny",
-      toolbar_mode: 'floating',
+      toolbar_mode: 'floating'
     });
   </script>
 END_tinymceScriptBody;
