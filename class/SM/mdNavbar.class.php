@@ -19,7 +19,8 @@ class SM_mdNavbar {
             '----2'=>'',  //Very partial translations
           'cy'=>'Cymraeg',
           'de'=>'Deutsch',
-          'ru'=>'Русский');
+          'ru'=>'Русский',
+          'hi'=>'हिन्दी');
       return $hlArr;
   }
 
