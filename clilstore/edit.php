@@ -237,7 +237,7 @@
         $langdirTiny = $_SERVER['DOCUMENT_ROOT'] . '/tinymce/langs/';
         $hlTinyTra = ['af'=>'af_ZA', 'azj'=>'az', 'bg'=>'bg_BG', 'bn'=>'bn_BD', 'en'=>'en_GB', 'ekk'=>'et', 'pes'=>'fa',
                      'fr'=>'fr_FR', 'he'=>'he_IL', 'hu'=>'hu_HU', 'it'=>'it_IT', 'kab'=>'kab', 'ka'=>'ka_GE', 'km'=>'km_KH', 'ko'=>'ko_KR',
-                     'lvs'=>'lv', 'nb'=>'nb_NO', 'pt'=>'pt_PT', 'sv'=>'sv_SE', 'th'=>'th_TH', 'zh-Hans'=>'zh_CN', 'zh-Hant'=>'zh_TW'];
+                     'lvs'=>'lv', 'nb'=>'nb_NO', 'pt'=>'pt_PT', 'sh'=>'hr', 'sv'=>'sv_SE', 'th'=>'th_TH', 'zh-Hans'=>'zh_CN', 'zh-Hant'=>'zh_TW'];
         if ( !file_exists("{$langdirTiny}{$hlTiny}.js") ) { $hlTiny = $hlTinyTra[$hlTiny] ?? $hlTiny; }
         $tinymceScriptHead = <<<END_tinymceScriptHead
 <script src="https://cdn.tiny.cloud/1/dxnggerdund5rb10s6xi2iempu5ez5q17cceotkni6rx6b7e/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
@@ -246,7 +246,7 @@ END_tinymceScriptHead;
   <script>
     tinymce.init({
       selector: 'textarea.tinymce',
-      plugins: [ 'advlist anchor autolink charmap code directionality emoticons fullscreen hr image imagetools',
+      plugins: [ 'advlist anchor autolink autoresize charmap code directionality emoticons fullscreen help hr image imagetools',
                  'link lists media nonbreaking paste print preview quickbars save searchreplace table visualblocks visualchars wordcount'
       ],
       language: "$hlTiny",

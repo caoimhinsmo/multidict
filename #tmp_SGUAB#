@@ -1,0 +1,46 @@
+D X  T  advlist
+D X  T  anchor
+D X  T  autolink
+     T? autoresize --This changes things a lot.  No more scroll within scroll. Good or not good?
+
+
+          autosave
+     -      bbcode
+D X  T  charmap
+  X  T  code
+          codesample
+          contextmenu
+
+
+  X  T  directionality
+  X  T  emoticons
+     -      fullpage
+  X  T  fullscreen
+     T? help  --Displays keyboard shortcuts. Is this helpful?
+D X  T  hr
+D X  T  image
+     T  imagetools
+     -    importcss  --Not for now. Very useful for later?
+     -      insertdatetime
+     -      legacyoutput
+D X  T  link
+D X  T  lists
+  X  T  media
+  X  T  nonbreaking
+     -      noneditable
+D    -      pagebreak
+  X  T  paste
+D X  T  preview
+D    T  print
+     T  quickbars
+  X  -      save
+  X  T  searchreplace
+  X  -      spellchecker
+     -      tabfocus
+  X  T  table
+  X  -      template
+     -      textpattern
+     -      toc
+  X  T  visualblocks
+  X  T  visualchars
+  X  T  wordcount
