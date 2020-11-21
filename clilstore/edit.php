@@ -246,11 +246,12 @@ END_tinymceScriptHead;
   <script>
     tinymce.init({
       selector: 'textarea.tinymce',
-      plugins: [ 'advlist anchor autolink autoresize charmap code directionality emoticons fullscreen help hr image imagetools',
+      plugins: [ 'advlist anchor autolink autoresize autosave charmap code directionality emoticons fullscreen help hr image imagetools',
                  'link lists media nonbreaking paste print preview quickbars save searchreplace table visualblocks visualchars wordcount'
       ],
-      language: "$hlTiny",
-      toolbar_mode: 'floating'
+      toolbar: 'undo redo | styleselect | bold italic forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | print preview media fullpage',
+      max_height: '100em',
+      language: "$hlTiny"
     });
   </script>
 END_tinymceScriptBody;
