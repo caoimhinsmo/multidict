@@ -22,6 +22,9 @@
   $T_Promote        = $T->h('Promote');
   $T_Move_up        = $T->h('Move_up');
   $T_Move_down      = $T->h('Move_down');
+  $T_Edit_this_item = $T->h('Edit_this_item');
+  $T_Add_an_item    = $T->h('Add_an_item');
+  $T_Work           = $T->h('Work');
   $T_Error_in       = $T->j('Error_in');
   $T_Is_this_OK     = $T->j('Is_this_OK');
 
@@ -90,7 +93,7 @@
         $itemEditHtml = "<span class=upArrow title='$T_Move_up' onClick=moveItem(this,'up')>⇧</span>"
                       . "<span class=downArrow title='$T_Move_down' onClick=moveItem(this,'down')>⇩</span> "
                       . "<img src='/icons-smo/curAs.png' alt='Delete' title='$T_Delete_this_item' onClick='itemDelete(this)'>";
-        $LitemEditHtml = "<img src='/icons-smo/peann.png' class=editIcon alt='Edit' title='Edit this item' onClick='LitemEdit(this)'>"
+        $LitemEditHtml = "<img src='/icons-smo/peann.png' class=editIcon alt='Edit' title='$T_Edit_this_item' onClick='LitemEdit(this)'>"
                        . "<img src='/icons-smo/floppydisk.png' class=saveIcon alt='Save' title='Save your edits' onClick='LitemSave(this)'> "
                        . $itemEditHtml;
         $itemEditHtml  = "<span class=edit>$itemEditHtml</span>";
@@ -153,7 +156,7 @@ END_unitsTableHtml;
                 extract ($pfuLRow);
                 $learnedHtml .= "<li id=pfuL$pfuL><span id=pfuLtext$pfuL onKeypress='keypress(event,this)'>$learned</span> $LitemEditHtml\n";
             }
-            if ($edit) { $newLearnedItem = "<input id=pfuLnew$pfu class=edit placeholder='Add an item' onChange=\"pfuLadd('$pfu')\">"; }
+            if ($edit) { $newLearnedItem = "<input id=pfuLnew$pfu class=edit placeholder='$T_Add_an_item' onChange=\"pfuLadd('$pfu')\">"; }
             $learnedHtml = <<<END_learnedHtml
 <ul id=pfuLul$pfu>
 $learnedHtml
@@ -168,7 +171,7 @@ END_learnedHtml;
                 $workHtml .= "<li id=pfuW$pfuW><a href='$workurl'>$work</a> $itemEditHtml\n";
             }
             if ($edit) {
-                $newWorkItem = "<input placeholder='Work' id=pfuWnewWork$pfu><br><input placeholder='URL' id=pfuWnewURL$pfu>";
+                $newWorkItem = "<input placeholder='$T_Work' id=pfuWnewWork$pfu><br><input placeholder='URL' id=pfuWnewURL$pfu>";
                 $newWorkItem = "<span class=edit onChange=\"pfuWadd('$pfu')\">$newWorkItem</span>";
             }
             $workHtml = <<<END_workHtml
