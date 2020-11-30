@@ -100,7 +100,10 @@ EOD1;
         $stmtUser = $DbMultidict->prepare('SELECT user FROM users WHERE user=:user');
         $stmtUser->bindParam(':user',$user);
 
-        if (empty($fullname) || strlen($fullname)<8) {
+        if ( $user <> strtr($user,'^!£$%^&"*()=+{}[]\\/|:;\'@~#<>,?',
+                                  '________________________________') ) {
+            $errorMessage = 'This username contains banned punctuation characters';
+        } elseif (empty($fullname) || strlen($fullname)<8) {
             $errorMessage = 'You have not given your full name';
         } elseif (empty($email)) {
             $errorMessage = 'You have not given your e-mail address';
@@ -147,7 +150,7 @@ ENDsuccess;
 <div style="color:red">$errorMessage</div>
 <form method="POST">
 <table id=formTable style="margin-bottom:2em">
-<tr><td>$T_UserID</td><td><input name="user" value="$userSC" required pattern=".{3,16}" autofocus placeholder="$T_Choose_unique_userid" style="width:16em"> <span class="info">$T_UserID_advice</span></td></tr>
+<tr><td>$T_UserID</td><td><input name="user" value="$userSC" required pattern="[^!£$%^&amp;&quot;*()=+{}\[\]\\\/|:;'@~#<>,?]{3,16}" autofocus placeholder="$T_Choose_unique_userid" style="width:16em"> <span class="info">$T_UserID_advice</span></td></tr>
 <tr><td>$T_Fullname</td><td><input name="fullname" value="$fullnameSC" required pattern=".{8,}"   style="width:22em"> <span class="info">$T_Fullname_advice</span></td></tr>
 <tr><td>$T_Email</td><td><input type="email" name="email" value="$emailSC" style="width:22em"> <span class="info">$T_Email_advice</span></td></tr>
 <tr><td>$T_Password</td><td><input type="password" name="password"  value="$passwordSC"  required pattern=".{8,}"> <span class="info">$T_Password_advice</span></td></tr>
