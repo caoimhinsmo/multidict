@@ -139,7 +139,7 @@
 
     $mdNavbar = SM_mdNavbar::mdNavbar($T->domhan);
 
-    $dataLists = $hiddenFiltersWarning = $tableHtml = $cookieMessage = $avgRow = $totRow = $portfoliosButton = '';
+    $dataLists = $hiddenFiltersWarning = $tableHtml = $cookieMessage = $avgRow = $totRow = $portfoliosButton = $tabletopChoices = '';
     $limitUnits = $limitInfo = FALSE;
 
     if (!isset($_COOKIE['csSessionId'])) $cookieMessage = <<<EOD_cookieMessage
@@ -215,10 +215,9 @@ EOD_cookieMessage;
         }
     }
 
-    $tabletopChoices = '';
-    $photo = ( $mode<2 ? 'StudentsBoard.png' : 'TeacherBoard.png' );
+    $studTeachGraphic = ( $mode<2 ? 'StudentsBoard.png' : 'TeacherBoard.png' );
     $newMode = ($mode+2)%4;
-    $photo = "<a href='/clilstore/?mode=$newMode'><img src='/clilstore/$photo' style='float:left;padding-right:25px' alt=''></a>";
+    $studTeachGraphic = "<a href='/clilstore/?mode=$newMode'><img src='/clilstore/$studTeachGraphic' alt=''></a>";
 
     $hiddenFilters = $csSess->hiddenFilters($mode);
     if ($hiddenFilters) {
@@ -260,7 +259,7 @@ CHECKBOXES2;
         if ($mode<=1) { $loginReason = $loginReasonStudent; }
           else        { $loginReason = $loginReasonTeacher; }
         $userHtml = <<<END_USER1
-<p style="clear:both;padding:1em 0"><a href="login.php" class=mybutton>$T_Login</a> $T_or <a href="register.php">$T_register</a> $loginReason.</p>
+<p style="line-height:1.5em"><a href="login.php" class=mybutton>$T_Login</a> $T_or <a href="register.php">$T_register</a><br>&nbsp;$loginReason.</p>
 END_USER1;
     } else {
         $stmtIncUnit = $DbMultidict->prepare('SELECT id AS incUnit, created AS incCreated FROM clilstore WHERE test=2 and owner=:user'); //Check whether the user has any incomplete units
@@ -299,37 +298,36 @@ END_USER1;
             $createButton = '';
         } else {
             $incUnitMessage = '';
-            $createButton = "<a href='edit.php?id=0' class=mybutton style='margin-right:2px'>$T_Create_a_unit</a>";
+            $createButton = "<a href='edit.php?id=0' class=mybutton>$T_Create_a_unit</a>";
         }
         if ($mode<=1) {
             $mybuttons = <<<END_MYBUTTONSstud
-<a href="voc.php?user=$user" class="mybutton" style="margin-left:0;margin-right:1px" title="$T_My_vocabulary">$T_Vocabulary</a>
+<a href="voc.php?user=$user" class="mybutton" title="$T_My_vocabulary">$T_Vocabulary</a><br>
 <a href="portfolio.php" class="mybutton">$T_Portfolio</a>
 END_MYBUTTONSstud;
         } else {
             $stmtPfs = $DbMultidict->prepare('SELECT pf FROM cspfPermit WHERE teacher=:teacher');
             $stmtPfs->execute([':teacher'=>$user]);
             if ($stmtPfs->fetch()) {
-                $portfoliosButton = "<a href='portfolios.php?teacher=$user' class=mybutton style='margin-left:2em'>$T_Portfolios</a>";
+                $portfoliosButton = "<a href='portfolios.php?teacher=$user' class=mybutton>$T_Portfolios</a>";
             }
             $mybuttons = <<<END_MYBUTTONSteach
-<a href="./?owner=$user" class="mybutton" style="margin-left:0;margin-right:1px">$T_My_units</a>
-$createButton
+<a href="./?owner=$user" class="mybutton">$T_My_units</a><br>
+$createButton<br>
 $portfoliosButton
 END_MYBUTTONSteach;
         }
         $userHtml = <<<END_USER2
-<div style="clear:both;float:left;margin:0.8em 0 1.8em 0;padding:2px 4px;background-color:#d8e9ff">
-<p style="margin:2px 3px"><span title="$T_Logged_in_as $user" style="padding-right:1.5em"><img src="/favicons/duine.png"> <b>$user</b></span>
-<a href="logout.php" title="$T_Logout_from_Clilstore" class="mybutton" style="margin-right:5px">$T_Logout <img src="/icons-smo/logout.png" alt=""></a>
-<a href="options.php?user=$user" title="Change your Clilstore options or password" class="mybutton" style="margin-right:2.5em">$T_Options</a>
-$mybuttons
+<div style="padding:2px 4px;border:1px solid grey;background-color:#eee">
+<p class=userHtml style="margin:2px 3px;line-height:1.7em"><span title="$T_Logged_in_as $user" style="padding-right:1.5em"><img src="/favicons/duine.png"> <b>$user</b></span><br>
+<a href="options.php?user=$user" title="Change your Clilstore options or password" class="mybutton"">$T_Options</a><br>
+$mybuttons<br>
+<a href="logout.php" title="$T_Logout_from_Clilstore" class="mybutton logout">$T_Logout <img src="/icons-smo/logout.png" alt=""></a>
 </p>
 $incUnitMessage
 </div><br style="clear:both">
 END_USER2;
     }
-    if ($mode<=1) { $userHtml .= "<p style='clear:both'>$T_Select_lang_level</p>"; }
 
     function wildChars (&$s,&$sVis,$con) {
      //Standardises wildcard characters to SQL format (% and _), removing duplicates
@@ -592,6 +590,7 @@ END_USER2;
     if ($mode==0) {
         $levelButHtml = $csSess->levelButHtml();
         $tabletopChoices = <<<ENDtabletopChoices
+<p style='clear:both'>$T_Select_lang_level</p>
 <form id="selectForm" method="post" style="margin:1em 0 0.5em 0">
 $T_Language <select name="sl" style="background-color:$slSelectColor" onchange="document.getElementById('selectForm').submit();">
 $slOptionsHtml
@@ -1061,6 +1060,8 @@ $tableStyles
         span.fann { color:grey; font-size:65%; }
         a.hiddenFilterField { padding:0 6px; background-color:yellow; border:1px solid black; border-radius:4px; }
         a.hiddenFilterField:hover { background-color:blue; color:yellow; }
+        p.userHtml a.mybutton { margin-left:1.5em; }
+        p.userHtml a.mybutton.logout { margin-left:0; color:#feb; }
     </style>
     <script>
         function submitFForm () {
@@ -1122,8 +1123,10 @@ $cookieMessage
 
 <div style="width:100%;min-height:1px;clear:both">
 
-$photo
-<form id="modeForm" method="get" style="padding:10px 0">
+<table tyle='border-collapse:collapse'><tr style='vertical-align:top'>
+<td style='text-align:center;padding:0 4em 1em 0'>
+$studTeachGraphic<br>
+<form id="modeForm" method="get">
 <select name="mode" style="background-color:white" onchange="document.getElementById('modeForm').submit();">
 <option $modeSselected value="$modeS" title="$T_For_students_info">$T_For_students</option>
 <option $modeTselected value="$modeT" title="$T_For_teachers_info">$T_For_teachers</option>
@@ -1132,10 +1135,13 @@ $photo
 <label class=toggle-switchy for=wide data-size=xs title="include more columns" onChange="toggleWide('$mode')">
   <input type=checkbox name=wide id=wide form=filterForm $wideChecked>
   <span class=toggle><span class=switch></span></span>
-  <span class=label>$T_More_options</span>
+  <span class=label style='font-size:80%'>$T_More_options</span>
 </label>
-
+</td>
+<td>
 $userHtml
+</td>
+</table>
 
 $tabletopChoices
 $dataLists

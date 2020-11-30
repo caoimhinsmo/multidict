@@ -205,7 +205,6 @@ $errorMessage
 $successMessage
 
 <p style="margin:1.7em 0">
-<a class="button" href="voc.php?user=$user" style="margin:1em 3em 1em 6em" title="$T_My_vocabulary">{$T_Vocabulary}…</a>
 <a class="button" href="changePassword.php?user=$user">{$T_Change_password}…</a>
 </p>
 
