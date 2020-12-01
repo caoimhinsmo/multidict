@@ -318,14 +318,14 @@ $portfoliosButton
 END_MYBUTTONSteach;
         }
         $userHtml = <<<END_USER2
-<div style="padding:2px 4px;border:1px solid grey;background-color:#eee">
+<div style="margin-bottom:0.3em;padding:2px 4px;border:2px solid #55a8eb;background-color:#eef">
 <p class=userHtml style="margin:2px 3px;line-height:1.7em"><span title="$T_Logged_in_as $user" style="padding-right:1.5em"><img src="/favicons/duine.png"> <b>$user</b></span><br>
 <a href="options.php?user=$user" title="Change your Clilstore options or password" class="mybutton"">$T_Options</a><br>
 $mybuttons<br>
 <a href="logout.php" title="$T_Logout_from_Clilstore" class="mybutton logout">$T_Logout <img src="/icons-smo/logout.png" alt=""></a>
 </p>
 $incUnitMessage
-</div><br style="clear:both">
+</div>
 END_USER2;
     }
 
@@ -1123,7 +1123,7 @@ $cookieMessage
 
 <div style="width:100%;min-height:1px;clear:both">
 
-<table tyle='border-collapse:collapse'><tr style='vertical-align:top'>
+<table style='border-collapse:collapse'><tr style='vertical-align:top'>
 <td style='text-align:center;padding:0 4em 1em 0'>
 $studTeachGraphic<br>
 <form id="modeForm" method="get">
