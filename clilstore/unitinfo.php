@@ -11,9 +11,27 @@
       $myCLIL->toradh = $e->getMessage();
   }
 
+  $T = new SM_T('clilstore/unitinfo');
+
+  $T_Language  = $T->h('Language');
+  $T_Title     = $T->h('Title');
+  $T_Owner     = $T->h('csCol_owner');
+  $T_Short_url = $T->h('Short_url');
+  $T_Summary   = $T->h('Summary');
+  $T_Level     = $T->h('Level_title');
+  $T_Media     = $T->h('csCol_medtype');
+  $T_Created   = $T->h('csCol_created');
+  $T_Changed   = $T->h('csCol_changed');
+  $T_Licence   = $T->h('csCol_licence');
+  $T_Language_notes = $T->h('Language_notes');
+  $T_Word_count     = $T->h('Word_count');
+  $T_Parameter_p_a_dhith = $T->h('Parameter_p_a_dhith');
+
+  $id = $_REQUEST['id'] ?? NULL;
+  $mdNavbar = SM_mdNavbar::mdNavbar($T->domhan,$id);
+
   try {
-    if (!isset($_REQUEST['id'])) { throw new SM_MDexception('No id parameter'); }
-    $id = $_REQUEST['id'];
+    if (is_null($id))     { throw new SM_MDexception(sprintf($T_Parameter_p_a_dhith,'id')); }
     if (!is_numeric($id)) { throw new SM_MDexception('id parameter is not numeric'); }
 
     $abuseParams = $ownerHtml = $offerMess = $errorMessage = '';
@@ -54,8 +72,8 @@
     $stmt->execute();
     if (!($r = $stmt->fetch(PDO::FETCH_ASSOC))) { throw new SM_MDexception("No unit exists for id=$id"); }
     extract($r);
+    $licenceLC = strtolower($licence);
     $tl = ( $sl=='en' ? 'es' : 'en'); //airson Google Translate
-
     $summary   = htmlspecialchars($summary);
     $langnotes = htmlspecialchars($langnotes);
     $words = ( isset($words) ? $words : '');
@@ -79,13 +97,6 @@
     if      ($medtype==0) { $mediaHtml = 'none'; }
      elseif ($medtype==1) { $mediaHtml = "<img src=\"audio.png\" alt=\"audio\"> ($medlenStr)"; }
      elseif ($medtype==2) { $mediaHtml = "<img src=\"video.png\" alt=\"video\"> ($medlenStr)"; }
-
-    $linkbuttons = <<<EOBUT
-<ul class="linkbuts">
-<li><a href="./" class="nowordlink" target="_top" title="Clilstore index">Clilstore</a></li>
-<li><a href="/cs/$id" title="Back to Unit $id">Unit $id</a></li>
-</ul>
-EOBUT;
 
     $stmtLikeUsers = $DbMultidict->prepare('SELECT user FROM user_unit WHERE unit=:id AND likes>0 ORDER BY user');
     $stmtLikeUsers->execute([':id'=>$id]);
@@ -149,9 +160,8 @@ EODowner;
     <style>
         div.body-indent { clear:both; margin:0 0.25%; padding:0 0.25% 6px 0.25%; border-top:1px solid white; }
         table#priomh    { border-collapse:collapse; }
-        table#priomh td { padding:7px 4px; }
-        table#priomh td:first-child { white-space:nowrap; }
-        table#priomh td:first-child { text-align:right; font-weight:bold; }
+        table#priomh td { padding:7px 4px; vertical-align:top; }
+        table#priomh td:first-child { white-space:nowrap; text-align:right; font-weight:bold; }
         form { display:inline; }
         fieldset#transfer { margin-top:1.5em; border:2px solid #61abec; border-radius:6px; padding:6px; margin-bottom:2em; }
         fieldset#transfer legend { border:2px solid #61abec; border-radius:4px; padding:1px 4px; background-color:#eef; color:#55a8eb; font-weight:bold; }
@@ -161,7 +171,7 @@ EODowner;
 
 </head>
 <body>
-$linkbuttons
+$mdNavbar
 <div class="body-indent">
 
 $errorMessage
@@ -169,18 +179,18 @@ $errorMessage
 <h1 style="font-size:130%">Details for Clilstore unit $id</h1>
 
 <table id="priomh">
-<tr><td>Title:</td><td style="font-weight:bold;font-size:130%">$title</td></tr>
-<tr><td>Owner:</td><td><a href="./userinfo.php?user=$owner" title="$fullname">$owner</a></td></tr>
-<tr><td>Short&nbsp;URL:</td><td><a href="/cs/$id">$serverhome/cs/$id</a>
-<tr><td style="vertical-align:top">Summary:</td><td>$summary</td></tr>
-<tr><td style="vertical-align:top">Language notes:</td><td>$langnotes</td></tr>
-<tr><td>Language:</td><td><a href="./?sl=$sl">$sl</a></td></tr>
-<tr><td>Level:</td><td><a href="./?sl=$sl&amp;levelMin=$cefr&amp;levelMax=$cefr">$cefr</a> <span style="color:grey;font-size:70%;padding-left:1em">($level)</span></td></tr>
-<tr><td>Word count:</td><td>$words</td></tr>
-<tr><td>Media:</td><td>$mediaHtml</td></tr>
-<tr><td>Created:</td><td>$createdDateTime UT</td></tr>
-<tr><td>Changed:</td><td>$changedDateTime UT</td></tr>
-<tr><td>Licence:</td><td>Creative Commons $licence</td></tr>
+<tr><td>$T_Title:</td><td style="font-weight:bold;font-size:130%">$title</td></tr>
+<tr><td>$T_Owner:</td><td><a href="./userinfo.php?user=$owner" title="$fullname">$owner</a></td></tr>
+<tr><td>$T_Short_url:</td><td><a href="/cs/$id">$serverhome/cs/$id</a>
+<tr><td style="vertical-align:top">$T_Summary:</td><td>$summary</td></tr>
+<tr><td style="vertical-align:top">$T_Language_notes:</td><td>$langnotes</td></tr>
+<tr><td>$T_Language:</td><td><a href="./?sl=$sl">$sl</a></td></tr>
+<tr><td>$T_Level:</td><td><a href="./?sl=$sl&amp;levelMin=$cefr&amp;levelMax=$cefr">$cefr</a> <span style="color:grey;font-size:70%;padding-left:1em">($level)</span></td></tr>
+<tr><td>$T_Word_count:</td><td>$words</td></tr>
+<tr><td>$T_Media:</td><td>$mediaHtml</td></tr>
+<tr><td>$T_Created:</td><td>$createdDateTime UT</td></tr>
+<tr><td>$T_Changed:</td><td>$changedDateTime UT</td></tr>
+<tr><td style="vertical-align:bottom">$T_Licence:</td><td><a href="https://creativecommons.org/licenses/$licenceLC/4.0/">Creative Commons $licence</a> <img src="/icons-smo/CC-$licence.png" alt=""></td></tr>
 <tr><td>Views:</td><td>$views</td></tr>
 <tr><td>Clicks on words:</td><td>$clicks$clicksMessage - <a href='unitwordclicks.php?id=$id'>List of clicked words</a></td></tr>
 <tr><td>Likes:</td><td $likeUsersTitle>$likes</td</tr>
@@ -196,7 +206,7 @@ $ownerHtml
 <a href="http://www.languages.dk/abuse.php?subject=$serverhome/cs/$id$abuseParams" id="abuse">Report abuse</a> Tell us if you think this unit contains copyright or inappropriate material and should be removed</p>
 
 </div>
-$linkbuttons
+$mdNavbar
 </body>
 </html>
 EOD1;

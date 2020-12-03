@@ -109,7 +109,8 @@
   $editorsMessage = $tinymceScriptHead = $tinymceScriptBody  = '';
 
   $hl0 = $T->hl0();
-  $mdNavbar = SM_mdNavbar::mdNavbar($T->domhan);
+  $id = $_REQUEST['id'] ?? NULL;
+  $mdNavbar = SM_mdNavbar::mdNavbar($T->domhan,$id);
 
   $T_I_am_the_author     = strtr( $T_I_am_the_author,     [ '['=>'<i>', ']'=>'</i>' ] );
   $T_I_agree_to_copyleft = strtr( $T_I_agree_to_copyleft, [ '['=>'<i>', ']'=>'</i>', '{'=>'<a href=copyleftPolicy.php>', '}'=>'</a>' ] );
@@ -218,7 +219,6 @@
     $myCLIL->dearbhaich();
     $user = $myCLIL->id;
     if (!isset($_REQUEST['id'])) { throw new SM_MDexception(sprintf($T_Parameter_p_a_dhith,'id')); }
-    $id = $_REQUEST['id'];
     $insistOnTitleJS = ( empty($id) ? 'insistOnTitle();' : '' );
 
     $servername = SM_myCLIL::servername();
