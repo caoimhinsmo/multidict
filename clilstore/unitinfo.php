@@ -68,8 +68,7 @@
     $query = 'SELECT sl,level,owner,medtype,medlen,title,summary,langnotes,words,created,changed,licence,views,clicks,likes,offer,offerTime,fullname'
             .' FROM clilstore, users WHERE id=:id AND clilstore.owner=users.user';
     $stmt = $DbMultidict->prepare($query);
-    $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-    $stmt->execute();
+    $stmt->execute([':id'=>$id]);
     if (!($r = $stmt->fetch(PDO::FETCH_ASSOC))) { throw new SM_MDexception("No unit exists for id=$id"); }
     extract($r);
     $licenceLC = strtolower($licence);
