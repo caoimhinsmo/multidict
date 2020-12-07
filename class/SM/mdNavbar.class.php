@@ -65,7 +65,7 @@ class SM_mdNavbar {
         { $trPutan = "\n<li class=deas><a href='//www3.smo.uhi.ac.uk/teanga/smotr/tr.php?domhan=$domhan' target='tr' title='$T_tr_fios'>tr</a>"; } else { $trPutan = ''; }
       $ceangalRiMoSMO = ( isset($myCLIL->id)
                         ? "<li class='deas'><a href='/clilstore/logout.php' title='$T_Log_dheth_fios'>$T_Logout</a></li>"
-                        : "<li class='deas'><a href='/clilstore/login.php?till_gu=/' title='$T_Log_air_fios'>$T_Log_air</a></li>"
+                        : "<li class='deas'><a href='/clilstore/login.php' title='$T_Log_air_fios'>$T_Log_air</a></li>"
                         );
       $hlArr = self::hlArr();
       $options = '';

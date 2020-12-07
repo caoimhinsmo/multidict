@@ -30,6 +30,12 @@
     $successMessage = $refreshHeader = $formHtml = '';
     $userAsTyped = $passwordAsTyped = $userAutofocus = $passwordAutofocus = '';
 
+    if      (!empty($_REQUEST['returnTo']))    { $refreshURL = $_REQUEST['returnTo'];
+                                                   if (substr($refreshURL,0,4)<>'http') { $refreshURL = $serverhome . $refreshURL; }
+                                               }
+     elseif (!empty($_SERVER['HTTP_REFERER'])) { $refreshURL = $_SERVER['HTTP_REFERER']; }
+     else                                      { $refreshURL = "$serverhome/clilstore"; }
+
     if (!empty($csSess->getCsSession()->user)) { $userAsTyped = $csSess->getCsSession()->user; }
     if (!empty($_REQUEST['user'])) {
         $userAsTyped     = trim($_REQUEST['user']);
@@ -67,7 +73,7 @@
 <p style="margin-left:1em">⇨ $T_Go_to <a href="./" style="font-weight:bold">Clilstore</a></p>
 ENDsuccess;
             $formRequired = FALSE;
-            $refreshHeader =  "<meta http-equiv=\"refresh\" content=\"1; url=$serverhome/clilstore/\">";
+            $refreshHeader =  "<meta http-equiv=refresh content='1; url=$refreshURL'>";
         } elseif (!isset($_GET['user'])) {
             $successMessage = <<<ENDfailure
 <p style="color:red">$T_Userid_or_pw_incorrect</p>
@@ -80,7 +86,7 @@ ENDfailure;
         $passwordSC = htmlspecialchars($passwordAsTyped);
         if (empty($userSC)) { $userAutofocus = 'autofocus'; } else { $passwordAutofocus = 'autofocus'; }
         $formHtml = <<<ENDform
-<form method="POST">
+<form method="POST" action="/clilstore/login.php?returnTo=$refreshURL">
 <table id=formTable>
 <tr><td>$T_Email / $T_UserID </td><td><input name="user" value="$userSC" required $userAutofocus>
 <tr><td>$T_Password</td><td><input type="password" name="password" value="$passwordSC" required $passwordAutofocus></td></tr>
