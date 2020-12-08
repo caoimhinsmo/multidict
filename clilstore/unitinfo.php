@@ -23,12 +23,21 @@
   $T_Created   = $T->h('csCol_created');
   $T_Changed   = $T->h('csCol_changed');
   $T_Licence   = $T->h('csCol_licence');
-  $T_Language_notes = $T->h('Language_notes');
-  $T_Word_count     = $T->h('Word_count');
-  $T_Parameter_p_a_dhith = $T->h('Parameter_p_a_dhith');
+  $T_Views     = $T->h('csCol_views');
+  $T_Likes     = $T->h('csCol_likes');
+  $T_since_    = $T->h('since_'); 
+  $T_Language_notes  = $T->h('Language_notes');
+  $T_Word_count      = $T->h('Word_count');
+  $T_Clicks_on_words = $T->h('Clicks_on_words');
+  $T_List_of_clicked_words = $T->h('List_of_clicked_words');
+  $T_Parameter_p_a_dhith   = $T->h('Parameter_p_a_dhith');
+  $T_Raw_unit_unwordlinked = $T->h('Raw_unit_unwordlinked');
+  $T_Google_translated     = $T->h('Google_translated');
+  $T_Ownership_transfer    = $T->h('Ownership_transfer');
 
   $id = $_REQUEST['id'] ?? NULL;
   $mdNavbar = SM_mdNavbar::mdNavbar($T->domhan,$id);
+  $T_Raw_unit_unwordlinked = strtr($T_Raw_unit_unwordlinked,[ '{'=>"<a href=/clilstore/page.php?id=$id>", '}'=>'</a>', '('=>'<i>(', ')'=>')</i>' ]);
 
   try {
     if (is_null($id))     { throw new SM_MDexception(sprintf($T_Parameter_p_a_dhith,'id')); }
@@ -76,7 +85,7 @@
     $summary   = htmlspecialchars($summary);
     $langnotes = htmlspecialchars($langnotes);
     $words = ( isset($words) ? $words : '');
-    $clicksMessage = ( $created>1395188407 ? '' : ' <span style="color:grey;font-size:80%">(since 2014-03-18)</span>' ) ;
+    $clicksMessage = ( $created>1395188407 ? '' : ' <span style="color:grey;font-size:80%">(' . sprintf($T_since_,'2014-03-18') . ')</span>' ) ;
 
     if      ($level<0)  { $cefr = '';   }
      elseif ($level<10) { $cefr = 'A1'; }
@@ -142,7 +151,7 @@
         $offerMess .= "<form action=\"unitinfo.php?id=$id\" method=\"post\">\n"
                     . '<input name="offer" list="userList" placeholder="Clilstore user id"> <input type="submit" name="offerSubmit" value="Offer"></form>'."\n";
         $ownerHtml = <<<EODowner
-<fieldset id="transfer"><legend>Ownership transfer</legend>$offerMess</fieldset>
+<fieldset id="transfer"><legend>$T_Ownership_transfer</legend>$offerMess</fieldset>
 EODowner;
     }
 
@@ -189,14 +198,14 @@ $errorMessage
 <tr><td>$T_Media:</td><td>$mediaHtml</td></tr>
 <tr><td>$T_Created:</td><td>$createdDateTime UT</td></tr>
 <tr><td>$T_Changed:</td><td>$changedDateTime UT</td></tr>
-<tr><td style="vertical-align:bottom">$T_Licence:</td><td><a href="https://creativecommons.org/licenses/$licenceLC/4.0/">Creative Commons $licence</a> <img src="/icons-smo/CC-$licence.png" alt=""></td></tr>
-<tr><td>Views:</td><td>$views</td></tr>
-<tr><td>Clicks on words:</td><td>$clicks$clicksMessage - <a href='unitwordclicks.php?id=$id'>List of clicked words</a></td></tr>
-<tr><td>Likes:</td><td $likeUsersTitle>$likes</td</tr>
+<tr><td style="vertical-align:bottom">$T_Licence:</td><td><a href="https://creativecommons.org/licenses/$licenceLC/4.0/"><img src="/icons-smo/CC-$licence.png" alt=""> Creative Commons $licence</a></td></tr>
+<tr><td>$T_Views:</td><td>$views</td></tr>
+<tr><td>$T_Clicks_on_words:</td><td>$clicks$clicksMessage - <a href='unitwordclicks.php?id=$id'>$T_List_of_clicked_words</a></td></tr>
+<tr><td>$T_Likes:</td><td $likeUsersTitle>$likes</td</tr>
 </table>
 
-<p><a href="page.php?id=$id">Raw unit</a> <i>(unwordlinked)</i>
-⇒ <a href="http://translate.google.com/translate?sl=$sl&amp;tl=$tl&amp;u=$serverhome/clilstore/page.php%3Fid=$id">Google translated</a>
+<p>$T_Raw_unit_unwordlinked
+⇒ <a href="http://translate.google.com/translate?sl=$sl&amp;tl=$tl&amp;u=$serverhome/clilstore/page.php%3Fid=$id">$T_Google_translated</a>
 </p>
 
 $ownerHtml
