@@ -160,7 +160,6 @@ $T_The_unit_is_on_offer_
 <span class="info" style="padding-left:2em">$T_User_can_accept_</span><br><br>
 END_offerMess;
             } else {
-//                $T_The_unit_was_on_offer = strtr($T_The_unit_was_on_offer, ['{userid}' => 'CHAIDH']);
                 $T_The_unit_was_on_offer = strtr($T_The_unit_was_on_offer, ['{userid}' => "<a href='/userinfo.php?user=$oxsffer'>$offer</a>"]);
                 $offerMess .= "$T_The_unit_was_on_offer<br>\n";
             }
