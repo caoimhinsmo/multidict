@@ -4,6 +4,25 @@
 
   header("Cache-Control:max-age=0");
 
+  $T = new SM_T('clilstore/unitwordclicks');
+
+  $T_since_    = $T->h('since_');
+  $T_Created   = $T->h('csCol_created');
+  $T_Clicks    = $T->h('csCol_clicks');
+  $T_New       = $T->h('New');
+  $T_Word      = $T->h('Facal');
+  $T_Last_time = $T->h('Last_time');
+  $T_Total     = $T->h('Iomlan');
+  $T_on_DATE   = $T->h('on_DATE');
+  $T_Reset_now = $T->h('Reset_now');
+  $T_Words_clicked_in_unit_ = $T->h('Words_clicked_in_unit_');
+  $T_Total_clicks_on_words  = $T->h('Total_clicks_on_words');
+  $T_Click_to_sort          = $T->h('Click_to_sort');
+  $T_The_New_column_shows_  = $T->h('The_New_column_shows_');
+  $T_No_words_clicked_yet   = $T->h('No_words_clicked_yet');
+
+  $T_The_New_column_shows_ = strtr($T_The_New_column_shows_, ['{xxx}'=>"‘{$T_New}’"]);
+
   try {
       $myCLIL = SM_myCLIL::singleton();
       $user = ( isset($myCLIL->id) ? $myCLIL->id : '' );
@@ -20,9 +39,14 @@
      return $timeDate;
   }
   function sinceHtml($created,$countStarted) {
+      global $T_since_;
       if ($created>$countStarted) { return ''; }
-      return 'since ' . timeHtml($countStarted);
+      return sprintf($T_since_,timeHtml($countStarted));
   }
+
+  $id = $_REQUEST['id'] ?? NULL;
+  $mdNavbar = SM_mdNavbar::mdNavbar($T->domhan,$id);
+  $T_Words_clicked_in_unit_ = strtr($T_Words_clicked_in_unit_, ['{unitNo}'=>$id]);
 
   try {
     $HTML = $resetMessage = $resetButton = '';
@@ -32,22 +56,22 @@
     if (!is_numeric($id)) { throw new SM_MDexception('id parameter is not numeric'); }
 
     $sort = $_REQUEST['sort'] ?? 'clicks';
-    $clicksHead = "<a href='unitwordclicks.php?id=$id&amp;sort=clicks' title='Sort'>Clicks</a>";
-    $newHead    = "<a href='unitwordclicks.php?id=$id&amp;sort=new' title='Sort'>New</a>";
-    $wordHead   = "<a href='unitwordclicks.php?id=$id&amp;sort=word' title='Sort'>Word</a>";
-    $timeHead   = "<a href='unitwordclicks.php?id=$id&amp;sort=time' title='Sort'>Last click</a>";
+    $clicksHead = "<a href='unitwordclicks.php?id=$id&amp;sort=clicks' title='$T_Click_to_sort'>$T_Clicks</a>";
+    $newHead    = "<a href='unitwordclicks.php?id=$id&amp;sort=new' title='$T_Click_to_sort'>$T_New</a>";
+    $wordHead   = "<a href='unitwordclicks.php?id=$id&amp;sort=word' title='$T_Click_to_sort'>$T_Word</a>";
+    $timeHead   = "<a href='unitwordclicks.php?id=$id&amp;sort=time' title='$T_Click_to_sort'>$T_Last_time</a>";
     if ($sort=='clicks') {
         $ordering = 'clicks DESC,word';
-        $clicksHead = 'Clicks';
+        $clicksHead = $T_Clicks;
     } elseif ($sort=='new') {
         $ordering = 'newclicks DESC,clicks DESC,word';
-        $newHead = 'New';
+        $newHead = $T_New;
     } elseif ($sort=='word') {
         $ordering = 'word';
-        $wordHead = 'Word';
+        $wordHead = $T_Word;
     } elseif ($sort=='time') {
         $ordering = 'utime DESC';
-        $timeHead = 'Last time';
+        $timeHead = $T_Last_time;
     } else { throw new SM_MDexception("Invalid parameter $ordering"); }
 
     $DbMultidict = SM_DbMultidictPDO::singleton('rw');
@@ -64,16 +88,9 @@
     $createdDateTime  = timeHtml($created);
     if ($newclickTime) {
         $newclickDateTime = timeHtml($newclickTime);
-        $resetMessage = " on $newclickDateTime";
+        $resetMessage = " $T_on_DATE $newclickDateTime";
     }
-    if ($user==$owner) { $resetButton = " &nbsp;<a id=rnc href='' onclick=\"resetNewclicks('$id');\">Reset now</a>"; }
-    $linkbuttons = <<<EOBUT
-<ul class="linkbuts">
-<li><a href="./" class="nowordlink" target="_top" title="Clilstore index">Clilstore</a></li>
-<li><a href="/cs/$id" title="Back to Unit $id">Unit $id</a></li>
-<li><a href="unitinfo.php?id=$id" title="Information on unit $id">Unit info</a></li>
-</ul>
-EOBUT;
+    if ($user==$owner) { $resetButton = " &nbsp;<a id=rnc href='' onclick=\"resetNewclicks('$id');\">$T_Reset_now</a>"; }
 
     $stmt = $DbMultidict->prepare("SELECT word,clicks,newclicks,utime FROM csWclick WHERE unit=:id ORDER BY $ordering");
     $stmt->execute([':id'=>$id]);
@@ -92,20 +109,20 @@ EOBUT;
         $timeDateTime = timeHtml($lastTime);
         $HTML = <<<EOD_PT
 <p style="margin:1.5em 0 0 0;font-size:90%;color:#555;font-weight:bold">$title</p>
-<p style="margin:0 0 0 2em;font-size:80%;color:#666">Created: $createdDateTime<br>
-Total clicks on words: $unitClicks$unitClicksMessage</p>
+<p style="margin:0 0 0 2em;font-size:80%;color:#666">$T_Created: $createdDateTime<br>
+$T_Total_clicks_on_words: $unitClicks$unitClicksMessage</p>
 
 <table id=priomh>
 <tr><td>$clicksHead</td><td>$newHead</td><td>$wordHead</td><td>$timeHead</td></td>
 </tr>
 $HTML
-<tr><td>$totClicks</td><td>$totNewclicks</td><td>·Total·</td><td>$timeDateTime</td></tr>
+<tr><td>$totClicks</td><td>$totNewclicks</td><td>·{$T_Total}·</td><td>$timeDateTime</td></tr>
 </table>
 
-<p style="font-size:85%;color:#0b0">The ‘New’ column shows the number of clicks since the ‘new’ counter was last reset by the owner of the unit$resetMessage$resetButton</p>
+<p style="font-size:85%;color:#0b0">$T_The_New_column_shows_$resetMessage$resetButton</p>
 EOD_PT;
     } else {
-        $HTML = "<p>No words clicked yet in this unit</p>\n";
+        $HTML = "<p>$T_No_words_clicked_yet</p>\n";
     }
 
 
@@ -114,7 +131,7 @@ EOD_PT;
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Words clicked in Clilstore unit $id</title>
+    <title>$T_Words_clicked_in_unit_</title>
     <link rel="icon" type="image/png" href="/favicons/clilstore.png">
     <link rel="StyleSheet" href="/css/smo.css">
     <link rel="StyleSheet" href="style.css?version=2014-04-15">
@@ -136,7 +153,7 @@ EOD_PT;
     <script>
       function resetNewclicks(unit) {
         var xmlhttp = new XMLHttpRequest();
-        xmlhttp.onload = function() { if (this.status!=200) { alert('Error in resetNewclicks:'+this.status); } } 
+        xmlhttp.onload = function() { if (this.status!=200) { alert('Error in resetNewclicks:'+this.status); } }
         xmlhttp.open('GET', 'ajax/resetNewclicks.php?unit=' + unit);
         xmlhttp.send();
         window.location.href = window.location.href;
@@ -144,14 +161,14 @@ EOD_PT;
     </script>
 </head>
 <body>
-$linkbuttons
+$mdNavbar
 <div class="body-indent">
 
-<h1 style="font-size:130%;margin-bottom:0">Words clicked in Clilstore unit $id</h1>
+<h1 style="font-size:130%;margin-bottom:0">$T_Words_clicked_in_unit_</h1>
 $clicksMessage
 $HTML
 </div>
-$linkbuttons
+$mdNavbar
 </body>
 </html>
 EOD1;

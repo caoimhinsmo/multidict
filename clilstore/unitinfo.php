@@ -44,6 +44,8 @@
   $T_Clilstore_user_id     = $T->h('Clilstore_user_id');
   $T_Details_for_unit_     = $T->h('Details_for_unit_');
   $T_The_unit_was_on_offer = $T->h('The_unit_was_on_offer');
+  $T_Report_abuse          = $T->h('Report_abuse');
+  $T_Report_abuse_label    = $T->h('Report_abuse_label');
 
   $id = $_REQUEST['id'] ?? NULL;
   $mdNavbar = SM_mdNavbar::mdNavbar($T->domhan,$id);
@@ -160,7 +162,6 @@ $T_The_unit_is_on_offer_
 <span class="info" style="padding-left:2em">$T_User_can_accept_</span><br><br>
 END_offerMess;
             } else {
-//                $T_The_unit_was_on_offer = strtr($T_The_unit_was_on_offer, ['{userid}' => 'CHAIDH']);
                 $T_The_unit_was_on_offer = strtr($T_The_unit_was_on_offer, ['{userid}' => "<a href='/userinfo.php?user=$oxsffer'>$offer</a>"]);
                 $offerMess .= "$T_The_unit_was_on_offer<br>\n";
             }
@@ -229,7 +230,7 @@ $errorMessage
 $ownerHtml
 
 <p style="margin-top:3em;border-top:1px solid red;padding-top:12px">
-<a href="http://www.languages.dk/abuse.php?subject=$serverhome/cs/$id$abuseParams" id="abuse">Report abuse</a> Tell us if you think this unit contains copyright or inappropriate material and should be removed</p>
+<a href="http://www.languages.dk/abuse.php?subject=$serverhome/cs/$id$abuseParams" id="abuse">$T_Report_abuse</a><br>$T_Report_abuse_label</p>
 
 </div>
 $mdNavbar
