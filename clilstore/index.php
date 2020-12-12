@@ -241,7 +241,7 @@ EOD_cookieMessage;
                         : "$T_Include_test_units_o" );
         $incTestChecked = ( $incTest ? 'checked' : '' );
         $checkboxesHtml = <<<CHECKBOXES
-<label class=toggle-switchy for=incTest data-size=xs style="padding-right:2em" onclick="submitFForm()">
+<label class=toggle-switchy for=incTest data-size=xs style="padding-right:2em" onChange="submitFForm()">
   <input type=checkbox id=incTest name=incTest form="filterForm" $incTestChecked>
   <span class=toggle><span class=switch></span></span>
   <span class=label>$incTestLabel</span>
