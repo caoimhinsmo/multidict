@@ -1,7 +1,6 @@
 <?php
 //Reset to 0 the newclicks counter for each word in a unit
 
-error_log('Ann an resetNewclicks.php');
   if (!include('autoload.inc.php')) { die('include autoload failed'); }
   if (!isset($_REQUEST['unit']))   { die('unit is not set'); }
   $unit = $_REQUEST['unit'];

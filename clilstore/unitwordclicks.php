@@ -15,6 +15,7 @@
   $T_Total     = $T->h('Iomlan');
   $T_on_DATE   = $T->h('on_DATE');
   $T_Reset_now = $T->h('Reset_now');
+  $T_Error_in  = $T->j('Error_in');
   $T_Words_clicked_in_unit_ = $T->h('Words_clicked_in_unit_');
   $T_Total_clicks_on_words  = $T->h('Total_clicks_on_words');
   $T_Click_to_sort          = $T->h('Click_to_sort');
@@ -90,7 +91,10 @@
         $newclickDateTime = timeHtml($newclickTime);
         $resetMessage = " $T_on_DATE $newclickDateTime";
     }
-    if ($user==$owner) { $resetButton = " &nbsp;<a id=rnc href='' onclick=\"resetNewclicks('$id');\">$T_Reset_now</a>"; }
+    if ($user==$owner) { $resetButton = <<<END_resetButton
+<span style="padding-left:2em"><a id=rnc href="" onclick="resetNewclicks('$id');alert('B');">$T_Reset_now</a></span>
+END_resetButton;
+    }
 
     $stmt = $DbMultidict->prepare("SELECT word,clicks,newclicks,utime FROM csWclick WHERE unit=:id ORDER BY $ordering");
     $stmt->execute([':id'=>$id]);
@@ -113,8 +117,7 @@
 $T_Total_clicks_on_words: $unitClicks$unitClicksMessage</p>
 
 <table id=priomh>
-<tr><td>$clicksHead</td><td>$newHead</td><td>$wordHead</td><td>$timeHead</td></td>
-</tr>
+<tr><td>$clicksHead</td><td>$newHead</td><td>$wordHead</td><td>$timeHead</td></tr>
 $HTML
 <tr><td>$totClicks</td><td>$totNewclicks</td><td>·{$T_Total}·</td><td>$timeDateTime</td></tr>
 </table>
@@ -152,11 +155,19 @@ EOD_PT;
     </style>
     <script>
       function resetNewclicks(unit) {
-        var xmlhttp = new XMLHttpRequest();
-        xmlhttp.onload = function() { if (this.status!=200) { alert('Error in resetNewclicks:'+this.status); } }
-        xmlhttp.open('GET', 'ajax/resetNewclicks.php?unit=' + unit);
-        xmlhttp.send();
-        window.location.href = window.location.href;
+alert('Ann an resetNewclicks: unit='+unit);
+          xhr.onreadystatechange = function() {
+              if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+                  var resp = this.responseText;
+                  if (resp=='OK') { window.location.href = window.location.href; }
+                   else           { alert('$T_Error_in resetNewclicks.php: '+resp); }
+              }
+          }
+          var formData = new FormData();
+          formData.append('unit',unit);
+          xhr.open('POST', 'ajax/resetNewclicks.php');
+alert('gus xhr.send');
+          xhr.send(formData);
       }
     </script>
 </head>

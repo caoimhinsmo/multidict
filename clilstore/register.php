@@ -5,11 +5,13 @@
   header("Cache-Control:max-age=0");
 
   $T = new SM_T('clilstore/register');
+
   $T_UserID   = $T->h('UserID');
   $T_Fullname = $T->h('Fullname');
   $T_Email    = $T->h('E-mail');
   $T_Password = $T->h('Password');
-  $T_Register  = $T->h('Register');
+  $T_Register = $T->h('Register');
+  $T_Login    = $T->h('Log_air'); 
   $T_Retype_password  = $T->h('Retype_password');
   $T_UserID_advice    = $T->h('UserID_advice');
   $T_Fullname_advice  = $T->h('Fullname_advice');
@@ -25,6 +27,8 @@
   $T_User_exists_for_email_3 = $T->h('User_exists_for_email_3');
   $T_User_already_taken      = $T->h('User_already_taken');
   $T_Retyped_pw_mismatch     = $T->h('Retyped_pw_mismatch');
+  $T_Userid_successfully_reg = $T->h('Userid_successfully_reg');
+  $T_You_may_now_            = $T->h('You_may_now_');
 
   $mdNavbar = SM_mdNavbar::mdNavbar($T->domhan);
 
@@ -75,6 +79,8 @@
     <style>
         span.info { color:green; font-size:70%; }
         table#formTable td:first-child { text-align:right; }
+        a.button { background-color:#55a8eb; color:white; font-weight:bold; padding:3px 10px; border:0; border-radius:8px; }
+        a.button:hover { background-color:blue; }
     </style>
 </head>
 <body>
@@ -138,9 +144,10 @@ EOD1;
             $stmtInsert->bindParam(':joined',  $utime);
             $stmtInsert->bindParam(':password',$passwordCrypt);
             if (!$stmtInsert->execute()) { throw new SM_MDexception('Failed to insert user record'); }
+            $T_Userid_successfully_reg = strtr($T_Userid_successfully_reg, ['{#userid}'=>"<b>$userSC</b>"]);
             echo <<<ENDsuccess
-<p>Userid <b>$user</b> has been successfully registered.</p>
-<p>You may now <a href="login.php">login</a>.</p>
+<p>$T_Userid_successfully_reg.</p>
+<P>$T_You_may_now_ <a class=button href='login.php?user=$userSC&amp;returnTo=/clilstore/'>$T_Login</a></p>
 ENDsuccess;
             $formRequired = 0;
         }
