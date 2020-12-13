@@ -67,6 +67,8 @@
   }
 
   try {
+    $returnTo = $_REQUEST['returnTo'] ?? '/clilstore/';
+
     echo <<<EOD1
 <!DOCTYPE html>
 <html lang="en">
@@ -118,9 +120,9 @@ EOD1;
         } elseif ($stmtEmail->execute() && $stmtEmail->bindColumn(1,$prevUser) && $stmtEmail->fetch()) {
             $User_exists_for_email_1 = strtr( $T_User_exists_for_email_1, ['[xxxxxx]' => "<b>$prevUser</b>"] );
             $User_exists_for_email_2 = strtr( $T_User_exists_for_email_2,
-                                             ['[xxxxxx]' => "<b>$prevUser</b>",
-                                              '{' => "<a href=\"login.php?user=$prevUser\" style='border:1px solid;border-radius:3px;padding:0 3px'>",
-                                              '}' => '</a>'] );
+                                          ['[xxxxxx]' => "<b>$prevUser</b>",
+                                           '{' => "<a href=\"login.php?user=$prevUser&amp;returnto=$returnTo\" style='border:1px solid;border-radius:3px;padding:0 3px'>",
+                                           '}' => '</a>'] );
             $User_exists_for_email_3 = strtr( $T_User_exists_for_email_3, ['{'=>'<i>','}'=>'</i>'] );
             $errorMessage = "$User_exists_for_email_1<br>$User_exists_for_email_2<br><br><br>$User_exists_for_email_3";
         } elseif ($stmtUser->execute() && $stmtUser->fetch()) {
@@ -147,7 +149,7 @@ EOD1;
             $T_Userid_successfully_reg = strtr($T_Userid_successfully_reg, ['{#userid}'=>"<b>$userSC</b>"]);
             echo <<<ENDsuccess
 <p>$T_Userid_successfully_reg.</p>
-<P>$T_You_may_now_ <a class=button href='login.php?user=$userSC&amp;returnTo=/clilstore/'>$T_Login</a></p>
+<P>$T_You_may_now_ <a class=button href='login.php?user=$userSC&amp;returnTo=$returnTo'>$T_Login</a></p>
 ENDsuccess;
             $formRequired = 0;
         }
