@@ -25,7 +25,7 @@ class SM_mdNavbar {
   }
 
 
-  public static function mdNavbar($domhan='',$unit=NULL) {
+  public static function mdNavbar($domhan='',$unit=NULL,$extra=NULL) {
       $servername =  $_SERVER['SERVER_NAME'];
       $serverhome = ( empty($_SERVER['HTTPS']) ? 'http' : 'https' ) . '://' . $_SERVER['SERVER_NAME'];
       $hl0 = SM_T::hl0();
@@ -60,6 +60,16 @@ class SM_mdNavbar {
                   ? "<li><a href='/cs/$unit'>$T_Unit $unit</a></li>"
                   : ''
                   );
+$extraLink = '';
+if (!empty($extra)) {
+    if (is_array($extra)) {
+        extract($extra);
+    } else { //If not an array, assume it is a unit number
+        $label = "$T_Unit $extra";
+        $url   = "/cs/$extra";
+    }
+    $extraLink = "<li><a href='$url'>$label</a></li>";
+}
       $myCLIL = SM_myCLIL::singleton();
       if ($myCLIL->cead(SM_myCLIL::LUCHD_EADARTHEANGACHAIDH))
         { $trPutan = "\n<li class=deas><a href='//www3.smo.uhi.ac.uk/teanga/smotr/tr.php?domhan=$domhan' target='tr' title='$T_tr_fios'>tr</a>"; } else { $trPutan = ''; }
@@ -106,6 +116,7 @@ END_selCanan;
 <ul class="smo-navlist">
 $homeLink
 $unitLink
+$extraLink
 $ceangalRiMoSMO
 <li style="float:right" title="$T_canan_eadarAghaidh">$selCanan$trPutan
 </ul>

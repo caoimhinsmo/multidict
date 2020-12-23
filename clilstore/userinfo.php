@@ -4,6 +4,14 @@
 
   header("Cache-Control:max-age=0");
 
+  $T = new SM_T('clilstore/userinfo');
+
+  $T_UserID   = $T->h('UserID');
+
+//  $extraButton = ['label'=>'UHI3','url'=>'https://www.uhi.ac.uk/'];
+  $extraButton = '191';
+  $mdNavbar = SM_mdNavbar::mdNavbar($T->domhan,NULL,$extraButton);
+
   try {
       $myCLIL = SM_myCLIL::singleton();
   } catch (Exception $e) {
@@ -189,6 +197,7 @@ EODfullInfo;
     </style>
 </head>
 <body>
+$mdNavbar
 <ul class="linkbuts">
 <li><a href="./" title="Clilstore index page">Clilstore</a>
 <li><a href="users.php">Users</a>

@@ -13,17 +13,19 @@
 
   $T = new SM_T('clilstore/edit');
 
+  $T_File    = $T->h('File');
+  $T_Delete  = $T->h('Sguab às');
+  $T_View    = $T->h('View_verb');
+  $T_Text    = $T->h('Text');
+
   $T_Creating_new_unit   = $T->h('Creating_new_unit');  
   $T_editorsMessage      = $T->h('editorsMessage');
   $T_Title               = $T->h('Title');
   $T_Title_info_4_120    = $T->h('Title_info_4_120');
   $T_Language            = $T->h('Language');
   $T_Embed_code_legend   = $T->h('Embed_code_legend');
-  $T_Left                = $T->h('Left');
-  $T_Right               = $T->h('Right');
   $T_Scroll_text         = $T->h('Scroll_text');
   $T_Clone_as_a_new_unit = $T->h('Clone_as_a_new_unit');
-  $T_Text                = $T->h('Text');
   $T_Text_placeholder    = $T->h('Text_placeholder');
   $T_Text_Advice         = $T->h('Text_Advice');
   $T_Text_Advice_html    = $T->h('Text_Advice_html');
@@ -78,6 +80,16 @@
   $T_New                 = $T->h('New');
   $T_Link                = $T->h('Link');
   $T_Link_advice         = $T->h('Link_advice');
+  $T_No_attached_files   = $T->h('No_attached_files');
+  $T_Upload_files_info_1 = $T->h('Upload_files_info_1');
+  $T_Upload_files_info_2 = $T->h('Upload_files_info_2');
+  $T_Upload_a_file       = $T->h('Upload_a_file');
+  $T_Choose_a_file       = $T->h('Choose_a_file');
+  $T_Files_attached      = $T->h('Files_attached');
+  $T_Delete_this_file    = $T->h('Delete_this_file');
+  $T_View_this_file      = $T->h('View_this_file');
+  $T_Link_address        = $T->h('Link_address');
+  $T_Link_address_info   = $T->h('Link_address_info');
 
   $T_CC_BY_message       = $T->j('CC_BY_message');
   $T_CC_SA_message       = $T->j('CC_SA_message');
@@ -105,6 +117,7 @@
   $T_No_unit_found_for_id      = $T->h('No_unit_found_for_id');
   $T_May_only_edit_own_units   = $T->h('May_only_edit_own_units');
   $T_You_have_Javascript_off   = $T->h('You_have_Javascript_off');
+  $T_you_can_edit_its_name     = $T->h('you_can_edit_its_name');
 
   $editorsMessage = $tinymceScriptHead = $tinymceScriptBody  = '';
 
@@ -116,6 +129,7 @@
   $T_I_agree_to_copyleft = strtr( $T_I_agree_to_copyleft, [ '['=>'<i>', ']'=>'</i>', '{'=>'<a href=copyleftPolicy.php>', '}'=>'</a>' ] );
   $T_I_grant_use         = strtr( $T_I_grant_use,         [ '{'=>'<a href=https://creativecommons.org/licenses/>', '}'=>'</a>' ] );
   $T_Text_Advice_new     = strtr( $T_Text_Advice_new,     [ '['=>'<b>', ']'=>'</b>' ] );
+  $T_Upload_files_info_2 = strtr($T_Upload_files_info_2,  [ '{'=>'<b>', '}'=>'</b>' ] );
 
   function scriptscan($text) {
       if (preg_match('|<\?php|iu', $text)) { return 'PHP'; }
@@ -544,8 +558,8 @@ EODbutHtml;
 <tr id="filetr-$fileid">
 <td><span id="filetick-$fileid" class=change>✔<span></td>
 <td><input id="filename-$fileid" value="$filename" title="filesize $filesize" onchange="changeFilename('$fileid')"></td>
-<td><img src="/icons-smo/curAs.png" title="Delete this file (immediately and permanently)" onclick="deleteFile('$fileid')" alt="Delete"></td>
-<td><a id="fileLink-$fileid" href="/cs/$id/$filename"><img src="/icons-smo/td.gif" title="View this file" alt="View"></a></td>
+<td><img src="/icons-smo/curAs.png" title="$T_Delete_this_file" onclick="deleteFile('$fileid')" alt="$T_Delete"></td>
+<td><a id="fileLink-$fileid" href="/cs/$id/$filename"><img src="/icons-smo/td.gif" title="$T_View_this_file" alt="$T_View"></a></td>
 <td style="font-size:80%" id="fileLinkName-$fileid">/cs/$id/$filename</td>
 </tr>
 EODeditFile;
@@ -554,20 +568,20 @@ EODeditFile;
           else                 { $nofilesDisplay = 'none';  $filesDisplay = 'block'; }
         $fileInfoForm = <<<EODfileInfoForm
 <div id="nofilesDisplay" style="display:$nofilesDisplay">
-<p style="margin:0.2em;font-size:80%">The unit currently has no attached files</p>
-<p class="info" style="margin:0">You can upload files which will be attached to this unit.  Make sure that you name them with the correct filename extension: <b>.html</b> or <b>.docx</b> or <b>.pdf</b> or whatever, as appropriate to their file type.</p>
+<p style="margin:0.2em;font-size:80%">$T_No_attached_files</p>
+<p class="info" style="margin:0.3em">$T_Upload_files_info_1 $T_Upload_files_info_2</p>
 </div>
 <fieldset id="filesDisplay" style="display:$filesDisplay;margin:6px;border:1px solid grey;padding:10px;border-radius:5px;background-color:#ffd">
-<legend class=boldleg>Files attached to the unit</legend>
+<legend class=boldleg>$T_Files_attached</legend>
 <form name="fileInfoForm">
 <table id="filesAtt">
 <tbody id="filesAttBody">
 <tr style="font-size:85%;background-color2:#ddf">
 <td></td>
-<td>File <span class="info" style="font-style:italic">(you can edit its name here to change it)</span></td>
-<td>Delete</td>
-<td>View</td>
-<td>Link address <span style="font-size:80%;font-style:italic">(relative url for use in buttons or in the body of the unit)</span></td>
+<td>$T_File <span class="info" style="font-style:italic">($T_you_can_edit_its_name)</span></td>
+<td>$T_Delete</td>
+<td>$T_View</td>
+<td><span style='color:black'>$T_Link_address</span> <span class=info style="font-size:80%;font-style:italic">($T_Link_address_info)</span></td>
 </tr>
 $filesHtml
 </tbody>
@@ -619,6 +633,7 @@ EODfileInfoForm;
         table#licTable td.chk { border-color:#bb3; background-color:#ffd; }
         table#licTable img { padding:1px 25px 4px 4px; }
         div#licenceInfo { margin:4px 0 0 6px; border:2px solid #bb3; border-radius:6px; background-color:#ffd; padding:2px; }
+        table#filesAtt td { white-space: nowrap; }
         div.fann { opacity:0.25; }
     </style>
     <script>
@@ -1030,10 +1045,10 @@ $T_I_grant_use
 $fileInfoForm
 
 <fieldset style="margin:6px;border:1px solid grey;padding:10px;border-radius:5px;background-color:#ffd"> 
-<legend class=boldleg>Upload a file</legend>
+<legend class=boldleg>$T_Upload_a_file</legend>
 <form id="uploadForm" action="ajax/uploadHandling.php" method="post" onsubmit="uploadOnsubmit(event)">
 <div>
-    <label for="bloigh">Choose a file on your computer:</label>
+    <label for="bloigh">$T_Choose_a_file:</label>
     <input type="file" name="bloigh" id="bloigh" style="width:16em" onchange="makeNiceFilename(this.value)">
 </div>
 <div style="display:none" id="nicenameDiv">
