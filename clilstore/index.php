@@ -7,37 +7,39 @@
   try {
     $T = new SM_T('clilstore/index');
 
-    $T_First_visit_to_CS      = $T->h('First_visit_to_CS');
-    $T_CS_needs_cookies       = $T->h('CS_needs_cookies');
-    $T_Got_it                 = $T->h('Got_it');
-    $T_If_message_persists    = $T->h('If_message_persists');
-    $T_privacy_policy         = $T->h('privacy_policy');
-    $T_CS_is_well_behaved     = $T->h('CS_is_well_behaved');
-    $T_setNewbieAlert         = $T->j('setNewbieAlert');
+    $T_First_visit_to_CS   = $T->h('First_visit_to_CS');
+    $T_CS_needs_cookies    = $T->h('CS_needs_cookies');
+    $T_Got_it              = $T->h('Got_it');
+    $T_If_message_persists = $T->h('If_message_persists');
+    $T_privacy_policy      = $T->h('privacy_policy');
+    $T_CS_is_well_behaved  = $T->h('CS_is_well_behaved');
+    $T_setNewbieAlert      = $T->j('setNewbieAlert');
 
-    $T_Teaching_units         = $T->h('Teaching_units');
-    $T_for_CLIL               = $T->h('for_CLIL');
-    $T_Help                   = $T->h('Cobhair');
-    $T_About_Clilstore        = $T->h('mu_Clilstore');
-    $T_Select_lang_level      = $T->h('Select_lang_level');
-    $T_Options                = $T->h('Options');
-    $T_My_options             = $T->h('My_options');
-    $T_My_units               = $T->h('My_units');
-    $T_Vocabulary             = $T->h('Vocabulary');
-    $T_My_vocabulary          = $T->h('My_vocabulary');
-    $T_Portfolio              = $T->h('Portfolio');
-    $T_Portfolios             = $T->h('Portfolios');
+    $T_Teaching_units    = $T->h('Teaching_units');
+    $T_for_CLIL          = $T->h('for_CLIL');
+    $T_Help              = $T->h('Cobhair');
+    $T_About_Clilstore   = $T->h('mu_Clilstore');
+    $T_Select_lang_level = $T->h('Select_lang_level');
+    $T_Options           = $T->h('Options');
+    $T_My_options        = $T->h('My_options');
+    $T_My_units          = $T->h('My_units');
+    $T_Vocabulary        = $T->h('Vocabulary');
+    $T_My_vocabulary     = $T->h('My_vocabulary');
+    $T_Portfolio         = $T->h('Portfolio');
+    $T_Portfolios        = $T->h('Portfolios');
+    $T_See_as_newbie     = $T->h('See_as_newbie');
+    $T_Create_a_unit     = $T->h('Create_a_unit') . '…';
+    $T_For_students      = $T->h('For_students');
+    $T_For_teachers      = $T->h('For_teachers');
+    $T_More_options      = $T->h('More_options');
+    $T_more_options      = $T->h('more_options');
+
     $T_Add_a_column_info      = $T->h('Add_a_column_info');
-    $T_See_as_newbie          = $T->h('See_as_newbie');
-    $T_Create_a_unit          = $T->h('Create_a_unit') . '…';
-    $T_For_students           = $T->h('For_students');
-    $T_For_teachers           = $T->h('For_teachers');
-    $T_More_options           = $T->h('More_options');
-    $T_more_options           = $T->h('more_options');
     $T_For_students_info      = $T->h('For_students_info');
     $T_For_students_more_info = $T->h('For_students_more_info');
     $T_For_teachers_info      = $T->h('For_teachers_info');
     $T_For_teachers_more_info = $T->h('For_teachers_more_info');
+    $T_Include_more_columns   = $T->h('Include_more_columns');
     $T_Include_test_units     = $T->h('Include_test_units');
     $T_Include_test_units_o   = $T->h('Include_test_units_o');
     $T_Login                  = $T->h('Log_air');
@@ -51,39 +53,42 @@
     $loginReasonStudent       = $T->h('loginReasonStudent');
     $loginReasonTeacher       = $T->h('loginReasonTeacher');
     $T_Lorg                   = $T->h('Lorg');
+    $T_Warning                = $T->h('Warning');
+    $T_Hidden_filter_warning  = $T->h('Hidden_filter_warning');
+    $T_Hidden_filters_warning = $T->h('Hidden_filters_warning');
 
-    $T_UnitID                 = $T->h('csCol_id');
-    $T_Views                  = $T->h('csCol_views');
-    $T_Clicks                 = $T->h('csCol_clicks');
-    $T_Likes                  = $T->h('csCol_likes');
-    $T_Created                = $T->h('csCol_created');
-    $T_Changed                = $T->h('csCol_changed');
-    $T_Licence                = $T->h('csCol_licence');
-    $T_Owner                  = $T->h('csCol_owner');
-    $T_Language               = $T->h('Language');
-    $T_Level                  = $T->h('csCol_level');
-    $T_Words                  = $T->h('csCol_words');
-    $T_Media                  = $T->h('csCol_medtype');
-    $T_MedLength              = $T->h('csCol_medlen');
-    $T_Buttons                = $T->h('csCol_buttons');
-    $T_Files                  = $T->h('csCol_files');
-    $T_Title                  = $T->h('Title');
-    $T_TextOrSummary          = $T->h('csCol_text');
+    $T_UnitID        = $T->h('csCol_id');
+    $T_Views         = $T->h('csCol_views');
+    $T_Clicks        = $T->h('csCol_clicks');
+    $T_Likes         = $T->h('csCol_likes');
+    $T_Created       = $T->h('csCol_created');
+    $T_Changed       = $T->h('csCol_changed');
+    $T_Licence       = $T->h('csCol_licence');
+    $T_Owner         = $T->h('csCol_owner');
+    $T_Language      = $T->h('Language');
+    $T_Level         = $T->h('csCol_level');
+    $T_Words         = $T->h('csCol_words');
+    $T_Media         = $T->h('csCol_medtype');
+    $T_MedLength     = $T->h('csCol_medlen');
+    $T_Buttons       = $T->h('csCol_buttons');
+    $T_Files         = $T->h('csCol_files');
+    $T_Title         = $T->h('Title');
+    $T_TextOrSummary = $T->h('csCol_text');
 
-    $T_UnitID_title           = $T->h('UnitID_title');
-    $T_Views_title            = $T->h('Views_title');
-    $T_Clicks_title           = $T->h('Clicks_title');
-    $T_Created_title          = $T->h('Created_title');
-    $T_Changed_title          = $T->h('Changed_title');
-    $T_Licence_title          = $T->h('Licence_title');
-    $T_Owner_title            = $T->h('Owner_title');
-    $T_by_language_code       = $T->h('by_language_code');
-    $T_Level_title            = $T->h('Level_title');
-    $T_Words_title            = $T->h('Words_title');
-    $T_Media_title            = $T->h('Media_title');
-    $T_MedLength_title        = $T->h('MedLength_title');
-    $T_Buttons_title          = $T->h('Buttons_title');
-    $T_Files_title            = $T->h('Files_title');
+    $T_UnitID_title     = $T->h('UnitID_title');
+    $T_Views_title      = $T->h('Views_title');
+    $T_Clicks_title     = $T->h('Clicks_title');
+    $T_Created_title    = $T->h('Created_title');
+    $T_Changed_title    = $T->h('Changed_title');
+    $T_Licence_title    = $T->h('Licence_title');
+    $T_Owner_title      = $T->h('Owner_title');
+    $T_by_language_code = $T->h('by_language_code');
+    $T_Level_title      = $T->h('Level_title');
+    $T_Words_title      = $T->h('Words_title');
+    $T_Media_title      = $T->h('Media_title');
+    $T_MedLength_title  = $T->h('MedLength_title');
+    $T_Buttons_title    = $T->h('Buttons_title');
+    $T_Files_title      = $T->h('Files_title');
 
     $T_minimum_views          = $T->h('minimum_views');
     $T_maximum_views          = $T->h('maximum_views');
@@ -119,6 +124,7 @@
     $T_or_wildcard_pattern    = $T->h('or_wildcard_pattern');
     $T_Clear_filter           = $T->h('Clear_filter');
     $T_Clear_filter_title     = $T->h('Clear_filter_title');
+    $T_click_to_clear_filter  = $T->h('click_to_clear_filter');
     $T_units_found            = $T->h('units_found');
     $T_Total                  = $T->h('Iomlan');
     $T_Average                = $T->h('Average');
@@ -222,16 +228,16 @@ EOD_cookieMessage;
     $hiddenFilters = $csSess->hiddenFilters($mode);
     if ($hiddenFilters) {
         $message = ( count($hiddenFilters)==1
-                   ? 'A filter is currently being applied on a hidden column:'
-                   : 'Filters are currently being applied on hidden columns:' );
+                   ? $T_Hidden_filter_warning
+                   : $T_Hidden_filters_warning );
         foreach ($hiddenFilters as $i=>$fd) {
             $fdHtml = $T->h("csCol_$fd");
             $fdHtml = "<a class=hiddenFilterField title='$T_Clear_filter' onclick=clearFilter('$fd')>$fdHtml</a>";
             $hiddenFilters[$i] = $fdHtml;
         }
         $hiddenFiltersWarning = implode(' ',$hiddenFilters);
-        $hiddenFiltersWarning = "$message $hiddenFiltersWarning (click to clear filter)";
-        $hiddenFiltersWarning = "<p style='margin:3px 0'><span style='color:red'>Warning:</span> $hiddenFiltersWarning</p>";
+        $hiddenFiltersWarning = "$message $hiddenFiltersWarning ($T_click_to_clear_filter)";
+        $hiddenFiltersWarning = "<p style='margin:3px 0'><span style='color:red'>$T_Warning:</span> $hiddenFiltersWarning</p>";
     }
 
     $wideChecked = ( $mode%2==1 ? 'checked' : '');
@@ -775,7 +781,8 @@ END_tableHtmlBarr;
         $query = 'SELECT clilstore.id,owner,fullname,sl,endonym,level,words,medtype,medlen,buttons,files,title,summary,created,changed,licence,test,views,clicks,likes'
                 .' FROM clilstore,users,lang'
                 ." WHERE $whereClause ORDER BY $orderClause"
-                .' LIMIT 0,4000';
+//                .' LIMIT 0,4000';  //Old limit, to avoid server PHP memory overrun, hopefully not needed at the moment
+                ;
         $stmt = $DbMultidict->prepare($query);
         $i = 1;
         if (!empty($whereClauses['id']))         { $stmt->bindParam($i++,$idFil);       }
@@ -1132,7 +1139,7 @@ $studTeachGraphic<br>
 <option $modeTselected value="$modeT" title="$T_For_teachers_info">$T_For_teachers</option>
 </select>
 </form>
-<label class=toggle-switchy for=wide data-size=xs title="include more columns" onChange="toggleWide('$mode')">
+<label class=toggle-switchy for=wide data-size=xs title="$T_Include_more_columns" onChange="toggleWide('$mode')">
   <input type=checkbox name=wide id=wide form=filterForm $wideChecked>
   <span class=toggle><span class=switch></span></span>
   <span class=label style='font-size:80%'>$T_More_options</span>
