@@ -474,7 +474,7 @@ EOD2;
                 $legend = sprintf($legend,$id);
                 $cruth  = 'html'; 
             }
-            if (count($buttons)<8) { $buttons[] = new button(count($buttons)); } // Always create at least one blank button, up to a maximum of 8 buttons
+            $buttons[] = new button(count($buttons));  // Always create at least one blank button
             for ($ord=count($buttons);$ord<4;$ord++) { $buttons[] = new button($ord); } //Create new blank buttons if necessary, to give a minimum of 4 buttons
         }
         $clonech = ( empty($clone) ? '' : ' checked' );
@@ -525,8 +525,9 @@ END_cloneHtml;
             $wlch  = ( $b->wl  ? 'checked' : '');
             $newch = ( $b->new ? 'checked' : '');
             $link  = $b->link;
+            $butInvisible = ( $ord==count($buttons)-1 ? "style='display:none'" : ''); //Make the last row invisible, to act as a template for duplication
             $buttonsHtml  .= <<<EODbutHtml
-<tr>
+<tr $butInvisible>
 <td><input name="but[]"  value="$but" placeholder="$T_You_can_write_here"></td>
 <td><input type="checkbox" name="wl[]" $wlch value="$ord" title="$T_Whether_to_WL_link\n$T_Whether_to_WL_info"></td>
 <td><input type="checkbox"  name="new[]" $newch value="$ord" title="$T_Whether_to_new_tab"></td>
@@ -608,7 +609,9 @@ EODfileInfoForm;
         table#editlinkbuts td:nth-child(2)       { width:1.5em; text-align:center; }
         table#editlinkbuts td:nth-child(3)       { width:1.8em; text-align:center; }
         table#editlinkbuts td:nth-child(4) input { min-width:60em; }
-
+        a#addLinkButton { display:block; font-size:85%; margin-left: 3px;width:12em; text-align:center; padding:2px 4px;
+                          border:1px dashed black; border-radius:6px; background-color:white; font-weight:bold; }
+        a#addLinkButton:hover { background-color:blue; }
         table#filesAtt { margin-bottom:0.2em; border-collapse:collapse; }
         table#filesAtt td { padding:2px 4px; } 
         table#filesAtt td:nth-child(1)       { padding:2px 0; }
@@ -874,6 +877,20 @@ EODfileInfoForm;
             xhr.send(formData);
         }
 
+        function addLinkButton() {
+            var tbody = document.querySelector("table#editlinkbuts > tbody");
+            var lastTR = document.querySelector("table#editlinkbuts tr:last-child");
+            lastTR.style.display = 'table-row'; //Make the hidden template row visible
+            var lastValue = lastTR.querySelector("input[type='checkbox']").value;
+            var newTR = lastTR.cloneNode(true);
+            var newValue = parseInt(lastValue,10)+1;
+            var checkboxes = newTR.querySelectorAll("input[type='checkbox']");
+            checkboxes.forEach( function(chb) { chb.value=newValue; } );
+            newTR.style.display = 'none'; //Make the new template row invisible
+            tbody.appendChild(newTR);
+            return false;
+        }
+
     </script>
 
 $tinymceScriptHead
@@ -916,6 +933,8 @@ $tinymceScriptBody
 </tr>
 $buttonsHtml
 </table>
+<a href="#notUsed" onClick="addLinkButton()" id=addLinkButton title="Add an extra link button">Add a button</a>
+
 </fieldset>
 </fieldset>
 
