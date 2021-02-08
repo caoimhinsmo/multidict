@@ -90,6 +90,8 @@
   $T_View_this_file      = $T->h('View_this_file');
   $T_Link_address        = $T->h('Link_address');
   $T_Link_address_info   = $T->h('Link_address_info');
+  $T_Add_a_button        = $T->h('Add_a_button');
+  $T_Add_a_button_info   = $T->h('Add_a_button_info');
 
   $T_CC_BY_message       = $T->j('CC_BY_message');
   $T_CC_SA_message       = $T->j('CC_SA_message');
@@ -933,7 +935,7 @@ $tinymceScriptBody
 </tr>
 $buttonsHtml
 </table>
-<a href="#notUsed" onClick="addLinkButton()" id=addLinkButton title="Add an extra link button">Add a button</a>
+<a href="#null" onClick="addLinkButton()" id=addLinkButton title="$T_Add_a_button_info">$T_Add_a_button</a>
 
 </fieldset>
 </fieldset>
