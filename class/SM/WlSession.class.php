@@ -48,13 +48,6 @@ class SM_WlSession {
       $stmt->execute();
       $stmt = null;
 
-
-//Temporary lines to delete any old-style cookies which contained a domainname parameter
-setcookie ('SM_wlUser', '', 1, '/', $_SERVER['SERVER_NAME']);
-setcookie ('SM_wlUser', '', 1, '',  $_SERVER['SERVER_NAME']);
-setcookie ('SM_wlUser', '', 1, '/', 'multidict.net' );
-setcookie ('SM_wlUser', '', 1, '',  'multidict.net' );
-
       setcookie ('wlUser', $uid, time()+31556926, '/' );  //Store cookie for up to a year
 
       if (is_null($sid)) {  // No sid so create a new one

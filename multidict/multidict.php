@@ -110,7 +110,7 @@ FORMHTML;
         a.button:hover { background-color:blue; color:white; }
     </style>
 </head>
-<body>
+<body style='font-family:Verdana,sans-serif'>
 <p>Click “Submit” to look up the word in the dictionary</p>
 <p><a href='$url' target='dictab$sid' class=button>Submit</a> - <i>The results will be opened in a new tab$message</i></p>
 <p><i>or</i></p>

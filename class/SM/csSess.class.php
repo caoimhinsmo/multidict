@@ -113,10 +113,6 @@ class SM_csSess {
       $stmt4->bindParam(':csid',$csid,PDO::PARAM_INT);
       $stmt4->execute();
 
-//Temporary lines, to delete any old-style cookies (containing a domain parameter)
-setcookie('csSession','',1,'/clilstore/',$_SERVER['SERVER_NAME']);
-setcookie('csSession','',1,'/clilstore/','multidict.net');
-
       setcookie('csSessionId',
                 $csid,
                 time()+31556926,  // expires in 1 year (So sessions with timestamps older than a year can be deleted from the database)
