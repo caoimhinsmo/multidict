@@ -24,7 +24,8 @@
   $T_Move_down      = $T->h('Move_down');
   $T_Edit_this_item = $T->h('Edit_this_item');
   $T_Add_an_item    = $T->h('Add_an_item');
-  $T_Work           = $T->h('Work');
+  $T_Save_your_edit = $T->h('Save_your_edit');
+  $T_My_work        = $T->h('My_work');
   $T_Error_in       = $T->j('Error_in');
   $T_Is_this_OK     = $T->j('Is_this_OK');
 
@@ -70,6 +71,7 @@
     $DbMultidict = SM_DbMultidictPDO::singleton('rw');
 
     $unitsHtml = $titleHtml = $permitTableHtml = $pfsTableHtml = $addTeacherHtml = $itemEditHtml = '';
+    $maxItemlen = 250;
 
     $pf = $_REQUEST['pf'] ?? -1;
     if ($pf == -1) {
@@ -94,7 +96,7 @@
                       . "<span class=downArrow title='$T_Move_down' onClick=moveItem(this,'down')>⇩</span> "
                       . "<img src='/icons-smo/curAs.png' alt='Delete' title='$T_Delete_this_item' onClick='itemDelete(this)'>";
         $LitemEditHtml = "<img src='/icons-smo/peann.png' class=editIcon alt='Edit' title='$T_Edit_this_item' onClick='LitemEdit(this)'>"
-                       . "<img src='/icons-smo/floppydisk.png' class=saveIcon alt='Save' title='Save your edits' onClick='LitemSave(this)'> "
+                       . "<img src='/icons-smo/floppydisk.png' class=saveIcon alt='Save' title='$T_Save_your_edit' onClick='LitemSave(this)'> "
                        . $itemEditHtml;
         $itemEditHtml  = "<span class=edit>$itemEditHtml</span>";
         $LitemEditHtml = "<span class=edit>$LitemEditHtml</span>";
@@ -156,7 +158,7 @@ END_unitsTableHtml;
                 extract ($pfuLRow);
                 $learnedHtml .= "<li id=pfuL$pfuL><span id=pfuLtext$pfuL onKeypress='keypress(event,this)'>$learned</span> $LitemEditHtml\n";
             }
-            if ($edit) { $newLearnedItem = "<input id=pfuLnew$pfu class=edit placeholder='$T_Add_an_item' onChange=\"pfuLadd('$pfu')\">"; }
+            if ($edit) { $newLearnedItem = "<input id=pfuLnew$pfu class=edit placeholder='$T_Add_an_item' maxlength=$maxItemlen onChange=\"pfuLadd('$pfu')\">"; }
             $learnedHtml = <<<END_learnedHtml
 <ul id=pfuLul$pfu>
 $learnedHtml
@@ -171,7 +173,8 @@ END_learnedHtml;
                 $workHtml .= "<li id=pfuW$pfuW><a href='$workurl'>$work</a> $itemEditHtml\n";
             }
             if ($edit) {
-                $newWorkItem = "<input placeholder='$T_Work' id=pfuWnewWork$pfu><br><input placeholder='URL' id=pfuWnewURL$pfu>";
+                $newWorkItem = "<input placeholder='$T_My_work' maxlength=$maxItemlen id=pfuWnewWork$pfu><br>"
+                             . "<input placeholder='URL' maxlength=$maxItemlen id=pfuWnewURL$pfu>";
                 $newWorkItem = "<span class=edit onChange=\"pfuWadd('$pfu')\">$newWorkItem</span>";
             }
             $workHtml = <<<END_workHtml
@@ -489,6 +492,7 @@ EOD;
             var textEl = document.getElementById('pfuLtext'+pfuL);
             liEl.classList.add('editing');
             textEl.setAttribute('contenteditable','true');
+            textEl.focus();
         }
 
         function LitemSave(el) {
@@ -502,9 +506,16 @@ EOD;
                 liEl.classList.remove('editing');
                 textEl.setAttribute('contenteditable','false');
             }
+            var newtxt = textEl.innerText;
+            var maxItemlen = $maxItemlen;
+            if (newtxt.length>maxItemlen) {
+                newtxt = newtxt.substring(0,maxItemlen);
+                textEl.innerHTML = newtxt;
+                alert('Too long - Truncated to ' + maxItemlen + ' characters');
+            }
             var formData = new FormData();
             formData.append('pfuL',pfuL);
-            formData.append('text',textEl.innerText);
+            formData.append('text',newtxt);
             xhr.open('POST', 'ajax/pfuLsave.php'); //Safer to use POST in case of rubbish in the text
             xhr.send(formData);
         }
@@ -513,6 +524,8 @@ EOD;
             if (event.keyCode === 13) {
                 event.preventDefault();
                 LitemSave(el);
+            } else if (el.innerHTML.length > $maxItemlen-1) {
+                alert('Too long');
             }
         }
 
