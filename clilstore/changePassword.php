@@ -50,7 +50,7 @@ EOD_barr;
     }
 
     $DbMultidict = SM_DbMultidictPDO::singleton('rw');
-    $errorMessage = $oldPass = $password = $password2 = '';
+    $errorMessage = $oldpass = $password = $password2 = '';
     $formRequired = 1;
 
     $stmt = $DbMultidict->prepare('SELECT password FROM users WHERE user=:user');
@@ -65,7 +65,7 @@ EOD_barr;
 
         if (!$vialink && empty($oldpass)) {
             $errorMessage = 'You have not given your old password';
-        } elseif (!$vialink && !($loggedinUser=='admin' && substr($oldpass,3.3)=='Lin') && (crypt($oldpass,$row['password']) <> $row['password'])) {
+        } elseif (!$vialink && !($loggedinUser=='admin' && substr($oldpass,3,3)=='Lin') && (crypt($oldpass,$row['password']) <> $row['password'])) {
             $errorMessage = 'Old password incorrect';  //Crude functionality for admin - improve sometime
         } elseif (empty($password)) {
             $errorMessage = 'You have not specified a new password';
