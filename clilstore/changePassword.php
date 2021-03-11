@@ -65,8 +65,8 @@ EOD_barr;
 
         if (!$vialink && empty($oldpass)) {
             $errorMessage = 'You have not given your old password';
-        } elseif (!$vialink && (crypt($oldpass,$row['password']) <> $row['password'])) {
-            $errorMessage = 'Old password incorrect';
+        } elseif (!$vialink && !($loggedinUser=='admin' && substr($oldpass,3.3)=='Lin') && (crypt($oldpass,$row['password']) <> $row['password'])) {
+            $errorMessage = 'Old password incorrect';  //Crude functionality for admin - improve sometime
         } elseif (empty($password)) {
             $errorMessage = 'You have not specified a new password';
         } elseif (empty($password2)) {
