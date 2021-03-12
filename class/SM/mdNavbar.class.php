@@ -11,10 +11,10 @@ class SM_mdNavbar {
           'ga'=>'Gaeilge',
           'gd'=>'Gàidhlig',
           'it'=>'Italiano',
+          'pt'=>'Português',
           'sh'=>'Srpskohrvatsk',
             '----1'=>'',  //Partial translations
           'lt'=>'Lietuvių',
-          'pt'=>'Português',
           'bg'=>'Български',
             '----2'=>'',  //Very partial translations
           'cy'=>'Cymraeg',
