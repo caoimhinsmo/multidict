@@ -8,7 +8,6 @@
   $DbMultidict = SM_DbMultidictPDO::singleton('rw');
 
   $utime = time();
-error_log("\$pf=$pf, \$utime=$utime");
   $stmt = $DbMultidict->prepare('UPDATE cspf SET prio=:prio WHERE pf=:pf');
   $stmt->execute([ ':pf'=>$pf, ':prio'=>$utime ]);
   
