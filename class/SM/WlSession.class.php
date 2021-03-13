@@ -624,8 +624,7 @@ class SM_WlSession {
       $DbMultidict = SM_DbMultidictPDO::singleton('rw');
       $stmt = $DbMultidict->prepare('SELECT class FROM dict WHERE dict=:dict');
       $stmt->execute([':dict'=>$dict]);
-      $r = $stmt->fetch();
-      $class = $r['class'];
+      $class = $stmt->fetchColumn();
       return $class;
   }
 
