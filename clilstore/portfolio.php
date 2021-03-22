@@ -92,6 +92,10 @@
     }
     $edit = ( in_array($loggedinUser, [$user,'admin']) ? 1 : 0 ); //$edit=1 indicates that the user has edit rights over the portfolio
     if ($edit) {
+        $stmtPfs = $DbMultidict->prepare('SELECT pf AS portf, title AS portfTitle FROM cspf WHERE user=:user ORDER BY prio DESC');
+        $stmtPfs->execute([':user'=>$user]);
+        $pfArr = $stmtPfs->fetchAll(PDO::FETCH_ASSOC);
+
         $itemEditHtml = "<span class=upArrow title='$T_Move_up' onClick=moveItem(this,'up')>⇧</span>"
                       . "<span class=downArrow title='$T_Move_down' onClick=moveItem(this,'down')>⇩</span> "
                       . "<img src='/icons-smo/curAs.png' alt='Delete' title='$T_Delete_this_item' onClick='itemDelete(this)'>";
@@ -138,6 +142,17 @@ END_unitsTableHtml;
                                     . ' WHERE pf=:pf AND unit=clilstore.id ORDER BY ord');
         $stmtPfu->execute([':pf'=>$pf]);
         $pfuRows = $stmtPfu->fetchAll(PDO::FETCH_ASSOC);
+        $movetoPfHtml = '';
+        foreach ($pfArr as $row) {
+            extract($row);
+            if ($portf<>$pf) { $movetoPfHtml .= "<option value=$portf>$portfTitle</option>\n"; }
+        }
+        if ($movetoPfHtml) { $movetoPfHtml = <<<END_movetoPfHtml
+<select class='edit movetoPf' title='Move the unit to another portfolio' onChange="movetoPf(this)">
+<option value=-1>⇦</option>
+$movetoPfHtml
+</select>
+END_movetoPfHtml; }
         foreach ($pfuRows as $pfuRow) {
             extract($pfuRow);
             $stmtPfuL = $DbMultidict->prepare('SELECT id AS pfuL, learned FROM cspfUnitLearned WHERE pfu=:pfu ORDER BY ord');
@@ -185,7 +200,7 @@ $newWorkItem
 END_workHtml;
             $unitsHtml .= <<<END_unitsHtml
 <tr id=pfuRow$pfu $rowClass>
-<td><p style="margin:0"><a href='/cs/$csUnit'>$unitidHtml<br>$csTitle</a></p><p style="margin:0.7em 0 0.3em 0.7em">$editToolsHtml</p></td>
+<td><p style="margin:0">$movetoPfHtml<a href='/cs/$csUnit'>$unitidHtml<br>$csTitle</a></p><p style="margin:0.7em 0 0.3em 0.7em">$editToolsHtml</p></td>
 <td>$learnedHtml <!-- <span id="\$vocid-tick" class=change>✔<span> --></td>
 <td>$workHtml</td>
 </tr>
@@ -199,7 +214,6 @@ END_unitsHtml;
 
         $unitsTableHtml = <<<END_unitsTable
 <table id=unitstab>
-<caption>$h1</caption>
 <col style="width:25%"><col><col>
 <tr id=unitstabhead><td>$T_Clilstore_unit</td><td>$T_What_I_have_learned</td><td>$T_Links_to_my_work</td></tr>
 $unitsHtml
@@ -235,18 +249,15 @@ $addTeacherHtml
 END_pt;
 
         if ($edit) {
-            $stmtPfs = $DbMultidict->prepare('SELECT pf AS portf,title FROM cspf WHERE user=:user ORDER BY prio DESC');
-            $stmtPfs->execute([':user'=>$user]);
-            $rows = $stmtPfs->fetchAll(PDO::FETCH_ASSOC);
-            foreach ($rows as $n=>$row) {
+            foreach ($pfArr as $n=>$row) {
                 extract($row);
                 if ($n==0) { $promoteHtml = "- <b>$T_active_portfolio</b>";
-                             $title = "<b>$title</b>"; }
+                             $portfTitle = "<b>$portfTitle</b>"; }
                  else      { $promoteHtml = "<a title='$T_Promote_to_active_portfolio' onClick=\"pfPromote('$portf')\">↑ $T_Promote</a>"; }
                 $editHtml = "<img src='/icons-smo/curAs.png' alt='Delete' title='$T_Delete_this_portfolio' onclick=\"pfDelete('$portf','$pf','$n')\">";
                 if ($portf==$pf) { $promoteHtml .= " &nbsp; [$T_this_portfolio]"; }
                 $promoteHtml = "<span style='font-size:75%'>$promoteHtml</span>";
-                $pfsTableHtml .= "<tr id=pfsRow$portf><td>$editHtml <a href='./portfolio.php?pf=$portf'>$title</a> $promoteHtml</td></tr>\n";
+                $pfsTableHtml .= "<tr id=pfsRow$portf><td>$editHtml <a href='./portfolio.php?pf=$portf'>$portfTitle</a> $promoteHtml</td></tr>\n";
             }
             $pfsTableHtml = <<<END_pfstab
 <p style="margin:3em 0 0 0; border-top:2px solid grey; font-weight:bold">$T_My_portfolios</p>
@@ -305,6 +316,8 @@ EOD;
         li:last-child span.downArrow { display:none; }
         tr:nth-child(2) span.upArrowUnit { display:none; }
         tr:last-child span.downArrowUnit { display:none; }
+        select.movetoPf { padding:0; font-size:120%; width:3em; }
+        select.movetoPf option { padding:0; }
     </style>
     <script>
         function createPortfolio() {
@@ -564,6 +577,21 @@ EOD;
                  else                { trEl.parentNode.insertBefore(swopEl,trEl); }
             }
             xhr.open('GET', 'ajax/pfUnitSwop.php?id='+id+'&swopId='+swopId);
+            xhr.send();
+        }
+ 
+        function movetoPf(el) {
+            var pf = el.value;
+            var trEl = el.closest('tr');
+            var pfu = trEl.id.substring(6);
+            var xhr = new XMLHttpRequest();
+            xhr.onload = function() {
+                var resp = this.responseText;
+                if (resp!='OK') { alert('$T_Error_in pfMoveUnit.php\\r\\n\\r\\n'+resp); return; }
+                trEl.style.backgroundColor = 'pink';
+                trEl.remove();
+            }
+            xhr.open('GET', 'ajax/pfMoveUnit.php?pfu='+pfu+'&pf='+pf);
             xhr.send();
         }
     </script>
