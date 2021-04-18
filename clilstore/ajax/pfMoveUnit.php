@@ -14,12 +14,12 @@
 
   $stmtCHECK = $DbMultidict->prepare('SELECT user FROM cspf WHERE pf=:pf');
   $stmtCHECK->execute([ ':pf'=>$pf ]);
-  if (! ($owner = $stmtCHECK->fetchColumn()) ) { die('No such unit'); }
+  if (! ($owner = $stmtCHECK->fetchColumn()) ) { die('No such portfolio'); }
   if ($owner<>$user) { die('You can only alter portfolios owned by you yourself'); }
 
   $timeNow = time();
-  $stmtUPDATE = $DbMultidict->prepare('UPDATE cspfUnit SET pf=:pf, ord=:ord WHERE pfu=:pfu');
+  $stmtUPDATE = $DbMultidict->prepare('UPDATE IGNORE cspfUnit SET pf=:pf, ord=:ord WHERE pfu=:pfu');
   $stmtUPDATE->execute([ ':pfu'=>$pfu, ':pf'=>$pf, ':ord'=>$timeNow ]);
-  
-  echo 'OK';
+  if ($stmtUPDATE->rowcount()==0) { echo 'KO'; }
+                             else { echo 'OK'; }
 ?>

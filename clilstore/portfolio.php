@@ -582,11 +582,12 @@ EOD;
  
         function movetoPf(el) {
             var pf = el.value;
-            var trEl = el.closest('tr');
+            var trEl = el.closest('tr.edit');
             var pfu = trEl.id.substring(6);
             var xhr = new XMLHttpRequest();
             xhr.onload = function() {
                 var resp = this.responseText;
+                if (resp=='KO') { alert('This unit is already in that portfolio'); return; }
                 if (resp!='OK') { alert('$T_Error_in pfMoveUnit.php\\r\\n\\r\\n'+resp); return; }
                 trEl.style.backgroundColor = 'pink';
                 trEl.remove();
