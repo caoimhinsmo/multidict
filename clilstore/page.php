@@ -26,6 +26,7 @@
   $T_Unit_info_title      = $T->h('Unit_info_title');
   $T_Open_vocabulary_list = $T->h('Open_vocabulary_list');
   $T_Add_to_portfolio     = $T->h('Add_to_portfolio');
+  $T_Clilstore_index_page = $T->h('Clilstore_index_page');
 
   try {
     if (!isset($_GET['id'])) { throw new SM_MDexception('No id parameter'); }
@@ -108,7 +109,7 @@
 //    if (stripos('Mobi',$_SERVER['HTTP_USER_AGENT'])===false) { $sharebuttonWA = ''; }
     $navbar1 = <<<EOD_NB1
 <ul class="linkbuts">
-<li><a href="./" class="nowordlink" target="_top" title="Clilstore index page">Clilstore</a></li>
+<li><a href="./" class="nowordlink" target="_top" title="$T_Clilstore_index_page">Clilstore</a></li>
 <li>$sharebuttonFB
 <li>$sharebuttonTw
 <li>$sharebuttonWA
@@ -122,7 +123,7 @@ $portfolioHtml
 EOD_NB1;
     $navbar2 = <<<EOD_NB2
 <ul class="linkbuts">
-<li><a href="./" class="nowordlink" target="_top" title="Clilstore index page">C</a></li>
+<li><a href="./" class="nowordlink" target="_top" title="$T_Clilstore_index_page">C</a></li>
 $buttonsHtml
 </ul>
 EOD_NB2;
