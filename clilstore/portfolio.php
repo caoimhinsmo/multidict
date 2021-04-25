@@ -58,9 +58,11 @@
   $T_Portfolio_contains_no_units    = $T->h('Portfolio_contains_no_units');
   $T_You_can_add_Clilstore_units    = $T->h('You_can_add_Clilstore_units');
   $T_Remove_permission_from_teacher = $T->h('Remove_permission_from_teacher');
+  $T_Move_this_unit_to_portfolio    = $T->h('Move_this_unit_to_portfolio');
   $T_Remove_unit_from_portfolio     = $T->h('Remove_unit_from_portfolio');
   $T_Completely_delete_portfolio    = $T->j('Completely_delete_portfolio');
   $T_Teacher_already_has_access     = $T->j('Teacher_already_has_access');
+  $T_Unit_already_in_that_portfolio = $T->j('Unit_already_in_that_portfolio');  
 
   $mdNavbar = SM_mdNavbar::mdNavbar($T->domhan);
 
@@ -145,10 +147,10 @@ END_unitsTableHtml;
         $movetoPfHtml = '';
         foreach ($pfArr as $row) {
             extract($row);
-            if ($portf<>$pf) { $movetoPfHtml .= "<option value=$portf>$portfTitle</option>\n"; }
+            if ($portf<>$pf) { $movetoPfHtml .= "<option value='$portf'>$portfTitle</option>\n"; }
         }
         if ($movetoPfHtml) { $movetoPfHtml = <<<END_movetoPfHtml
-<select class='edit movetoPf' title='Move the unit to another portfolio' onChange="movetoPf(this)">
+<select class='edit movetoPf' title='$T_Move_this_unit_to_portfolio' onChange="movetoPf(this)">
 <option value=-1>⇦</option>
 $movetoPfHtml
 </select>
@@ -587,7 +589,7 @@ EOD;
             var xhr = new XMLHttpRequest();
             xhr.onload = function() {
                 var resp = this.responseText;
-                if (resp=='KO') { alert('This unit is already in that portfolio'); return; }
+                if (resp=='KO') { alert('$T_Unit_already_in_that_portfolio'); return; }
                 if (resp!='OK') { alert('$T_Error_in pfMoveUnit.php\\r\\n\\r\\n'+resp); return; }
                 trEl.style.backgroundColor = 'pink';
                 trEl.remove();

@@ -20,13 +20,15 @@
   $T_Short_url  = $T->h('Short_url');
   $T_Error_in   = $T->j('Error_in');
   $T_totalj     = $T->j('total');
-  $T_Voc_Click_to_enable  = $T->h('Voc_Click_to_enable');
-  $T_Voc_Click_to_disable = $T->h('Voc_Click_to_disable');
-  $T_Edit_this_unit       = $T->h('Edit_this_unit');
-  $T_Unit_info_title      = $T->h('Unit_info_title');
-  $T_Open_vocabulary_list = $T->h('Open_vocabulary_list');
-  $T_Add_to_portfolio     = $T->h('Add_to_portfolio');
-  $T_Clilstore_index_page = $T->h('Clilstore_index_page');
+  $T_Voc_Click_to_enable    = $T->h('Voc_Click_to_enable');
+  $T_Voc_Click_to_disable   = $T->h('Voc_Click_to_disable');
+  $T_Edit_this_unit         = $T->h('Edit_this_unit');
+  $T_Unit_info_title        = $T->h('Unit_info_title');
+  $T_Open_vocabulary_list   = $T->h('Open_vocabulary_list');
+  $T_Portfolio_title        = $T->h('Portfolio_title');
+  $T_Clilstore_index_page   = $T->h('Clilstore_index_page');
+  $T_New_portfolio          = $T->h('New_portfolio');
+  $T_Create_a_new_portfolio = $T->h('Create_a_new_portfolio');
 
   try {
     if (!isset($_GET['id'])) { throw new SM_MDexception('No id parameter'); }
@@ -83,12 +85,29 @@
                         ."<img src='/favicons/recordOn.png' alt='VocOn' title='$T_Voc_Click_to_disable'>"
                         ."</span></li>"
                         ."<li class=right><a class=$vocClass href='voc.php?user=$user&amp;sl=$sl' data-nowordlink target=voctab title='$T_Open_vocabulary_list'>V</a>";
+
+        $stmtPfs = $DbMultidict->prepare('SELECT pf AS portf,title AS pfTitle FROM cspf WHERE user=:user ORDER BY prio DESC');
+        $stmtPfs->execute([':user'=>$user]);
+        $pfsRows = $stmtPfs->fetchAll(PDO::FETCH_ASSOC);
+        foreach($pfsRows as $pfRow) {
+            extract($pfRow);
+            $portfolioHtml .= "<div class=pfddown-item><a href='portfolio.php?pf=$portf&amp;unit=$id' target='pftab' data-nowordlink>$pfTitle</a></div>\n";
+        }
+
        $stmt = $DbMultidict->prepare('SELECT pf FROM cspf WHERE user=:user ORDER BY prio DESC LIMIT 1');
        $stmt->execute([':user'=>$user]);
        if ($row  = $stmt->fetch(PDO::FETCH_ASSOC)) {
            extract($row);
-           $portfolioHtml = "<li class=right><a href=portfolio.php?unit=$id target=pftab  onClick=\"pfAddUnit('$id');\" title='$T_Add_to_portfolio'>P</a>";
+           $portfolioHtml = <<<END_portfolioHtml
+<li class="pfddown right"><a href='javascript:;' data-nowordlink title='$T_Portfolio_title'>P</a>
+<div class=pfddown-content>
+$portfolioHtml
+<div class=pfddown-item><a href='portfolio.php?pf=0&amp;unit=$id' target='pftab' data-nowordlink style="font-style:italic;margin-left:0.3em" title='$T_Create_a_new_portfolio'>$T_New_portfolio</a></div>
+</div>
+</li>
+END_portfolioHtml;
        }
+
        $stmtGetLike  = $DbMultidict->prepare('SELECT likes FROM user_unit WHERE unit=:id AND user=:user');
        $stmtGetLikes = $DbMultidict->prepare('SELECT SUM(likes) FROM user_unit WHERE unit=:id');
        $stmtGetLike->execute([':id'=>$id,':user'=>$user]);
@@ -173,6 +192,11 @@ EOD_NB2;
         li#likeLI.unliked #heartUnliked { display:inline; }
         li.liked   span.badge { color:red;  }
         li.unliked span.badge { color:grey; }
+        .pfddown { display:inline-block; }
+        .pfddown-content { display:none; position:absolute; right:0; padding:2px; background-color:rgba(255,255,255,0.8);
+                         white-space:nowrap; border:1px solid grey; box-shadow:0 8px 16px 0 rgba(0,0,0,0.7); z-index:1; }
+        .pfddown:hover .pfddown-content { display:block; }
+        .pfddown-item {margin: 3px; }
     </style>
     <script>
         function likeClicked() {
