@@ -103,6 +103,13 @@ END_noVocTable2;
 </tr>
 END_vocHtml;
             }
+            $exportHtml = <<<END_exportHtml
+<p><form action=vocExport.php><input type=submit value='Export' style="padding:0px 8px"> this vocabulary list to a .csv file, with
+<input name=separator required value='|' maxlength=1 style="width:1em;text-align:center"> as the separator character.
+<input type=hidden name=user value='$userSC'>
+<input type=hidden name=sl value='$slLorg'>
+</form></p>
+END_exportHtml;
             $T_Empty_voc_list_question = strtr ( $T_Empty_voc_list_question,
                                                 [ '{'    => "<a id=emptyBut onclick=\"emptyVocList('$user','$slLorg')\">",
                                                   '}'    => '</a>',
@@ -114,7 +121,10 @@ END_vocHtml;
 <tr id=vocabhead><td></td><td>$T_Word</td><td>$T_Meaning</td><td>$T_Clicked_in_unit</td></tr>
 $vocHtml
 </table>
-<p style="margin:3.5em 0 0 0;font-size:85%">$T_Empty_voc_list_question</p>
+<div style="margin:3.5em 0 0 0;font-size:85%">
+<p>$T_Empty_voc_list_question</p>
+$exportHtml
+</div>
 END_vocTable;
         }
     }
