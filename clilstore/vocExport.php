@@ -5,8 +5,8 @@
     else { $sl = $_REQUEST['sl']; }
   if (empty($_REQUEST['user'])) { die('Missing user parameter'); }
     else { $user = $_REQUEST['user']; }
-  if (empty($_REQUEST['separator'])) { die('Missing separator parameter'); }
-    else { $separator = $_REQUEST['separator']; }
+  $separator = $_REQUEST['separator'] ?? "\t";
+  $extn = ( $separator=="\t" ? '.tsv' : '.csv' );
 
   $myCLIL = SM_myCLIL::singleton();
   if (!$myCLIL->cead('{logged-in}')) { die('Not logged in'); }
@@ -29,7 +29,7 @@
   header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
   header("Pragma: no-cache");
   header('Content-Type: text/plain; charset=UTF-8');
-  header("Content-disposition: attachment; filename=\"voc-$sl.csv\"");
+  header("Content-disposition: attachment; filename=\"voc-$sl$extn\"");
 
   echo $vocHtml;
 ?>
