@@ -139,6 +139,11 @@ END_unitsTableHtml;
     } else {
 
         $unitToEdit = $_REQUEST['unit'] ?? 0;
+        if ($unitToEdit) {
+            $ord = time();
+            $stmtAddUnit = $DbMultidict->prepare('INSERT IGNORE INTO cspfUnit (pf,unit,ord) VALUES (:pf,:unit,:ord)');
+            $stmtAddUnit->execute([ ':pf'=>$pf, ':unit'=>$unitToEdit, ':ord'=>$ord ]);
+        }
 
         $stmtPfu = $DbMultidict->prepare('SELECT cspfUnit.pfu, cspfUnit.unit AS csUnit, clilstore.title AS csTitle FROM cspfUnit,clilstore'
                                     . ' WHERE pf=:pf AND unit=clilstore.id ORDER BY ord');
