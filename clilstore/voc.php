@@ -28,7 +28,10 @@
   $T_No_words_in_voc_list      = $T->h('No_words_in_voc_list');
   $T_No_words_in_voc_list_for_ = $T->h('No_words_in_voc_list_for_');
   $T_No_words_in_voc_list_info = $T->h('No_words_in_voc_list_info');
+  $T_Sort_the_column           = $T->h('Sort_the_column');
   $T_Empty_voc_list_question   = $T->h('Empty_voc_list_question');
+  $T_Export_to_csv             = $T->h('Export_to_csv');
+  $T_Export_to_tsv             = $T->h('Export_to_tsv');
   $T_Empty_voc_list_confirm    = $T->j('Empty_voc_list_confirm');
 
   $T_No_words_in_voc_list_info = strtr ( $T_No_words_in_voc_list_info, [ '{'=>'<i>', '}'=>'</i>' ] );
@@ -76,7 +79,32 @@ END_noVocTable1;
 <p>$T_No_words_in_voc_list_info</p>
 END_noVocTable2;
         } else {
-            $stmt = $DbMultidict->prepare('SELECT vocid,word,calls,head,meaning FROM csVoc WHERE user=:user AND sl=:sl');
+            $vocidClickOrder   = 'vocid';
+            $wordClickOrder    = 'word';
+            $meaningClickOrder = 'meaning';
+            $order = $_REQUEST['order'] ?? 'vocid';
+            if ($order=='vocid') {
+                $orderCondition  = 'vocid';
+                $vocidClickOrder = 'vocidDESC';
+            } elseif ($order=='vocidDESC') {
+                $orderCondition = 'vocid DESC';
+                $vocidClickOrder = 'vocid';
+            } elseif ($order=='word') {
+                $orderCondition = 'word';
+                $wordClickOrder  = 'wordDESC';
+            } elseif ($order=='wordDESC') {
+                $orderCondition = 'word DESC';
+                $wordClickOrder = 'word';
+            } elseif ($order=='meaning') {
+                $orderCondition = 'meaning, word';
+                $meaningClickOrder  = 'meaningDESC';
+            } elseif ($order=='meaningDESC') {
+                $orderCondition = 'meaning DESC, word';
+                $meaningClickOrder = 'meaning';
+            } else {
+                $orderCondition = 'vocid';
+            }
+            $stmt = $DbMultidict->prepare("SELECT vocid,word,calls,head,meaning FROM csVoc WHERE user=:user AND sl=:sl ORDER BY $orderCondition");
             $stmt->execute([':user'=>$user,':sl'=>$slLorg]);
             $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
             foreach ($rows as $row) {
@@ -103,29 +131,43 @@ END_noVocTable2;
 </tr>
 END_vocHtml;
             }
-            $exportHtml = <<<END_exportHtml
-<div id=export>
-<p><form action=vocExport.php><input type=submit value='Export' style="padding:0px 8px"> this vocabulary list to a .csv file, with
-<input name=separator required value='|' maxlength=1 style="width:1em;text-align:center"> as the separator character
-<input type=hidden name=user value='$userSC'>
-<input type=hidden name=sl value='$slLorg'>
-<i>(UTF-8 encoding)</i>.
-</form></p>
-<p><form action=vocExport.php><input type=submit value='Export' style="padding:0px 8px"> this vocabulary list to a .tsv file
-<input type=hidden name=user value='$userSC'>
-<input type=hidden name=sl value='$slLorg'>
-<i>(UTF-8 encoding)</i>.
-</form></p>
-</div>
-END_exportHtml;
+            $T_Export_to_csv = strtr ( $T_Export_to_csv,
+                                      [ '{' => '<input type=submit value="',
+                                        '}' => '" style="padding:0px 8px">',
+                                        '|' => '<input name=separator required value="|" maxlength=1 style="width:1em;text-align:center">'
+                                      ] );
+            $T_Export_to_tsv = strtr ( $T_Export_to_tsv,
+                                      [ '{' => '<input type=submit value="',
+                                        '}' => '" style="padding:0px 8px">'
+                                      ] );
             $T_Empty_voc_list_question = strtr ( $T_Empty_voc_list_question,
                                                 [ '{'    => "<a id=emptyBut onclick=\"emptyVocList('$user','$slLorg')\">",
                                                   '}'    => '</a>',
                                                   '[sl]' => "$slLorgEndonym"
                                                 ] );
+            $exportHtml = <<<END_exportHtml
+<div id=export>
+<p><form action=vocExport.php>$T_Export_to_csv
+<input type=hidden name=user value='$userSC'>
+<input type=hidden name=sl value='$slLorg'>
+<i>(UTF-8 encoding)</i>
+</form></p>
+<p><form action=vocExport.php>$T_Export_to_tsv
+<input type=hidden name=user value='$userSC'>
+<input type=hidden name=sl value='$slLorg'>
+<i>(UTF-8 encoding)</i>
+</form></p>
+<p>$T_Empty_voc_list_question</p>
+</div>
+END_exportHtml;
             $vocTableHtml = <<<END_vocTable
 <table id=vocab>
-<tr id=vocabhead><td></td><td>$T_Word</td><td>$T_Meaning</td><td>$T_Clicked_in_unit</td></tr>
+<tr id=vocabhead>
+<td><a href="./voc.php?user=$user&amp;sl=$slLorg&amp;order=$vocidClickOrder" title='$T_Sort_the_column'>*</a></td>
+<td><a href="./voc.php?user=$user&amp;sl=$slLorg&amp;order=$wordClickOrder" title='$T_Sort_the_column'>$T_Word</a></td>
+<td><a href="./voc.php?user=$user&amp;sl=$slLorg&amp;order=$meaningClickOrder" title='$T_Sort_the_column'>$T_Meaning</a></td>
+<td>$T_Clicked_in_unit</td>
+</tr>
 $vocHtml
 </table>
 END_vocTable;
@@ -138,7 +180,6 @@ $langButHtml
 <p style="margin:0">$T_Language: $slLorgEndonym</p>
 $exportHtml
 $vocTableHtml
-<p style="margin:3.5em 0 0 0;font-size:85%">$T_Empty_voc_list_question</p>
 EOD;
 
   } catch (Exception $e) { $HTML = $e; }
@@ -156,6 +197,7 @@ EOD;
         span.callcount { font-size:75%; color:grey; }
         table#vocab { border-collapse:collapse; border:1px solid grey; margin-bottom:0.5em; white-space:nowrap; }
         table#vocab tr#vocabhead { background-color:grey; color:white; font-weight:bold; }
+        table#vocab tr#vocabhead a { color:white; }
         table#vocab tr:nth-child(odd)  { background-color:#ddf; }
         table#vocab tr:nth-child(even) { background-color:#fff; }
         table#vocab tr:nth-child(odd):hover  { background-color:#fe6; }
@@ -172,8 +214,9 @@ EOD;
         a#emptyBut:hover,
         a#emptyBut:active,
         a#emptyBut:focus  { background-color:#f00; color:white; }
-        div#export { margin-left:4em; font-size:70%; }
+        div#export { margin:0.6em 4em; border:1px solid grey; border-radius:0.5em; background-color:#eef; padding:0.1em 0.6em; font-size:70%; }
         div#export p { margin:0.5em 0; }
+        div#export i { font-size:70%; color:#333; }
     </style>
     <script>
         function deleteVocWord(vocid) {
