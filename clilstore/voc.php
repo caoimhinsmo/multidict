@@ -69,7 +69,7 @@ END_noVocTable1;
             $langButArray[$sl] = "<a href='voc.php?user=$userSC&amp;sl=$sl' title='$endonym ($cnt $T_words)' class='$class'>$sl</a>";
         }
         $langButHtml = implode(' ',$langButArray);
-        $langButHtml = "<p>$langButHtml</p>";
+        $langButHtml = "<p style='margin:0.3em 0'>$langButHtml</p>";
         if (empty($langButArray[$slLorg])) {
             $vocTableHtml = <<<END_noVocTable2
 <p>$T_No_words_in_voc_list_for_ &lsquo;$slLorg&rsquo;.</p>
@@ -104,6 +104,7 @@ END_noVocTable2;
 END_vocHtml;
             }
             $exportHtml = <<<END_exportHtml
+<div id=export>
 <p><form action=vocExport.php><input type=submit value='Export' style="padding:0px 8px"> this vocabulary list to a .csv file, with
 <input name=separator required value='|' maxlength=1 style="width:1em;text-align:center"> as the separator character
 <input type=hidden name=user value='$userSC'>
@@ -115,6 +116,7 @@ END_vocHtml;
 <input type=hidden name=sl value='$slLorg'>
 <i>(UTF-8 encoding)</i>.
 </form></p>
+</div>
 END_exportHtml;
             $T_Empty_voc_list_question = strtr ( $T_Empty_voc_list_question,
                                                 [ '{'    => "<a id=emptyBut onclick=\"emptyVocList('$user','$slLorg')\">",
@@ -122,15 +124,10 @@ END_exportHtml;
                                                   '[sl]' => "$slLorgEndonym"
                                                 ] );
             $vocTableHtml = <<<END_vocTable
-<p>$T_Language: $slLorgEndonym</p>
 <table id=vocab>
 <tr id=vocabhead><td></td><td>$T_Word</td><td>$T_Meaning</td><td>$T_Clicked_in_unit</td></tr>
 $vocHtml
 </table>
-<div style="margin:3.5em 0 0 0;font-size:85%">
-<p>$T_Empty_voc_list_question</p>
-$exportHtml
-</div>
 END_vocTable;
         }
     }
@@ -138,8 +135,10 @@ END_vocTable;
 <h1 style="font-size:140%;margin:0;padding-top:0.5em">$T_Vocabulary_list_for_user_ <span style="color:brown">$user</span></h1>
 
 $langButHtml
-
+<p style="margin:0">$T_Language: $slLorgEndonym</p>
+$exportHtml
 $vocTableHtml
+<p style="margin:3.5em 0 0 0;font-size:85%">$T_Empty_voc_list_question</p>
 EOD;
 
   } catch (Exception $e) { $HTML = $e; }
@@ -173,6 +172,8 @@ EOD;
         a#emptyBut:hover,
         a#emptyBut:active,
         a#emptyBut:focus  { background-color:#f00; color:white; }
+        div#export { margin-left:4em; font-size:70%; }
+        div#export p { margin:0.5em 0; }
     </style>
     <script>
         function deleteVocWord(vocid) {
