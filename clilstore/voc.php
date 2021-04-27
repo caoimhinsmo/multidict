@@ -82,7 +82,7 @@ END_noVocTable2;
             $vocidClickOrder   = 'vocid';
             $wordClickOrder    = 'word';
             $meaningClickOrder = 'meaning';
-            $order = $_REQUEST['order'] ?? 'vocid';
+            $order = $_REQUEST['order'] ?? 'vocidDESC';
             if ($order=='vocid') {
                 $orderCondition  = 'vocid';
                 $vocidClickOrder = 'vocidDESC';
