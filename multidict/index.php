@@ -34,7 +34,7 @@
 
   $sid = ( !empty($_GET['sid']) ? $_GET['sid'] : null);
   $wlSession = new SM_WlSession($sid);
-  $wlSession->bestDict();
+  try { $wlSession->bestDict(); } catch (Exception $e) { } //Improve this sometime to give better error messages
   $wlSession->storeVars();
   $sid = $wlSession->sid;
   $sl  = $wlSession->sl;
