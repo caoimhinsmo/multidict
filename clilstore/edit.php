@@ -842,7 +842,7 @@ EODfileInfoForm;
             var uploadForm = document.getElementById('uploadForm');
             var file = document.getElementById('bloigh').files[0]; //If multiple files selected, retain only the first
             if (typeof(file)=='undefined') { alert('You need to select a file first'); return; }
-            if (file.size>3000000) { alert('File size exceeds Clilstore’s 3MB upload limit'); return; }
+            if (file.size>5000000) { alert('File size exceeds the Clilstore 5MB upload limit'); return; }
             if (file.size>1000000) { alert('This file is very big'); }
             uploadStatus.innerHTML = 'Uploading...';
             var formData = new FormData();

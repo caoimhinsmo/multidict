@@ -19,12 +19,17 @@
     $bloighSize  = $bloighInfo['size'];
     $bloighType  = $bloighInfo['type'];
     $bloighName  = $bloighInfo['name'];
+    if ( substr($bloighName,0,3)=='MOR' ) { // Unadvertized trick - If the filename starts with 'MOR'
+        $maxsize = 5000000;                 // allow slightly bigger files to be uploaded
+    } else {
+        $maxsize = 1048000;
+    }
     $tmp_name    = $bloighInfo['tmp_name'];
     if      ($bloighError==1) { die('File too large - exceeds the website’s php.ini limit'); }
      elseif ($bloighError==2) { die('File too large - exceeds Clilstore upload limit of 3MB'); }
      elseif ($bloighError==3) { die('Failed partway through'); }
      elseif ($bloighError==4) { die('Looks like you hadn’t chosen any file'); }
-     elseif ($bloighSize>1048000)  { die('File exceeds the 1MB limit for files in Clilstore'); }
+     elseif ($bloighSize>$maxsize)  { die('File exceeds the 1MB limit for files in Clilstore'); }
     else {
         $bloigh = file_get_contents($tmp_name);
         $filename = $bloighName;
