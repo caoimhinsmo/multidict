@@ -267,7 +267,8 @@ END_tinymceScriptHead;
       ],
       toolbar: 'undo redo | styleselect | bold italic forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | print preview media fullpage',
       max_height: '100em',
-      language: "$hlTiny"
+      language: "$hlTiny",
+      entity_encoding: 'raw'
     });
   </script>
 END_tinymceScriptBody;
