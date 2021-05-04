@@ -126,7 +126,8 @@ END_noVocTable2;
 <tr id=row$vocid>
 <td><img src='/icons-smo/curAs.png' alt='Delete' title='$T_Delete_instantaneously' onclick="deleteVocWord('$vocid')"></td>
 <td title='$T_Lookup_with_Multidict'><a href='/multidict/?sl=$slLorg&amp;word=$word' target=vocmdtab><img src=/favicons/multidict.png alt=''> $word</a></td>
-<td><input value='$meaningSC' style='min-width:45em;max-width:55em' onchange="changeMeaning('$vocid',this.value);"><span id="$vocid-tick" class=change>✔<span></td>
+<td class=meaning><a class=reveal href="javascript:;" onclick="reveal(this)">Reveal</a>
+    <input value='$meaningSC' style='min-width:45em;max-width:55em' onchange="changeMeaning('$vocid',this.value);" title="Here you can write in or alter the meaning of the word"><span id="$vocid-tick" class=change>✔<span></td>
 <td>$unitsHtml</td>
 </tr>
 END_vocHtml;
@@ -173,12 +174,20 @@ $vocHtml
 END_vocTable;
         }
     }
+    $vocHideRevealHtml = <<<END_vocHideRevealHtml
+<p>
+Test yourself
+<a class=button href='javascript:hideAll();'>Hide All</a>
+<a class=button href='javascript:revealAll();'>Reveal All</a>
+</p>
+END_vocHideRevealHtml;
     $HTML = <<<EOD
 <h1 style="font-size:140%;margin:0;padding-top:0.5em">$T_Vocabulary_list_for_user_ <span style="color:brown">$user</span></h1>
 
 $langButHtml
 <p style="margin:0">$T_Language: $slLorgEndonym</p>
 $exportHtml
+$vocHideRevealHtml
 $vocTableHtml
 EOD;
 
@@ -204,9 +213,15 @@ EOD;
         table#vocab tr:nth-child(even):hover { background-color:#fe6; }
         table#vocab td { padding:0px 3px; }
         table#vocab td:nth-child(1) { padding:0 0.4em; }
+        table#vocab td:nth-child(2) a { color:blue; }
         table#vocab td:nth-child(2) a:hover { color:white; background-color:black; }
         table#vocab td:nth-child(3) { padding:0; }
         table#vocab tr + tr > td { border-left:1px solid #aaa; }
+        table#vocab td.meaning input { }
+        table#vocab td.meaning a.reveal { display:none; margin-left:1em; font-size:80%; padding:0 5px; background-color:#5ae; color:white; border-radius:4px; }
+        table#vocab td.meaning a.reveal:hover {background-color:blue; }
+        table#vocab td.meaning.hide input { display:none }
+        table#vocab td.meaning.hide a.reveal { display:inline; }
         a.langbutton { margin:1px 7px; background-color:#55a8eb; color:white; font-weight:bold; padding:2px 8px; border:1px solid white; border-radius:8px; }
         a.langbutton.selected { border-color:#55a8eb; background-color:yellow; color:#55a8eb; }
         a.langbutton.live:hover { background-color:blue; }
@@ -256,6 +271,24 @@ EOD;
                 xhttp.send();
                 return false;
             }
+        }
+        function hideAll() {
+            var inputEls = document.querySelectorAll('table#vocab td.meaning input');
+            for (i = 0; i < inputEls.length; i++) {
+                var inputEl = inputEls[i];
+                if (inputEl.value > '') { inputEl.closest('td.meaning').classList.add('hide'); }
+            }
+        }
+        function revealAll() {
+            var inputEls = document.querySelectorAll('table#vocab td.meaning input');
+            for (i = 0; i < inputEls.length; i++) {
+                var inputEl = inputEls[i];
+                if (inputEl.value > '') { inputEl.closest('td.meaning').classList.remove('hide'); }
+            }
+        }
+        function reveal(el) {
+            el.closest('td.meaning').classList.remove('hide');
+            return false;
         }
     </script>
 </head>
