@@ -14,25 +14,30 @@
 
   $T = new SM_T('clilstore/voc');
 
-  $T_Language = $T->h('Language');
-  $T_Word     = $T->h('Facal');
-  $T_words    = $T->h('facail');
-  $T_Meaning  = $T->h('Meaning');
-  $T_Error_in = $T->h('Error_in');
+  $T_Language   = $T->h('Language');
+  $T_Word       = $T->h('Facal');
+  $T_words      = $T->h('facail');
+  $T_Meaning    = $T->h('Meaning');
+  $T_Error_in   = $T->h('Error_in');
+  $T_Hide_all   = $T->h('Hide_all');
+  $T_Reveal_all = $T->h('Reveal_all');
+  $T_Reveal     = $T->h('Reveal');
 
-  $T_Vocabulary_list_for_user_ = $T->h('Vocabulary_list_for_user_');
-  $T_Page_needs_parameter      = $T->h('Parameter_p_a_dhith');
-  $T_Clicked_in_unit           = $T->h('Clicked_in_unit');
-  $T_Delete_instantaneously    = $T->h('Delete_instantaneously');
-  $T_Lookup_with_Multidict     = $T->h('Lorg le Multidict');
-  $T_No_words_in_voc_list      = $T->h('No_words_in_voc_list');
-  $T_No_words_in_voc_list_for_ = $T->h('No_words_in_voc_list_for_');
-  $T_No_words_in_voc_list_info = $T->h('No_words_in_voc_list_info');
-  $T_Sort_the_column           = $T->h('Sort_the_column');
-  $T_Empty_voc_list_question   = $T->h('Empty_voc_list_question');
-  $T_Export_to_csv             = $T->h('Export_to_csv');
-  $T_Export_to_tsv             = $T->h('Export_to_tsv');
-  $T_Empty_voc_list_confirm    = $T->j('Empty_voc_list_confirm');
+  $T_Vocabulary_list_for_user_  = $T->h('Vocabulary_list_for_user_');
+  $T_Page_needs_parameter       = $T->h('Parameter_p_a_dhith');
+  $T_Clicked_in_unit            = $T->h('Clicked_in_unit');
+  $T_Delete_instantaneously     = $T->h('Delete_instantaneously');
+  $T_Lookup_with_Multidict      = $T->h('Lorg le Multidict');
+  $T_No_words_in_voc_list       = $T->h('No_words_in_voc_list');
+  $T_No_words_in_voc_list_for_  = $T->h('No_words_in_voc_list_for_');
+  $T_No_words_in_voc_list_info  = $T->h('No_words_in_voc_list_info');
+  $T_Sort_the_column            = $T->h('Sort_the_column');
+  $T_Empty_voc_list_question    = $T->h('Empty_voc_list_question');
+  $T_Export_to_csv              = $T->h('Export_to_csv');
+  $T_Export_to_tsv              = $T->h('Export_to_tsv');
+  $T_Here_you_can_write_meaning = $T->h('Here_you_can_write_meaning');
+  $T_Test_yourself              = $T->h('Test_yourself');
+  $T_Empty_voc_list_confirm     = $T->j('Empty_voc_list_confirm');
 
   $T_No_words_in_voc_list_info = strtr ( $T_No_words_in_voc_list_info, [ '{'=>'<i>', '}'=>'</i>' ] );
 
@@ -126,8 +131,8 @@ END_noVocTable2;
 <tr id=row$vocid>
 <td><img src='/icons-smo/curAs.png' alt='Delete' title='$T_Delete_instantaneously' onclick="deleteVocWord('$vocid')"></td>
 <td title='$T_Lookup_with_Multidict'><a href='/multidict/?sl=$slLorg&amp;word=$word' target=vocmdtab><img src=/favicons/multidict.png alt=''> $word</a></td>
-<td class=meaning><a class=reveal href="javascript:;" onclick="reveal(this)">Reveal</a>
-    <input value='$meaningSC' style='min-width:45em;max-width:55em' onchange="changeMeaning('$vocid',this.value);" title="Here you can write in or alter the meaning of the word"><span id="$vocid-tick" class=change>✔<span></td>
+<td class=meaning><a class=reveal href="javascript:;" onclick="reveal(this)">$T_Reveal</a>
+    <input value='$meaningSC' style='min-width:45em;max-width:55em' onchange="changeMeaning('$vocid',this.value);" title="$T_Here_you_can_write_meaning"><span id="$vocid-tick" class=change>✔<span></td>
 <td>$unitsHtml</td>
 </tr>
 END_vocHtml;
@@ -176,9 +181,9 @@ END_vocTable;
     }
     $vocHideRevealHtml = <<<END_vocHideRevealHtml
 <p>
-Test yourself
-<a class=button href='javascript:hideAll();'>Hide All</a>
-<a class=button href='javascript:revealAll();'>Reveal All</a>
+$T_Test_yourself
+<a class=button href='javascript:hideAll();'>$T_Hide_all</a>
+<a class=button href='javascript:revealAll();'>$T_Reveal_all</a>
 </p>
 END_vocHideRevealHtml;
     $HTML = <<<EOD
