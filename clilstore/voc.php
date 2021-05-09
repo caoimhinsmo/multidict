@@ -24,7 +24,6 @@
   $T_Reveal     = $T->h('Reveal');
 
   $T_Vocabulary_list_for_user_ = $T->h('Vocabulary_list_for_user_');
-  $T_Page_needs_parameter      = $T->h('Parameter_p_a_dhith');
   $T_Clicked_in_unit           = $T->h('Clicked_in_unit');
   $T_Delete_instantaneously    = $T->h('Delete_instantaneously');
   $T_Lookup_with_Multidict     = $T->h('Lorg le Multidict');
@@ -46,10 +45,8 @@
   try {
     $myCLIL->dearbhaich();
     $loggedinUser = $myCLIL->id;
-
-    $user = @$_REQUEST['user'] ?:null;
+    $user = $_REQUEST['user'] ?? $loggedinUser;
     $userSC = htmlspecialchars($user);
-    if (empty($user)) { throw new SM_MDexception(sprintf($T_Page_needs_parameter,'user')); }
 
     $DbMultidict = SM_DbMultidictPDO::singleton('rw');
     $vocHtml = $langButHtml = '';
@@ -269,7 +266,7 @@ EOD;
                 xhttp.onload = function() {
                     var resp = this.responseText;
                     if (resp!='OK') { alert('$T_Error_in emptyVocList:'+resp); return; }
-                    location.reload();
+                    window.location = window.location.href.split('?')[0];
                 }
                 xhttp.open('GET', 'ajax/emptyVocList.php?user='+user+'&sl=' +sl,true);
                 xhttp.send();
