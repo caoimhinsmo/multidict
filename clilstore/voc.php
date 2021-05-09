@@ -222,7 +222,6 @@ EOD;
         table#vocab td:nth-child(2) a:hover { color:white; background-color:black; }
         table#vocab td:nth-child(3) { padding:0; }
         table#vocab tr + tr > td { border-left:1px solid #aaa; }
-        table#vocab td.meaning input { }
         table#vocab td.meaning a.reveal { display:none; margin-left:1em; font-size:80%; padding:0 5px; background-color:#5ae; color:white; border-radius:4px; }
         table#vocab td.meaning a.reveal:hover {background-color:blue; }
         table#vocab td.meaning.hide input { display:none }

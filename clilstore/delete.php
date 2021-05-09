@@ -107,8 +107,8 @@ EOD1;
         $DbMultidict = SM_DbMultidictPDO::singleton('rw');
         try {
             $DbMultidict->beginTransaction();
-            $DbMultidict->prepare('DELETE FROM csButtons WHERE id=:id')->execute(array('id'=>$id));
-            $DbMultidict->prepare('DELETE FROM csFiles WHERE id=:id')->execute(array('id'=>$id));
+            $DbMultidict->prepare('DELETE FROM csButtons WHERE id=:id')->execute(['id'=>$id]);
+            $DbMultidict->prepare('DELETE FROM csFiles WHERE id=:id')->execute(['id'=>$id]);
             $owner = ( $user=='admin' ? '%' : $user );
             $stmt5 = $DbMultidict->prepare('DELETE FROM clilstore WHERE id=:id AND owner LIKE :owner');
             $stmt5->bindParam(':id', $id, PDO::PARAM_INT);

@@ -36,9 +36,7 @@
 
     $T_Add_a_column_info      = $T->h('Add_a_column_info');
     $T_For_students_info      = $T->h('For_students_info');
-    $T_For_students_more_info = $T->h('For_students_more_info');
     $T_For_teachers_info      = $T->h('For_teachers_info');
-    $T_For_teachers_more_info = $T->h('For_teachers_more_info');
     $T_Include_more_columns   = $T->h('Include_more_columns');
     $T_Include_test_units     = $T->h('Include_test_units');
     $T_Include_test_units_o   = $T->h('Include_test_units_o');
@@ -145,7 +143,8 @@
 
     $mdNavbar = SM_mdNavbar::mdNavbar($T->domhan);
 
-    $dataLists = $hiddenFiltersWarning = $tableHtml = $cookieMessage = $avgRow = $totRow = $portfoliosButton = $tabletopChoices = '';
+    $dataLists = $hiddenFiltersWarning = $tableHtml = $cookieMessage = $avgRow = $totRow
+               = $portfoliosButton = $tabletopChoices = $incUnitMessage = '';
     $limitUnits = $limitInfo = FALSE;
 
     if (!isset($_COOKIE['csSessionId'])) $cookieMessage = <<<EOD_cookieMessage
@@ -268,44 +267,46 @@ CHECKBOXES2;
 <p style="line-height:1.5em"><a href="login.php" class=mybutton>$T_Login</a> $T_or <a href="register.php">$T_register</a><br>&nbsp;$loginReason.</p>
 END_USER1;
     } else {
-        $stmtIncUnit = $DbMultidict->prepare('SELECT id AS incUnit, created AS incCreated FROM clilstore WHERE test=2 and owner=:user'); //Check whether the user has any incomplete units
+        $createButton = "<a href='edit.php?id=0' class=mybutton>$T_Create_a_unit</a>";
+       //Check whether the user has any incomplete unit, and if so either delete it (if it is over 24 hours old) or issue a warning
+        $stmtIncUnit = $DbMultidict->prepare('SELECT id AS incUnit, created AS incCreated FROM clilstore WHERE test=2 and owner=:user');
         $stmtIncUnit->execute([':user'=>$user]);
         $row = $stmtIncUnit->fetch(PDO::FETCH_ASSOC);
         if ($row) {
             extract($row);
             $secondsToLive = $incCreated + 86400 - time(); //Delete automatically after 1 day
             if ($secondsToLive<=0) {
-                header("Location:$serverhome/clilstore/delete.php?id=$incUnit&delete");
-            } elseif ($secondsToLive<100) {
-                $deleteTimeMess = "$secondsToLive $T_seconds";
+                $DbMultidict->prepare('DELETE FROM csButtons WHERE id=:id')->execute(['id'=>$incUnit]);
+                $DbMultidict->prepare('DELETE FROM csFiles   WHERE id=:id')->execute(['id'=>$incUnit]);
+                $DbMultidict->prepare('DELETE FROM clilstore WHERE id=:id')->execute(['id'=>$incUnit]);
             } else {
-                $minutesToLive = round($secondsToLive/60);
-                if ($minutesToLive<100) {
-                    $deleteTimeMess = "$minutesToLive $T_minutes";
+                if ($secondsToLive<100) {
+                    $deleteTimeMess = "$secondsToLive $T_seconds";
                 } else {
-                    $hoursToLive = round($minutesToLive/60);
-                    $deleteTimeMess = "$hoursToLive $T_hours";
+                    $minutesToLive = round($secondsToLive/60);
+                    if ($minutesToLive<100) {
+                        $deleteTimeMess = "$minutesToLive $T_minutes";
+                    } else {
+                        $hoursToLive = round($minutesToLive/60);
+                        $deleteTimeMess = "$hoursToLive $T_hours";
+                    }
                 }
+                $stmtIncUnitFcount = $DbMultidict->prepare('SELECT COUNT(1) As cnt FROM csFiles WHERE id=:id');
+                $stmtIncUnitFcount->execute([':id'=>$incUnit]);
+                $incUnitFcount = $stmtIncUnitFcount->fetchColumn();
+                $fcountMessage = ( $incUnitFcount ? ' <i>('.sprintf($T_inc_d_attached_files,$incUnitFcount).')</i>' : '' );
+                $incUnitMessage = sprintf($T_incUnitMessage,$fcountMessage,$deleteTimeMess);
+                $incUnitMessage = strtr($incUnitMessage,
+                                         [ '{' => "<a href='edit.php?id=$incUnit' class=mybutton>",
+                                           '}' => '</a>',
+                                           '[' => "<a href='delete.php?id=$incUnit' class=mybutton>",
+                                           ']' => '</a>',
+                                           '&lt;br&gt;' => '<br>'
+                                         ]);
+                $incUnitMessage = "<p style='margin:0;padding:0.5em;background-color:red;color:white'>$incUnitMessage</p>";
+                $createButton = '';
             }
-            $stmtIncUnitFcount = $DbMultidict->prepare('SELECT COUNT(1) As cnt FROM csFiles WHERE id=:id');
-            $stmtIncUnitFcount->execute([':id'=>$incUnit]);
-            $incUnitFcount = $stmtIncUnitFcount->fetchColumn();
-            $fcountMessage = ( $incUnitFcount ? ' <i>('.sprintf($T_inc_d_attached_files,$incUnitFcount).')</i>' : '' );
-            $incUnitMessage = sprintf($T_incUnitMessage,$fcountMessage,$deleteTimeMess);
-            $incUnitMessage = strtr($incUnitMessage,
-                                     [ '{' => "<a href='edit.php?id=$incUnit' class=mybutton>",
-                                       '}' => '</a>',
-                                       '[' => "<a href='delete.php?id=$incUnit' class=mybutton>",
-                                       ']' => '</a>',
-                                       '&lt;br&gt;' => '<br>'
-                                     ]);
-            $incUnitMessage = "<p style='margin:0;padding:0.5em;background-color:red;color:white'>$incUnitMessage</p>";
-                                    
-            $createButton = '';
-        } else {
-            $incUnitMessage = '';
-            $createButton = "<a href='edit.php?id=0' class=mybutton>$T_Create_a_unit</a>";
-        }
+        }                        
         if ($mode<=1) {
             $mybuttons = <<<END_MYBUTTONSstud
 <a href="voc.php?user=$user" class="mybutton" title="$T_My_vocabulary">$T_Vocabulary</a><br>
