@@ -19,8 +19,10 @@
     $bloighSize  = $bloighInfo['size'];
     $bloighType  = $bloighInfo['type'];
     $bloighName  = $bloighInfo['name'];
-    if ( substr($bloighName,0,3)=='MOR' ) { // Unadvertized trick - If the filename starts with 'MOR'
-        $maxsize = 5000000;                 // allow slightly bigger files to be uploaded
+    if ( substr($bloighName,0,6)=='MORmor') {     // Unadvertized trick - If the filename starts with 'MORmor'
+        $maxsize = 10000000;                      // allow bigger files to be uploaded
+    } elseif ( substr($bloighName,0,3)=='MOR' ) { // and not quite so big if the name starts with just'MOR'
+        $maxsize = 4000000;
     } else {
         $maxsize = 1048000;
     }
