@@ -426,8 +426,8 @@ EOD;
         function randIncreaseTotal() {
             nRandDone += 1;
             var dateobj = new Date();
-            var nRandSeconds = (dateobj.getTime()-nRandTime)/1000;
-            var nRandSecsPerWord = Math.round(1000*nRandSeconds/nRandDone)/1000;
+            var nRandSeconds = Math.round((dateobj.getTime()-nRandTime)/10)/100;
+            var nRandSecsPerWord = Math.round(100*nRandSeconds/nRandDone)/100;
             document.getElementById('nRandDone').innerHTML = nRandDone;
             document.getElementById('nRandSeconds').innerHTML = nRandSeconds;
             document.getElementById('nRandSecsPerWord').innerHTML = nRandSecsPerWord;
