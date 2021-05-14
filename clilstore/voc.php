@@ -226,10 +226,12 @@ EOD;
         table#vocab tr + tr > td { border-left:1px solid #aaa; }
         table#vocab td.meaning a.reveal { display:none; margin-left:1em; font-size:80%; padding:0 5px; background-color:#5ae; color:white; border-radius:4px; }
         table#vocab td.meaning a.reveal:hover {background-color:blue; }
-        table#vocab td.meaning span.rand { margin-left:0.3em; padding:0 3px; border-radius:3px; background-color:brown; color:white; font-size:90%; }
-        table#vocab td.meaning.hide input { display:none; }
-        table#vocab td.meaning.rand input { display:none; }
-        table#vocab td.meaning.hide a.reveal { display:inline; }
+        table#vocab tr.hide td.meaning input { display:none; }
+        table#vocab tr.rand td.meaning input { display:none; }
+        table#vocab tr.rand:nth-child(odd)  > td:nth-child(2) { background-color:#dce; font-weight:bold; padding-left2:1em; }
+        table#vocab tr.rand:nth-child(even) > td:nth-child(2) { background-color:#fee; font-weight:bold; padding-left2:1em; }
+        table#vocab tr.hide td.meaning a.reveal { display:inline; }
+        table#vocab td.meaning span.rand { margin-left:0.3em; padding:0 3px; border-radius:3px; background-color:brown; color:white; font-size:90%; cursor:grab; }
         a.langbutton { margin:1px 7px; background-color:#55a8eb; color:white; font-weight:bold; padding:2px 8px; border:1px solid white; border-radius:8px; }
         a.langbutton.selected { border-color:#55a8eb; background-color:yellow; color:#55a8eb; }
         a.langbutton.live:hover { background-color:blue; }
@@ -290,15 +292,15 @@ EOD;
             restoreAll();
             var inputEls = document.querySelectorAll('table#vocab td.meaning input');
             for (let inputEl of inputEls) {
-                if (inputEl.value > '') { inputEl.closest('td.meaning').classList.add('hide'); }
+                if (inputEl.value > '') { inputEl.closest('tr').classList.add('hide'); }
             }
         }
 
         function restoreAll() {
-            var tdEls = document.querySelectorAll('table#vocab td.meaning');
-            for (let tdEl of tdEls) {
-                tdEl.classList.remove('hide');
-                tdEl.classList.remove('rand');
+            var trEls = document.querySelectorAll('table#vocab tr');
+            for (let trEl of trEls) {
+                trEl.classList.remove('hide');
+                trEl.classList.remove('rand');
             }
             var randEls = document.querySelectorAll('table#vocab td.meaning span.rand');
             for (let randEl of randEls) { randEl.remove(); }
@@ -311,7 +313,7 @@ EOD;
         }
 
         function reveal(el) {
-            el.closest('td.meaning').classList.remove('hide');
+            el.closest('tr').classList.remove('hide');
             return false;
         }
 
@@ -367,7 +369,7 @@ EOD;
                 var tdEl  = document.getElementById('mean'+vocid);
                 var trEl  = document.getElementById('row'+vocid);
                 var inpEl = document.getElementById('inp'+vocid);
-                tdEl.classList.add('rand');
+                trEl.classList.add('rand');
                 var randEl   = document.createElement('span');
                 var textNode = document.createTextNode(document.getElementById('inp'+vocidShuffle).value);
                 randEl.appendChild(textNode);
@@ -412,12 +414,12 @@ EOD;
             if (sourceRandVocid==targetVocid) {
                 randIncreaseTotal();
                 sourceRandEl.remove();
-                targetTdEl.classList.remove('rand');
+                targetTrEl.classList.remove('rand');
             }
             if (targetRandVocid==sourceVocid) {
                 randIncreaseTotal();
                 targetRandEl.remove();
-                sourceTdEl.classList.remove('rand');
+                sourceTrEl.classList.remove('rand');
             }
         }
 
