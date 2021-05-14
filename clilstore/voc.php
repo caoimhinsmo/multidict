@@ -302,6 +302,7 @@ EOD;
             }
             var randEls = document.querySelectorAll('table#vocab td.meaning span.rand');
             for (let randEl of randEls) { randEl.remove(); }
+            nRandDone = nRandTotal = nRandSeconds = 0;
             document.getElementById('nRandDone').innerHTML = '0';
             document.getElementById('nRandTotal').innerHTML = '0';
             document.getElementById('nRandSeconds').innerHTML = '0';
@@ -331,6 +332,8 @@ EOD;
             }
             return array;
         }
+
+        var nRandDone, nRandTime;
 
         function randomize() {
             restoreAll();
@@ -378,6 +381,8 @@ EOD;
             }
             document.getElementById('randStatistics').classList.add('rand');
             document.getElementById('nRandTotal').innerHTML = vocids.length;
+            var dateobj = new Date();
+            nRandTime = dateobj.getTime();
         }
 
         function randDragover(ev) {
@@ -415,10 +420,6 @@ EOD;
                 sourceTdEl.classList.remove('rand');
             }
         }
-
-        var nRandDone = 0;
-        var dateobj = new Date();
-        var nRandTime = dateobj.getTime();
 
         function randIncreaseTotal() {
             nRandDone += 1;
