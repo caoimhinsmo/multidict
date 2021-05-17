@@ -14,14 +14,15 @@
 
   $T = new SM_T('clilstore/voc');
 
-  $T_Language   = $T->h('Language');
-  $T_Word       = $T->h('Facal');
-  $T_words      = $T->h('facail');
-  $T_Meaning    = $T->h('Meaning');
-  $T_Error_in   = $T->h('Error_in');
-  $T_Hide_all   = $T->h('Hide_all');
+  $T_Language    = $T->h('Language');
+  $T_Word        = $T->h('Facal');
+  $T_words       = $T->h('facail');
+  $T_Meaning     = $T->h('Meaning');
+  $T_Error_in    = $T->h('Error_in');
+  $T_Hide_all    = $T->h('Hide_all');
   $T_Restore_all = $T->h('Restore_all');
-  $T_Reveal     = $T->h('Reveal');
+  $T_Randomize   = $T->h('Randomize');
+  $T_Reveal      = $T->h('Reveal');
 
   $T_Vocabulary_list_for_user_ = $T->h('Vocabulary_list_for_user_');
   $T_Clicked_in_unit           = $T->h('Clicked_in_unit');
@@ -181,7 +182,7 @@ END_vocTable;
 <p style="margin:0.4em">
 $T_Test_yourself
 <a class=button href='javascript:hideAll();'>$T_Hide_all</a>
-<a class=button href='javascript:randomize();'>Randomize</a>
+<a class=button href='javascript:randomize();'>$T_Randomize</a>
 <a class=button href='javascript:restoreAll();'>$T_Restore_all</a>
 </p>
 <p id=randStatistics>Drag the meaning to the correct word.<br>
@@ -290,6 +291,7 @@ EOD;
 
         function hideAll() {
             restoreAll();
+            moveMeaningsToTop();
             var inputEls = document.querySelectorAll('table#vocab td.meaning input');
             for (let inputEl of inputEls) {
                 if (inputEl.value > '') { inputEl.closest('tr').classList.add('hide'); }
@@ -310,6 +312,21 @@ EOD;
             document.getElementById('nRandSeconds').innerHTML = '0';
             document.getElementById('nRandSecsPerWord').innerHTML = '0';
             document.getElementById('randStatistics').classList.remove('rand');
+        }
+
+        function moveMeaningsToTop() {
+            var trEls = document.querySelectorAll('table#vocab tr[id^="row"');
+            var topEmptyTrEl = null;
+            var nMeanings = 0;
+            for (let trEl of trEls) {
+                if (trEl.querySelector('td.meaning input').value=='') {
+                    if (topEmptyTrEl===null) { topEmptyTrEl = trEl; }
+                } else {
+                    nMeanings += 1;
+                    if (topEmptyTrEl!==null) { trEl.parentElement.insertBefore(trEl,topEmptyTrEl); }
+                }
+            }
+            return nMeanings;
         }
 
         function reveal(el) {
@@ -339,6 +356,7 @@ EOD;
 
         function randomize() {
             restoreAll();
+            moveMeaningsToTop();
             var inputElsRaw = document.querySelectorAll('table#vocab td.meaning input');
             let vocids = [], vals = [], dupVals = '';
             for (let inputEl of inputElsRaw) {
