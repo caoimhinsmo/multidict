@@ -215,6 +215,7 @@ EOD;
         table#vocab { border-collapse:collapse; border:1px solid grey; margin-bottom:0.5em; white-space:nowrap; }
         table#vocab tr#vocabhead { background-color:grey; color:white; font-weight:bold; }
         table#vocab tr#vocabhead a { color:white; }
+        table#vocab tr.batchend { border-bottom:8px solid grey; }
         table#vocab tr:nth-child(odd)  { background-color:#ddf; }
         table#vocab tr:nth-child(even) { background-color:#fff; }
         table#vocab tr:nth-child(odd):hover  { background-color:#fe6; }
@@ -376,28 +377,39 @@ EOD;
                     + '\\n\You need to either distinguish the meanings\\nor else delete one of the words.');
                 return;
             }
-           //Construct a randomization mapping, randMap
-            var vocidsShuffle = [...vocids];
-            vocidsShuffle = shuffle(vocidsShuffle);
-            var randMap = new Map;
-            for (let i=0; i<vocids.length; i++) { randMap.set(vocids[i],vocidsShuffle[i]); }
-           //Process each vocabulary element
-            for (vocid of vocids) {
-                var vocidShuffle = randMap.get(vocid);
-                var tdEl  = document.getElementById('mean'+vocid);
-                var trEl  = document.getElementById('row'+vocid);
-                var inpEl = document.getElementById('inp'+vocid);
-                trEl.classList.add('rand');
-                var randEl   = document.createElement('span');
-                var textNode = document.createTextNode(document.getElementById('inp'+vocidShuffle).value);
-                randEl.appendChild(textNode);
-                randEl.id = 'rand'+vocidShuffle;
-                randEl.className = 'rand';
-                randEl.setAttribute('draggable','true');
-                tdEl.insertBefore(randEl,tdEl.firstChild);
-                randEl.addEventListener('dragstart',randDragstart);
-                trEl.addEventListener('dragover',randDragover);
-                trEl.addEventListener('drop',randDrop);
+            var nVocids = vocids.length;
+            var batchSize = 20; //Randomize in batches so that the drag-and-drop distance is not too great
+            if (nVocids < batchSize*1.25) { batchSize = nVocids; } //Exceed the usual batch size by up to 25% if this would make a single batch possible
+            var nBatches = Math.ceil(nVocids/batchSize);
+            batchSizeFloat = (nVocids/nBatches);
+            batchStarts = [0];
+            for (var iBatch=1; iBatch<=nBatches; iBatch++) { batchStarts.push(Math.floor(iBatch*batchSizeFloat)); }
+            for (iBatch=1; iBatch<=nBatches; iBatch++) {
+               //Construct a randomization mapping, randMap
+                var vocidsBatch = vocids.slice(batchStarts[iBatch-1],batchStarts[iBatch]);
+                var vocidsShuffle = vocidsBatch.slice(0);
+                vocidsShuffle = shuffle(vocidsShuffle);
+                var randMap = new Map;
+                for (let i=0; i<vocidsBatch.length; i++) { randMap.set(vocidsBatch[i],vocidsShuffle[i]); }
+               //Process each vocabulary element
+                for (vocid of vocidsBatch) {
+                    var vocidShuffle = randMap.get(vocid);
+                    var tdEl  = document.getElementById('mean'+vocid);
+                    var trEl  = document.getElementById('row'+vocid);
+                    var inpEl = document.getElementById('inp'+vocid);
+                    trEl.classList.add('rand');
+                    var randEl   = document.createElement('span');
+                    var textNode = document.createTextNode(document.getElementById('inp'+vocidShuffle).value);
+                    randEl.appendChild(textNode);
+                    randEl.id = 'rand'+vocidShuffle;
+                    randEl.className = 'rand';
+                    randEl.setAttribute('draggable','true');
+                    tdEl.insertBefore(randEl,tdEl.firstChild);
+                    randEl.addEventListener('dragstart',randDragstart);
+                    trEl.addEventListener('dragover',randDragover);
+                    trEl.addEventListener('drop',randDrop);
+                }
+                trEl.classList.add('batchend');
             }
             document.getElementById('randStatistics').classList.add('rand');
             document.getElementById('nRandTotal').innerHTML = vocids.length;
