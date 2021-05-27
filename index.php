@@ -12,6 +12,7 @@
   $T_Multidict_welcome        = $T->h('Multidict_welcome');
   $T_Disclaimer               = $T->h('Disclaimer');
   $T_Disclaimer_EuropeanCom   = $T->h('Disclaimer_EuropeanCom');
+  $T_interface_language       = $T->h('canan_eadarAghaidh');
 
   $EUlogo = '/EUlogos/' . SM_T::hl0() . '.jpg';
   if (!file_exists($_SERVER['DOCUMENT_ROOT'] . $EUlogo)) { $EUlogo = '/EUlogos/en.jpg'; }
@@ -25,7 +26,7 @@ echo <<< END_html
 <meta charset="utf-8">
 <title>Multidict, Wordlink and Clilstore - Tools for CLIL</title>
 <meta name="description" content="Three tools for language learners.  Multidict can link to online dictionaries in hundreds of languages.  Wordlink links (nearly) any webpage word by word to online dictionaries.  Clilstore is a store of audiovisual learning units, with every word linked automatically to dictionaries.">
-<link href="lone.css" rel="stylesheet">
+<link href="lone.css?sgudal=1" rel="stylesheet">
 <style>
 #apDiv1 {
 	position: absolute;
@@ -63,7 +64,7 @@ echo <<< END_html
 </head>
 
 <body>
-<div style="float:left">$hlSelect</div>
+<div style="float:left;padding-left:1em">$T_interface_language $hlSelect</div>
 
 <div id="master">
 <!--<span style="color:red;background-color:yellow">News: Service disruption likely on Friday evening, 4 March, 17:00-21:00 UT</span>-->
@@ -86,6 +87,8 @@ echo <<< END_html
   <div id="apDiv4"><a href="/wordlink/"><img src="lonelogo/pil-blue.png" alt="" style="width:17px;height:17px;border:0"></a></div>
     <div id="multitext">$T_Multidict_welcome</div>
   </div>
+  <div id="clilstore_eu">A new website is available at <a href="https://clilstore.eu/">clilstore.eu</a><br><br>
+  with a new user interface and the same data</div>
   <div id="disclaimer"><a href="http://eacea.ec.europa.eu/llp/index_en.php"><img src="$EUlogo" style="width:275px;height:60px;border:0" alt="logo"></a></div>
   <div id="distekst"><i>$T_Disclaimer:</i> $T_Disclaimer_EuropeanCom</div>
 </div>

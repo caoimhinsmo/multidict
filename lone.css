@@ -1,11 +1,11 @@
 @charset "utf-8";
 #master {
-	height: 470px;
+	height: 570px;
 	width: 590px;
 	margin-right: auto;
 	margin-left: auto;
 	position: relative;
-	top: 20px;
+	top: 30px;
 	border: 1px solid #1D6935;
 	box-shadow: 3px 3px 6px 3px #999999;
 	border-radius: 6px;
@@ -94,6 +94,19 @@ body {
 .redbord {
 	border: 1px solid #a20d20;
 	border-radius: 6px;
+}
+#clilstore_eu {
+        position: absolute;
+     	height: 42px;
+	width: 532px;
+	left: 20px;
+	top: 420px;
+        border:1px solid grey;
+        border-radius: 3px;
+	box-shadow: 3px 3px 6px 3px #999999;
+        padding: 8px;
+        text-align: center;
+        font-size: 2em;
 }
 #disclaimer {
 	position: absolute;
