@@ -304,6 +304,7 @@ EOD;
             for (let trEl of trEls) {
                 trEl.classList.remove('hide');
                 trEl.classList.remove('rand');
+                trEl.classList.remove('batchend');
             }
             var randEls = document.querySelectorAll('table#vocab td.meaning span.rand');
             for (let randEl of randEls) { randEl.remove(); }
