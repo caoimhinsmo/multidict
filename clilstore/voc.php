@@ -85,25 +85,32 @@ END_noVocTable2;
             $vocidClickOrder   = 'vocid';
             $wordClickOrder    = 'word';
             $meaningClickOrder = 'meaning';
+            $vocidArrow = $wordArrow = $meaningArrow = "<span style='color:#666'>↕</span>";
             $order = $_REQUEST['order'] ?? 'vocidDESC';
             if ($order=='vocid') {
                 $orderCondition  = 'vocid';
                 $vocidClickOrder = 'vocidDESC';
+                $vocidArrow = '↓';
             } elseif ($order=='vocidDESC') {
                 $orderCondition = 'vocid DESC';
                 $vocidClickOrder = 'vocid';
+                $vocidArrow = '↑';
             } elseif ($order=='word') {
                 $orderCondition = 'word';
                 $wordClickOrder  = 'wordDESC';
+                $wordArrow = '↓';
             } elseif ($order=='wordDESC') {
                 $orderCondition = 'word DESC';
                 $wordClickOrder = 'word';
+                $wordArrow = '↑';
             } elseif ($order=='meaning') {
                 $orderCondition = 'meaning, word';
                 $meaningClickOrder  = 'meaningDESC';
+                $meaningArrow = '↓';
             } elseif ($order=='meaningDESC') {
                 $orderCondition = 'meaning DESC, word';
                 $meaningClickOrder = 'meaning';
+                $meaningArrow = '↑';
             } else {
                 $orderCondition = 'vocid';
             }
@@ -168,9 +175,9 @@ END_exportHtml;
             $vocTableHtml = <<<END_vocTable
 <table id=vocab>
 <tr id=vocabhead>
-<td><a href="./voc.php?user=$user&amp;sl=$slLorg&amp;order=$vocidClickOrder" title='$T_Sort_the_column'>*</a></td>
-<td><a href="./voc.php?user=$user&amp;sl=$slLorg&amp;order=$wordClickOrder" title='$T_Sort_the_column'>$T_Word</a></td>
-<td><a href="./voc.php?user=$user&amp;sl=$slLorg&amp;order=$meaningClickOrder" title='$T_Sort_the_column'>$T_Meaning</a></td>
+<td><a href="./voc.php?user=$user&amp;sl=$slLorg&amp;order=$vocidClickOrder" title='$T_Sort_the_column (vocid)'>$vocidArrow</a></td>
+<td><a href="./voc.php?user=$user&amp;sl=$slLorg&amp;order=$wordClickOrder" title='$T_Sort_the_column'>$wordArrow $T_Word</a></td>
+<td><a href="./voc.php?user=$user&amp;sl=$slLorg&amp;order=$meaningClickOrder" title='$T_Sort_the_column'>$meaningArrow $T_Meaning</a></td>
 <td>$T_Clicked_in_unit</td>
 </tr>
 $vocHtml
