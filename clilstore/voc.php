@@ -25,6 +25,7 @@
   $T_Reveal      = $T->h('Reveal');
 
   $T_Vocabulary_list_for_user_ = $T->h('Vocabulary_list_for_user_');
+  $T_You_can_add_meanings      = $T->h('You_can_add_meanings');
   $T_Clicked_in_unit           = $T->h('Clicked_in_unit');
   $T_Delete_instantaneously    = $T->h('Delete_instantaneously');
   $T_Lookup_with_Multidict     = $T->h('Lorg le Multidict');
@@ -186,6 +187,7 @@ END_vocTable;
         }
     }
     $vocHideRevealHtml = <<<END_vocHideRevealHtml
+<p style="margin:0.4em">$T_You_can_add_meanings
 <p style="margin:0.4em">
 $T_Test_yourself
 <a class=button href='javascript:hideAll();'>$T_Hide_all</a>
