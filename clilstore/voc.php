@@ -32,15 +32,29 @@
   $T_No_words_in_voc_list      = $T->h('No_words_in_voc_list');
   $T_No_words_in_voc_list_for_ = $T->h('No_words_in_voc_list_for_');
   $T_No_words_in_voc_list_info = $T->h('No_words_in_voc_list_info');
-  $T_Sort_the_column           = $T->h('Sort_the_column');
+  $T_Sort_by_when_recorded     = $T->h('Sort_by_when_recorded');
+  $T_Sort_by_Word              = $T->h('Sort_by_Word');
+  $T_Sort_by_Meaning           = $T->h('Sort_by_Meaning');
+  $T_Drag_the_meaning          = $T->h('Drag_the_meaning');
+  $T_You_have_so_far_done_     = $T->h('You_have_so_far_done_');
+  $T_seconds_per_word          = $T->h('seconds_per_word');
   $T_Empty_voc_list_question   = $T->h('Empty_voc_list_question');
   $T_Export_to_csv             = $T->h('Export_to_csv');
   $T_Export_to_tsv             = $T->h('Export_to_tsv');
   $T_Write_meaning_here        = $T->h('Write_meaning_here');
   $T_Test_yourself             = $T->h('Test_yourself');
+
+  $T_Some_meanings_duplicates  = $T->j('Some_meanings_duplicates');
+  $T_dupVals_message1          = $T->j('dupVals_message1');
+  $T_dupVals_message2          = $T->j('dupVals_message2');
   $T_Empty_voc_list_confirm    = $T->j('Empty_voc_list_confirm');
 
   $T_No_words_in_voc_list_info = strtr ( $T_No_words_in_voc_list_info, [ '{'=>'<i>', '}'=>'</i>' ] );
+  $T_You_have_so_far_done_     = strtr ( $T_You_have_so_far_done_,
+                                         [ '{{nD}}' => '<span id=nRandDone>0</span>',
+                                           '{{nW}}' => '<span id=nRandTotal>0</span>',
+                                           '{{nS}}' => '<span id=nRandSeconds>0</span>'
+                                         ] );
 
   $mdNavbar = SM_mdNavbar::mdNavbar($T->domhan);
 
@@ -176,9 +190,9 @@ END_exportHtml;
             $vocTableHtml = <<<END_vocTable
 <table id=vocab>
 <tr id=vocabhead>
-<td><a href="./voc.php?user=$user&amp;sl=$slLorg&amp;order=$vocidClickOrder" title='$T_Sort_the_column (vocid)'>$vocidArrow</a></td>
-<td><a href="./voc.php?user=$user&amp;sl=$slLorg&amp;order=$wordClickOrder" title='$T_Sort_the_column'>$wordArrow $T_Word</a></td>
-<td><a href="./voc.php?user=$user&amp;sl=$slLorg&amp;order=$meaningClickOrder" title='$T_Sort_the_column'>$meaningArrow $T_Meaning</a></td>
+<td><a href="./voc.php?user=$user&amp;sl=$slLorg&amp;order=$vocidClickOrder" title='$T_Sort_by_when_recorded'>$vocidArrow</a></td>
+<td><a href="./voc.php?user=$user&amp;sl=$slLorg&amp;order=$wordClickOrder" title='$T_Sort_by_Word'>$wordArrow $T_Word</a></td>
+<td><a href="./voc.php?user=$user&amp;sl=$slLorg&amp;order=$meaningClickOrder" title='$T_Sort_by_Meaning'>$meaningArrow $T_Meaning</a></td>
 <td>$T_Clicked_in_unit</td>
 </tr>
 $vocHtml
@@ -186,7 +200,7 @@ $vocHtml
 END_vocTable;
         }
     }
-    $vocHideRevealHtml = <<<END_vocHideRevealHtml
+    $vocTestYourselfHtml = <<<END_vocTestYourselfHtml
 <p style="margin:0.4em">$T_You_can_add_meanings
 <p style="margin:0.4em">
 $T_Test_yourself
@@ -194,17 +208,16 @@ $T_Test_yourself
 <a class=button href='javascript:randomize();'>$T_Randomize</a>
 <a class=button href='javascript:restoreAll();'>$T_Restore_all</a>
 </p>
-<p id=randStatistics>Drag the meaning to the correct word.<br>
-You have so far done <span id=nRandDone>0</span> out of <span id=nRandTotal>0</span> words in <span id=nRandSeconds>0</span> seconds
-(<span id=nRandSecsPerWord>0</span> seconds per word).</p>
-END_vocHideRevealHtml;
+<p id=randStatistics>$T_Drag_the_meaning<br>
+$T_You_have_so_far_done_ (<span id=nRandSecsPerWord>0</span> $T_seconds_per_word).</p>
+END_vocTestYourselfHtml;
     $HTML = <<<EOD
 <h1 style="font-size:140%;margin:0;padding-top:0.5em">$T_Vocabulary_list_for_user_ <span style="color:brown">$user</span></h1>
 
 $langButHtml
 <p style="margin:0">$T_Language: $slLorgEndonym</p>
 $exportHtml
-$vocHideRevealHtml
+$vocTestYourselfHtml
 $vocTableHtml
 EOD;
 
@@ -233,6 +246,8 @@ EOD;
         table#vocab td:nth-child(1) { padding:0 0.4em; }
         table#vocab td:nth-child(2) a { color:blue; }
         table#vocab td:nth-child(2) a:hover { color:white; background-color:black; }
+        table#vocab td:nth-child(2) img { margin-right:0.4em; }
+        table#vocab tr.rand td:nth-child(2) img { margin-right:1.4em; }
         table#vocab td:nth-child(3) { padding:0; }
         table#vocab tr + tr > td { border-left:1px solid #aaa; }
         table#vocab td.meaning a.reveal { display:none; margin-left:1em; font-size:80%; padding:0 5px; background-color:#5ae; color:white; border-radius:4px; }
@@ -242,7 +257,7 @@ EOD;
         table#vocab tr.rand:nth-child(odd)  > td:nth-child(2) { background-color:#dce; font-weight:bold; padding-left2:1em; }
         table#vocab tr.rand:nth-child(even) > td:nth-child(2) { background-color:#fee; font-weight:bold; padding-left2:1em; }
         table#vocab tr.hide td.meaning a.reveal { display:inline; }
-        table#vocab td.meaning span.rand { margin-left:0.3em; padding:0 3px; border-radius:3px; background-color:brown; color:white; font-size:90%; cursor:grab; }
+        table#vocab td.meaning span.rand { margin-left:2em; padding:0 3px; border-radius:3px; background-color:brown; color:white; font-size:90%; cursor:grab; }
         a.langbutton { margin:1px 7px; background-color:#55a8eb; color:white; font-weight:bold; padding:2px 8px; border:1px solid white; border-radius:8px; }
         a.langbutton.selected { border-color:#55a8eb; background-color:yellow; color:#55a8eb; }
         a.langbutton.live:hover { background-color:blue; }
@@ -258,6 +273,8 @@ EOD;
         p#randStatistics span { font-weight:bold; }
     </style>
     <script>
+        var nRandDone, nRandTime;
+
         function deleteVocWord(vocid) {
             var xhttp = new XMLHttpRequest();
             xhttp.onload = function() {
@@ -363,8 +380,6 @@ EOD;
             return array;
         }
 
-        var nRandDone, nRandTime;
-
         function randomize() {
             restoreAll();
             moveMeaningsToTop();
@@ -383,12 +398,12 @@ EOD;
                 if (valsSort[i+1] == valsSort[i]) { dupVals += '      ' + valsSort[i] + '\\n'; }
             }
             if (dupVals>'') {
-                alert('Some meanings are duplicated\\n\\n' + dupVals
-                    + '\\n\You need to either distinguish the meanings\\nor else delete one of the words.');
+                var nl = '\\n';
+                alert('$T_Some_meanings_duplicates' + nl+nl + dupVals + nl + '$T_dupVals_message1' + nl + '$T_dupVals_message2' + nl+nl);
                 return;
             }
             var nVocids = vocids.length;
-            var batchSize = 20; //Randomize in batches so that the drag-and-drop distance is not too great
+            var batchSize = 16; //Randomize in batches so that the drag-and-drop distance is not too great
             if (nVocids < batchSize*1.25) { batchSize = nVocids; } //Exceed the usual batch size by up to 25% if this would make a single batch possible
             var nBatches = Math.ceil(nVocids/batchSize);
             batchSizeFloat = (nVocids/nBatches);
