@@ -77,8 +77,11 @@ $wlSession->wfs = $wfs = $stmt->fetch()['wfs'];
   if (sizeof($wordformArr)<2) { $wordformHtmlFull = ''; }
   else {
       foreach ($wordformArr as $key=>&$wf) {
-          if ($wf==$word) { $wf = '<span class="lemmaword">' . $wf . '</span>';}
-          if ($key==0)    { $wf = '<span class="lemma0">' . $wf . '</span>'; }
+          $lemmaClass = '';
+          if ($wf==$word) $lemmaClass .= 'lemmaword ';
+          if ($key==0)    $lemmaClass .= 'lemma0 ';
+          $lemmaClass = trim($lemmaClass);
+          if ($lemmaClass) { $wf = "<span class='$lemmaClass'>$wf</span>"; }
           if ($key<>0)    { $wf = "<a href=\"/multidict/?sid=$sid&amp;word=$word&amp;rot=$key\" class=\"lemmalink\">$wf</a>"; }
       }
       $wordformHtml = implode(' <span dir="ltr">←</span> ',$wordformArr);
@@ -205,8 +208,9 @@ Replace the following sometime with flexbox - Option 3 at https://stackoverflow.
         div#slSelectOff:hover,
         div#tlSelectOff:hover,
         div#dictSelectOff:hover { background-color:#ddf; }
-        span.lemma0 { font-weight:bold; text-decoration:underline; color:#bb2020; }
+        span.lemma0 { font-weight:bold; text-decoration:underline; color:#bb2020; background-color:brown; color:white; padding:0 1px; }
         span.lemmaword { font-style:italic; }
+        span.lemma0.lemmaword { background-color:inherit; color:inherit; }
         span.toggle { margin:0 0 0 0.5em; border-radius:0.3em; padding:0.1em 0.3em 0 0.3em; background-color:#75c8fb; color:white; font-size:80%; }
         span.toggle b { color:yellow; }
         span.toggle input { font-size:90%; vertical-align:bottom; }
