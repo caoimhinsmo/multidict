@@ -84,7 +84,8 @@ class SM_WlSession {
       if (!empty($_GET['dict'])) { $dict = $_GET['dict']; }
       if (!empty($_GET['url'] )) { $url  = $_GET['url'];  }
       if (isset($_GET['word'])) {
-          if ($word==$_GET['word']) {
+          $getword = trim($_GET['word']);
+          if ($word==$getword) {
               $this->wfRot = 1; //Rotate by 1
               if (isset($_GET['rot'])) {
                   $rot = $_GET['rot'];
@@ -92,7 +93,7 @@ class SM_WlSession {
               }
           } else {
               $this->wfRot = 'recalc';
-              $word = $_GET['word'];
+              $word = $getword;
           }
       }
       if (isset($_GET['go'])) {
