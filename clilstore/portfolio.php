@@ -119,6 +119,7 @@
         if ($edit) {
             $h1 .= " <img src='/icons-smo/peann.png' class=editIcon alt='Edit' title='$T_Edit_the_title' onClick=titleEdit(1)>";
             $h1 .= " <img src='/icons-smo/floppydisk.png' class=saveIcon alt='Save' title='$T_Save_your_edit' onClick=titleEdit(0)>";
+            $h1 .= " <span id=titletick class=change>✔<span>";
         }
     }
     $h1 = "<h1 id=h1 style='font-size:140%;margin:0.6em 0'>$h1</h1>";
@@ -635,6 +636,10 @@ EOD;
                     if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
                         var resp = this.responseText;
                         if (resp!='OK') { alert('$T_Error_in titleEdit~~\\r\\n\\r\\n'+resp); return; }
+                    } else {
+                        var tickel = document.getElementById('titletick');
+                        tickel.classList.remove('changed'); //Remove the class (if required) and add again after a tiny delay, to restart the animation
+                        setTimeout(function(){tickel.classList.add('changed');},50);
                     }
                 }
                 var formData = new FormData();
