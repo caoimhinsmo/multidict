@@ -47,6 +47,7 @@
   $T_A_URL_must_begin_with_  = $T->j('A_URL_must_begin_with_');
   $T_No_such_userid_as_      = $T->j('No_such_userid_as_');
   $T_Have_changed_URL_to_    = $T->j('Have_changed_URL_to_');
+  $T_Err_Title_too_short     = $T->j('Err_Title_too_short');
 
   $T_No_teachers_can_yet_view       = $T->h('No_teachers_can_yet_view');
   $T_Following_teacher_can_view     = $T->h('Following_teacher_can_view');
@@ -64,6 +65,8 @@
   $T_Completely_delete_portfolio    = $T->j('Completely_delete_portfolio');
   $T_Teacher_already_has_access     = $T->j('Teacher_already_has_access');
   $T_Unit_already_in_that_portfolio = $T->j('Unit_already_in_that_portfolio');  
+
+  $T_Err_Title_too_short = sprintf($T_Err_Title_too_short,1);
 
   $mdNavbar = SM_mdNavbar::mdNavbar($T->domhan);
 
@@ -631,6 +634,11 @@ EOD;
                 h1El.classList.remove('editing');
                 h1SpanEl.setAttribute('contenteditable','false');
                 var newTitle = h1SpanEl.innerHTML;
+                if (newTitle.length < 1) {
+                    alert('$T_Err_Title_too_short');
+                    titleEdit(1);
+                    return;
+                }
                 var xhr = new XMLHttpRequest();
                 xhr.onreadystatechange = function() {
                     if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
