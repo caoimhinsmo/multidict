@@ -16,6 +16,7 @@
 
   $T_Clilstore_unit = $T->h('Clilstore_unit');
   $T_userid         = $T->h('userid');
+  $T_Edit_the_title = $T->h('Edit_the_title');
   $T_Add_a_teacher  = $T->h('Add_a_teacher');
   $T_My_portfolios  = $T->h('My_portfolios');
   $T_Create         = $T->h('Create');
@@ -72,7 +73,7 @@
 
     $DbMultidict = SM_DbMultidictPDO::singleton('rw');
 
-    $unitsHtml = $titleHtml = $permitTableHtml = $pfsTableHtml = $addTeacherHtml = $itemEditHtml = '';
+    $unitsHtml = $permitTableHtml = $pfsTableHtml = $addTeacherHtml = $itemEditHtml = '';
     $maxItemlen = 250;
 
     $pf = $_REQUEST['pf'] ?? -1;
@@ -110,8 +111,18 @@
 
     $userSC = htmlspecialchars($user) ?? '';
 
-    if ($pf==0) { $h1 = $T_Create_a_new_portfolio; }
-      else      { $h1 = "<span style='font-size:75%;font-style:italic'>$T_Portfolio_for_user_ <span style='color:brown'>$user</span></span><br>" . htmlspecialchars($title); }
+    if ($pf==0) {
+        $h1 = $T_Create_a_new_portfolio;
+    } else {
+        $h1 = htmlspecialchars($title);
+        $h1 = "<span id=h1Span onKeypress='titleKeypress(event)'>$h1</span>";
+        if ($edit) {
+            $h1 .= " <img src='/icons-smo/peann.png' class=editIcon alt='Edit' title='$T_Edit_the_title' onClick=titleEdit(1)>";
+            $h1 .= " <img src='/icons-smo/floppydisk.png' class=saveIcon alt='Save' title='$T_Save_your_edit' onClick=titleEdit(0)>";
+        }
+    }
+    $h1 = "<h1 id=h1 style='font-size:140%;margin:0.6em 0'>$h1</h1>";
+    if ($pf>0) { $h1 = "<p style='margin:0;font-size:75%'>$T_Portfolio_for_user_ <span style='color:brown'>$user</span></p>" . $h1; }
 
     if ($pf==0) {
 
@@ -277,7 +288,7 @@ END_pfstab;
     }
 
     $HTML = <<<EOD
-<h1 style="font-size:140%;margin:0.5em 0">$h1</h1>
+$h1
 
 $unitsTableHtml
 $permitTableHtml
@@ -314,6 +325,11 @@ EOD;
         a#emptyBut:hover,
         a#emptyBut:active,
         a#emptyBut:focus  { background-color:#f00; color:white; }
+        h1 img.editIcon { display:inline; }
+        h1 img.saveIcon { display:none; }
+        h1.editing img.editIcon { display:none; }
+        h1.editing img.saveIcon { display:inline; }
+        h1.editing span#h1Span { border:1px solid black; padding:0 0.2em; }
         li img.editIcon { display:inline; }
         li img.saveIcon { display:none; }
         li.editing span:first-child { background-color:white; padding:0 0.3em; border:1px solid black; }
@@ -602,6 +618,40 @@ EOD;
             xhr.open('GET', 'ajax/pfMoveUnit.php?pfu='+pfu+'&pf='+pf);
             xhr.send();
         }
+
+        function titleEdit(onOff) {
+            var h1El     = document.getElementById('h1');
+            var h1SpanEl = document.getElementById('h1Span');
+            if (onOff==1) {
+                h1El.classList.add('editing');
+                h1SpanEl.setAttribute('contenteditable','true');
+                h1SpanEl.focus();
+            } else {
+                h1El.classList.remove('editing');
+                h1SpanEl.setAttribute('contenteditable','false');
+                var newTitle = h1SpanEl.innerHTML;
+                var xhr = new XMLHttpRequest();
+                xhr.onreadystatechange = function() {
+                    if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+                        var resp = this.responseText;
+                        if (resp!='OK') { alert('$T_Error_in titleEdit~~\\r\\n\\r\\n'+resp); return; }
+                    }
+                }
+                var formData = new FormData();
+                formData.append('pf','$pf');
+                formData.append('title',newTitle);
+                xhr.open('POST', 'ajax/pfTitleEdit.php');
+                xhr.send(formData);
+            }
+        }
+
+        function titleKeypress(event) {
+            if (event.keyCode === 13) {
+                event.preventDefault();
+                titleEdit(0);
+            }
+        }
+
     </script>
 </head>
 <body>
