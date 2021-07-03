@@ -237,7 +237,7 @@ EOD;
         table#vocab { border-collapse:collapse; border:1px solid grey; margin-bottom:0.5em; white-space:nowrap; }
         table#vocab tr#vocabhead { background-color:grey; color:white; font-weight:bold; }
         table#vocab tr#vocabhead a { color:white; }
-        table#vocab tr.batchend { border-bottom:8px solid grey; }
+        table#vocab tr.batchend { border-bottom:2.5em solid #bbb; }
         table#vocab tr:nth-child(odd)  { background-color:#ddf; }
         table#vocab tr:nth-child(even) { background-color:#fff; }
         table#vocab tr:nth-child(odd):hover  { background-color:#fe6; }
@@ -258,6 +258,9 @@ EOD;
         table#vocab tr.rand:nth-child(even) > td:nth-child(2) { background-color:#fee; font-weight:bold; padding-left2:1em; }
         table#vocab tr.hide td.meaning a.reveal { display:inline; }
         table#vocab td.meaning span.rand { margin-left:2em; padding:0 3px; border-radius:3px; background-color:brown; color:white; font-size:90%; cursor:grab; }
+      table#vocab td.meaning span.rand.red { background-color:red; }
+      table#vocab td.meaning span.rand.red::before { content:'⇵ '; }
+      table#vocab td.meaning span.rand.red::after  { content:' ⇵'; }
         a.langbutton { margin:1px 7px; background-color:#55a8eb; color:white; font-weight:bold; padding:2px 8px; border:1px solid white; border-radius:8px; }
         a.langbutton.selected { border-color:#55a8eb; background-color:yellow; color:#55a8eb; }
         a.langbutton.live:hover { background-color:blue; }
@@ -273,7 +276,7 @@ EOD;
         p#randStatistics span { font-weight:bold; }
     </style>
     <script>
-        var nRandDone, nRandTime;
+        var nRandDone, nRandTime, swopVocid = null;
 
         function deleteVocWord(vocid) {
             var xhttp = new XMLHttpRequest();
@@ -433,6 +436,7 @@ EOD;
                     randEl.addEventListener('dragstart',randDragstart);
                     trEl.addEventListener('dragover',randDragover);
                     trEl.addEventListener('drop',randDrop);
+                  trEl.addEventListener('click',randClick);
                 }
                 trEl.classList.add('batchend');
             }
@@ -447,19 +451,26 @@ EOD;
         }
 
         function randDragstart(ev) {
-            ev.dataTransfer.setData("text/plain", ev.target.id);
+            ev.dataTransfer.setData("text/plain", ev.target.id.substring(4));  //vocid of the meaning
         }
 
         function randDrop(ev) {
             ev.preventDefault();
-            var sourceRandId = ev.dataTransfer.getData("text/plain");
+            var sourceRandVocid = ev.dataTransfer.getData("text/plain");
+
+            var targetTrEl = ev.target.closest('tr');
+            var targetRandEl = targetTrEl.querySelector("span.rand");
+            var targetRandVocid = targetRandEl.id.substring(4);
+           if (targetRandVocid==sourceRandVocid) { return; }
+            randDoSwop(sourceRandVocid,targetRandVocid);
+        }
+
+        function randDoSwop(sourceRandVocid,targetRandVocid) {
+            var targetRandEl = document.getElementById('rand'+targetRandVocid);
+            var targetTrEl = document.getElementById('rand'+targetRandVocid).closest('tr');
+            var sourceRandId = 'rand' + sourceRandVocid;
             var sourceRandEl = document.getElementById(sourceRandId);
             var sourceTrEl = sourceRandEl.closest("tr");
-            var targetTrEl = ev.target.closest('tr');
-           if (targetTrEl==sourceTrEl) return;
-            var targetRandEl = targetTrEl.querySelector("span.rand");
-            var sourceRandVocid = sourceRandEl.id.substring(4);
-            var targetRandVocid = targetRandEl.id.substring(4);
             var sourceVocid = sourceTrEl.id.substring(3);
             var targetVocid = targetTrEl.id.substring(3);
             var sourceTdEl = document.getElementById('mean'+sourceVocid);
@@ -470,11 +481,26 @@ EOD;
                 randIncreaseTotal();
                 sourceRandEl.remove();
                 targetTrEl.classList.remove('rand');
+                if (swopVocid==sourceRandVocid) { swopVocid = null; }
             }
             if (targetRandVocid==sourceVocid) {
                 randIncreaseTotal();
                 targetRandEl.remove();
                 sourceTrEl.classList.remove('rand');
+                if (swopVocid==targetRandVocid) { swopVocid = null; }
+            }
+        }
+
+        function randClick(ev) {
+            var clickVocid = ev.target.id.substring(4);
+            if (clickVocid == swopVocid) {
+                ev.target.classList.remove('red');
+                swopVocid = null;
+            } else if (swopVocid==null) {
+                ev.target.classList.add('red');
+                swopVocid = clickVocid;
+            } else {
+                randDoSwop(swopVocid,clickVocid);
             }
         }
 
