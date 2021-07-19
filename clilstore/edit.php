@@ -98,6 +98,9 @@
   $T_CC_ND_message       = $T->j('CC_ND_message');
   $T_CC_NC_message       = $T->j('CC_NC_message');
   $T_Error_in            = $T->j('Error_in');
+  $T_Text_too_long       = $T->j('Text_too_long');
+  $T_Text_rather_long    = $T->j('Text_rather_long');
+  $T_long_text_advice    = $T->j('long_text_advice');
 
   $T_Clone_this_unit_title     = $T->h('Clone_this_unit_title');
   $T_Creating_Clilstore_unit_d = $T->h('Creating_Clilstore_unit_d');
@@ -895,6 +898,39 @@ EODfileInfoForm;
             return false;
         }
 
+        function onSubmitHandler() {
+            //Legacy exceptions - hopefully delete sometime
+                var id = '$id';
+                if (id=='1361') { return true; }
+                if (id=='1574') { return true; }
+                if (id=='1950') { return true; }
+                if (id=='2259') { return true; }
+                if (id=='2830') { return true; }
+                if (id=='4498') { return true; }
+                if (id=='4617') { return true; }
+                if (id=='6088') { return true; }
+                if (id=='6512') { return true; }
+                if (id=='6722') { return true; }
+                if (id=='7740') { return true; }
+                if (id=='8330') { return true; }
+                if (id=='8376') { return true; }
+                if (id=='9056') { return true; }
+                if (id=='9124') { return true; }
+                if (id=='9209') { return true; }
+                if (id=='9442') { return true; }
+                if (id=='9443') { return true; }
+                if (id=='9495') { return true; }
+                if (id=='9496') { return true; }
+            let len = document.getElementById('text').value.length;
+            if (len>200000) {
+                alert('$T_Text_too_long: '+ len + ' bytes\\n\\n' + '$T_long_text_advice');
+                return false;
+            } else if (len>100000) {
+                alert('$T_Text_rather_long: ' + len + ' bytes\\n\\n' + '$T_long_text_advice');
+                return true;
+            }
+        }
+
     </script>
 
 $tinymceScriptHead
@@ -907,7 +943,7 @@ $mdNavbar
 $errorMessage
 $editorsMessage
 
-<form method="post" name="mainForm">
+<form method="post" name="mainForm" onSubmit="return onSubmitHandler()">
 
 <fieldset style="background-color:#eef;border:8px solid #55a8eb;border-radius:10px">
 <legend style="width:auto;margin-left:auto;margin-right:auto;background-color:#55a8eb;color:white;padding:1px 3em">$legend</legend>
