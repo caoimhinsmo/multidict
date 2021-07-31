@@ -112,7 +112,7 @@ $hlSelect
 <p style="float:left;margin:1px 0">
 <select name="upload">
 <option value="0" selected>$T_Process_page</option>
-<option value="2">Compose a page</option>
+<option value="2">$T_Compose_page</option>
 </select>
 <span style="padding:0 0.4em;font-size:90%;color:brown;background-color:white;border:1px solid #999;border-radius:3px" title="$T_Remove_exist_links_info">
 <input type="checkbox" name="rmLi"$rmLiHtml/ id="rexl"><label for="rexl">$T_Remove_exist_links</label></span>
