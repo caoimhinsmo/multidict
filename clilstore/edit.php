@@ -17,6 +17,7 @@
   $T_Delete  = $T->h('Sguab às');
   $T_View    = $T->h('View_verb');
   $T_Text    = $T->h('Text');
+  $T_Upload  = $T->h('Upload');
 
   $T_Creating_new_unit   = $T->h('Creating_new_unit');  
   $T_editorsMessage      = $T->h('editorsMessage');
@@ -85,6 +86,9 @@
   $T_Upload_files_info_2 = $T->h('Upload_files_info_2');
   $T_Upload_a_file       = $T->h('Upload_a_file');
   $T_Choose_a_file       = $T->h('Choose_a_file');
+  $T_name_in_Clilstore   = $T->h('name_in_Clilstore');
+  $T_You_can_change_this = $T->h('You_can_change_this');
+  $T_Remember_copyright  = $T->h('Remember_copyright');
   $T_Files_attached      = $T->h('Files_attached');
   $T_Delete_this_file    = $T->h('Delete_this_file');
   $T_View_this_file      = $T->h('View_this_file');
@@ -1111,10 +1115,10 @@ $fileInfoForm
     <input type="file" name="bloigh" id="bloigh" style="width:16em" onchange="makeNiceFilename(this.value)">
 </div>
 <div style="display:none" id="nicenameDiv">
-    <label for="filenameUpload">and the name it will have in Clilstore</legend>
-    <input id="filenameUpload" style="width:16em"> <span class="info">You can change this, but the name should be something sensible for a computer file<br>&nbsp;</span>
-    <input type="submit" value="Upload">
-    <span class="info">Remember that you must not upload copyrighted material</span>
+    <label for="filenameUpload">$T_name_in_Clilstore</legend>
+    <input id="filenameUpload" style="width:16em"> <span class="info">$T_You_can_change_this<br>&nbsp;</span>
+    <input type="submit" value="$T_Upload">
+    <span class="info">$T_Remember_copyright</span>
 </div>
 <p id="uploadStatus"></p>
 </form>
