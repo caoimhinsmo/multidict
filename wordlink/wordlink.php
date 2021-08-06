@@ -5,10 +5,8 @@
   header('P3P: CP="CAO PSA OUR"');
 
   $T = new SM_T('wordlink/wordlink');
-
   $T_Help    = $T->h('Cobhair');
   $T_Process = $T->h('Process');
-
   $T_Wordlink_start_text1 = $T->h('Wordlink_start_text1');
   $T_Wordlink_start_text2 = $T->h('Wordlink_start_text2');
   $T_Wordlink_start_text3 = $T->h('Wordlink_start_text3');
@@ -120,25 +118,6 @@
     return $newTag;
   }
 
-  function compose($title,$text) {
-    $html = <<<END_COMPOSE
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title>$title</title>
-    <link rel="icon" type="image/png" href="/favicons/wordlink.png">
-</head>
-<body>
-<h1>$title</h1>
-<p>$text</p>
-</body>
-</html>
-END_COMPOSE;
-    return $html;
-  }
-
-
   try {
 
     $sid = ( !empty($_GET['sid']) ? $_GET['sid'] : null);
@@ -174,21 +153,10 @@ END_COMPOSE;
 
     if (empty($url))  { throw new Exception('{blankpage}'); }
 
-    if ($url=='{upload}') {
-        $uploadName = "wordlinkUpload$sid";
-        if (empty($_FILES[$uploadName])) { header("Location:$server/wordlink/upload.php?sid=$sid"); }
-        $uploadedFilename = "$document_root/wordlink/uploads/$sid";
-        move_uploaded_file ($_FILES[$uploadName]['tmp_name'], $uploadedFilename);
-        $html = file_get_contents($uploadedFilename);
-        $encoding = $_POST['encoding'];
-        if ($encoding=='ISO-8859-1') { $encoding = 'windows-1252'; } //Might as well be liberal in case ISO-8859-1 is wrongly specified with smart quotes
-        if ($encoding<>'UTF-8') { $html = iconv ($encoding,'UTF-8',$html); }
-         $rmLi = 1;
-    } elseif ($url=='{compose}') {
+    if ($url=='{compose}') {
         if ($_GET['composed']<>1) {
             header("Location:$wlhome/compose.php?sid=$sid");
         }
-        $title = $_POST['title'];
         $text  = $_POST['text'];
         $text = str_replace('&'   ,'&amp;',$text);
         $text = str_replace('<'   ,'&lt;' ,$text);
@@ -198,7 +166,17 @@ END_COMPOSE;
         $text = str_replace(" \n" ,"\n"   ,$text);
         $text = str_replace("\n\n","</p>\n\n<p>",$text);
         $text = "<p>$text</p>";
-        $html = compose($title,$text);
+        $html = <<<END_COMPOSE
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<p>$text</p>
+</body>
+</html>
+END_COMPOSE;
     } else {
         //The next two statements are just to change the likes of http://domain.com to http://domain.com/ (with trailing slash) - otherwise resolveLink doesn’t work
         $ubits = parse_url($url);  //split the url into components, before recombing it inserting any missing ‘/’
