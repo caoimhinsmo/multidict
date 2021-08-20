@@ -277,8 +277,14 @@ Replace the following sometime with flexbox - Option 3 at https://stackoverflow.
             document.getElementById('slSelOff').style.display = 'none';
         }
         function submitForm(langChanged) {
+//alert('submitForm');
             if (langChanged=='sl') { document.getElementById('tl').value   = ''; }
             if (langChanged>'')    { document.getElementById('dict').value = ''; }
+var word = document.getElementById('word').value;
+var sl   = document.getElementById('sl').value;
+var tl   = document.getElementById('tl').value;
+var dict = document.getElementById('dict').value;
+alert('word='+word+' sl='+sl+' tl='+tl+' dict='+dict);
             document.getElementById('mdForm').submit();
         }
         function changeDict(dict) {
@@ -327,7 +333,7 @@ $schemeSwopHtml
 <div class="formItem" style="width:35%;max-width:300px"><input type="hidden" name="sid" value="$sid">
 <div class="label">$T_Word &nbsp;<input type="submit" name="go" value="$T_Search" style="padding:0 3px;height:1.5em;line-height:1em">
 $pageNav</div>
-<input type="text" name="word" value="$word" title="The word to lookup in the dictionary" placeholder="     $T_Word_to_translate" style="width:94%">
+<input type="text" name="word" id="word" value="$word" title="The word to lookup in the dictionary" placeholder="     $T_Word_to_translate" style="width:94%">
 </div>
 $wordformHtmlFull
 </div>
