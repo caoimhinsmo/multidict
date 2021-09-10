@@ -137,19 +137,34 @@ CLICKHTML;
     </style>
     <script>
       function popup(url) {
-          var ow = window.outerWidth;
+          var dictLeft=0,dictTop=0,dictRight=200,dictBottom=200;
+
+          var dpr = window.devicePixelRatio;
+          var sX = window.screenX;
+          var sY = window.screenY;
           var oh = window.outerHeight;
           var ih = window.innerHeight;
-          var dleft   = Math.round(ow*0.61) + 2;
-          var dwidth  = Math.round(ow*0.39) - 5;
-          var dtop    = oh - ih + 18;
-          var dheight = ih - 18;
-          var dictwin = window.open(url, "dictwin", "resizable=1,scrollbars=1,top="+dtop+",left="+dleft+",outerHeight="+dheight+",outerWidth="+dwidth);
-          dictwin.focus();
+          var ow = window.outerWidth;
+          var iw = window.innerWidth;
+
+          var popupLeft, popupTop, popupWidth, popupHeight;
+          if (window.mozInnerScreenX) { //Firefox
+              popupLeft = window.mozInnerScreenX;
+              popupTop  = window.mozInnerScreenY;
+              popupWidth  = iw;
+              popupHeight = ih*0.9;
+          } else {
+              popupLeft = sX + ow - (iw*dpr);
+              popupTop  = sY + oh - (ih*dpr);
+              popupWidth  = iw*dpr;
+              popupHeight = ih*dpr*0.9;
+          }
+          var popupDimensions = 'left='+popupLeft + ',top='+popupTop + ',width='+popupWidth + ',height='+popupHeight;
+          window.open(encodeURI(url), 'dictwin', popupDimensions);
       }
     </script>
 </head>
-<body id='bod'>
+<body onload="popup('$url')">
 <p>Click “Submit” to look up the word in the dictionary</p>
 <p><a href="javascript:popup('$url')" target2='dictab$sid' class=button>Submit</a></p>
 <p>The results will be opened in a new popup window$message</p>

@@ -277,14 +277,8 @@ Replace the following sometime with flexbox - Option 3 at https://stackoverflow.
             document.getElementById('slSelOff').style.display = 'none';
         }
         function submitForm(langChanged) {
-//alert('submitForm');
             if (langChanged=='sl') { document.getElementById('tl').value   = ''; }
             if (langChanged>'')    { document.getElementById('dict').value = ''; }
-var word = document.getElementById('word').value;
-var sl   = document.getElementById('sl').value;
-var tl   = document.getElementById('tl').value;
-var dict = document.getElementById('dict').value;
-alert('word='+word+' sl='+sl+' tl='+tl+' dict='+dict);
             document.getElementById('mdForm').submit();
         }
         function changeDict(dict) {
