@@ -88,6 +88,7 @@
 
   function addWordlink($tag,$context='') { global $sid, $sl, $wlhome;
     if (preg_match('/nowordlink/iu',$tag)) { return $tag; }  //No wordlinking if 'nowordlink' found in the tag
+    if (preg_match('/\bno\s*wordlink\b/iu',$tag)) { return $tag; }  //No wordlinking if 'no wordlink' or similar found in the tag
     $attribute = ( $context=='frame' ? 'src' : 'href' ); //The attribute to be wordlinked
     $pattern =  '/((.*?) '.$attribute.'=")(.*?)("(.*))/ius';
     if (!preg_match($pattern,$tag,$matches)) {                      // If no luck...
@@ -336,7 +337,7 @@ END_LS;
         preg_match('|^<\s*([\/\w]*)|ius',$tag,$matches);
         $tagType = strtolower($matches[1]);
         if ( ($tagType=='a') && (   preg_match('|\"/wordlink.*url|'       ,$tag)
-                                 || preg_match('|smo.uhi.ac.uk/wordlink|' ,$tag)  //Old - this line can be deleted sometime
+                                 || preg_match('|clilstore.eu/wordlink|'  ,$tag)
                                  || preg_match('|multidict.info/wordlink|',$tag)
                                  || preg_match('|multidict.net/wordlink|' ,$tag) ) ) {  //If this happens to be a link to Wordlink itself then
             $tag = '<a class="opaque">';                                                //zap it and make it invisible to avoid to avoid recursion
