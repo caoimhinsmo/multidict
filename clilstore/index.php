@@ -54,6 +54,7 @@
     $T_Warning                = $T->h('Warning');
     $T_Hidden_filter_warning  = $T->h('Hidden_filter_warning');
     $T_Hidden_filters_warning = $T->h('Hidden_filters_warning');
+    $T_new_website_available   = $T->h('new_website_available');
 
     $T_UnitID        = $T->h('csCol_id');
     $T_Views         = $T->h('csCol_views');
@@ -140,6 +141,7 @@
 
     $T_CS_is_well_behaved = strtr( $T_CS_is_well_behaved, ['{'=>'<a href=privacyPolicy.php>','}'=>'</a>'] );
     $T_If_message_persists = sprintf( $T_If_message_persists, $T_Got_it );
+    $T_new_website_available = str_replace( '[clilstore.eu]', '<a href="//clilstore.eu/">clilstore.eu</a>', $T_new_website_available );
 
     $mdNavbar = SM_mdNavbar::mdNavbar($T->domhan);
 
@@ -1158,7 +1160,9 @@ $dataLists
 $tableHtml
 </form>
 
-<div style="min-height:65px;max-width:840px;border:2px solid #47d;margin:8em 0 0.5em 0;border-radius:4px;color:#47d;font-size:95%">
+<div style="max-width:840px;margin:8em 0 0.6em 0;border:1px solid;border-radius:3px;padding:2px">$T_new_website_available</div>
+
+<div style="min-height:65px;max-width:840px;border:2px solid #47d;margin:0 0 0.5em 0;border-radius:4px;color:#47d;font-size:95%">
 <div style="float:left;margin-right:1.5em">
 <a href="https://eacea.ec.europa.eu/erasmus-plus_en"><img src="$EUlogo" alt="" style="margin:3px"></a>
 </div>

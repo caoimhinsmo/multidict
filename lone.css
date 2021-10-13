@@ -103,10 +103,10 @@ body {
 	top: 420px;
         border:1px solid grey;
         border-radius: 3px;
-	box-shadow: 3px 3px 6px 3px #999999;
+	box-shadow: 2px 2px 3px #999999;
         padding: 8px;
         text-align: center;
-        font-size: 2em;
+        font-size: 1.8em;
 }
 #disclaimer {
 	position: absolute;

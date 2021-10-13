@@ -13,6 +13,9 @@
   $T_Disclaimer               = $T->h('Disclaimer');
   $T_Disclaimer_EuropeanCom   = $T->h('Disclaimer_EuropeanCom');
   $T_interface_language       = $T->h('canan_eadarAghaidh');
+  $T_new_website_available    = $T->h('new_website_available');
+
+  $T_new_website_available = str_replace('[clilstore.eu]', '<a href="//clilstore.eu/">clilstore.eu</a>,<br><br>', $T_new_website_available);
 
   $EUlogo = '/EUlogos/' . SM_T::hl0() . '.jpg';
   if (!file_exists($_SERVER['DOCUMENT_ROOT'] . $EUlogo)) { $EUlogo = '/EUlogos/en.jpg'; }
@@ -87,8 +90,7 @@ echo <<< END_html
   <div id="apDiv4"><a href="/wordlink/"><img src="lonelogo/pil-blue.png" alt="" style="width:17px;height:17px;border:0"></a></div>
     <div id="multitext">$T_Multidict_welcome</div>
   </div>
-  <div id="clilstore_eu">A new website is available at <a href="https://clilstore.eu/">clilstore.eu</a><br><br>
-  with a new user interface and the same data</div>
+  <div id="clilstore_eu">$T_new_website_available</div>
   <div id="disclaimer"><a href="http://eacea.ec.europa.eu/llp/index_en.php"><img src="$EUlogo" style="width:275px;height:60px;border:0" alt="logo"></a></div>
   <div id="distekst"><i>$T_Disclaimer:</i> $T_Disclaimer_EuropeanCom</div>
 </div>
