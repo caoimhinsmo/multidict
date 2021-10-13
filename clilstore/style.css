@@ -1,6 +1,10 @@
 @charset "UTF-8";
+/* Colours used previously
 a:link    { color:#4fa4ea; }
 a:visited { color:#bf7fda; }
+*/
+a:link    { color:#48c; }
+a:visited { color:#a6c; }
 a:hover   { color:white; background-color:brown; }
 
 p.info, span.info, ul.info { color:green; font-size:80%; }
