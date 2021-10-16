@@ -298,7 +298,7 @@ END_COMPOSE;
                 if (aTag.className=='wllCur') { aTag.className = 'wllCurSean'; }
             }
             elem.className = 'wllCur';
-window.open('https://www.teanga.info/','testwin','width-400,height=400');
+//window.open('https://www.teanga.info/','testwin','width-400,height=400');
       }
       function popup(url) {
           dictwin = window.open(url, "dictwin", "resizable=1,scrollbars=1,top=50,left=25,height=500,width=700");
