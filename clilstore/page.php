@@ -42,6 +42,7 @@
     $stmt->execute();
     if (!($r = $stmt->fetch(PDO::FETCH_ASSOC))) { throw new SM_MDexception("No unit exists for id=$id"); }
     extract($r);
+    $css = strip_tags($css); //paranoia
 
     if ($sl<>'ar') { $left = 'left';  $right = 'right'; }
      else          { $left = 'right'; $right = 'left';  }
