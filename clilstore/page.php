@@ -37,7 +37,7 @@
 
     $serverhome = SM_myCLIL::serverhome();
     $DbMultidict = SM_DbMultidictPDO::singleton('rw');
-    $stmt = $DbMultidict->prepare('SELECT sl,owner,title,text,medembed,medfloat FROM clilstore WHERE id=:id');
+    $stmt = $DbMultidict->prepare('SELECT sl,owner,title,text,medembed,medfloat,css FROM clilstore WHERE id=:id');
     $stmt->bindParam(':id', $id, PDO::PARAM_INT);
     $stmt->execute();
     if (!($r = $stmt->fetch(PDO::FETCH_ASSOC))) { throw new SM_MDexception("No unit exists for id=$id"); }
@@ -197,6 +197,7 @@ EOD_NB2;
                          white-space:nowrap; border:1px solid grey; box-shadow:0 8px 16px 0 rgba(0,0,0,0.7); z-index:1; }
         .pfddown:hover .pfddown-content { display:block; }
         .pfddown-item {margin: 3px; }
+$css
     </style>
     <script>
         function likeClicked() {
