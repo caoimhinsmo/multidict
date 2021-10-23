@@ -42,8 +42,16 @@
         $text       = $matches[4];
         $result .= $whitespace;
         if ($sl=='ja') { //Japanese has no spaces between words so needs to be broken up with the mecab tokenizer
-            $command = "echo '{$word}' | mecab";
-            $response = shell_exec($command);
+            $process = proc_open ( 'mecab',
+                                    [ 0=>['pipe','r'],               //stdin
+                                      1=>['pipe','w'],               //stdout
+                                      2=>['file','/dev/null','a'] ], //stderr
+                                   $pipes );
+            fwrite($pipes[0],$word);
+            fclose($pipes[0]);
+            $response = stream_get_contents($pipes[1]);
+            fclose($pipes[1]);
+            proc_close($process);
             $lines = explode("\n", $response);
             foreach ($lines as $line) {
                 if ($line=='EOS') continue;
@@ -64,21 +72,6 @@
                 if ($jaPronounce==$jaWord) { $jaPronounce = ''; }
                 $result .= addLink($jaWord,$jaPronounce);
             }
-/* //This special processing for Chinese using Urheen works, but is far far too slow, so commented out
-        } elseif ($sl=='zh' || substr($sl,0,3)=='zh-') { //Chinese has no spaces between words so needs to be broken up with the urheen tokenizer
-            $word = iconv('UTF-8','GBK',$word); //Convert to GBK character encoding, which urheen works in, unfortunately
-            $command = "cd /usr/local/bin; echo '{$word}' | urheen_m64 -i /dev/stdin -o /dev/stdout -t segpos 2>/dev/null";
-            $response = shell_exec($command);
-            $response = trim(explode("\n",$response)[1]); //The second line of the response is what we want
-            $response = iconv('GBK','UTF-8',$response); //Convert back to UTF-8
-            $wordPOSs = explode(' ', $response);
-            foreach ($wordPOSs as $wordPOS) {
-                $bits = explode('/',$wordPOS);
-                $zhWord = $bits[0];
-                $POS    = $bits[1]; //Part of speech
-                $result .= addLink($zhWord,$POS);
-            }
-*/
         } else { $result .= addLink($word); } // The usual case, for languages with spaces between words
     }
     $result .= $text; //Add any remaining text (trailing non-word text)
