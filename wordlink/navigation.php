@@ -126,7 +126,7 @@ $hlSelect
 </p>
 </div>
 <p style="margin:0;clear:both"><input type="hidden" name="sid" value="$sid"/>
-<input type="text" id="url" name="url" value="$url" title="URL of the webpage" placeholder="$T_Copy_url_here" style="width:99%"/></p>
+<input type=url id=url name=url value="$url" title="URL of the webpage" placeholder="$T_Copy_url_here" style="width:99%"/></p>
 EOD1;
   echo "<div class=\"formitem\">
 <div style=\"font-size:80%;color:#777\">$T_Webpage_language</div>

@@ -172,14 +172,21 @@
 </html>
 END_COMPOSE;
     } else {
-        //The next two statements are just to change the likes of http://domain.com to http://domain.com/ (with trailing slash) - otherwise resolveLink doesn’t work
-        $ubits = parse_url($url);  //split the url into components, before recombing it inserting any missing ‘/’
-        $url =  $ubits['scheme'] . '://' . $ubits['host']
+        //Perform some checks to ensure that the URL is acceptable.
+        $ubits = parse_url($url);  //split the url into components
+        $scheme = $ubits['scheme'];
+        $host   = $ubits['host'];
+        if ($scheme<>'https' && $scheme<>'http')
+          { throw new Exception("The URL must start with https or http<br>&ldquo;$scheme&rdquo; is not acceptable"); }
+        if (!preg_match("/^([a-z](-*[a-z\d])*)(\.([a-z](-*[a-z\d])*))+$/i",$host))
+          { throw new Exception("Invalid domainname &ldquo;$host&rdquo; in URL"); }
+        //Recombine the URL to change the likes of https://domain.com to https://domain.com/ (with trailing slash) - otherwise resolveLink doesn’t work
+        //(also omit things like port, user, pass) 
+        $url =  "$scheme://$host"
               . ( empty($ubits['path'])     ? '/' : $ubits['path']         )
               . ( empty($ubits['query'])    ? ''  : '?'.$ubits['query']    )
               . ( empty($ubits['fragment']) ? ''  : '#'.$ubits['fragment'] );
         $netUrl = new Net_URL2($url);
-//        if ($netUrl->getScheme()<>'http') { header("Location:$url"); }  //Redirect any non http pages and hope for the best!
 
         for ($nRhtml=0; $nRhtml<6; $nRhtml++) {   //up to 6 html redirections 
            $req = new HTTP_Request2();
