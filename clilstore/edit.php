@@ -1104,7 +1104,7 @@ $T_I_grant_use
 <input type="hidden" name="owner" value="$owner">
 </form>
 
-<div style="margin-top:4em;border-top:0.25em solid #5ae;padding:1px;background-color2:#9cf">
+<div style="margin-top:4em;border:0.25em solid #5ae;border-radius:0.25em;padding:0.1em;background-color:#f5f5ff">
 $fileInfoForm
 
 <fieldset style="margin:6px;border:1px solid grey;padding:10px;border-radius:5px;background-color:#ffd"> 
