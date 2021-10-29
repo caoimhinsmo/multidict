@@ -265,7 +265,7 @@
         $tinymceScriptHead = <<<END_tinymceScriptHead
 <script src="https://cdn.tiny.cloud/1/dxnggerdund5rb10s6xi2iempu5ez5q17cceotkni6rx6b7e/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
 END_tinymceScriptHead;
-        if ($hl0=='ga' || $hl0=='gd') { $language_url = "language_url: '/tinymce/langs/$hlTiny.js',"; } //Currently TinyMCE needs local translations for ga and gd
+        if (in_array($hl0,['ga','gd','sh'])) { $language_url = "language_url: '/tinymce/langs/$hlTiny.js',"; } //Currently need local translations for ga, gd, sh
 
         $tinymceScriptBody = <<<END_tinymceScriptBody
   <script>
