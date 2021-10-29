@@ -128,7 +128,7 @@
   $T_You_have_Javascript_off   = $T->h('You_have_Javascript_off');
   $T_you_can_edit_its_name     = $T->h('you_can_edit_its_name');
 
-  $editorsMessage = $tinymceScriptHead = $tinymceScriptBody  = '';
+  $editorsMessage = $tinymceScriptHead = $tinymceScriptBody = $language_url = '';
 
   $hl0 = $T->hl0();
   $id = $_REQUEST['id'] ?? NULL;
@@ -265,16 +265,19 @@
         $tinymceScriptHead = <<<END_tinymceScriptHead
 <script src="https://cdn.tiny.cloud/1/dxnggerdund5rb10s6xi2iempu5ez5q17cceotkni6rx6b7e/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
 END_tinymceScriptHead;
+        if ($hl0=='ga' || $hl0=='gd') { $language_url = "language_url: '/tinymce/langs/$hlTiny.js',"; } //Currently TinyMCE needs local translations for ga and gd
+
         $tinymceScriptBody = <<<END_tinymceScriptBody
   <script>
     tinymce.init({
       selector: 'textarea.tinymce',
-      plugins: [ 'advlist autolink autoresize autosave charmap code directionality emoticons fullscreen help hr image imagetools',
+      plugins: [ 'advlist autolink autoresize autosave charmap code directionality emoticons fullscreen help hr image ',
                  'link lists media nonbreaking paste print preview quickbars save searchreplace table visualblocks visualchars wordcount'
       ],
       toolbar: 'undo redo | styleselect | bold italic forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | print preview media fullpage',
       max_height: '100em',
       language: "$hlTiny",
+      $language_url
       entity_encoding: 'raw'
     });
   </script>

@@ -1,4 +1,6 @@
 tinymce.addI18n('gd',{
+"Link...": "Nasg...",
+"More...": "Tuilleadh...",
 "Redo": "Ath-dh\u00e8an",
 "Undo": "Neo-dh\u00e8an",
 "Cut": "Gearr \u00e0s",
@@ -84,6 +86,7 @@ tinymce.addI18n('gd',{
 "Horizontal line": "Loidhne ch\u00f2mhnard",
 "Insert/edit image": "Cuir a-steach/Deasaich an dealbh",
 "Image description": "Tuairisgeul an deilbh",
+"Image...": "Dealbh...",
 "Source": "T\u00f9s",
 "Dimensions": "Meudachd",
 "Constrain proportions": "Cuingich na co-r\u00e8irean",
@@ -121,6 +124,7 @@ tinymce.addI18n('gd',{
 "New window": "Uinneag \u00f9r",
 "Remove link": "Thoir air falbh an ceangal",
 "Anchors": "Acraichean",
+"Anchor...": "Acair...",
 "The URL you entered seems to be an email address. Do you want to add the required mailto: prefix?": "Tha coltas gu bheil an URL a chuir thu a-steach 'na she\u00f2ladh puist-d. A bheil thu airson an ro-leasachan mailto: a chur ris? Tha feum air.",
 "The URL you entered seems to be an external link. Do you want to add the required http:// prefix?": "Tha coltas gu bheil an URL a chuir thu a-steach 'na cheangal ris an taobh a-muigh. A bheil thu airson an ro-leasachan http:// a chur ris? Tha feum air.",
 "Insert video": "Cuir a-steach video",
