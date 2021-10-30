@@ -14,7 +14,7 @@
     if (empty($word)) { throw new SM_Exception('Missing parameter: ‘word’'); }
 
     $DbMultidict = SM_DbMultidictPDO::singleton('rw');
-    $stmt = $DbMultidict->prepare('SELECT word,disambig,meaning FROM wordlistdict WHERE sl=:sl and tl=:tl and word LIKE :word ORDER BY word,disambig');
+    $stmt = $DbMultidict->prepare('SELECT word,disambig,gram,meaning FROM wordlistdict WHERE sl=:sl and tl=:tl and word LIKE :word ORDER BY word,disambig');
     $stmt->execute(['sl'=>$sl,':tl'=>$tl,'word'=>$wordLIKE]);
     $res = $stmt->fetchAll(PDO::FETCH_ASSOC);
     $resHTML = '';
@@ -26,8 +26,9 @@
            $title = htmlspecialchars($disambig);
            $title = " title='$title'";
        }
+       if (!empty($gram)) { $gram = " $gram"; }
        $resHTML .= <<<resHTML
-<p class=word title="$disambig">$word</p>
+<p class=word title="$disambig">$word$gram</p>
 <p class=meaning>$meaning</p>
 resHTML;
     }
