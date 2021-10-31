@@ -14,13 +14,26 @@
     if (empty($word)) { throw new SM_Exception('Missing parameter: ‘word’'); }
 
     $DbMultidict = SM_DbMultidictPDO::singleton('rw');
-    $stmt = $DbMultidict->prepare('SELECT word,disambig,gram,meaning FROM wordlistdict WHERE sl=:sl and tl=:tl and word LIKE :word ORDER BY word,disambig');
+//  $query = 'SELECT word,disambig,gram,meaning FROM custom WHERE sl=:sl and tl=:tl and word LIKE :word ORDER BY word,disambig';
+    $query = 'SELECT word,disambig,gram,meaning,0 AS type FROM custom WHERE sl=:sl and tl=:tl and word LIKE :word'
+           . ' UNION '
+           . 'SELECT custom.word,disambig,gram,meaning,type FROM custom,customwf'
+           . ' WHERE sl=:sl AND tl=:tl AND customwf.lang=sl AND customwf.word=custom.word AND customwf.wf=:word'
+           . ' ORDER BY type,word,disambig';
+    $stmt = $DbMultidict->prepare($query);
     $stmt->execute(['sl'=>$sl,':tl'=>$tl,'word'=>$wordLIKE]);
     $res = $stmt->fetchAll(PDO::FETCH_ASSOC);
     $resHTML = '';
     foreach ($res as $r) {
        extract($r);
        $word = htmlspecialchars($word);
+       $word = strtr ( $word,
+        [ '&lt;ruby&gt;'  => '<ruby>',
+          '&lt;/ruby&gt;' => '</ruby>',
+          '&lt;rt&gt;'    => '<rt>',
+          '&lt;/rt&gt;'   => '</rt>',
+          '&lt;rp&gt;'    => '<rp>',
+          '&lt;/rp&gt;'   => '</rp>' ] ); //Restore ruby markup which was messed up by htmlspecialchars
        $title = '';
        if (!empty($disambig)) {
            $title = htmlspecialchars($disambig);
@@ -28,7 +41,7 @@
        }
        if (!empty($gram)) { $gram = " $gram"; }
        $resHTML .= <<<resHTML
-<p class=word title="$disambig">$word$gram</p>
+<p class=word title="$disambig"><b>$word</b>$gram</p>
 <p class=meaning>$meaning</p>
 resHTML;
     }
@@ -43,7 +56,7 @@ resHTML;
     <link rel="StyleSheet" href="/css/smo.css">
     <link rel="icon" type="image/png" href="/favicons/multidict.png">
     <style>
-        p.word { margin:0.2em 0; font-weight:bold; }
+        p.word { margin:0.2em 0; }
         p.meaning { margin:0 0 1em 1em; }
     </style>
 </head>
