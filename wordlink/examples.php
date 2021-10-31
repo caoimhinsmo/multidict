@@ -63,7 +63,7 @@ $wikiLinks
 <li>Gàidhlig:
    <a target="_top" href="./?sl=gd&amp;navsize=1&amp;url=http://danamag.org/">Dàna</a> <i>(online magazine)</i>
 <li>Français:
-   <a target="_top" href="./?sl=fr&amp;url=https://www.gaulois.ardennes.culture.fr/accessible">Acy-Romance: Les Gaulois des Ardennes</a>
+   <a target="_top" href="./?sl=fr&amp;url=https://archeologie.culture.fr/gaulois-ardennes/fr">Acy-Romance: Les Gaulois des Ardennes</a>
 <li>Cree:
    <a target="_top" href="./?sl=cr-Latn&amp;url=https://cr.wikipedia.org/wiki/Maskisin">Maskisin</a>
 <li>Ancient Greek:

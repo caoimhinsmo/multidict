@@ -246,6 +246,19 @@ END_COMPOSE;
 
     $html = rtrim($html);  //Without rtrim the program crashed on pages with trailing whitespace
 
+    if ($sl=='ryuR') {
+        //Protect ruby tags by converting to something unlikely but textual, so that they are treated as part of the word
+        $rubytr = [ '<ruby>'  => 'þðrubyðþ',
+                    '</ruby>' => 'þððrubyðþ',
+                    '<rt>'    => 'þðrtðþ',
+                    '</rt>'   => 'þððrtðþ',
+                    '<rp>(</rp>' => 'þðrpLðþ',
+                    '<rp>)</rp>' => 'þðrpRðþ' ];
+        $html = strtr($html,$rubytr);
+    }
+
+    $htmlout = '';
+
     // Convert all relative links to absolute links
     function resolveLink ($link) {
         global $netUrl;
@@ -321,12 +334,15 @@ END_JS;
 END_LS;
     $head = preg_replace('|</head>|i',"$linkstyle$javascript\n</head>",$head);
     $head = preg_replace('|(<meta.*".*charset\s*=\s*).*(".*>)|i',"$1UTF-8$2",$head);
-    echo $head;
-    echo $bodytag;
+//    echo $head;
+    $htmlout .= $head;
+//    echo $bodytag;
+    $htmlout .= $bodytag;
 
 //  First mop up anything before the first tag
     preg_match('|^(.*?)(<.*>)$|us',$remainder,$matches);
-    echo addLinks($matches[1]);
+//    echo addLinks($matches[1]);
+    $htmlout .= addLinks($matches[1]);
     $remainder  = $matches[2];
 
 //  Then process tag,text repeatedly til the end of the source
@@ -354,8 +370,16 @@ END_LS;
             if ($tagType=='a')     { $tag  = addWordlink($tag); }
             if ($tagType=='frame') { $tag  = addWordlink($tag,'frame'); }
         }
-        echo $tag,$text;
+//        echo $tag,$text;
+        $htmlout .= $tag;
+        $htmlout .= $text;
     }
+    if ($sl=='ryuR') {
+        //Restore the ruby tags
+        $rubytrrev = array_flip($rubytr);
+        $htmlout = strtr($htmlout,$rubytrrev);
+    }
+    echo $htmlout;
 
   } catch (Exception $e) {
       $message = $e->getMessage();
