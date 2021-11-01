@@ -3,7 +3,7 @@
     header("Location:http://claran.smo.uhi.ac.uk/mearachd/include_a_dhith/?faidhle=autoload.inc.php");
 
   try {
-    $T = new SM_T('multidict/wordlistdict');
+    $T = new SM_T('multidict/custom');
     $T_No_words_found = $T->h('Cha_d_fhuaireadh_facal');
 
     $sl   = $_REQUEST['sl']   ?? '';
@@ -14,7 +14,6 @@
     if (empty($word)) { throw new SM_Exception('Missing parameter: ‘word’'); }
 
     $DbMultidict = SM_DbMultidictPDO::singleton('rw');
-//  $query = 'SELECT word,disambig,gram,meaning FROM custom WHERE sl=:sl and tl=:tl and word LIKE :word ORDER BY word,disambig';
     $query = 'SELECT word,disambig,gram,meaning,0 AS type FROM custom WHERE sl=:sl and tl=:tl and word LIKE :word'
            . ' UNION '
            . 'SELECT custom.word,disambig,gram,meaning,type FROM custom,customwf'
