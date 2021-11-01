@@ -183,7 +183,7 @@ tinymce.addI18n('ga',{
 "Paste as text": "Greamaigh mar th\u00e9acs",
 "Preview": "R\u00e9amhamharc",
 "Print": "Priont\u00e1il",
-"Print": "Priont\u00e1il",
+"Print...": "Priont\u00e1il...",
 "Save": "S\u00e1bh\u00e1il",
 "Find": "Aimsigh",
 "Replace with": "Ionadaigh le",
