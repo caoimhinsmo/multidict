@@ -77,7 +77,7 @@ tinymce.addI18n('ga',{
 "You have unsaved changes are you sure you want to navigate away?": "T\u00e1 athruithe gan s\u00e1bh\u00e1il ann. An bhfuil t\u00fa cinnte gur mhaith leat imeacht amach as seo?",
 "Restore last draft": "Oscail an dr\u00e9acht is d\u00e9ana\u00ed",
 "Special character": "Carachtar speisialta",
-"Special character,,,": "Carachtar speisialta,,,",
+"Special character...": "Carachtar speisialta...",
 "Source code": "C\u00f3d foinseach",
 "Insert\/Edit code sample": "Cuir sampla c\u00f3id isteach\/in eagar",
 "Language": "Teanga",
@@ -276,6 +276,5 @@ tinymce.addI18n('ga',{
 "Word count": "L\u00edon focal",
 "Fonts": "Cl\u00f3fhoirne",
 "System Font": "Cl\u00f3fhoireann C\u00f3ais",
-"Special character...": "Carachtar speisealta...",
 "Accessibility": "Inrochtaineacht"
 });
