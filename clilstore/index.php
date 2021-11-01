@@ -439,7 +439,8 @@ END_USER2;
         }
     }
 
-    $f['slFil']    = SM_WlSession::langName2Code($f['slFil']);  //Accept language names as well as codes
+// Delete the following line. Don't know why I ever wanted it, and it led to a crash when there was ambiguity in the lang table --CPD 2021-11-01
+//    $f['slFil']    = SM_WlSession::langName2Code($f['slFil']);  //Accept language names as well as codes
     $f['levelMin'] = SM_csSess::levelVis2Num($f['levelMin'],'min');
     $f['levelMax'] = SM_csSess::levelVis2Num($f['levelMax'],'max');
 

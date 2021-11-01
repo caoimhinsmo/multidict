@@ -801,6 +801,7 @@ EOD;
   }
 
 
+/* The following function is no longer used and can probably be deleted  --CPD 2021-11-01
   public static function langName2Code($name) {
       if ($name=='') { return $name; }
       $DbMultidict = SM_DbMultidictPDO::singleton('rw');
@@ -813,6 +814,7 @@ EOD;
       if (count($result) >1) { return '«ambiguous»'; }
       return strtolower($name);
   }
+*/
 
 
   public static function updateCalls($sl,$tl,$dict) {
