@@ -167,6 +167,7 @@ tinymce.addI18n('ga',{
 "Paste or type a link": "Greamaigh n\u00f3 cl\u00f3scr\u00edobh nasc",
 "The URL you entered seems to be an email address. Do you want to add the required mailto: prefix?": "Is seoladh r\u00edomhphoist \u00e9 an URL a chuir t\u00fa isteach. An bhfuil fonn ort an r\u00e9im\u00edr riachtanach mailto: a chur leis?",
 "The URL you entered seems to be an external link. Do you want to add the required http:\/\/ prefix?": "Is nasc seachtrach \u00e9 an URL a chuir t\u00fa isteach. An bhfuil fonn ort an r\u00e9im\u00edr riachtanach http:\/\/ a chur leis?",
+"The URL you entered seems to be an external link. Do you want to add the required https:\/\/ prefix?": "Is nasc seachtrach \u00e9 an URL a chuir t\u00fa isteach. An bhfuil fonn ort an r\u00e9im\u00edr riachtanach https:\/\/ a chur leis?",
 "Link list": "Liosta nascanna",
 "Insert video": "Cuir f\u00edse\u00e1n isteach",
 "Insert\/edit video": "Cuir f\u00edse\u00e1n isteach\/in eagar",
@@ -268,5 +269,13 @@ tinymce.addI18n('ga',{
 "Table": "T\u00e1bla",
 "Tools": "Uirlis\u00ed",
 "Powered by {0}": "\u00c1 chumhacht\u00fa ag {0}",
-"Rich Text Area. Press ALT-F9 for menu. Press ALT-F10 for toolbar. Press ALT-0 for help": "Limist\u00e9ar M\u00e9ith-Th\u00e9acs. Br\u00faigh ALT-F9 le haghaidh roghchl\u00e1ir, ALT-F10 le haghaidh barra uirlis\u00ed, agus ALT-0 le c\u00fanamh a fh\u00e1il"
+"Rich Text Area. Press ALT-F9 for menu. Press ALT-F10 for toolbar. Press ALT-0 for help": "Limist\u00e9ar M\u00e9ith-Th\u00e9acs. Br\u00faigh ALT-F9 le haghaidh roghchl\u00e1ir, ALT-F10 le haghaidh barra uirlis\u00ed, agus ALT-0 le c\u00fanamh a fh\u00e1il",
+"Open link in...": "Oscail nasc in...",
+"Open link": "Oscail nasc",
+"Current window": "Fuinneog reatha",
+"Word count": "L\u00edon focal",
+"Fonts": "Cl\u00f3fhoirne",
+"System Font": "Cl\u00f3fhoireann C\u00f3ais",
+"Special character...": "Carachtar speisealta...",
+"Accessibility": "Inrochtaineacht"
 });
