@@ -14,11 +14,11 @@
     if (empty($word)) { throw new SM_Exception('Missing parameter: ‘word’'); }
 
     $DbMultidict = SM_DbMultidictPDO::singleton('rw');
-    $query = 'SELECT word,disambig,gram,meaning,0 AS type FROM custom WHERE sl=:sl and tl=:tl and word LIKE :word'
+    $query = 'SELECT word,disambig,gram,meaning,0 AS pri FROM custom WHERE sl=:sl and tl=:tl and word LIKE :word'
            . ' UNION '
-           . 'SELECT custom.word,disambig,gram,meaning,type FROM custom,customwf'
+           . 'SELECT custom.word,disambig,gram,meaning,pri FROM custom,customwf'
            . ' WHERE sl=:sl AND tl=:tl AND customwf.lang=sl AND customwf.word=custom.word AND customwf.wf=:word'
-           . ' ORDER BY type,word,disambig';
+           . ' ORDER BY pri,word,disambig';
     $stmt = $DbMultidict->prepare($query);
     $stmt->execute(['sl'=>$sl,':tl'=>$tl,'word'=>$wordLIKE]);
     $res = $stmt->fetchAll(PDO::FETCH_ASSOC);
