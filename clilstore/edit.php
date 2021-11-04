@@ -432,7 +432,7 @@ END_tinymceScriptBody;
             }
             echo <<<EOD2
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="refresh" content="$refreshTime; url=$happyRefresh">
@@ -607,7 +607,7 @@ EODfileInfoForm;
 
         echo <<<EOD1
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="UTF-8">
     <title>$legend</title>
@@ -968,7 +968,7 @@ $cloneHtml</div>
 </div>
 <div style="margin-top:6px">
 $T_Text <span class="info" style="padding-left:2em">$textAdvice</span><br>
-<textarea name="text" id="text" class=tinymce placeholder="$T_Text_placeholder" style="width:100%;height:400px">$text</textarea></div>
+<textarea name="text" id="text" class=tinymce spellcheck=false placeholder="$T_Text_placeholder" style="width:100%;height:400px">$text</textarea></div>
 $tinymceScriptBody
 <fieldset style="margin:6px 0 0 0;border:1px solid green;padding:5px;corner-radius:5px">
 <legend>$T_Link_buttons</legend>
