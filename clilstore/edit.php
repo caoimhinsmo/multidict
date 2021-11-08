@@ -128,7 +128,7 @@
   $T_You_have_Javascript_off   = $T->h('You_have_Javascript_off');
   $T_you_can_edit_its_name     = $T->h('you_can_edit_its_name');
 
-  $editorsMessage = $tinymceScriptHead = $tinymceScriptBody = $language_url = '';
+  $editorsMessage = $tinymceScriptHead = $tinymceScriptBody = $language_url = $editHtmlSwitchHTML = '';
 
   $hl0 = $T->hl0();
   $id = $_REQUEST['id'] ?? NULL;
@@ -247,43 +247,6 @@
     $servername = SM_myCLIL::servername();
     $serverhome = SM_myCLIL::serverhome();
 
-    if (@$_REQUEST['editor']=='old') { $editor = 'old'; } else { $editor = 'new'; }
-    if ($editor=='new') {
-        $oldEditorLink = "edit.php?id=$id&amp;editor=old";
-        if (isset($_GET['view'])) { $oldEditorLink .= '&amp;view'; }
-        $editorsMessage = strtr($T_editorsMessage, [ '{' => "<a href='$oldEditorLink'>", '}' => '</a>' ] );
-        $editorsMessage = "<p style='margin:1em 0;color:green;font-size:80%'>$editorsMessage</p>";
-//      $tinymceCSS = '/clilstore/tinymce.css?bogus=' . time();  //Bogus parameter to thwart browser cache and ensure refresh while under development
-//        $tinymceCSS = '/clilstore/tinymce.css';
-
-        $hlTiny = $hl0;
-        $langdirTiny = $_SERVER['DOCUMENT_ROOT'] . '/tinymce/langs/';
-        $hlTinyTra = ['af'=>'af_ZA', 'azj'=>'az', 'bg'=>'bg_BG', 'bn'=>'bn_BD', 'en'=>'en_GB', 'ekk'=>'et', 'pes'=>'fa',
-                     'fr'=>'fr_FR', 'he'=>'he_IL', 'hu'=>'hu_HU', 'it'=>'it_IT', 'kab'=>'kab', 'ka'=>'ka_GE', 'km'=>'km_KH', 'ko'=>'ko_KR',
-                     'lvs'=>'lv', 'nb'=>'nb_NO', 'pt'=>'pt_PT', 'sh'=>'hr', 'sv'=>'sv_SE', 'th'=>'th_TH', 'zh-Hans'=>'zh_CN', 'zh-Hant'=>'zh_TW'];
-        if ( !file_exists("{$langdirTiny}{$hlTiny}.js") ) { $hlTiny = $hlTinyTra[$hlTiny] ?? $hlTiny; }
-        $tinymceScriptHead = <<<END_tinymceScriptHead
-<script src="https://cdn.tiny.cloud/1/dxnggerdund5rb10s6xi2iempu5ez5q17cceotkni6rx6b7e/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
-END_tinymceScriptHead;
-        if (in_array($hl0,['ga','gd','sh'])) { $language_url = "language_url: '/tinymce/langs/$hlTiny.js',"; } //Currently need local translations for ga, gd, sh
-
-        $tinymceScriptBody = <<<END_tinymceScriptBody
-  <script>
-    tinymce.init({
-      selector: 'textarea.tinymce',
-      plugins: [ 'advlist autolink autoresize autosave charmap code directionality emoticons fullscreen help hr image ',
-                 'link lists media nonbreaking paste print preview quickbars save searchreplace table visualblocks visualchars wordcount'
-      ],
-      toolbar: 'undo redo | styleselect | bold italic forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | print preview media fullpage',
-      max_height: '100em',
-      language: "$hlTiny",
-      $language_url
-      entity_encoding: 'raw'
-    });
-  </script>
-END_tinymceScriptBody;
-    }
-
     $DbMultidict = SM_DbMultidictPDO::singleton('rw');
     //Initialisations
     $errorMessage = $warningMessage = $cruth = $cloneHtml = $legend = '';
@@ -296,7 +259,6 @@ END_tinymceScriptBody;
         $clone     =@$_POST['clone'];     if (isset($clone)) { $id = 0; } // Set id to 0 to create a new unit
         $owner     = $_POST['owner'];
         $sl        = $_POST['sl'];        $sl = trim(strip_tags($sl));
-          //  $sl = SM_WlSession::langName2Code($sl); //Accept names+codes --Delete. Don't know why I ever wanted it, and it cause a crash when there was ambiguioty --CPD 2021-11-01
         $level     = $_POST['level'];
         $cefr      = $_POST['cefr'];
         $title     = $_POST['title'];     $title = trim(strip_tags($title));
@@ -309,8 +271,9 @@ END_tinymceScriptBody;
         $summary   = $_POST['summary'];
         $langnotes = $_POST['langnotes'];
         $licence   = $_POST['licence'];
-        $test      =@$_POST['test'];      $test  = ( isset($test)   ? 1 : 0 );
-        $permis    =@$_POST['permis'];    $permis= ( isset($permis) ? 1 : 0 );
+        $test      =@$_POST['test'];      $test     = ( isset($test)     ? 1 : 0 );
+        $permis    =@$_POST['permis'];    $permis   = ( isset($permis)   ? 1 : 0 );
+        $editHtml  =@$_POST['editHtml'];  $editHtml = ( isset($editHtml) ? 1 : 0 );
         $created = $changed  = time();
         $butArr  = $_POST['but'];
         $linkArr = $_POST['link'];
@@ -386,10 +349,10 @@ END_tinymceScriptBody;
 
             if (empty($id)) {
                 $query = 'INSERT INTO clilstore('
-                        . 'owner,sl,level,title,text,medembed,medfloat,medtype,medlen,words,created,changed,summary,langnotes,licence,test'
-                        . ') VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)';
+                        . 'owner,sl,level,title,text,medembed,medfloat,medtype,medlen,words,created,changed,summary,langnotes,licence,test,editHtml'
+                        . ') VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)';
                 $stmt = $DbMultidict->prepare($query);
-                $stmt->execute(array($user,$sl,$level,$title,$text,$medembed,$medfloat,$medtype,$medlen,$words,$created,$changed,$summary,$langnotes,$licence,$test));
+                $stmt->execute([$user,$sl,$level,$title,$text,$medembed,$medfloat,$medtype,$medlen,$words,$created,$changed,$summary,$langnotes,$licence,$test,$editHtml]);
                 $stmt = null;
                 $happyMessage = $T_Unit_created;
                 $id = current($DbMultidict->query("SELECT MAX(id) FROM clilstore")->fetch()); //The id of the newly created unit
@@ -406,19 +369,20 @@ END_tinymceScriptBody;
                    && time()-$row['changed'] > 20 ) //Old licence has been in force for some time
                     { $warningMessage = strtr($T_Warn_New_licence_restrict, ['{%s1}'=>$licence,'{%s2}'=>$prevLicence]); }
                 $query = 'UPDATE clilstore'
-                        . ' SET sl=?,level=?,title=?,text=?,medembed=?,medfloat=?,medtype=?,medlen=?,words=?,summary=?,langnotes=?,changed=?,licence=?,test=?'
+                        . ' SET sl=?,level=?,title=?,text=?,medembed=?,medfloat=?,medtype=?,medlen=?,words=?,summary=?,langnotes=?,changed=?,licence=?,test=?,editHtml=?'
                         . ' WHERE id=? AND owner LIKE ?';
                 $stmt = $DbMultidict->prepare($query);
                 $userRequired = ( $user=='admin' ? '%' : $user);
                 $result = $stmt->execute(array(
-                           $sl,$level,$title,$text,$medembed,$medfloat,$medtype,$medlen,$words,$summary,$langnotes,$changed,$licence,$test,$id,$userRequired));
+                           $sl,$level,$title,$text,$medembed,$medfloat,$medtype,$medlen,$words,$summary,$langnotes,$changed,$licence,$test,$editHtml,$id,$userRequired));
                 $DbMultidict->prepare('DELETE FROM csButtons WHERE id=:id')->execute(array('id'=>$id)); //Delete any previous buttons
                 $happyMessage = $T_Edit_complete;
             }
             $stmt = $DbMultidict->prepare('INSERT INTO csButtons(id,ord,but,wl,new,link) VALUES(?,?,?,?,?,?)');
             $nbuttons = 0;
             foreach ($buttons as $ord=>$b) {
-                if (!empty($b->but) && !empty($b->link)) { $stmt->execute(array($id,$nbuttons++,$b->but,$b->wl,$b->new,$b->link)); } //Store nonempty buttons, ignoring $ord and storing new sequence numbers
+                if (!empty($b->but) && !empty($b->link))
+                  { $stmt->execute(array($id,$nbuttons++,$b->but,$b->wl,$b->new,$b->link)); } //Store nonempty buttons, ignoring $ord and storing new sequence numbers
             }
             $stmt = null;
             $stmt = $DbMultidict->prepare('UPDATE clilstore SET buttons=:buttons WHERE id=:id');
@@ -473,7 +437,9 @@ EOD2;
                 $stmt = null;
             } else {
              //Editing an old unit, so first fetch the values from the database
-                $stmt = $DbMultidict->prepare('SELECT owner,sl,level,title,text,medembed,medfloat,medtype,medlen,summary,langnotes,licence,test FROM clilstore WHERE id=:id');
+                $query = 'SELECT owner,sl,level,title,text,medembed,medfloat,medtype,medlen,summary,langnotes,licence,test,editHtml'
+                       . ' FROM clilstore WHERE id=:id';
+                $stmt = $DbMultidict->prepare($query);
                 $stmt->execute(array('id'=>$id));
                 if (!$row = $stmt->fetch(PDO::FETCH_ASSOC)) { throw new SM_MDexception("$T_No_unit_found_for_id=$id"); }
                 extract($row);
@@ -488,6 +454,57 @@ EOD2;
                 $legend = sprintf($legend,$id);
                 $cruth  = 'html'; 
             }
+
+            if ($editHtml) { $editor = 'old'; }
+             else          { $editor = $_REQUEST['editor'] ?? 'new'; }
+            if ($editor=='old') {  // HTML editor
+                $textAdvice = ( $cruth=='html'
+                              ? $T_Text_Advice_html
+                              : $T_Text_Advice_new );
+                $editHtmlChecked = ( $editHtml ? 'checked' : '' );
+                $editHtmlSwitchHTML = <<<END_editHtmlSwitchHTML
+<p>
+<label class=toggle-switchy for=editHtml data-size=xs>
+  <input type=checkbox id=editHtml name=editHtml value=editHtml $editHtmlChecked><span class=toggle><span class=switch></span></span>
+  <span class=label style="font-size:70%">Always use the HTML editor (rather than wysiwyg) with this unit</span>
+</label>
+</p>
+END_editHtmlSwitchHTML;
+            } else {  // wysiwyg editor (TinyMCE)
+                $textAdvice = $T_Text_Advice;
+                $oldEditorLink = "edit.php?id=$id&amp;editor=old";
+                if (isset($_GET['view'])) { $oldEditorLink .= '&amp;view'; }
+                $editorsMessage = strtr($T_editorsMessage, [ '{' => "<a href='$oldEditorLink'>", '}' => '</a>' ] );
+                $editorsMessage = "<p style='margin:1em 0;color:green;font-size:80%'>$editorsMessage</p>";
+
+                $hlTiny = $hl0;
+                $langdirTiny = $_SERVER['DOCUMENT_ROOT'] . '/tinymce/langs/';
+                $hlTinyTra = ['af'=>'af_ZA', 'azj'=>'az', 'bg'=>'bg_BG', 'bn'=>'bn_BD', 'en'=>'en_GB', 'ekk'=>'et', 'pes'=>'fa',
+                             'fr'=>'fr_FR', 'he'=>'he_IL', 'hu'=>'hu_HU', 'it'=>'it_IT', 'kab'=>'kab', 'ka'=>'ka_GE', 'km'=>'km_KH', 'ko'=>'ko_KR',
+                             'lvs'=>'lv', 'nb'=>'nb_NO', 'pt'=>'pt_PT', 'sh'=>'hr', 'sv'=>'sv_SE', 'th'=>'th_TH', 'zh-Hans'=>'zh_CN', 'zh-Hant'=>'zh_TW'];
+                if ( !file_exists("{$langdirTiny}{$hlTiny}.js") ) { $hlTiny = $hlTinyTra[$hlTiny] ?? $hlTiny; }
+                $tinymceScriptHead = <<<END_tinymceScriptHead
+<script src="https://cdn.tiny.cloud/1/dxnggerdund5rb10s6xi2iempu5ez5q17cceotkni6rx6b7e/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+END_tinymceScriptHead;
+                if (in_array($hl0,['ga','gd','sh'])) { $language_url = "language_url: '/tinymce/langs/$hlTiny.js',"; } //Currently need local translations for ga, gd, sh
+
+                $tinymceScriptBody = <<<END_tinymceScriptBody
+  <script>
+    tinymce.init({
+      selector: 'textarea.tinymce',
+      plugins: [ 'advlist autolink autoresize autosave charmap code directionality emoticons fullscreen help hr image ',
+                 'link lists media nonbreaking paste print preview quickbars save searchreplace table visualblocks visualchars wordcount'
+      ],
+      toolbar: 'undo redo | styleselect | bold italic forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | print preview media fullpage',
+      max_height: '100em',
+      language: "$hlTiny",
+      $language_url
+      entity_encoding: 'raw'
+    });
+  </script>
+END_tinymceScriptBody;
+            }
+
             $buttons[] = new button(count($buttons));  // Always create at least one blank button
             for ($ord=count($buttons);$ord<4;$ord++) { $buttons[] = new button($ord); } //Create new blank buttons if necessary, to give a minimum of 4 buttons
         }
@@ -508,13 +525,6 @@ EOD2;
   <span class=label>$T_Clone_as_a_new_unit</span>
 </label>
 END_cloneHtml;
-        }
-        if ($editor=='new') {
-            $textAdvice = $T_Text_Advice;
-        } else {
-            $textAdvice = ( $cruth=='html'
-                          ? $T_Text_Advice_html
-                          : $T_Text_Advice_new );
         }
         $scrollChecked = ( $medfloat=='scroll' ? 'checked' : '' );
 
@@ -1102,6 +1112,7 @@ $T_I_grant_use
 </div>
 
 <div style="margin-top:8px;margin-bottom:2em">
+$editHtmlSwitchHTML
 <input type="submit" name="save" id="save" value="$submitValue">
 </div>
 
