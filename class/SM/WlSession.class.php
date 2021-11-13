@@ -453,8 +453,14 @@ class SM_WlSession {
           if ($wfrule=='hun') {
               $wfArr = array();
               if (file_exists("/usr/share/hunspell/$slEffective.aff")) {
-                  $command = "echo '{$word}' | hunspell -m -d {$slEffective} ";
-                  $response = shell_exec($command);
+                  $env = ['LANG' => 'en_US.utf-8'];
+                  $process = proc_open ( "hunspell -m -d $slEffective", [ 0=>['pipe','r'], 1=>['pipe','w'], 2=>['file','/dev/null','a'] ], $pipes, NULL , $env );
+                  fwrite($pipes[0],$word);  //stdin
+                  fclose($pipes[0]);
+                  $response = stream_get_contents($pipes[1]);  //stdout
+                  fclose($pipes[1]);
+                  proc_close($process);
+
                   $lines = explode("\n", $response);
                   $wordpreg = $this->wordpreg;
                   foreach ($lines as $line) {
