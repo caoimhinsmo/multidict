@@ -387,7 +387,7 @@ class SM_WlSession {
   private function arroot ($wordform) {
     // Obtains the root of an Arabic word using the ISRIStemmer in nltk
       $document_root = $_SERVER['DOCUMENT_ROOT'];
-      $root = shell_exec("python3 $document_root/multidict/arroot.py $wordform");
+      $root = shell_exec("python3 ".escapeshellarg($document_root/multidict/arroot.py.' '.$wordform));
       return array($root);
   }
 
