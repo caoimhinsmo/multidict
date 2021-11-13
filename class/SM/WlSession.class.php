@@ -465,13 +465,15 @@ class SM_WlSession {
           $bits = explode(':',$wfrule);  if (sizeof($bits)==2) { $wfrule = $bits[0]; $slEffective = $bits[1]; }
           if ($wfrule=='hun') {
               $wfArr = array();
-              $command = "echo '{$word}' | hunspell -m -d {$slEffective} ";
-              $response = shell_exec($command);
-              $lines = explode("\n", $response);
-              $wordpreg = $this->wordpreg;
-              foreach ($lines as $line) {
-                  preg_match ('%\sst:('.$wordpreg.')%u' , $line, $matches );
-                  if (!empty($matches[1])) { $wfArr[] = $matches[1]; }
+              if (file_exists("/usr/share/hunspell/$slEffective.aff")) {
+                  $command = "echo '{$word}' | hunspell -m -d {$slEffective} ";
+                  $response = shell_exec($command);
+                  $lines = explode("\n", $response);
+                  $wordpreg = $this->wordpreg;
+                  foreach ($lines as $line) {
+                      preg_match ('%\sst:('.$wordpreg.')%u' , $line, $matches );
+                      if (!empty($matches[1])) { $wfArr[] = $matches[1]; }
+                  }
               }
           } elseif ($wfrule=='lemtable') {
             $DbMultidict = SM_DbMultidictPDO::singleton('rw');

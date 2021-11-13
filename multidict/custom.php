@@ -14,13 +14,13 @@
     if (empty($word)) { throw new SM_Exception('Missing parameter: ‘word’'); }
 
     $DbMultidict = SM_DbMultidictPDO::singleton('rw');
-    $query = 'SELECT word, disambig, gram, meaning, pri FROM custom WHERE sl=:sl and tl=:tl and word LIKE :word'
+    $query = 'SELECT word, disambig, gram, meaning, pri FROM custom, customtr WHERE lang=:sl AND word LIKE :word AND custom.idc=customtr.idc AND tl=:tl'
            . ' UNION '
-           . 'SELECT custom.word, disambig, gram, meaning, customwf.pri AS pri FROM custom,customwf'
-           . ' WHERE sl=:sl AND tl=:tl AND customwf.lang=sl AND customwf.word=custom.word AND customwf.wf=:word'
+           . 'SELECT custom.word, disambig, gram, meaning, customwf.pri AS pri FROM customwf, custom, customtr'
+           . ' WHERE wf LIKE :word AND customwf.idc=custom.idc AND lang=:sl AND customtr.idc=custom.idc AND tl=:tl'
            . ' ORDER BY pri, word, disambig';
     $stmt = $DbMultidict->prepare($query);
-    $stmt->execute(['sl'=>$sl,':tl'=>$tl,'word'=>$wordLIKE]);
+    $stmt->execute([':sl'=>$sl,':tl'=>$tl,':word'=>$wordLIKE]);
     $res = $stmt->fetchAll(PDO::FETCH_ASSOC);
     $resHTML = '';
     foreach ($res as $r) {
@@ -38,7 +38,7 @@
            $title = htmlspecialchars($disambig);
            $title = " title='$title'";
        }
-       if (!empty($gram)) { $gram = " $gram"; }
+       if (!empty($gram)) { $gram = " <span class=gram>$gram</span>"; }
        $resHTML .= <<<resHTML
 <p class=word title="$disambig"><b>$word</b>$gram</p>
 <p class=meaning>$meaning</p>
@@ -57,6 +57,7 @@ resHTML;
     <style>
         p.word { margin:0.2em 0; }
         p.meaning { margin:0 0 1em 1em; }
+        span.gram { padding-left:0.3em; font-size:70%; color:red; }
     </style>
 </head>
 <body>
