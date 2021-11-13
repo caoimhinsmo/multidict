@@ -42,14 +42,10 @@
         $text       = $matches[4];
         $result .= $whitespace;
         if ($sl=='ja') { //Japanese has no spaces between words so needs to be broken up with the mecab tokenizer
-            $process = proc_open ( 'mecab',
-                                    [ 0=>['pipe','r'],               //stdin
-                                      1=>['pipe','w'],               //stdout
-                                      2=>['file','/dev/null','a'] ], //stderr
-                                   $pipes );
-            fwrite($pipes[0],$word);
+            $process = proc_open ( 'mecab', [ 0=>['pipe','r'], 1=>['pipe','w'], 2=>['file','/dev/null','a'] ], $pipes );
+            fwrite($pipes[0],$word); //stdin
             fclose($pipes[0]);
-            $response = stream_get_contents($pipes[1]);
+            $response = stream_get_contents($pipes[1]); //stdout
             fclose($pipes[1]);
             proc_close($process);
             $lines = explode("\n", $response);
@@ -58,10 +54,10 @@
                 if (empty($line)) continue;
                 $bits = explode("\t", $line);
                 $jaWord = $bits[0];
-                $mecabInfo = ( empty($bits[1]) ? '' : $bits[1] );
+                $mecabInfo = $bits[1] ?? '';
                 $moreBits = explode(',', $mecabInfo);
-                $jaPronounce =( empty($moreBits[7]) ? '' : $moreBits[7] );
-                if (empty($jaPronounce)) { $jaPronounce = $jaWord; }
+                $jaPronounce = $moreBits[5] ?? '';
+                if ($jaPronounce=='*') { $jaPronounce = ''; }
                 //Convert the pronunciation from katakana to hiragana using a translation table
                 $hiragana = 'ぁあぃいぅうぇえぉおかがきぎくぐけげこごさざしじすずせぜそぞただちぢっつづてでとどなにぬねのはばぱひびぴふぶぷへべぺほぼぽまみむめもゃやゅゆょよらりるれろゎわゐゑをんゔ';
                 $katakana = 'ァアィイゥウェエォオカガキギクグケゲコゴサザシジスズセゼソゾタダチヂッツヅテデトドナニヌネノハバパヒビピフブプヘベペホボポマミムメモャヤュユョヨラリルレロヮワヰヱヲンヴ';

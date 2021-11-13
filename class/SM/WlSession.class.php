@@ -363,33 +363,20 @@ class SM_WlSession {
       }
       if ($sl=='ja') {
           $wordArr = array();
-          $command = "echo '{$wordform}' | mecab";
-          $response = shell_exec($command);
+          $process = proc_open ( 'mecab', [ 0=>['pipe','r'], 1=>['pipe','w'], 2=>['file','/dev/null','a'] ], $pipes );
+          fwrite($pipes[0],$word);  //stdin
+          fclose($pipes[0]);
+          $response = stream_get_contents($pipes[1]);  //stdout
+          fclose($pipes[1]);
+          proc_close($process);
           $lines = explode("\n", $response);
           $line = $lines[0];
           if (!empty($line) && $line<>'EOS') {
               $bits = explode("\t", $line);
               $jaWord = $bits[0];
               $moreBits = explode(',', $bits[1]);
-              $wordArr[] = $moreBits[6];
+              $wordArr[] = $moreBits[5];
           }
-/* Commented out 2019-02-08, CPD. Not sure what this was for.
-//Temporary section for testing-------------
-          if ($_SERVER['SERVER_NAME']=='test.multidict.net') {
-              $command = "echo '{$wordform}' | mecab --all-morphs";
-              $response = shell_exec($command);
-              $lines = explode("\n", $response);
-              foreach ($lines as $line) {
-                  $bits = explode("\t", $line);
-                  if (count($bits)>1) {
-                      $jaWord = $bits[0];
-                      $moreBits = explode(',', $bits[1]);
-                      $wordArr[] = $moreBits[6];
-                  }
-              }
-          }
-//------------------------------------------
-*/
           return $wordArr;
       }
       if ($word==$wordform)  return array();
