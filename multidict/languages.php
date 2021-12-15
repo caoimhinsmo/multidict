@@ -103,9 +103,6 @@ END_ROW;
         a:hover { color:white; background-color:blue; }
         span.mark { background-color:yellow; }
         input[type=text] { background-color:#ffe; width:97%; margin:0; padding:0}
-        span.change { opacity:0; color:white; }
-        span.change.changed { color:green; animation:appearFade 5s; }
-        @keyframes appearFade { from { opacity:1; background-color:yellow; } 20% { opacity:0.8; background-color:transparent; } to { opacity:0; } }
         table#mainTable { border-collapse:collapse; font-size:90%; margin-bottom:1em; }
         table#mainTable tr:first-child { font-weight:bold; text-decoration:underline; }
         table#mainTable tr.family   { border-top:1em solid white;   background-color:#bbf; font-size:150%; font-weight: bold;color:red; }

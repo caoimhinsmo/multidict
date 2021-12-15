@@ -6,6 +6,7 @@
     $T = new SM_T('multidict/custom');
     $T_No_words_found = $T->h('Cha_d_fhuaireadh_facal');
     $T_Deasaich = $T->h('Deasaich');
+    $T_Error_in = $T->h('Error_in');
 
     function tlLangs($sl) {
         $DbMultidict = SM_DbMultidictPDO::singleton('rw');
@@ -52,7 +53,8 @@
     extract($res);
 
     $myCLIL = SM_myCLIL::singleton();
-    $user = ( isset($myCLIL->id) ? $myCLIL->id : '' );
+    $user = $myCLIL->id ?? '';
+    if (empty($user)) { throw new SM_Exception("You are not logged on"); }
 
     $grp = "cw-$sl";
     $stmtPermission = $DbMultidict->prepare('SELECT 1 FROM userGrp WHERE user=:user AND grp=:grp');
@@ -107,7 +109,11 @@ END_cwfHTML2;
     }
     foreach ($meanings as $tl=>$meaning) {
         $ctrHTML .= <<<END_ctrHTML
-<tr><td>$tl</td><td><input value='$meaning' style="width:25em"></td></tr>
+<tr>
+<td>$tl</td>
+<td><input id=tr$idctr value='$meaning' style="width:25em" onchange="changetr('$idctr')"></td>
+<td><span id="tr$idctr-tick" class=change>✔<span></td>
+</tr>
 END_ctrHTML;
     }
     $ctrHTML = <<<END_ctrHTML2
@@ -148,32 +154,50 @@ if (isset($_REQUEST['newword'])) { $newwordMessage = '<p id=message>New word add
     <script>
         function deleteWord(idc) {
             if (!confirm('Really delete this word?\\r\\n (together with any wordforms and translations)')) { return; }
-            alert('Delete:' + idc);
-            let bodyEl = document.querySelector('body');
-            bodyEl.innerHTML = '<p>The word has been deleted</p>';
-        }
-
-/* Canibalize this to make build new AJAX function
-        function createPortfolio() {
-            var title   = document.getElementById('createTitle').value.trim();
-            var teacher = document.getElementById('createTeacher').value.trim();
-            if (title=='') { alert('You must give your portfolio a name'); return; }
             var xhr = new XMLHttpRequest();
             xhr.onreadystatechange = function() {
                 if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
                     var resp = this.responseText;
-                    if       (resp=='OK')     { window.location.href = '/clilstore/portfolio.php'; }
-                     else if (resp=='nouser') { alert('There is no such Clilstore userid as '+teacher); }
-                     else                     { alert('$T_Error_in pfCreate: '+resp); }
+                    if (resp=='OK') {
+                        let bodyEl = document.querySelector('body');
+                        bodyEl.innerHTML = '<p>The word has been deleted</p>';
+                    } else {
+                        alert('$T_Error_in deleteWord: '+resp);
+                    }
                 }
             }
             var formData = new FormData();
-            formData.append('title',title);
-            formData.append('teacher',teacher);
-            xhr.open('POST', 'ajax/pfCreate.php');
+            formData.append('id',idc);
+            formData.append('operation','deleteWord');
+            xhr.open('POST', 'ajax/customWordOp.php');
             xhr.send(formData);
         }
-*/
+
+        function changetr(idctr) {
+            let trel = document.getElementById('tr'+idctr);
+            let newval = trel.value;
+            alert('changetr ' + idctr + '→' + newval);
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function() {
+                if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+                    var resp = this.responseText;
+                    if (resp=='OK') {
+                        alert('OK');
+                        var tickel = document.getElementById('tr'+idctr+'-tick');
+                        tickel.classList.remove('changed'); //Remove the class (if required) and add again after a tiny delay, to restart the animation
+                        setTimeout(function(){tickel.classList.add('changed');},50);
+                    } else {
+                        alert('$T_Error_in changetr: '+resp);
+                    }
+                }
+            }
+            var formData = new FormData();
+            formData.append('id',idctr);
+            formData.append('operation','changetr');
+            formData.append('newval',newval);
+            xhr.open('POST', 'ajax/customWordOp.php');
+            xhr.send(formData);
+        }
     </script>
 </head>
 <body id=body>
