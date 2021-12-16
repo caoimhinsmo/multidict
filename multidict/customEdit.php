@@ -68,7 +68,7 @@
     $cHTML = <<<END_cHTML
 <p style="margin:0.1em 0 0 4em;font-size:70%">Editing word $idc — Language $sl</p>
 <p style="margin:0.3em 0 0.3em 0;font-weight:bold;font-size:120%">$word
-<img src="/icons-smo/curAs2.png" alt="DELETE" style="padding-left:1em" onclick="deleteWord('$idc')"></p>
+<img src="/icons-smo/curAs2.png" alt="DELETE" title="Delete the word" style="padding-left:1em" onclick="deleteWord('$idc')"></p>
 
 <table id=formtab>
 <tr><td>Word</td><td><input id=word value="$wordSC" style="width:20em"></td></tr>
@@ -84,14 +84,21 @@ END_cHTML;
     $res = $stmtCwf->fetchAll(PDO::FETCH_ASSOC);
     foreach ($res as $r) {
         extract($r);
-        $wfSC = htmlspecialchars($wf);
+        $wfSC     = htmlspecialchars($wf);
+        $priWhySC = htmlspecialchars($priWhy);
         $cwfHTML .= <<<END_cwfHTML
-<tr><td><input value='$wfSC'> $pri - $priWhy</td></tr>
+<tr>
+<td><input id=wf$idcwf value='$wfSC' onchange="changewf('$idcwf')"></td>
+<td><input value='$pri'></td>
+<td><input value='$priWhySC'></td></td>
+<td><span id="wf$idcwf-tick" class=change>✔<span></td>
+</tr>
 END_cwfHTML;
     }
     $cwfHTML = <<<END_cwfHTML2
 <p style="margin-bottom:0"><b>Wordforms</b> <i>(search-keys)</i></p>
-<table>
+<table id=wftable>
+<tr><td>wordform</td><td>priority</td><td>why</td><td></td></tr>
 $cwfHTML
 </table>
 END_cwfHTML2;
@@ -118,7 +125,7 @@ END_ctrHTML;
     }
     $ctrHTML = <<<END_ctrHTML2
 <p style="margin-bottom:0"><b>Translation</b></p>
-<table>
+<table id=trtable>
 $ctrHTML
 </table>
 END_ctrHTML2;
@@ -150,6 +157,14 @@ if (isset($_REQUEST['newword'])) { $newwordMessage = '<p id=message>New word add
         p.word { margin:0.2em 0; }
         p.meaning { margin:0 0 1em 1em; }
         span.gram { padding-left:0.3em; font-size:70%; color:red; }
+        table#wftable { border-collapse:collapse; margin-left:0.8em; }
+        table#wftable tr:nth-child(1) td { padding:0 0.2em; }
+        table#wftable td:nth-child(2) { text-align:right; }
+        table#wftable td:nth-child(1) input { width:14em; }
+        table#wftable td:nth-child(2) input { width:5em; text-align:right; }
+        table#wftable td:nth-child(3) input { width:6em; }
+        table#trtable { border-collapse:collapse; margin-left:0.8em; }
+        table#trtable td:nth-child(1) { padding-right:0.3em; }
     </style>
     <script>
         function deleteWord(idc) {
@@ -194,6 +209,32 @@ if (isset($_REQUEST['newword'])) { $newwordMessage = '<p id=message>New word add
             var formData = new FormData();
             formData.append('id',idctr);
             formData.append('operation','changetr');
+            formData.append('newval',newval);
+            xhr.open('POST', 'ajax/customWordOp.php');
+            xhr.send(formData);
+        }
+
+        function changewf(idcwf) {
+            let wfel = document.getElementById('wf'+idcwf);
+            let newval = wfel.value;
+            alert('changewf ' + idcwf + '→' + newval);
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function() {
+                if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+                    var resp = this.responseText;
+                    if (resp=='OK') {
+                        alert('OK');
+                        var tickel = document.getElementById('wf'+idcwf+'-tick');
+                        tickel.classList.remove('changed'); //Remove the class (if required) and add again after a tiny delay, to restart the animation
+                        setTimeout(function(){tickel.classList.add('changed');},50);
+                    } else {
+                        alert('$T_Error_in changewf: '+resp);
+                    }
+                }
+            }
+            var formData = new FormData();
+            formData.append('id',idcwf);
+            formData.append('operation','changewf');
             formData.append('newval',newval);
             xhr.open('POST', 'ajax/customWordOp.php');
             xhr.send(formData);

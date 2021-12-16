@@ -12,7 +12,7 @@
   $id        = $_REQUEST['id'];
   $operation = $_REQUEST['operation'];
   if (!preg_match('/^\d+$/',$id)) { die("The id parameter $id is not a postive integer"); }
-  if (!in_array($operation,['deleteWord','changetr'])) { die("Invalid operation: $operation"); }
+  if (!in_array($operation,['deleteWord','changetr','changewf'])) { die("Invalid operation: $operation"); }
 
   $myCLIL = SM_myCLIL::singleton();
   $user = $myCLIL->id ?? '';
@@ -26,6 +26,11 @@
       $stmtSELidctr = $DbMultidict->prepare("SELECT idctr,idc FROM customtr WHERE idctr=:idctr");
       $stmtSELidctr->execute([':idctr'=>$id]);
       $result = $stmtSELidctr->fetch(PDO::FETCH_ASSOC);
+      extract($result);
+  } elseif ($operation=='changewf') {
+      $stmtSELidcwf = $DbMultidict->prepare("SELECT idcwf,idc FROM customwf WHERE idcwf=:idcwf");
+      $stmtSELidcwf->execute([':idcwf'=>$id]);
+      $result = $stmtSELidcwf->fetch(PDO::FETCH_ASSOC);
       extract($result);
   } else {
       die("Invalid operation: $operation");
@@ -46,6 +51,11 @@
       $newval = $_REQUEST['newval'];
       $stmtUPDtr = $DbMultidict->prepare("UPDATE customtr SET meaning=:newval WHERE idctr=:idctr");
       $stmtUPDtr->execute([':newval'=>$newval,':idctr'=>$idctr]);
+  } elseif ($operation=='changewf') {
+      if (!isset($_REQUEST['newval'])) { die('newval is not set'); }
+      $newval = $_REQUEST['newval'];
+      $stmtUPDwf = $DbMultidict->prepare("UPDATE customwf SET wf=:newval WHERE idcwf=:idcwf");
+      $stmtUPDwf->execute([':newval'=>$newval,':idcwf'=>$idcwf]);
   }
   echo 'OK';
 ?>
