@@ -19,7 +19,7 @@
 
     $DbMultidict = SM_DbMultidictPDO::singleton('rw');
     $grp = "cw-$sl";
-    $stmtPermission = $DbMultidict->prepare('SELECT 1 FROM userGrp WHERE user=:user AND grp=:grp');
+    $stmtPermission = $DbMultidict->prepare('SELECT 1 FROM userGroup WHERE user=:user AND grp=:grp');
     $stmtPermission->execute([':user'=>$user,':grp'=>$grp]);
     if ($stmtPermission->fetch()) { $editor = TRUE; } else { $editor = FALSE; }
 

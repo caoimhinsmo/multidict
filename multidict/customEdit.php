@@ -57,7 +57,7 @@
     if (empty($user)) { throw new SM_Exception("You are not logged on"); }
 
     $grp = "cw-$sl";
-    $stmtPermission = $DbMultidict->prepare('SELECT 1 FROM userGrp WHERE user=:user AND grp=:grp');
+    $stmtPermission = $DbMultidict->prepare('SELECT 1 FROM userGroup WHERE user=:user AND grp=:grp');
     $stmtPermission->execute([':user'=>$user,':grp'=>$grp]);
     if (!$stmtPermission->fetch()) { throw new SM_Exception("User $user has no permission to edit Custom Wordlist entries for language $sl"); }
 
@@ -66,40 +66,42 @@
     $gramSC     = htmlspecialchars($gram);
 
     $cHTML = <<<END_cHTML
-<p style="margin:0.1em 0 0 4em;font-size:70%">Editing word $idc — Language $sl</p>
-<p style="margin:0.3em 0 0.3em 0;font-weight:bold;font-size:120%">$word
+<p style="margin:0.1em 0 0 9em;font-size:70%">Editing word $idc — Language $sl</p>
+<p style="margin:0.5em 0 0.5em 0;font-weight:bold;font-size:120%">$word
 <img src="/icons-smo/curAs2.png" alt="DELETE" title="Delete the word" style="padding-left:1em" onclick="deleteWord('$idc')"></p>
 
 <table id=formtab>
-<tr><td>Word</td><td><input id=word value="$wordSC" style="width:20em"></td></tr>
-<tr><td>Disambiguator</td><td><input id=disambig value="$disambigSC"></td></tr>
-<tr><td>Grammar</td><td><input id=gram value="$gramSC"></td></tr>
-<tr><td>Priority</td><td><input id=pri value="$pri"></td></tr>
+<tr><td>word</td><td><input id=word value="$wordSC" style="width:24em"></td></tr>
+<tr><td>disambiguator</td><td><input id=disambig value="$disambigSC" style="width:8em"></td></tr>
+<tr><td>grammar</td><td><input id=gram value="$gramSC" style="width:8em"></td></tr>
+<tr><td>priority</td><td><input id=pri value="$pri" style="width:8em"></td></tr>
 </table>
 END_cHTML;
 
-    $cwfHTML = '';
+    $cwfHTML = $cwfTableHead = '';
     $stmtCwf = $DbMultidict->prepare('SELECT idcwf,wf,pri,priWhy FROM customwf WHERE idc=:idc ORDER BY pri,wf');
     $stmtCwf->execute([':idc'=>$idc]);
     $res = $stmtCwf->fetchAll(PDO::FETCH_ASSOC);
+    if (!empty($res)) $cwfTableHead = '<tr><td>wordform</td><td>priority</td><td>reason</td><td></td></tr>';
     foreach ($res as $r) {
         extract($r);
         $wfSC     = htmlspecialchars($wf);
         $priWhySC = htmlspecialchars($priWhy);
         $cwfHTML .= <<<END_cwfHTML
 <tr>
-<td><input id=wf$idcwf value='$wfSC' onchange="changewf('$idcwf')"></td>
-<td><input value='$pri'></td>
-<td><input value='$priWhySC'></td></td>
+<td><input id=wf$idcwf-wf value='$wfSC' onchange="changewf('$idcwf','wf')"></td>
+<td><input id=wf$idcwf-pri value='$pri' onchange="changewf('$idcwf','pri')" type=number min=1 max=100 step=1></td>
+<td><input id=wf$idcwf-priWhy value='$priWhySC' onchange="changewf('$idcwf','priWhy')"></td></td>
 <td><span id="wf$idcwf-tick" class=change>✔<span></td>
 </tr>
 END_cwfHTML;
     }
     $cwfHTML = <<<END_cwfHTML2
-<p style="margin-bottom:0"><b>Wordforms</b> <i>(search-keys)</i></p>
+<p style="margin-bottom:0"><b>Wordforms</b> <span style="font-style:italic;color:#444;font-size:85%">(search-keys)</span>
 <table id=wftable>
-<tr><td>wordform</td><td>priority</td><td>why</td><td></td></tr>
+$cwfTableHead
 $cwfHTML
+<tr><td><input id=insertwf onchange="insertwf('$idc')"></td><td colspan=3 style="text-align:left;color:#444;font-size:85%">add wordform</td></tr>
 </table>
 END_cwfHTML2;
 
@@ -151,20 +153,25 @@ if (isset($_REQUEST['newword'])) { $newwordMessage = '<p id=message>New word add
     <link rel="StyleSheet" href="/css/smo.css">
     <link rel="icon" type="image/png" href="/favicons/multidict.png">
     <style>
-        table#formtab td:nth-child(1) { text-align:right; }
         p#message { margin:0; padding:0.1em 0.3em; background-color:black; color:white; }
 
         p.word { margin:0.2em 0; }
         p.meaning { margin:0 0 1em 1em; }
         span.gram { padding-left:0.3em; font-size:70%; color:red; }
+
+        table#formtab { margin-left:0.4em; }
+        table#formtab td:nth-child(1) { text-align:right; color:#444; font-size:85%; }
+
+        table#trtable { border-collapse:collapse; margin-left:0.8em; }
+        table#trtable td:nth-child(1) { padding-right:0.3em; color:#444; font-size:85%; }
+
         table#wftable { border-collapse:collapse; margin-left:0.8em; }
-        table#wftable tr:nth-child(1) td { padding:0 0.2em; }
+        table#wftable tr:nth-child(1) td { padding:0 0.2em; color:#444; font-size:85%; }
         table#wftable td:nth-child(2) { text-align:right; }
         table#wftable td:nth-child(1) input { width:14em; }
+        table#wftable tr:last-child td { padding-top:0.5em; }
         table#wftable td:nth-child(2) input { width:5em; text-align:right; }
         table#wftable td:nth-child(3) input { width:6em; }
-        table#trtable { border-collapse:collapse; margin-left:0.8em; }
-        table#trtable td:nth-child(1) { padding-right:0.3em; }
     </style>
     <script>
         function deleteWord(idc) {
@@ -182,8 +189,9 @@ if (isset($_REQUEST['newword'])) { $newwordMessage = '<p id=message>New word add
                 }
             }
             var formData = new FormData();
+            formData.append('table','custom');
             formData.append('id',idc);
-            formData.append('operation','deleteWord');
+            formData.append('operation','delete');
             xhr.open('POST', 'ajax/customWordOp.php');
             xhr.send(formData);
         }
@@ -191,13 +199,11 @@ if (isset($_REQUEST['newword'])) { $newwordMessage = '<p id=message>New word add
         function changetr(idctr) {
             let trel = document.getElementById('tr'+idctr);
             let newval = trel.value;
-            alert('changetr ' + idctr + '→' + newval);
             var xhr = new XMLHttpRequest();
             xhr.onreadystatechange = function() {
                 if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
                     var resp = this.responseText;
                     if (resp=='OK') {
-                        alert('OK');
                         var tickel = document.getElementById('tr'+idctr+'-tick');
                         tickel.classList.remove('changed'); //Remove the class (if required) and add again after a tiny delay, to restart the animation
                         setTimeout(function(){tickel.classList.add('changed');},50);
@@ -207,23 +213,22 @@ if (isset($_REQUEST['newword'])) { $newwordMessage = '<p id=message>New word add
                 }
             }
             var formData = new FormData();
+            formData.append('table','customtr');
             formData.append('id',idctr);
-            formData.append('operation','changetr');
+            formData.append('operation','change');
             formData.append('newval',newval);
             xhr.open('POST', 'ajax/customWordOp.php');
             xhr.send(formData);
         }
 
-        function changewf(idcwf) {
-            let wfel = document.getElementById('wf'+idcwf);
-            let newval = wfel.value;
-            alert('changewf ' + idcwf + '→' + newval);
+        function changewf(idcwf,field) {
+            let wfel = document.getElementById('wf'+idcwf+'-'+field);
+            let newval = wfel.value.trim();
             var xhr = new XMLHttpRequest();
             xhr.onreadystatechange = function() {
                 if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
                     var resp = this.responseText;
                     if (resp=='OK') {
-                        alert('OK');
                         var tickel = document.getElementById('wf'+idcwf+'-tick');
                         tickel.classList.remove('changed'); //Remove the class (if required) and add again after a tiny delay, to restart the animation
                         setTimeout(function(){tickel.classList.add('changed');},50);
@@ -233,8 +238,32 @@ if (isset($_REQUEST['newword'])) { $newwordMessage = '<p id=message>New word add
                 }
             }
             var formData = new FormData();
+            formData.append('table','customwf');
             formData.append('id',idcwf);
-            formData.append('operation','changewf');
+            formData.append('operation','change');
+            formData.append('field',field);
+            formData.append('newval',newval);
+            xhr.open('POST', 'ajax/customWordOp.php');
+            xhr.send(formData);
+        }
+
+        function insertwf(idc) {
+            let newval = document.getElementById('insertwf').value.trim();
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function() {
+                if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+                    var resp = this.responseText;
+                    if (resp=='OK') {
+                        window.location.reload(true);
+                    } else {
+                        alert('$T_Error_in insertwf: '+resp);
+                    }
+                }
+            }
+            var formData = new FormData();
+            formData.append('table','customwf');
+            formData.append('id',idc);
+            formData.append('operation','insert');
             formData.append('newval',newval);
             xhr.open('POST', 'ajax/customWordOp.php');
             xhr.send(formData);
@@ -246,8 +275,8 @@ if (isset($_REQUEST['newword'])) { $newwordMessage = '<p id=message>New word add
 
 $newwordMessage
 $cHTML
-$cwfHTML
 $ctrHTML
+$cwfHTML
 
 </body>
 </html>
