@@ -21,29 +21,6 @@
     $idc = $_REQUEST['idc'] ?? '';
     if (empty($idc)) { throw new SM_Exception('Missing parameter: ‘idc’'); }
 
-    if ($idc == -1) { //Flag to create a new word in the dictionary
-        $word = $_POST['word'] ?? '';
-        $sl   = $_POST['sl']   ?? '';
-        $tl   = $_POST['tl']   ?? '';
-        $meaning = $_POST['meaning'] ?? '';
-        if (empty($word))    { throw new Exception('No value for word');    }
-        if (empty($sl))      { throw new Exception('No value for sl');      }
-        if (empty($tl))      { throw new Exception('No value for tl');      }
-        if (empty($meaning)) { throw new Exception('No value for meaning'); }
-        $stmtINSc = $DbMultidict->prepare('INSERT INTO custom (sl,word) VALUES (:sl,:word)');
-        $stmtINSc->execute([':sl'=>$sl,':word'=>$word]);
-        $idc = $DbMultidict->lastInsertId();
-        $tlLangs = tlLangs($sl);
-        foreach ($tlLangs as $tlLang) { $meanings[$tlLang] = ''; }
-        $meanings[$tl] = $meaning;
-        $stmtINSctr = $DbMultidict->prepare('INSERT INTO customtr (idc,tl,meaning) VALUES(:idc,:tl,:meaning)');
-        foreach ($meanings as $tlLang=>$tlMeaning) {
-            $stmtINSctr->execute([':idc'=>$idc,':tl'=>$tlLang,':meaning'=>$tlMeaning]);
-        }
-        $server = $_SERVER['SERVER_NAME'];
-        header("Location:https://$server/multidict/customEdit.php?idc=$idc&newword");
-    }
-
     $HTML = $newwordMessage = '';
 
     $stmtC = $DbMultidict->prepare('SELECT sl, word, disambig, gram, pri FROM custom WHERE idc=:idc');
@@ -57,7 +34,7 @@
     if (empty($user)) { throw new SM_Exception("You are not logged on"); }
 
     $grp = "cw-$sl";
-    $stmtPermission = $DbMultidict->prepare('SELECT 1 FROM userGroup WHERE user=:user AND grp=:grp');
+    $stmtPermission = $DbMultidict->prepare('SELECT 1 FROM userGrp WHERE user=:user AND grp=:grp');
     $stmtPermission->execute([':user'=>$user,':grp'=>$grp]);
     if (!$stmtPermission->fetch()) { throw new SM_Exception("User $user has no permission to edit Custom Wordlist entries for language $sl"); }
 
@@ -67,14 +44,18 @@
 
     $cHTML = <<<END_cHTML
 <p style="margin:0.1em 0 0 9em;font-size:70%">Editing word $idc — Language $sl</p>
-<p style="margin:0.5em 0 0.5em 0;font-weight:bold;font-size:120%">$word
-<img src="/icons-smo/curAs2.png" alt="DELETE" title="Delete the word" style="padding-left:1em" onclick="deleteWord('$idc')"></p>
+<p style="margin:0.5em 0 0.5em 0;font-weight:bold;font-size:120%"><span id=wordTitle>$word</span>
+<img src="/icons-smo/curAs2.png" alt="DELETE" title="Delete the word" style="padding-left:1em" onclick="deleteCustom('$idc')"></p>
 
 <table id=formtab>
-<tr><td>word</td><td><input id=word value="$wordSC" style="width:24em"></td></tr>
-<tr><td>disambiguator</td><td><input id=disambig value="$disambigSC" style="width:8em"></td></tr>
-<tr><td>grammar</td><td><input id=gram value="$gramSC" style="width:8em"></td></tr>
-<tr><td>priority</td><td><input id=pri value="$pri" style="width:8em"></td></tr>
+<tr><td>word</td><td><input id=word value="$wordSC" onfocus="this.oldvalue=this.value" onchange="changeCustom('$idc','word')" style="width:24em">
+        <span id="word-tick" class=change>✔<span></td></tr>
+<tr><td>disambiguator</td><td><input id=disambig onfocus="this.oldvalue=this.value"  onchange="changeCustom('$idc','disambig')" value="$disambigSC" style="width:8em">
+        <span id="disambig-tick" class=change>✔<span></td></tr>
+<tr><td>grammar</td><td><input id=gram value="$gramSC" onchange="changeCustom('$idc','gram')" style="width:8em">
+        <span id="gram-tick" class=change>✔<span></td></tr>
+<tr><td>priority</td><td><input id=pri value="$pri" onchange="changeCustom('$idc','pri')" style="width:8em" type=number min=0 max=100>
+        <span id="pri-tick" class=change>✔<span></td></tr>
 </table>
 END_cHTML;
 
@@ -82,17 +63,18 @@ END_cHTML;
     $stmtCwf = $DbMultidict->prepare('SELECT idcwf,wf,pri,priWhy FROM customwf WHERE idc=:idc ORDER BY pri,wf');
     $stmtCwf->execute([':idc'=>$idc]);
     $res = $stmtCwf->fetchAll(PDO::FETCH_ASSOC);
-    if (!empty($res)) $cwfTableHead = '<tr><td>wordform</td><td>priority</td><td>reason</td><td></td></tr>';
+    if (!empty($res)) $cwfTableHead = '<tr><td>wordform</td><td>priority</td><td>reason</td><td></td><td></td></tr>';
     foreach ($res as $r) {
         extract($r);
         $wfSC     = htmlspecialchars($wf);
         $priWhySC = htmlspecialchars($priWhy);
         $cwfHTML .= <<<END_cwfHTML
 <tr>
-<td><input id=wf$idcwf-wf value='$wfSC' onchange="changewf('$idcwf','wf')"></td>
-<td><input id=wf$idcwf-pri value='$pri' onchange="changewf('$idcwf','pri')" type=number min=1 max=100 step=1></td>
-<td><input id=wf$idcwf-priWhy value='$priWhySC' onchange="changewf('$idcwf','priWhy')"></td></td>
+<td><input id=wf$idcwf-wf value='$wfSC' onchange="changeCustomwf('$idcwf','wf')"></td>
+<td><input id=wf$idcwf-pri value='$pri' onchange="changeCustomwf('$idcwf','pri')" type=number min=1 max=100 step=1></td>
+<td><input id=wf$idcwf-priWhy value='$priWhySC' onchange="changeCustomwf('$idcwf','priWhy')"></td></td>
 <td><span id="wf$idcwf-tick" class=change>✔<span></td>
+<td onclick="deleteCustomwf('$idcwf')">❌</td>
 </tr>
 END_cwfHTML;
     }
@@ -101,7 +83,7 @@ END_cwfHTML;
 <table id=wftable>
 $cwfTableHead
 $cwfHTML
-<tr><td><input id=insertwf onchange="insertwf('$idc')"></td><td colspan=3 style="text-align:left;color:#444;font-size:85%">add wordform</td></tr>
+<tr><td><input id=insertCustomwf onchange="insertCustomwf('$idc')"></td><td colspan=4 style="text-align:left;color:#444;font-size:85%">add wordform</td></tr>
 </table>
 END_cwfHTML2;
 
@@ -114,13 +96,11 @@ END_cwfHTML2;
     $res = $stmtCtr->fetchAll(PDO::FETCH_ASSOC);
     foreach ($res as $r) {
         extract($r);
-        $meanings[$tl] = htmlspecialchars($meaning);
-    }
-    foreach ($meanings as $tl=>$meaning) {
+        $meaningSC = htmlspecialchars($meaning);
         $ctrHTML .= <<<END_ctrHTML
 <tr>
 <td>$tl</td>
-<td><input id=tr$idctr value='$meaning' style="width:25em" onchange="changetr('$idctr')"></td>
+<td><input id=tr$idctr value='$meaningSC' style="width:25em" onchange="changeCustomtr('$idctr')"></td>
 <td><span id="tr$idctr-tick" class=change>✔<span></td>
 </tr>
 END_ctrHTML;
@@ -132,17 +112,8 @@ $ctrHTML
 </table>
 END_ctrHTML2;
 
-if (isset($_REQUEST['newword'])) { $newwordMessage = '<p id=message>New word added <span style="color:green">✓</span> &nbsp; You can now edit it further if you wish</p>'; }
-
-/*
-       $word = strtr ( $word,
-        [ '&lt;ruby&gt;'  => '<ruby>',
-          '&lt;/ruby&gt;' => '</ruby>',
-          '&lt;rt&gt;'    => '<rt>',
-          '&lt;/rt&gt;'   => '</rt>',
-          '&lt;rp&gt;'    => '<rp>',
-          '&lt;/rp&gt;'   => '</rp>' ] ); //Restore ruby markup which was messed up by htmlspecialchars
-*/
+    if (isset($_REQUEST['newword']))
+      { $newwordMessage = '<p id=message>New word added <span style="color:green">✓</span> &nbsp; You can now edit it further if you wish</p>'; }
 
     echo <<<END_HTML
 <!DOCTYPE html>
@@ -162,6 +133,11 @@ if (isset($_REQUEST['newword'])) { $newwordMessage = '<p id=message>New word add
         table#formtab { margin-left:0.4em; }
         table#formtab td:nth-child(1) { text-align:right; color:#444; font-size:85%; }
 
+        div#homograph table { border-collapse:collapse; border:1px solid; margin:0.2em 0.4em; }
+        div#homograph table tr td { padding:0.2em; }
+        div#homograph table tr:last-child td { padding-bottom:0.6em; }
+        div#homograph table tr td:nth-child(1) { text-align:right; color:#444; font-size:85%; }
+
         table#trtable { border-collapse:collapse; margin-left:0.8em; }
         table#trtable td:nth-child(1) { padding-right:0.3em; color:#444; font-size:85%; }
 
@@ -172,9 +148,20 @@ if (isset($_REQUEST['newword'])) { $newwordMessage = '<p id=message>New word add
         table#wftable tr:last-child td { padding-top:0.5em; }
         table#wftable td:nth-child(2) input { width:5em; text-align:right; }
         table#wftable td:nth-child(3) input { width:6em; }
+        table#wftable td:nth-child(5) { font-size:60%; }
+        table#wftable td:nth-child(5):hover { background-color:pink; }
+
+        div#homograph p { margin-bottom:0.2em; }
+        div#homograph.closed form { display:none; }
+        div#homograph.open   form { display:block; }
+        div#homograph.closed span#hgbutton { background-color:#73c8fb; color:white; padding:0.1em 0.2em; border-radius:0.2em; }
+        div#homograph.open   span#hgbutton { margin-bottom:0; font-weight:bold; } 
+        div#homograph.closed span#hgbutton:hover { background-color:blue; }
+        div#homograph.closed span#hgdots { display:inline; }
+        div#homograph.open   span#hgdots { display:none; }
     </style>
     <script>
-        function deleteWord(idc) {
+        function deleteCustom(idc) {
             if (!confirm('Really delete this word?\\r\\n (together with any wordforms and translations)')) { return; }
             var xhr = new XMLHttpRequest();
             xhr.onreadystatechange = function() {
@@ -184,7 +171,7 @@ if (isset($_REQUEST['newword'])) { $newwordMessage = '<p id=message>New word add
                         let bodyEl = document.querySelector('body');
                         bodyEl.innerHTML = '<p>The word has been deleted</p>';
                     } else {
-                        alert('$T_Error_in deleteWord: '+resp);
+                        alert('$T_Error_in deleteCustom: '+resp);
                     }
                 }
             }
@@ -196,7 +183,60 @@ if (isset($_REQUEST['newword'])) { $newwordMessage = '<p id=message>New word add
             xhr.send(formData);
         }
 
-        function changetr(idctr) {
+        function deleteCustomwf(idcwf) {
+            if (!confirm('Really delete this wordform?')) { return; }
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function() {
+                if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+                    var resp = this.responseText;
+                    if (resp=='OK') {
+                        window.location.reload(true);
+                    } else {
+                        alert('$T_Error_in deleteCustomwf: '+resp);
+                    }
+                }
+            }
+            var formData = new FormData();
+            formData.append('table','customwf');
+            formData.append('id',idcwf);
+            formData.append('operation','delete');
+            xhr.open('POST', 'ajax/customWordOp.php');
+            xhr.send(formData);
+        }
+
+        function changeCustom(idc,field) {
+            let el = document.getElementById(field);
+            let newval = el.value.trim();
+            if (field=='word' && newval=='') { alert('Change refused. You cannot delete a word by setting it to blank.'); return; }
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function() {
+                if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+                    var resp = this.responseText;
+                    if (resp=='OK') {
+                        var tickel = document.getElementById(field + '-tick');
+                        tickel.classList.remove('changed'); //Remove the class (if required) and add again after a tiny delay, to restart the animation
+                        setTimeout(function(){tickel.classList.add('changed');},50);
+                        if (field=='word') {
+                            document.getElementById('wordTitle').innerHTML = newval;
+                            document.getElementById('hgword').innerHTML = newval;
+                        }
+                    } else {
+                        alert('$T_Error_in changeCustomwf: '+resp);
+                        el.value = el.oldvalue;
+                    }
+                }
+            }
+            var formData = new FormData();
+            formData.append('table','custom');
+            formData.append('id',idc);
+            formData.append('operation','change');
+            formData.append('field',field);
+            formData.append('newval',newval);
+            xhr.open('POST', 'ajax/customWordOp.php');
+            xhr.send(formData);
+        }
+
+        function changeCustomtr(idctr) {
             let trel = document.getElementById('tr'+idctr);
             let newval = trel.value;
             var xhr = new XMLHttpRequest();
@@ -208,7 +248,7 @@ if (isset($_REQUEST['newword'])) { $newwordMessage = '<p id=message>New word add
                         tickel.classList.remove('changed'); //Remove the class (if required) and add again after a tiny delay, to restart the animation
                         setTimeout(function(){tickel.classList.add('changed');},50);
                     } else {
-                        alert('$T_Error_in changetr: '+resp);
+                        alert('$T_Error_in changeCustomtr: '+resp);
                     }
                 }
             }
@@ -221,9 +261,10 @@ if (isset($_REQUEST['newword'])) { $newwordMessage = '<p id=message>New word add
             xhr.send(formData);
         }
 
-        function changewf(idcwf,field) {
+        function changeCustomwf(idcwf,field) {
             let wfel = document.getElementById('wf'+idcwf+'-'+field);
             let newval = wfel.value.trim();
+            if (newval=='') { alert('Change refused. You cannot delete a wordform by setting it to blank.'); return; }
             var xhr = new XMLHttpRequest();
             xhr.onreadystatechange = function() {
                 if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
@@ -233,7 +274,7 @@ if (isset($_REQUEST['newword'])) { $newwordMessage = '<p id=message>New word add
                         tickel.classList.remove('changed'); //Remove the class (if required) and add again after a tiny delay, to restart the animation
                         setTimeout(function(){tickel.classList.add('changed');},50);
                     } else {
-                        alert('$T_Error_in changewf: '+resp);
+                        alert('$T_Error_in changeCustomwf: '+resp);
                     }
                 }
             }
@@ -247,8 +288,8 @@ if (isset($_REQUEST['newword'])) { $newwordMessage = '<p id=message>New word add
             xhr.send(formData);
         }
 
-        function insertwf(idc) {
-            let newval = document.getElementById('insertwf').value.trim();
+        function insertCustomwf(idc) {
+            let newval = document.getElementById('insertCustomwf').value.trim();
             var xhr = new XMLHttpRequest();
             xhr.onreadystatechange = function() {
                 if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
@@ -256,7 +297,7 @@ if (isset($_REQUEST['newword'])) { $newwordMessage = '<p id=message>New word add
                     if (resp=='OK') {
                         window.location.reload(true);
                     } else {
-                        alert('$T_Error_in insertwf: '+resp);
+                        alert('$T_Error_in insertCustomwf: '+resp);
                     }
                 }
             }
@@ -265,6 +306,49 @@ if (isset($_REQUEST['newword'])) { $newwordMessage = '<p id=message>New word add
             formData.append('id',idc);
             formData.append('operation','insert');
             formData.append('newval',newval);
+            xhr.open('POST', 'ajax/customWordOp.php');
+            xhr.send(formData);
+        }
+
+        function checkDisambig(idc,newval) {
+         // Checks whether it would be ok to give word idc the disambiguator newval.
+         // Returns false iff a word, other than idc itself, with the same spelling already has that disambiguator.
+            alert('idc='+idc+', newval='+newval);
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function() {
+alert('readystatechange: this.status='+this.status+', this.readyState='+this.readyState);
+                if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+                    var resp = this.responseText;
+                    if (resp=='OK') { return true; } else { return false; }
+                }
+            }
+            var formData = new FormData();
+            formData.append('table','custom');
+            formData.append('id',idc);
+            formData.append('operation','checkDisambig');
+            formData.append('newval',newval);
+alert('gus xhr.open');
+            xhr.open('POST', 'ajax/customWordOp.php');
+alert('gus xhr.send');
+            xhr.send(formData);
+        }
+
+        function insertHomograph(formEl) {
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function() {
+                if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+                    var resp = this.responseText;
+                    if (resp.substring(0,3)=='OK:') {
+                        let idc = resp.substring(3);
+                        location.href = location.origin + location.pathname + '?idc=' + idc + '&newword';
+                    } else {
+                        alert('$T_Error_in insertHomograph:'+resp);
+                    }
+                }
+            }
+            var formData = new FormData(formEl);
+            formData.append('table','custom');
+            formData.append('operation','insert');
             xhr.open('POST', 'ajax/customWordOp.php');
             xhr.send(formData);
         }
@@ -277,6 +361,21 @@ $newwordMessage
 $cHTML
 $ctrHTML
 $cwfHTML
+
+<div id=homograph class=closed onclick="this.className='open'">
+<p><span id=hgbutton title="Add another word with the same spelling but a different meaning">Add a homograph<span id=hgdots>...</span></span></p>
+<form method=POST onsubmit="insertHomograph(this); return false;">
+<input type=hidden name=word value="$wordSC">
+<input type=hidden name=sl value="$sl"> 
+<input type=hidden name=tl value="$tl">
+<table>
+<tr><td>word ($sl)</td><td style="padding-left:0.5em"><span id=hgword>$word</span></td></tr>
+<tr><td>disambiguator</td><td><input id=hgdisambig name="disambig" required style="width:8em"></td></tr>
+<tr><td>meaning ($tl)</td><td><input name="meaning" required style="width:22em"></td></tr>
+<tr><td></td><td><input type=submit value="Add to dictionary"></td></tr>
+</table>
+</form>
+</div>
 
 </body>
 </html>
