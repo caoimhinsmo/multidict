@@ -77,12 +77,14 @@ resHTML;
             $wordSC = htmlspecialchars($word);
             $wordQ = '“'.$wordSC.'”';
             $resHTML .= <<<END_notFoundHTML
+<div style="font-size:80%">
 <p style="margin-top:1.5em;border-top:1px solid"><b>Editors…</b><br>
 $wordQ is not yet in the custom dictionary. Neither as a headword nor as a wordform.<p>
 
 <p>If it is a variant of a headword which is (or ought to be) in the dictionary, you should look up the relevant headword (adding it to the dictionary if necessary) and edit it to add $wordQ to it as a variant wordform.</p>
 
 <p>Otherwise you can, if appropriate, add $wordQ now as a headword to the dictionary by supplying a meaning for it here:</p>
+</div>
 <form id=newword method=POST onsubmit="insertWord(this); return false;">
 <input type=hidden name=word value="$wordSC">
 <input type=hidden name=disambig value="">
