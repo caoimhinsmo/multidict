@@ -26,8 +26,8 @@
 
     $editHtml = $resHTML = '';
     if ($editor) {
-        $editHtml = " <img src='/icons-smo/peann.png'>";
-        $editHtml = "<a href='customEdit.php?idc={idc}' title='$T_Deasaich' style='margin-left:2em'>$editHtml</a>";
+        $editHtml = "<img src='/icons-smo/peann.png'>";
+        $editHtml = " <a href='customEdit.php?idc={idc}' title='$T_Deasaich' style='margin-left:2em'>$editHtml</a>";
     }
 
     $stmtSELc = $DbMultidict->prepare('SELECT idc, word, disambig, gram FROM custom'

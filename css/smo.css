@@ -59,7 +59,7 @@ input:focus, checkbox:focus  { background-color:#dfd; color:blue; }
 input[type="password"]:focus { background-color:#fdd; }
 
 /* ------------ Putanan airson foirmichean --------------------------------------------------------------------------- */
-button[class~=smo]       { padding:0 2px; margin:2px; font-size:90%; border:2px solid; background-color:#ccc; 
+button[class~=smo]       { padding:0 2px; margin:2px; font-size:90%; border:2px solid; background-color:#ccc;
                            border-top-color:#eee; border-left-color:#eee; border-bottom-color:#999; border-right-color:#999; }
 button[class~=smo]:hover,
 button[class~=smo]:focus { border-top-color:#999; border-left-color:#999; border-bottom-color:#eee; border-right-color:#eee; }

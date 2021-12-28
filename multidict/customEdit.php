@@ -49,13 +49,13 @@
 
 <table id=formtab>
 <tr><td>word</td><td><input id=word value="$wordSC" onfocus="this.oldvalue=this.value" onchange="changeCustom('$idc','word')" style="width:24em">
-        <span id="word-tick" class=change>✔<span></td></tr>
+        <span id="word-tick" class=change>✔</span></td></tr>
 <tr><td>disambiguator</td><td><input id=disambig onfocus="this.oldvalue=this.value"  onchange="changeCustom('$idc','disambig')" value="$disambigSC" style="width:8em">
-        <span id="disambig-tick" class=change>✔<span></td></tr>
+        <span id="disambig-tick" class=change>✔</span></td></tr>
 <tr><td>grammar</td><td><input id=gram value="$gramSC" onchange="changeCustom('$idc','gram')" style="width:8em">
-        <span id="gram-tick" class=change>✔<span></td></tr>
+        <span id="gram-tick" class=change>✔</span></td></tr>
 <tr><td>priority</td><td><input id=pri value="$pri" onchange="changeCustom('$idc','pri')" style="width:8em" type=number min=0 max=100>
-        <span id="pri-tick" class=change>✔<span></td></tr>
+        <span id="pri-tick" class=change>✔</span></td></tr>
 </table>
 END_cHTML;
 
@@ -73,7 +73,7 @@ END_cHTML;
 <td><input id=wf$idcwf-wf value='$wfSC' onchange="changeCustomwf('$idcwf','wf')"></td>
 <td><input id=wf$idcwf-pri value='$pri' onchange="changeCustomwf('$idcwf','pri')" type=number min=1 max=100 step=1></td>
 <td><input id=wf$idcwf-priWhy value='$priWhySC' onchange="changeCustomwf('$idcwf','priWhy')"></td></td>
-<td><span id="wf$idcwf-tick" class=change>✔<span></td>
+<td><span id="wf$idcwf-tick" class=change>✔</span></td>
 <td onclick="deleteCustomwf('$idcwf')">❌</td>
 </tr>
 END_cwfHTML;
@@ -101,7 +101,7 @@ END_cwfHTML2;
 <tr>
 <td>$tl</td>
 <td><input id=tr$idctr value='$meaningSC' style="width:25em" onchange="changeCustomtr('$idctr')"></td>
-<td><span id="tr$idctr-tick" class=change>✔<span></td>
+<td><span id="tr$idctr-tick" class=change>✔</span></td>
 </tr>
 END_ctrHTML;
     }

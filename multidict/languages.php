@@ -80,7 +80,7 @@ EOD1;
 <td>$name_en</td>
 <td><input type=text title="$T_alternative_source_languages" value="$altSl" onchange=updateAlt('$id','sl',this)></td>
 <td><input type=text title="$T_alternative_target_languages" value="$altTl" onchange=updateAlt('$id','tl',this)></td>
-<td><span id="$id-changed" class=change>✔<span></td>
+<td><span id="$id-changed" class=change>✔</span></td>
 <td>$parentageHtml</td>
 </tr>
 END_ROW;
