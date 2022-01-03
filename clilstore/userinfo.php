@@ -36,7 +36,10 @@
 
     $stmt = $DbMultidict->prepare('SELECT user,fullname,email,joined,password FROM users WHERE user=:user');
     $stmt->execute(array(':user'=>$user));
-    if (!($r = $stmt->fetch(PDO::FETCH_OBJ))) { throw new SM_MDexception("No such user as &ldquo;$userSC&rdquo;"); }
+    if (!($r = $stmt->fetch(PDO::FETCH_OBJ))) {
+        $userSC = htmlspecialchars($user);
+        throw new SM_MDexception("No such user as &ldquo;$userSC&rdquo;");
+    }
     $stmt = null;
     $user     = $r->user; //Replace the GET parameter copy, as this may possibly not have normalized diacritics and capitals
     $fullname = $r->fullname;
