@@ -121,11 +121,7 @@
     $stmtLikeUsers->execute([':id'=>$id]);
     $likeUsersArr = $stmtLikeUsers->fetchAll(PDO::FETCH_COLUMN);
     $likeUsers = htmlspecialchars(implode(', ',$likeUsersArr));
-
-    $likeUsersTitle = ( $likeUsers
-                      ? "TITLE='Liked by: $likeUsers'"
-                      : ''
-                      );
+    $likeUsersTitle = ( $likeUsers ? " title='$likeUsers'" : '' );
 
     if (!empty($user)) {
         $abuseParams =  '&amp;name=' . $myCLIL->fullname()
@@ -220,7 +216,7 @@ $errorMessage
 <tr><td style="vertical-align:bottom">$T_Licence:</td><td><a href="https://creativecommons.org/licenses/$licenceLC/4.0/"><img src="/icons-smo/CC-$licence.png" alt=""> Creative Commons $licence</a></td></tr>
 <tr><td>$T_Views:</td><td>$views</td></tr>
 <tr><td>$T_Clicks_on_words:</td><td>$clicks$clicksMessage - <a href='unitwordclicks.php?id=$id'>$T_List_of_clicked_words</a></td></tr>
-<tr><td>$T_Likes:</td><td $likeUsersTitle>$likes</td</tr>
+<tr><td>$T_Likes:</td><td$likeUsersTitle>$likes</td</tr>
 </table>
 
 <p>$T_Raw_unit_unwordlinked
