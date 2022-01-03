@@ -3,7 +3,8 @@
   if (!include('autoload.inc.php')) { die('include autoload failed'); }
   try {
       $myCLIL = SM_myCLIL::singleton();
-      $user = ( isset($myCLIL->id) ? $myCLIL->id : '' );
+      $user = $myCLIL->id ?? '';
+      if (empty($user)) { die('Not logged on'); }
   } catch (Exception $e) {
       $myCLIL->toradh = $e->getMessage();
   }
