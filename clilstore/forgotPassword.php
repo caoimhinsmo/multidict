@@ -26,7 +26,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Login to Clilstore</title>
+    <title>$T_Forgotten_your_password</title>
     <link rel="stylesheet" href="/css/smo.css">
     <link rel="stylesheet" href="style.css?version=2014-04-15">
     <link rel="icon" type="image/png" href="/favicons/clilstore.png">
@@ -69,14 +69,13 @@ EOD_barr;
     }
 
     if ($formRequired) {
-        $userSC     = htmlspecialchars($userAsTyped);
         echo <<<ENDform
 <div class="errorMessage">$errorMessage</div>
 <form method="POST">
 <table style="margin:2em 0 1em 0">
 <tr style="vertical-align:top">
  <td>$T_Email</td>
- <td><input name="findme" value="$findmeSC" required utofocus style="width:21em"></td>
+ <td><input name="findme" value="$findmeSC" required autofocus style="width:21em"></td>
  <td rowspan=2 style="color:green">$T_email_registered_with_Clilstore <span style="font-size:85%;font-style:italic">($T_or_your_userid)</span></td>
 </tr>
 <tr><td></td><td><input name="sendLink" type="submit" value="$T_Send_reset_link"></td></tr>
