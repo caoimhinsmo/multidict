@@ -1,8 +1,9 @@
 robots.txt
 google*.html
 **/*~
+**/*_GITIGNORE
+**/*_SABH
 **/*_SEAN
 **/*_SEANN
 **/*_SGUAB
-**/*_SABH
 **/*_TEST
