@@ -39,7 +39,7 @@
     if (!empty($csSess->getCsSession()->user)) { $userAsTyped = $csSess->getCsSession()->user; }
     if (!empty($_REQUEST['user'])) {
         $userAsTyped     = trim($_REQUEST['user']);
-        $passwordAsTyped = $_POST['password'];
+        $passwordAsTyped = $_POST['password'] ?? '';
         $stmt1 = $DbMultidict->prepare('SELECT user,password,csid FROM users WHERE user=:user OR email=:email');
         $stmt1->bindParam(':user',$userAsTyped);
         $stmt1->bindParam(':email',$userAsTyped);
