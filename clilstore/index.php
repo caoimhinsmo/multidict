@@ -54,7 +54,7 @@
     $T_Warning                = $T->h('Warning');
     $T_Hidden_filter_warning  = $T->h('Hidden_filter_warning');
     $T_Hidden_filters_warning = $T->h('Hidden_filters_warning');
-    $T_new_website_available   = $T->h('new_website_available');
+    $T_new_website_available  = $T->h('new_website_available');
 
     $T_UnitID        = $T->h('csCol_id');
     $T_Views         = $T->h('csCol_views');
@@ -138,6 +138,9 @@
     $T_Edit_this_unit         = $T->h('Edit_this_unit');
     $T_Show_all               = $T->h('Seall_na_h_uile');
     $T_only_first_n_are_shown = $T->h('only_first_n_are_shown');
+    $T_Clilstore_studentWelcome = $T->h('Clilstore_studentWelcome');
+    $T_Clilstore_teacherWelcome = $T->h('Clilstore_teacherWelcome');
+
 
     $T_CS_is_well_behaved = strtr( $T_CS_is_well_behaved, ['{'=>'<a href=privacyPolicy.php>','}'=>'</a>'] );
     $T_If_message_persists = sprintf( $T_If_message_persists, $T_Got_it );
@@ -1009,6 +1012,8 @@ END_tableHtmlBun;
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta property="og:image" content="ogimage.jpg"/>
+    <meta property="og:description" content="$T_Clilstore_studentWelcome >$T_Clilstore_teacherWelcome"/>
     <title>Clilstore - $T_Teaching_units $T_for_CLIL</title>
     <link rel="StyleSheet" href="/css/smo.css">
     <link rel="StyleSheet" href="/css/toggle-switchy.css">
