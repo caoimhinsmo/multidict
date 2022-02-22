@@ -169,8 +169,11 @@ EOD_cookieMessage;
     $servername = SM_myCLIL::servername();
     $serverhome = SM_myCLIL::serverhome();
 
-    $EUlogo = '/EUlogos/' . SM_T::hl0() . '.jpg';
+    $hl0 = SM_T::hl0();
+    $EUlogo = "/EUlogos/$hl0.jpg";
     if (!file_exists($_SERVER['DOCUMENT_ROOT'] . $EUlogo)) { $EUlogo = '/EUlogos/en.jpg'; }
+    $EUlangs = explode(',', 'bg,cs,da,de,en,el,es,et,fi,fr,hr,ga,hr,it,lt,lv,mt,nl,pl,pt,ro,sk,sl,sv');
+    $hlEU = ( in_array($hl0,$EUlangs) ? $hl0 : 'en' ); //EU official language, otherwise English
 
     if (isset($_GET['mode']))         { $csSess->setMode($_GET['mode']            ); }
     if (!empty($_GET['sortCol']))     { $csSess->sortCol($_GET['sortCol']         ); }
@@ -1170,7 +1173,7 @@ $tableHtml
 
 <div style="min-height:65px;max-width:840px;border:2px solid #47d;margin:0 0 0.5em 0;border-radius:4px;color:#47d;font-size:95%">
 <div style="float:left;margin-right:1.5em">
-<a href="https://eacea.ec.europa.eu/erasmus-plus_en"><img src="$EUlogo" alt="" style="margin:3px"></a>
+<a href="//www.eacea.ec.europa.eu/grants_$hlEU"><img src="$EUlogo" alt="" style="margin:3px"></a>
 </div>
 <div style="min-height:59px">
 <p style="margin:0.3em 0;color:#1e4d9f;font-size:75%"><i>$T_Disclaimer:</i> $T_Disclaimer_EuropeanCom</p>

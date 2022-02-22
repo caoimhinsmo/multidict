@@ -17,8 +17,11 @@
 
   $T_new_website_available = str_replace('[clilstore.eu]', '<a href="//clilstore.eu/">clilstore.eu</a>,<br><br>', $T_new_website_available);
 
-  $EUlogo = '/EUlogos/' . SM_T::hl0() . '.jpg';
+  $hl0 = SM_T::hl0();
+  $EUlogo = "/EUlogos/$hl0.jpg";
   if (!file_exists($_SERVER['DOCUMENT_ROOT'] . $EUlogo)) { $EUlogo = '/EUlogos/en.jpg'; }
+  $EUlangs = explode(',', 'bg,cs,da,de,en,el,es,et,fi,fr,hr,ga,hr,it,lt,lv,mt,nl,pl,pt,ro,sk,sl,sv');
+  $hlEU = ( in_array($hl0,$EUlangs) ? $hl0 : 'en' ); //EU official language, otherwise English
 
   $hlSelect = SM_mdNavbar::hlSelect();
 
@@ -91,7 +94,7 @@ echo <<< END_html
     <div id="multitext">$T_Multidict_welcome</div>
   </div>
   <div id="clilstore_eu">$T_new_website_available</div>
-  <div id="disclaimer"><a href="http://eacea.ec.europa.eu/llp/index_en.php"><img src="$EUlogo" style="width:275px;height:60px;border:0" alt="logo"></a></div>
+  <div id="disclaimer"><a href="//www.eacea.ec.europa.eu/grants_$hlEU"><img src="$EUlogo" style="width:275px;height:60px;border:0" alt="logo"></a></div>
   <div id="distekst"><i>$T_Disclaimer:</i> $T_Disclaimer_EuropeanCom</div>
 </div>
 </body>
