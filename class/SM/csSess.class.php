@@ -50,11 +50,17 @@ class SM_csSess {
       $csid = $this->csSession->csid;
       $DbMultidict = SM_DbMultidictPDO::singleton('rw');
       $stmt = $DbMultidict->prepare('SELECT csFilter.* FROM csFilter,csFields WHERE csid=:csid AND csFilter.fd=csFields.fd ORDER BY fid'); //Try to order fields sensibly
-      $stmt->bindParam(':csid',$csid,PDO::PARAM_INT);
-      $stmt->execute();
-      while ($r = $stmt->fetch(PDO::FETCH_ASSOC)) {
-          $this->csFilter[$r['fd']] = $r;
+      $stmt->execute([':csid'=>$csid]);
+      $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+      if (empty($rows)) { //The previous filter must have been deleted so recreate a filter using the defaults from csFields, and re-read this
+          $queryRecreate = 'INSERT IGNORE INTO csFilter(csid,fd,m0,m1,m2,m3,sortpri,sortord)'
+                                            . " SELECT :csid,fd,m0,m1,m2,m3,sortpri,sortord FROM csFields";
+          $stmtRecreate = $DbMultidict->prepare($queryRecreate);
+          $stmtRecreate->execute([':csid'=>$csid]);
+          $stmt->execute([':csid'=>$csid]);
+          $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
       }
+      foreach ($rows as $r) { $this->csFilter[$r['fd']] = $r; }
       $stmt = null;
   }
 
@@ -84,6 +90,7 @@ class SM_csSess {
           $this->csSession->csid = $csid = $_COOKIE['csSessionId'];
           if ($this->fetchCsSession()) { $this->newSession = 0; }
       }
+      $time = time();
       
       if ($this->newSession==1) {
          // No valid csid exists so create a new one
@@ -93,25 +100,21 @@ class SM_csSess {
           $stmt1->fetch();
           $stmt1 = null;
           $this->csSession->csid = $csid = ( isset($csidMax) ? $csidMax+1 : 1 );
-          $crTime = time();
-          $stmt2 = $DbMultidict->prepare('INSERT INTO csSession (csid,crTime) VALUES (:csid,:crTime)');
-          $stmt2->bindParam(':csid',$csid,PDO::PARAM_INT);
-          $stmt2->bindParam(':crTime',$crTime,PDO::PARAM_INT);
-          $stmt2->execute();
+          $crTime = $chTime = time();
+          $stmt2 = $DbMultidict->prepare('INSERT INTO csSession (csid,crTime) VALUES (:csid,:time)');
+          $stmt2->execute([':csid'=>$csid,':time'=>$time]);
           $stmt2 = null;
-          $query = 'INSERT INTO csFilter(csid,fd,m0,m1,m2,m3,sortpri,sortord)'
-                             . " SELECT $csid,fd,m0,m1,m2,m3,sortpri,sortord FROM csFields";
-          $stmt3 = $DbMultidict->prepare($query);
-          $stmt3->execute();
+          $query3 = 'INSERT INTO csFilter(csid,fd,m0,m1,m2,m3,sortpri,sortord)'
+                              . " SELECT :csid,fd,m0,m1,m2,m3,sortpri,sortord FROM csFields";
+          $stmt3 = $DbMultidict->prepare($query3);
+          $stmt3->execute([':csid'=>$csid]);
           $stmt3 = null;
       }
 
      // Log some information for statistics
       $IPaddr = $_SERVER['REMOTE_ADDR'];
-      $stmt4 = $DbMultidict->prepare('UPDATE csSession SET nCalls=nCalls+1,IPaddr=:ipaddr WHERE csid=:csid');
-      $stmt4->bindParam(':ipaddr',$IPaddr,PDO::PARAM_STR);
-      $stmt4->bindParam(':csid',$csid,PDO::PARAM_INT);
-      $stmt4->execute();
+      $stmt4 = $DbMultidict->prepare('UPDATE csSession SET nCalls=nCalls+1,chTime=:time,IPaddr=:ipaddr WHERE csid=:csid');
+      $stmt4->execute([':csid'=>$csid,':time'=>$time,':ipaddr'=>$IPaddr]);
 
       setcookie('csSessionId',
                 $csid,

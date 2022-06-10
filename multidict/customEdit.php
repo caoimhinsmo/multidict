@@ -4,7 +4,7 @@
 
   try {
     $T = new SM_T('multidict/custom');
-    $T_No_words_found = $T->h('Cha_d_fhuaireadh_facal');
+    $T_No_words_found = $T->h('No_words_found');
     $T_Deasaich = $T->h('Deasaich');
     $T_Error_in = $T->h('Error_in');
 
