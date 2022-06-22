@@ -16,7 +16,7 @@
   $T_Old_password_missing     = $T->h('Old_password_missing');
   $T_Old_password_incorrect   = $T->h('Old_password_incorrect');
   $T_No_new_password          = $T->h('No_new_password');
-  $T_No_retyped new_password  = $T->h('No_retyped_new_password');
+  $T_No_retyped_new_password  = $T->h('No_retyped_new_password');
 
   $mdNavbar = SM_mdNavbar::mdNavbar($T->domhan);
 
