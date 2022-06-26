@@ -605,7 +605,7 @@ class SM_WlSession {
               if ($dic==$this->dict) { $iconClassArr[] = 'sel'; }
               $iconClass = implode(' ',$iconClassArr);
               $classHtml = ( empty($iconClass) ? '' : "class='$iconClass'" );
-              $iconHtml = "<img src=\"icon.php?dict=$dic\" $classHtml title=\"$name\" onclick=\"changeDict('$dic')\" alt=\"\"/>";
+              $iconHtml = "<img src='icon.php?dict=$dic' $classHtml title=\"$name\" onclick=\"changeDict('$dic')\" alt=''>";
               $html .= "$iconHtml\n";
           }
       }
@@ -881,25 +881,22 @@ EOD;
 
   public static function getDictIcon($dict,&$icon,&$mimetype) {
       $DbMultidict = SM_DbMultidictPDO::singleton('rw');
-      $stmt = $DbMultidict->prepare("SELECT icon,mimetype FROM dict WHERE dict=:dict");
-      $stmt->bindParam(':dict',$dict);
-      $stmt->execute();
-      $stmt->bindColumn(1,$icon,PDO::PARAM_LOB);
-      $stmt->bindColumn(2,$mimetype);
-      $stmt->fetch();
-      $stmt = null;
+      $stmt = $DbMultidict->prepare("SELECT icon AS ic,mimetype AS mt FROM dict WHERE dict=:dict");
+      $stmt->execute([':dict'=>$dict]);
+      $res = $stmt->fetch(PDO::FETCH_ASSOC);
+      extract($res);
+      $icon = $ic;
+      $mimetype = $mt;
   }
 
 
   public static function getLangIcon($lang,&$icon,&$mimetype) {
       $DbMultidict = SM_DbMultidictPDO::singleton('rw');
-      $stmt = $DbMultidict->prepare("SELECT icon,mimetype FROM langV WHERE id=:lang");
-      $stmt->bindParam(':lang',$lang);
-      $stmt->execute();
-      $stmt->bindColumn(1,$icon,PDO::PARAM_LOB);
-      $stmt->bindColumn(2,$mimetype);
-      $stmt->fetch();
-      $stmt = null;
+      $stmt = $DbMultidict->prepare("SELECT icon AS ic,mimetype AS mt FROM langV WHERE id=:lang");
+      $stmt->execute([':lang'=>$lang]);
+      $res = $stmt->fetch(PDO::FETCH_ASSOC);
+      $icon = $ic;
+      $mimetype = $mt;
   }
 
 

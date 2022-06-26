@@ -341,16 +341,14 @@ END_addColHtml;
      // Retrieves from table csFilter the filter parameters for the session
       $DbMultidict = SM_DbMultidictPDO::singleton('rw');
       $csid = $this->csSession->csid;
-      $stmt = $DbMultidict->prepare('SELECT csFields.fd,csFields.minmax,csFilter.val1,csFilter.val2 FROM csFields,csFilter WHERE csid=:csid AND csFields.fd=csFilter.fd');
-      $stmt->bindParam(':csid',$csid, PDO::PARAM_INT);
-      $stmt->execute();
+      $stmt = $DbMultidict->prepare('SELECT csFields.fd,csFields.minmax,csFilter.val1,csFilter.val2'
+                                  , ' FROM csFields,csFilter WHERE csid=:csid AND csFields.fd=csFilter.fd');
+      $stmt->bindParam(, PDO::PARAM_INT);
+      $stmt->execute([':csid'=?$csid]);
       $res = $stmt->fetchAll(PDO::FETCH_OBJ);
       $stmt = null;
       foreach ($res as $r) {
-          $fd     = $r->fd;
-          $minmax = $r->minmax;
-          $val1   = $r->val1;
-          $val2   = $r->val2;
+          extract($r);
           if ($minmax==0) {
               $f[$fd.'Fil'] = $val1;
           } else {
