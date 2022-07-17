@@ -895,6 +895,7 @@ EOD;
       $stmt = $DbMultidict->prepare("SELECT icon AS ic,mimetype AS mt FROM langV WHERE id=:lang");
       $stmt->execute([':lang'=>$lang]);
       $res = $stmt->fetch(PDO::FETCH_ASSOC);
+      extract($res);
       $icon = $ic;
       $mimetype = $mt;
   }

@@ -250,7 +250,7 @@ POPUPHTML;
         if ($charExtraItem=='Maori')       { $word = strtr($word, array('ng'=>'ny','wh'=>'wy')); }  //Expedient to deal with unusual alphabetisation of ng and wh
         if ($charExtraItem=='lemmatize')   { $word = lemmatize($word,$sl); }
         if ($charExtraItem=='lod')         { $word = strtoupper($word).'1'; } //Ad-hoc for this one dictionary, which only partially works anyway
-        if ($charExtraItem=='strixpMiddot') { $word = strtr($word, array('·'=>'')); }
+        if ($charExtraItem=='stripMiddot') { $word = strtr($word, array('·'=>'')); }
         if ( preg_match('%^tr:(.*):(.*)$%u', $charExtraItem, $matches) ) { $word = strtr($word, array($matches[1]=>$matches[2])); }
     }
     if ($sl=='ar') { $word = strtr($word, array(json_decode('"\u0640"')=>'')); }  //Remove tatweel characters from Arabic words

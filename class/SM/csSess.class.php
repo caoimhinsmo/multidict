@@ -342,10 +342,9 @@ END_addColHtml;
       $DbMultidict = SM_DbMultidictPDO::singleton('rw');
       $csid = $this->csSession->csid;
       $stmt = $DbMultidict->prepare('SELECT csFields.fd,csFields.minmax,csFilter.val1,csFilter.val2'
-                                  , ' FROM csFields,csFilter WHERE csid=:csid AND csFields.fd=csFilter.fd');
-      $stmt->bindParam(, PDO::PARAM_INT);
-      $stmt->execute([':csid'=?$csid]);
-      $res = $stmt->fetchAll(PDO::FETCH_OBJ);
+                                  . ' FROM csFields,csFilter WHERE csid=:csid AND csFields.fd=csFilter.fd');
+      $stmt->execute([':csid'=>$csid]);
+      $res = $stmt->fetchAll(PDO::FETCH_ASSOC);
       $stmt = null;
       foreach ($res as $r) {
           extract($r);

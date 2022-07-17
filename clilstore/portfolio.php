@@ -106,7 +106,7 @@
                       . "<span class=downArrow title='$T_Move_down' onClick=moveItem(this,'down')>⇩</span> "
                       . "<img src='/icons-smo/curAs.png' alt='Delete' title='$T_Delete_this_item' onClick='itemDelete(this)'>";
         $LitemEditHtml = "<img src='/icons-smo/peann.png' class=editIcon alt='Edit' title='$T_Edit_this_item' onClick='LitemEdit(this)'>"
-                       . "<img src='/icons-smo/floppydisk.png' class=saveIcon alt='Save' title='$T_Save_your_edit' onClick='LitemSave(this)'> "
+                       . "<img src='/icons-smo/floppy.png' class=saveIcon alt='Save' title='$T_Save_your_edit' onClick='LitemSave(this)'> "
                        . $itemEditHtml;
         $itemEditHtml  = "<span class=edit>$itemEditHtml</span>";
         $LitemEditHtml = "<span class=edit>$LitemEditHtml</span>";
@@ -121,7 +121,7 @@
         $h1 = "<span id=h1Span onKeypress='titleKeypress(event)'>$h1</span>";
         if ($edit) {
             $h1 .= " <img src='/icons-smo/peann.png' class=editIcon alt='Edit' title='$T_Edit_the_title' onClick=titleEdit(1)>";
-            $h1 .= " <img src='/icons-smo/floppydisk.png' class=saveIcon alt='Save' title='$T_Save_your_edit' onClick=titleEdit(0)>";
+            $h1 .= " <img src='/icons-smo/floppy.png' class=saveIcon alt='Save' title='$T_Save_your_edit' onClick=titleEdit(0)>";
             $h1 .= " <span id=titletick class=change>✔<span>";
         }
     }
