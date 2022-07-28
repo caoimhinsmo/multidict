@@ -30,7 +30,8 @@ class SM_WlSession {
           $crTime = time();
           $crHost = gethostbyaddr($crIP);
           $crReferer = ( isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '');
-          $stmt = $DbMultidict->prepare("INSERT INTO wlUser (uid,IP,crIP,utime,crTime,crHost,crReferer) VALUES (:uid,:crIP,:crIP,:crTime,:crTime,:crHost,:crReferer)");
+          $stmt = $DbMultidict->prepare('INSERT INTO wlUser (uid,IP,crIP,utime,crTime,crHost,crReferer)'
+                                     . ' VALUES (:uid,:crIP,:crIP,:crTime,:crTime,:crHost,:crReferer)');
           $stmt->bindParam(':uid',$uid,PDO::PARAM_INT);
           $stmt->bindParam(':crIP',$crIP);
           $stmt->bindParam(':crTime',$crTime,PDO::PARAM_INT);
@@ -796,22 +797,6 @@ EOD;
   }
 
 
-/* The following function is no longer used and can probably be deleted  --CPD 2021-11-01
-  public static function langName2Code($name) {
-      if ($name=='') { return $name; }
-      $DbMultidict = SM_DbMultidictPDO::singleton('rw');
-      $query = 'SELECT id FROM lang WHERE id=:name OR endonym=:name OR name_en=:name OR ll=:name OR iso_639_3=:name';
-      $stmt = $DbMultidict->prepare($query);
-      $stmt->bindParam(':name',$name);
-      $stmt->execute();
-      $result = $stmt->fetchAll(PDO::FETCH_COLUMN, 0);
-      if (count($result)==1) { return $result[0]; }
-      if (count($result) >1) { return '«ambiguous»'; }
-      return strtolower($name);
-  }
-*/
-
-
   public static function updateCalls($sl,$tl,$dict) {
       // Updates the count of word lookup Calls to the combination ($sl, $tl, $dict)
       // and also the exponential decay average count over the last three months or whatever
@@ -909,6 +894,7 @@ EOD;
   }
 
 
+/* Coltach nach eil dad a' cleachdadh seo --CPD 2022-07-28
   public static function clilSlArr() {
       // Returns an array of languages in Clilstore together with their native names
       $DbMultidict = SM_DbMultidictPDO::singleton('rw');
@@ -924,7 +910,7 @@ EOD;
       }
       return $slArr;
   }
-
+*/
 
   public static function clilOwnerArr() {
       // Returns an array of page ownere in Clilstore

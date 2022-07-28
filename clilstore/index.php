@@ -586,16 +586,19 @@ END_USER2;
     if (!empty($textVis))    { $textVal       = "value='$textVis'";    }
 
 
-    $query = 'SELECT DISTINCT endonym,sl FROM clilstore,lang WHERE clilstore.sl=lang.id ORDER BY endonym';
+    $query = 'SELECT DISTINCT endonym,sl,script FROM clilstore,lang WHERE clilstore.sl=lang.id ORDER BY endonym';
     $stmt = $DbMultidict->prepare($query);
     $stmt->execute();
-    $result = $stmt->fetchAll();
+    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
     $slOptions = array();
-    $slOptions[] = '<option value="" style="background-color:white">'
-                  .'</option><option value="ar">Arabic (ar)</option>'; //"Arabic" added in English as a special case
-    foreach ($result as $lang) {
-        $endonym = $lang['endonym'];
-        $sl      = $lang['sl'];
+    $slOptions[] = '<option value="" style="background-color:white">';
+    $scriptPrev = 'Latn';
+    foreach ($result as $res) {
+        extract($res);
+        if ($script<>$scriptPrev) {
+            $slOptions[] = "<option value='' disabled>-- $script --</option>";
+            $scriptPrev = $script;
+        }
         $selected = ( $sl==$slFil ? ' selected' : '');;
         $codeInfo = " ($sl)";  //Decided to always include the language code
         $slOptions[] = "<option value='$sl'$selected>$endonym$codeInfo</option>";
