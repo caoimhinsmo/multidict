@@ -205,7 +205,11 @@ class SM_WlSession {
           }
       }
       $DbMultidict = SM_DbMultidictPDO::singleton('rw');
-      $query = "UPDATE wlSession SET sl=:sl,tl=:tl,dict=:dict,url=:url,word=:word,wfs=:wfs,inc=:inc,rmLi=:rmLi, mode=:mode, navsize=:navsize, utime=:utime WHERE sid=:sid";
+      $query = <<<EOSQL
+          UPDATE wlSession
+            SET sl=:sl,tl=:tl,dict=:dict,url=:url,word=:word,wfs=:wfs,inc=:inc,rmLi=:rmLi, mode=:mode, navsize=:navsize, utime=:utime
+            WHERE sid=:sid
+          EOSQL;
       $stmt = $DbMultidict->prepare($query);
       $stmt->bindParam(':sl',$sl);
       $stmt->bindParam(':tl',$tl);
@@ -652,11 +656,11 @@ class SM_WlSession {
       $html = '';
 //The following dictionary icon used to be included in the next statement, but I have removed it (despite the name of the function) -- CPD 2019-08-22
 //<img src="icon.php?dict=$dict" alt="" style="border:none;margin-top:-5px;vertical-align:bottom">
-      if (!empty($icon)) { $html = <<<EOD
-<a href="$url" target="_top" title="$T_Click_to_escape_Multidict" id="esc">
-<span>Esc</span>
-</a>
-EOD;
+      if (!empty($icon)) { $html = <<<EOHTML
+          <a href="$url" target="_top" title="$T_Click_to_escape_Multidict" id="esc">
+          <span>Esc</span>
+          </a>
+          EOHTML;
       }
       $html .= (empty($message) ? '' : "<span style=\"color:red\" title=\"$message\">⚠</span>" . $message);
       return $html;
@@ -712,9 +716,9 @@ EOD;
           $stmt2->execute([':id'=>$alt]);
           if (isset($tlArr[$alt]) && $stmt2->fetch()) {
               if (empty($icon)) {
-                  $html .= "<a onclick='tlChange('$alt')' title='$T_Switch_to $endonym' class=box>$alt</a>";
+                  $html .= "<a onclick=\"tlChange('$alt')\" title='$T_Switch_to $endonym' class=box>$alt</a>";
               } else {
-                  $html .= "<a onclick='tlChange('$alt')' title='$T_Switch_to $endonym'><img src='/multidict/icon.php?lang=$alt' alt=''></a>";
+                  $html .= "<a onclick=\"tlChange('$alt')\" title='$T_Switch_to $endonym'><img src='/multidict/icon.php?lang=$alt' alt=''></a>";
               }
           }
       }
@@ -727,12 +731,15 @@ EOD;
       // Returns an array of source languages which have dictionaries in the database together with their native names and some other info
       $slArr = array();
       $DbMultidict = SM_DbMultidictPDO::singleton('rw');
-      $query = "SELECT dictLang.lang AS sl, endonym, script, wiki, pools, dictParamV.dict"
-             ." FROM dictParamV,dictLang LEFT JOIN lang ON dictLang.lang=lang.id"
-             ." WHERE dictParamV.sl='¤' AND dictParamV.dict=dictLang.dict"
-             ." UNION"
-             ." SELECT sl, endonym, script, wiki, pools, dict FROM dictParamV LEFT JOIN lang ON dictParamV.sl=lang.id WHERE sl<>'¤'"
-             ." ORDER BY endonym";
+      $query = <<<EOSQL
+          SELECT dictLang.lang AS sl, endonym, script, wiki, pools, dictParamV.dict
+            FROM dictParamV,dictLang LEFT JOIN lang ON dictLang.lang=lang.id
+            WHERE dictParamV.sl='¤' AND dictParamV.dict=dictLang.dict
+          UNION
+          SELECT sl, endonym, script, wiki, pools, dict
+            FROM dictParamV LEFT JOIN lang ON dictParamV.sl=lang.id WHERE sl<>'¤'
+          ORDER BY endonym
+          EOSQL;
       $stmt = $DbMultidict->prepare($query);
       $stmt->execute();
       $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -757,13 +764,15 @@ EOD;
       $sl = $this->sl;
       $tlArr = array();
       $DbMultidict = SM_DbMultidictPDO::singleton('rw');
-      $query = "SELECT DISTINCT tl, endonym, script FROM dictParamV LEFT JOIN lang ON dictParamV.tl=lang.id WHERE sl=:sl"
-             ." UNION"
-             ." SELECT dl2.lang AS tl, endonym, script"
-             ." FROM dictParamV, dictLang AS dl1, dictLang AS dl2 LEFT JOIN lang ON dl2.lang=lang.id"
-             ." WHERE dictParamV.dict=dl1.dict AND dl1.dict=dl2.dict AND dl1.lang=:sl AND (dictParamV.tl='¤'"
-             ."  OR (dictParamV.tl='x' AND dl1.lang<>dl2.lang))"
-             ." ORDER BY endonym";
+      $query = <<<EOSQL
+          SELECT DISTINCT tl, endonym, script FROM dictParamV LEFT JOIN lang ON dictParamV.tl=lang.id WHERE sl=:sl
+           UNION
+          SELECT dl2.lang AS tl, endonym, script
+           FROM dictParamV, dictLang AS dl1, dictLang AS dl2 LEFT JOIN lang ON dl2.lang=lang.id
+           WHERE dictParamV.dict=dl1.dict AND dl1.dict=dl2.dict AND dl1.lang=:sl AND (dictParamV.tl='¤'
+             OR (dictParamV.tl='x' AND dl1.lang<>dl2.lang))
+           ORDER BY endonym
+          EOSQL;
       $stmt = $DbMultidict->prepare($query);
       $stmt->execute([':sl'=>$sl]);
       $results = $stmt->fetchAll(PDO::FETCH_ASSOC);

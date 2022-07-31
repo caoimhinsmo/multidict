@@ -85,18 +85,18 @@ $wlSession->wfs = $wfs = $stmt->fetch()['wfs'];
           if ($key<>0)    { $wf = "<a href=\"/multidict/?sid=$sid&amp;word=$word&amp;rot=$key\" class=\"lemmalink\">$wf</a>"; }
       }
       $wordformHtml = implode(' <span dir="ltr">←</span> ',$wordformArr);
-      $wordformHtmlFull = <<<EODWFFH
-<div class="formItem" style="margin:0 0 0 0.5%px;width:63%;border2:1px solid purple">
-<div class="label" style="padding:4px 0 1px 0;overflow:hidden">$T_Rotation_message</div>
-<div style="font-size:85%;color:brown">$wordformHtml ↩</div>
-</div>
-EODWFFH;
+      $wordformHtmlFull = <<<EOHTML
+          <div class="formItem" style="margin:0 0 0 0.5%px;width:63%;border2:1px solid purple">
+          <div class="label" style="padding:4px 0 1px 0;overflow:hidden">$T_Rotation_message</div>
+          <div style="font-size:85%;color:brown">$wordformHtml ↩</div>
+          </div>
+          EOHTML;
   }
   $dictClass = $wlSession->dictClass();
-  if (substr($dictClass,0,1)=='p') { $pageNav = <<<EODpageNav
-<input type="submit" name="go" value="<" style="padding:0 3px;margin-left:1.2em" title="$T_Page_back">
-<input type="submit" name="go" value=">" style="padding:0 3px" title="$T_Page_forward">
-EODpageNav;
+  if (substr($dictClass,0,1)=='p') { $pageNav = <<<EOHTML
+      <input type="submit" name="go" value="<" style="padding:0 3px;margin-left:1.2em" title="$T_Page_back">
+      <input type="submit" name="go" value=">" style="padding:0 3px" title="$T_Page_forward">
+      EOHTML;
   } else { $pageNav = ''; }
 
   $slOptionsHtml = $tlSelectHtml = $formItems = '';
@@ -131,23 +131,23 @@ EODpageNav;
       $dictIconsHtml  = $wlSession->dictIconsHtml();
       $dictIconHtml   = $wlSession->dictIconHtml();
       $nbTlHtml       = $wlSession->nbTlHtml();
-      $formItems = <<<EOD3
-<div class="formItem" style="min-width:95px;max-width:28%"><div class="label">$T_To</div>
-<select name="tl" id="tl" title="$T_Target_language" onchange="submitForm('tl');">
-  <option value="">-Choose-</option>
-$tlSelectHtml
-</select><span class=advOnly>$nbTlHtml</span>
-</div>
-<div class="formItem" style="min-width:110px;max-width:40%;overflow:visible"><div class="label">$T_Dictionary $dictIconHtml</div>
-<select id="dict" name="dict" onchange="submitForm();" title="$T_Choose_dictionary">
-  <option value="">-Choose-</option>
-$dictSelectHtml
-</select><br>
-<div class=advOnly><div id="dictIcons">$dictIconsHtml</div></div>
-</div>
-<div id="noJSinfo" style="position:absolute;bottom:4px;left:6px;font-size:55%;color:green;white-space:normal">
-If JavaScript is disabled you must click Search after each language change</div>
-EOD3;
+      $formItems = <<<EOHTML
+          <div class="formItem" style="min-width:95px;max-width:28%"><div class="label">$T_To</div>
+          <select name="tl" id="tl" title="$T_Target_language" onchange="submitForm('tl');">
+            <option value="">-Choose-</option>
+          $tlSelectHtml
+          </select><span class=advOnly>$nbTlHtml</span>
+          </div>
+          <div class="formItem" style="min-width:110px;max-width:40%;overflow:visible"><div class="label">$T_Dictionary $dictIconHtml</div>
+          <select id="dict" name="dict" onchange="submitForm();" title="$T_Choose_dictionary">
+            <option value="">-Choose-</option>
+          $dictSelectHtml
+          </select><br>
+          <div class=advOnly><div id="dictIcons">$dictIconsHtml</div></div>
+          </div>
+          <div id="noJSinfo" style="position:absolute;bottom:4px;left:6px;font-size:55%;color:green;white-space:normal">
+          If JavaScript is disabled you must click Search after each language change</div>
+          EOHTML;
   }
 
   if (!$standalone) {    //Don’t use schemeSwop with Wordlink because doesn’t work in a frame
@@ -171,8 +171,10 @@ EOD3;
       $schemeSwopHtml = "<span class=toggle title='$T_Swop_http_https' onclick=\"window.location.replace('$schemeSwopLocation')\">$schemeSwopHtml</span>";
   }
 
-  $advSwopHtml = "<span class=basOnly><b>$T_basic</b><input type=range id=basRange min=0 max=1 step=1 value=0 style=width:3em;margin:0;padding:0><a title='$T_Switch_to_advanced'>$T_advanced</a></span>"
-                ."<span class=advOnly><a title='$T_Switch_to_basic'>$T_basic</a><input type=range id=advRange min=0 max=1 step=1 value=1 style=width:3em;margin:0;padding:0><b>$T_advanced</b></span>";
+  $advSwopHtml = "<span class=basOnly><b>$T_basic</b><input type=range id=basRange min=0 max=1 step=1 value=0"
+                ." style=width:3em;margin:0;padding:0><a title='$T_Switch_to_advanced'>$T_advanced</a></span>"
+                ."<span class=advOnly><a title='$T_Switch_to_basic'>$T_basic</a><input type=range id=advRange min=0 max=1 step=1 value=1"
+                ." style=width:3em;margin:0;padding:0><b>$T_advanced</b></span>";
 
   $advSwopHtml = "<span class=toggle title='$T_Swop_basic_advanced' onclick='mdAdvSet(1-mdAdv)'>$advSwopHtml</span>";
 
