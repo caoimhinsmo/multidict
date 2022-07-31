@@ -10,13 +10,14 @@
 
     $wikiLinks = '';
     $slArr = SM_WlSession::slArr();
+    ksort($slArr);
     foreach ($slArr as $sl=>$langInfo) {
-        $endonym    = $langInfo['endonym'];
-        $wiki       = $langInfo['wiki'];
-        $multidicts = $langInfo['multidicts'];
-        $class      = $langInfo['pools'];
+        $endonym  = $langInfo['endonym'];
+        $wiki     = $langInfo['wiki'];
+        $onlyGoog = $langInfo['onlyGoog'];
+        $class    = $langInfo['pools'];
       if ($class=='omit' or empty($wiki)) { continue; }
-        if ($multidicts=='|Google|') { $class = 'googleOnly'; }
+        if ($onlyGoog=='onlyGoog') { $class = 'onlyGoog'; }
         $wikiLinks .= "<div class='wiki $class'><a href='./?sl=$sl&amp;url=https://$wiki.wikipedia.org/' title='$endonym'>$sl</a></div>\n";
     }
     $wikiLinks .= "<div class='wiki tools' style='margin-left:1em'><a href='./?sl=en&amp;url=https://simple.wikipedia.org/' title='Simple English'>simple</a></div>\n";
@@ -40,7 +41,7 @@
         fieldset#wiki div.tools  { font-weight:bold; background-color:#0e0; }
         fieldset#wiki div.poolst { font-weight:bold; background-color:#8f3; }
         fieldset#wiki div.problem  a {color:grey; text-decoration:line-through;  }
-        fieldset#wiki div.googleOnly a { color:grey; }
+        fieldset#wiki div.onlyGoog a { color:grey; }
         fieldset#wiki a { padding:2px; }
     </style>
 </head>

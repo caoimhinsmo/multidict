@@ -101,23 +101,31 @@ EODpageNav;
 
   $slOptionsHtml = $tlSelectHtml = $formItems = '';
 
+  $slOptionsHtml = "<option value=''>-Choose-</option>\n";
   $slArr = SM_WlSession::slArr();
-  foreach ($slArr as $lang=>$langInfo) { $slArray[$lang] = $langInfo['endonym']; }
-  setlocale(LC_ALL,'en_GB.UTF-8');
-  uasort($slArray,'strcoll');
-  $slArray = array_merge(array(''=>'-Choose-'),$slArray);
-  foreach ($slArray as $code=>$name) {
-      $selectHtml = ( $sl==$code ? ' selected="selected"' : '');
-      $slOptionsHtml .= "  <option value=\"$code\"$selectHtml>$name</option>\n";
+  $scriptPrev = 'Latn';
+  foreach ($slArr as $lang=>$langInfo) {
+      $endonym = $langInfo['endonym'];
+      $script  = $langInfo['script'];
+      if ($script<>$scriptPrev) {
+          $slOptionsHtml .= "  <option value='' disabled>-- $script --</option>\n";
+          $scriptPrev = $script;
+      }
+      $selectHtml = ( $sl==$lang ? ' selected=selected' : '');
+      $slOptionsHtml .= "  <option value='$lang'$selectHtml>$endonym</option>\n";
   }
 
   if (!empty($sl)) {
       $tlArray = $wlSession->tlArr();
-      setlocale(LC_ALL,'en_GB.UTF-8');
-      uasort($tlArray,'strcoll');
-      foreach ($tlArray as $code=>$name) {
-          $selectedHtml = ( $tl==$code ? ' selected="selected"' : '');
-          $tlSelectHtml .= "  <option value=\"$code\"$selectedHtml>$name</option>\n";
+      $scriptPrev = 'Latn';
+      foreach ($tlArray as $lang=>$langInfo) {
+          extract($langInfo);
+          if ($script<>$scriptPrev) {
+              $tlSelectHtml .= "  <option value='' disabled>-- $script --</option>\n";
+              $scriptPrev = $script;
+          }
+          $selectedHtml = ( $tl==$lang ? ' selected=selected' : '');
+          $tlSelectHtml .= "  <option value='$lang'$selectedHtml>$endonym</option>\n";
       }
       $dictSelectHtml = $wlSession->dictSelectHtml();
       $dictIconsHtml  = $wlSession->dictIconsHtml();

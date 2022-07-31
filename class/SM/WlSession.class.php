@@ -115,7 +115,6 @@ class SM_WlSession {
       } elseif (!empty($url) && $url<>'{compose}') {
           $url = trim($url);
           $url = strtr ( $url, array('{and}'=>'&') );  //Translate back any protected ampersands
-//          if (preg_match('|^https://.*wikipedia|',$url)) { $url = 'http://'.substr($url,8); }  //Replace https protocol with http, since Wordlink doesn’t seem to work with https at present
           if (substr($url,0,2)=='//')       { $url = "http:$url"; }  //If the protocol is empty, use http
           if (!(strpos($url,'://')>0) and !(substr($url,0,4)=='http')) { $url = "http://$url"; }  //if  there is still no sign of a protocol, use http
           if (strpos($url,'google.com')>0) { throw new SM_MDexception('Sorry, Wordlink does not currently work with Google Drive or other Google sites'); }
@@ -695,73 +694,60 @@ EOD;
   public function nbTlHtml() {
       // Returns html for swopping tl to a cognate language (or to sl to get monolingual dictionaries)
       $tl = $this->tl;
+      $T = new SM_T('multidict');
+      $T_Switch_to = $T->h('Switch_to');
       $DbMultidict = SM_DbMultidictPDO::singleton('rw');
       $html = '';
       $stmt = $DbMultidict->prepare('SELECT alt FROM langAltTl WHERE id=:tl ORDER BY ord');
-      $stmt->bindParam(':tl',$tl);
-      $stmt->execute();
+      $stmt->execute([':tl'=>$tl]);
       $altTlArr = $stmt->fetchAll(PDO::FETCH_COLUMN, 0);
       $sl = $this->sl;
       if ($sl<>$tl && !in_array($sl,$altTlArr)) { $altTlArr[] = $sl; }
       $tlArr = $this->tlArr;
      if (empty($tlArr)) { return ''; }
       $stmt2 = $DbMultidict->prepare('SELECT endonym,icon FROM langV WHERE id=:id');
-      $stmt2->bindParam(':id',$alt);
       $stmt2->bindColumn(1,$endonym);
       $stmt2->bindColumn(2,$icon);
       foreach ($altTlArr as $alt) {
-          $stmt2->execute();
+          $stmt2->execute([':id'=>$alt]);
           if (isset($tlArr[$alt]) && $stmt2->fetch()) {
               if (empty($icon)) {
-                  $html .= "<a onclick=\"tlChange('$alt')\" title=\"Switch to $endonym\" class=\"box\">$alt</a>";
+                  $html .= "<a onclick='tlChange('$alt')' title='$T_Switch_to $endonym' class=box>$alt</a>";
               } else {
-                  $html .= "<a onclick=\"tlChange('$alt')\" title=\"Switch to $endonym\"><img src=\"/multidict/icon.php?lang=$alt\" alt=\"\"></a>";
+                  $html .= "<a onclick='tlChange('$alt')' title='$T_Switch_to $endonym'><img src='/multidict/icon.php?lang=$alt' alt=''></a>";
               }
           }
       }
-      if (!empty($html)) { $html = "<br>\n<div class=\"nbLang\">$html</div>\n"; }
+      if (!empty($html)) { $html = "<br>\n<div class=nbLang>$html</div>\n"; }
       return $html;
   }
 
 
   public static function slArr() {
-      // Returns an array of source languages which have dictionaries in the database together with the native names
+      // Returns an array of source languages which have dictionaries in the database together with their native names and some other info
       $slArr = array();
       $DbMultidict = SM_DbMultidictPDO::singleton('rw');
-      $query = "SELECT dictLang.lang,endonym,name_en,wiki,pools,dictParamV.dict"
+      $query = "SELECT dictLang.lang AS sl, endonym, script, wiki, pools, dictParamV.dict"
              ." FROM dictParamV,dictLang LEFT JOIN lang ON dictLang.lang=lang.id"
-             ." WHERE dictParamV.sl='¤' AND dictParamV.dict=dictLang.dict";
+             ." WHERE dictParamV.sl='¤' AND dictParamV.dict=dictLang.dict"
+             ." UNION"
+             ." SELECT sl, endonym, script, wiki, pools, dict FROM dictParamV LEFT JOIN lang ON dictParamV.sl=lang.id WHERE sl<>'¤'"
+             ." ORDER BY endonym";
       $stmt = $DbMultidict->prepare($query);
       $stmt->execute();
-      $stmt->bindColumn(1,$sl);
-      $stmt->bindColumn(2,$endonym);
-      $stmt->bindColumn(3,$name_en);
-      $stmt->bindColumn(4,$wiki);
-      $stmt->bindColumn(5,$pools);
-      $stmt->bindColumn(6,$dict);
-      while ($stmt->fetch()) {
-          if (!isset($slArr[$sl])) { $slArr[$sl]['multidicts'] = '|'; } //Initialise (For multidict-only languages, multidicts will be set to list them)
+      $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+      foreach ($results as $res) {
+          extract($res);
           $slArr[$sl]['endonym']  = "$endonym ($sl)";
-          $slArr[$sl]['name_en']  = "$name_en ($sl)";
+          $slArr[$sl]['script']   = $script;
           $slArr[$sl]['wiki']  = $wiki;
           $slArr[$sl]['pools'] = $pools;
-          $slArr[$sl]['multidicts'] .= "$dict|";
+          if ($dict<>'Google') {
+              $slArr[$sl]['onlyGoog'] = '';
+          } elseif (!isset($slArr[$sl]['onlyGoog'])) {
+              $slArr[$sl]['onlyGoog'] = 'onlyGoog';
+          }
       }
-      $stmt = null;
-      $stmt = $DbMultidict->prepare("SELECT DISTINCT sl,endonym,wiki,pools FROM dictParamV LEFT JOIN lang ON dictParamV.sl=lang.id WHERE sl<>'¤'");
-      $stmt->execute();
-      $stmt->bindColumn(1,$sl);
-      $stmt->bindColumn(2,$endonym);
-      $stmt->bindColumn(3,$wiki);
-      $stmt->bindColumn(4,$pools);
-      while ($stmt->fetch()) {
-          $slArr[$sl]['endonym']  = "$endonym ($sl)";
-          $slArr[$sl]['wiki']   = $wiki;
-          $slArr[$sl]['pools'] = $pools;
-          $slArr[$sl]['multidicts'] = '';
-      }
-      $stmt = null;
-      ksort($slArr);
       return $slArr;
   }
 
@@ -771,27 +757,21 @@ EOD;
       $sl = $this->sl;
       $tlArr = array();
       $DbMultidict = SM_DbMultidictPDO::singleton('rw');
-      $stmt = $DbMultidict->prepare("SELECT DISTINCT tl,endonym FROM dictParamV LEFT JOIN lang ON dictParamV.tl=lang.id WHERE sl=:sl");
-      $stmt->bindParam(':sl',$sl);
-      $stmt->execute();
-      $stmt->bindColumn(1,$tl);
-      $stmt->bindColumn(2,$endonym);
-      while ($stmt->fetch()) {
-          $tlArr[$tl] = "$endonym ($tl)";
-      }
-      $stmt = null;
-      $query = "SELECT dl2.lang AS tl, endonym"
+      $query = "SELECT DISTINCT tl, endonym, script FROM dictParamV LEFT JOIN lang ON dictParamV.tl=lang.id WHERE sl=:sl"
+             ." UNION"
+             ." SELECT dl2.lang AS tl, endonym, script"
              ." FROM dictParamV, dictLang AS dl1, dictLang AS dl2 LEFT JOIN lang ON dl2.lang=lang.id"
-             ." WHERE dictParamV.dict=dl1.dict AND dl1.dict=dl2.dict AND dl1.lang=:sl AND (dictParamV.tl='¤' OR (dictParamV.tl='x' AND dl1.lang<>dl2.lang))";
+             ." WHERE dictParamV.dict=dl1.dict AND dl1.dict=dl2.dict AND dl1.lang=:sl AND (dictParamV.tl='¤'"
+             ."  OR (dictParamV.tl='x' AND dl1.lang<>dl2.lang))"
+             ." ORDER BY endonym";
       $stmt = $DbMultidict->prepare($query);
-      $stmt->bindParam(':sl',$sl);
-      $stmt->execute();
-      $stmt->bindColumn(1,$tl);
-      $stmt->bindColumn(2,$endonym);
-      while ($stmt->fetch()) {
-          $tlArr[$tl] = "$endonym ($tl)";
+      $stmt->execute([':sl'=>$sl]);
+      $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+      foreach ($results as $res) {
+          extract($res);
+          $tlArr[$tl] = ['endonym'=>"$endonym ($tl)",
+                         'script' =>$script];
       }
-      $stmt = null;
       $this->tlArr = $tlArr;
       return $tlArr;
   }

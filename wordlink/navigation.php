@@ -28,8 +28,8 @@
   $T_modeSelect_title = strtr( $T_modeSelect_title, [ '{{Process}}' => '‘' . $T_Process . '’' ] );
 
   // Handy abbreviations
-  $checked  = ' checked="checked"';
-  $selected = ' selected="selected"';
+  $checked  = ' checked=checked';
+  $selected = ' selected=selected';
 
   $sid = ( !empty($_GET['sid']) ? $_GET['sid'] : null);
   $wlSession = new SM_WlSession($sid);
@@ -52,6 +52,21 @@
 
   $robots = ( empty($wlSession->url) ? 'index,follow' : 'noindex,nofollow' );
   $servername = $_SERVER['SERVER_NAME'];
+
+  $slArr = SM_WlSession::slArr();
+  $slSelectHtml = "  <option value=''>-Choose-</option>\n";
+  $scriptPrev = 'Latn';
+  foreach ($slArr as $lang=>$langInfo) {
+      $endonym = $langInfo['endonym'];
+      $script  = $langInfo['script'];
+      if ($script<>$scriptPrev) {
+          $slSelectHtml .= "  <option value='' disabled>- $script -</option>\n";
+          $scriptPrev = $script;
+      }
+      $selectedHtml = ( $sl==$lang ? ' selected=selected' : '');
+      $slSelectHtml .= "  <option value='$lang'$selectedHtml>$endonym</option>\n";
+  }
+
   echo <<<EOD1
 <!DOCTYPE html>
 <html>
@@ -127,23 +142,14 @@ $hlSelect
 </div>
 <p style="margin:0;clear:both"><input type="hidden" name="sid" value="$sid"/>
 <input type=url id=url name=url value="$url" title="URL of the webpage" placeholder="$T_Copy_url_here" style="width:99%"/></p>
-EOD1;
-  echo "<div class=\"formitem\">
-<div style=\"font-size:80%;color:#777\">$T_Webpage_language</div>
-<select name=\"sl\" id=\"sl\" title=\"The language the above page is written in\" style=\"margin-bottom:2px\" onchange=\"submitForm()\">\n";
-  $slArr = SM_WlSession::slArr();
-  foreach ($slArr as $lang=>$langInfo) { $slArray[$lang] = $langInfo['endonym']; }
-  setlocale(LC_COLLATE,'en_GB.UTF-8');
-  uasort($slArray,'strcoll');
-  $slArray = array_merge ( array(''=>'- Choose -'), $slArray, array('null'=>'--null--') );
-  foreach ($slArray as $lang=>$endonym) {
-      $selectHtml = ( $sl==$lang ? ' selected="selected"' : '');
-      echo "  <option value=\"$lang\"$selectHtml>$endonym</option>\n";
-  }
-  echo <<<EOD2
-<div class="formitem"><div style="font-size:80%">&nbsp;</div><input type="submit" name="go" value="$T_Process"/ style="margin-left:1em"></div>
+<div class=formitem>
+<div style='font-size:80%;color:#777'>$T_Webpage_language</div>
+<select name=sl id=sl title='The language the above page is written in' style='margin-bottom:2px' onchange='submitForm()'>
+$slSelectHtml;
 
-<div class="nbLang" style="float:right;margin-top:3px;margin-right:3px;font-size:130%">
+<div class=formitem><div style="font-size:80%">&nbsp;</div><input type=submit name=go value="$T_Process" style="margin-left:1em"></div>
+
+<div class=nbLang style="float:right;margin-top:3px;margin-right:3px;font-size:130%">
 <a class="box" style="border-radius:5px" title="$T_Esc_title" onclick="escapeWL();">Esc</a>
 </div>
 
@@ -151,8 +157,8 @@ EOD1;
 </form>
 
 </div>
-EOD2;
-?>
 
 </body>
 </html>
+EOD1;
+?>
