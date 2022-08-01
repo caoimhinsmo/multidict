@@ -133,7 +133,7 @@ EOD_NAVBAR;
       $hlArr = self::hlArr();
       $options = '';
       foreach ($hlArr as $hl=>$hlAinm) {
-          if (substr($hl,0,4)=='----') { $options .= "<option value='' disabled>&nbsp;_{$hlAinm}_</option>/n"; }  //Divider in the list of select options
+          if (substr($hl,0,4)=='----') { $options .= "<option value='' disabled>&nbsp;_{$hlAinm}_</option>\n"; }  //Divider in the list of select options
             else                       { $options .= "<option value='$hl|en' title='$hlAinm'" . ( $hl==$hl0 ? ' selected' : '' ) . ">$hl</option>\n"; }
       }
       $hrSelect = <<< END_hrSelect

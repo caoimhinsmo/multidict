@@ -883,24 +883,6 @@ class SM_WlSession {
   }
 
 
-/* Coltach nach eil dad a' cleachdadh seo --CPD 2022-07-28
-  public static function clilSlArr() {
-      // Returns an array of languages in Clilstore together with their native names
-      $DbMultidict = SM_DbMultidictPDO::singleton('rw');
-      $sql = "SELECT DISTINCT clilstore.sl,lang.endonym FROM clilstore,lang WHERE clilstore.sl=lang.id"
-            ." ORDER BY clilstore.sl";
-      $stmt = $DbMultidict->prepare($sql);
-      $stmt->execute();
-      $stmt->bindColumn(1,$sl);
-      $stmt->bindColumn(2,$endonym);
-      $slArr = array();
-      while ($stmt->fetch()) {
-         $slArr[$sl] = $endonym;
-      }
-      return $slArr;
-  }
-*/
-
   public static function clilOwnerArr() {
       // Returns an array of page ownere in Clilstore
       $DbMultidict = SM_DbMultidictPDO::singleton('rw');

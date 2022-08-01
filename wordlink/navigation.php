@@ -54,13 +54,13 @@
   $servername = $_SERVER['SERVER_NAME'];
 
   $slArr = SM_WlSession::slArr();
-  $slSelectHtml = "  <option value=''>-Choose-</option>\n";
+  $slSelectHtml = '';
   $scriptPrev = 'Latn';
   foreach ($slArr as $lang=>$langInfo) {
       $endonym = $langInfo['endonym'];
       $script  = $langInfo['script'];
       if ($script<>$scriptPrev) {
-          $slSelectHtml .= "  <option value='' disabled>- $script -</option>\n";
+          $slSelectHtml .= "  <option value='' disabled>&nbsp; &nbsp;$script</option>\n";
           $scriptPrev = $script;
       }
       $selectedHtml = ( $sl==$lang ? ' selected=selected' : '');
@@ -84,9 +84,8 @@
         a:hover   { color: #ff0; background-color:blue;  }
         a.button { display:inline-block; margin-left:0.8em; padding:0 4px; border-radius:4px; background-color:#75c8fb; color:white; font-size:90%; }
         a.button:hover { background-color:blue; color:white; }
-        div.formitem { float:left; margin:3px 2px; }
         select { font-size:80%; }
-        select.hlselect { padding:0; font-size2:70%; }
+        select.hlselect { padding:0; }
         div.nbLang { font-size:80%; color:#aaa; padding-bottom:1px; }
         div.nbLang img { margin:0 3px; }
         div.nbLang a.box { margin:0 2px; border:1px solid #aaa; padding:0 1px; background-color:white; }
@@ -130,7 +129,7 @@ $hlSelect
 <option value="2">$T_Compose_page</option>
 </select>
 <span style="padding:0 0.4em;font-size:90%;color:brown;background-color:white;border:1px solid #999;border-radius:3px" title="$T_Remove_exist_links_info">
-<input type="checkbox" name="rmLi"$rmLiHtml/ id="rexl"><label for="rexl">$T_Remove_exist_links</label></span>
+<input type="checkbox" name=rmLi$rmLiHtml id="rexl"><label for="rexl">$T_Remove_exist_links</label></span>
 <span style="font-size:80%;padding-left:1em"><span style="color:#777">$T_Dictionary_in</span> <select name="mode" title="$T_modeSelect_title">
 <option value="nt"$modeHtmlNt>$T_New_tab</option>
 <option value="st"$modeHtmlSt>$T_Same_tab</option>
@@ -142,14 +141,17 @@ $hlSelect
 </div>
 <p style="margin:0;clear:both"><input type="hidden" name="sid" value="$sid"/>
 <input type=url id=url name=url value="$url" title="URL of the webpage" placeholder="$T_Copy_url_here" style="width:99%"/></p>
-<div class=formitem>
-<div style='font-size:80%;color:#777'>$T_Webpage_language</div>
+
+<div style="margin:2px">
+<p style='margin:0;font-size:80%;color:#777'>$T_Webpage_language</p>
 <select name=sl id=sl title='The language the above page is written in' style='margin-bottom:2px' onchange='submitForm()'>
-$slSelectHtml;
+  <option value=''>- Choose -</option>
+$slSelectHtml
+  <option value='null'>-- null --</option>
+</select>
+<input type=submit name=go value="$T_Process" style="margin-left:1em;font-size:90%">
 
-<div class=formitem><div style="font-size:80%">&nbsp;</div><input type=submit name=go value="$T_Process" style="margin-left:1em"></div>
-
-<div class=nbLang style="float:right;margin-top:3px;margin-right:3px;font-size:130%">
+<div class=nbLang style="float:right;margin-top:3px;margin-right:3px;font-size:120%">
 <a class="box" style="border-radius:5px" title="$T_Esc_title" onclick="escapeWL();">Esc</a>
 </div>
 

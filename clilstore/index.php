@@ -586,7 +586,7 @@ END_USER2;
     if (!empty($textVis))    { $textVal       = "value='$textVis'";    }
 
 
-    $query = 'SELECT DISTINCT endonym,sl,script FROM clilstore,lang WHERE clilstore.sl=lang.id ORDER BY endonym';
+    $query = 'SELECT DISTINCT sl, endonym, script FROM clilstore,lang WHERE clilstore.sl=lang.id ORDER BY endonym';
     $stmt = $DbMultidict->prepare($query);
     $stmt->execute();
     $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
