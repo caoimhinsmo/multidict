@@ -108,7 +108,7 @@ $wlSession->wfs = $wfs = $stmt->fetch()['wfs'];
       $endonym = $langInfo['endonym'];
       $script  = $langInfo['script'];
       if ($script<>$scriptPrev) {
-          $slOptionsHtml .= "  <option value='' disabled>-- $script --</option>\n";
+          $slOptionsHtml .= "  <option value='' disabled>&nbsp; &nbsp; &nbsp; -$script-</option>\n";
           $scriptPrev = $script;
       }
       $selectHtml = ( $sl==$lang ? ' selected=selected' : '');
@@ -121,7 +121,7 @@ $wlSession->wfs = $wfs = $stmt->fetch()['wfs'];
       foreach ($tlArray as $lang=>$langInfo) {
           extract($langInfo);
           if ($script<>$scriptPrev) {
-              $tlSelectHtml .= "  <option value='' disabled>-- $script --</option>\n";
+              $tlSelectHtml .= "  <option value='' disabled>&nbsp; &nbsp; &nbsp; -$script-</option>\n";
               $scriptPrev = $script;
           }
           $selectedHtml = ( $tl==$lang ? ' selected=selected' : '');
@@ -244,6 +244,8 @@ Replace the following sometime with flexbox - Option 3 at https://stackoverflow.
         div.basic    div.advOnly  { display:none; }
         div.basic    span.advOnly { display:none; }
         div.advanced span.basOnly { display:none; }
+        select#sl option[disabled],
+        select#tl option[disabled] { background-color:#686; color:#aca; }
     </style>
     <script>
         var standalone, mdAdv, mdAdvClass;

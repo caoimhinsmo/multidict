@@ -60,7 +60,7 @@
       $endonym = $langInfo['endonym'];
       $script  = $langInfo['script'];
       if ($script<>$scriptPrev) {
-          $slSelectHtml .= "  <option value='' disabled>&nbsp; &nbsp;$script</option>\n";
+          $slSelectHtml .= "  <option value='' disabled>&nbsp; &nbsp; &nbsp -$script-</option>\n";
           $scriptPrev = $script;
       }
       $selectedHtml = ( $sl==$lang ? ' selected=selected' : '');
@@ -91,6 +91,7 @@
         div.nbLang a.box { margin:0 2px; border:1px solid #aaa; padding:0 1px; background-color:white; }
         div.nbLang a:hover { background-color:blue; }
         input[type=submit]:hover { background-color:blue; color:yellow; }
+        select#sl option[disabled] { background-color:#686; color:#aca; }
     </style>
         <script>
         function escapeAmpersands() {

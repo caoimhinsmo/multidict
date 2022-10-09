@@ -29,6 +29,7 @@
   $T_Clilstore_index_page   = $T->h('Clilstore_index_page');
   $T_New_portfolio          = $T->h('New_portfolio');
   $T_Create_a_new_portfolio = $T->h('Create_a_new_portfolio');
+  $T_Alt_interface_at       = $T->h('Alt_interface_at');
 
   try {
     if (!isset($_GET['id'])) { throw new SM_MDexception('No id parameter'); }
@@ -136,6 +137,7 @@ END_portfolioHtml;
 $likeHtml
 <li class="right"><a href="unitinfo.php?id=$id" class="nowordlink" target="_top"
     title="$T_Unit_info_title">$T_Unit_info</a></li>
+<li class="right"><a href="https://clilstore.eu/cs/$id" target="_top" data-nowordlink title="$T_Alt_interface_at clilstore.eu"><img src="/icons-smo/COOL.png" alt=""></a>
 $buttonedit
 $recordVocHtml
 $portfolioHtml

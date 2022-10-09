@@ -596,7 +596,7 @@ END_USER2;
     foreach ($result as $res) {
         extract($res);
         if ($script<>$scriptPrev) {
-            $slOptions[] = "<option value='' disabled>-- $script --</option>";
+            $slOptions[] = "<option value='' disabled>&nbsp; &nbsp; &nbsp; -$script-</option>";
             $scriptPrev = $script;
         }
         $selected = ( $sl==$slFil ? ' selected' : '');;
@@ -694,7 +694,7 @@ ENDtabletopChoices;
             $row4 .= $symbolHtml['owner'];
         } elseif ($fd=='sl') {
             $row1 .= "<td><a href='./?sortCol=sl' title='$T_Click_to_sort ($T_by_language_code)'>$T_Language</a></td>";
-            $row2 .= "<td><select name=sl style='background-color:$slSelectColor' tabindex=50>$slOptionsHtml</select></td>";
+            $row2 .= "<td><select name=sl id=sl style='background-color:$slSelectColor' tabindex=50>$slOptionsHtml</select></td>";
             $row3 .= "<td></td>";
             $row4 .= $symbolHtml['sl'];
         } elseif ($fd=='level') {
@@ -1084,6 +1084,7 @@ $tableStyles
         a.hiddenFilterField:hover { background-color:blue; color:yellow; }
         p.userHtml a.mybutton { margin-left:1.5em; }
         p.userHtml a.mybutton.logout { margin-left:0; color:#feb; }
+        select#sl option[disabled] { background-color:#686; color:#aca; }
     </style>
     <script>
         function submitFForm () {
