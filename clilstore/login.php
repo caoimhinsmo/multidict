@@ -67,7 +67,7 @@
             if (preg_match('|www\d*\.(.*)|',$cookieDomain,$matches)) { $cookieDomain = $matches[1]; }   // Remove www., www2., etc. e.g. www2.smo.uhi.ac.uk->smo.uhi.ac.uk
             $myCLIL::cuirCookie('myCLIL_authentication',$user,0,108000); //Cookie expires at session end, or max 30 hours
             $csSess->setUser($user);  //Remember $user, to make the next login easier
-            SM_csSess::logWrite($user,'login');
+            SM_csSess::logWrite($user,'login','multidict.net');
             $successMessage = <<<ENDsuccess
 <p style="color:green"><span style="font-size:200%">✔</span> $T_Successfully_logged_in</p>
 <p style="margin-left:1em">⇨ $T_Go_to <a href="./" style="font-weight:bold">Clilstore</a></p>
