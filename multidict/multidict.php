@@ -240,17 +240,18 @@ POPUPHTML;
     $charExtraItems = explode('|',$charExtra);
     foreach ($charExtraItems as $charExtraItem) {
         $charExtraItem = trim ($charExtraItem);
-        if ($charExtra=='entity')          { $word = toEntities($word); }
-        if ($charExtraItem=='stripAccent') { setlocale(LC_CTYPE, 'en_GB.utf8');  $word = iconv('UTF-8','US-ASCII//TRANSLIT',$word); }
-        if ($charExtraItem=='urlencode')   { $word = urlencode(iconv('UTF-8',$paramEncoding,$word)); }
-        if ($charExtraItem=='lc')          { $word = strtolower($word); }
-        if ($charExtraItem=='Bosworth')    { $word = strtr($word, array('æ'=>'ae','Æ'=>'ae','ǽ'=>'ae','þ'=>'th','ð'=>'th','ȝ'=>'g'));
-                                             $word = preg_replace('/^th(.*)/',"þ$1",$word,1); }
-        if ($charExtraItem=='PokornyFill') { $word = 'P'.sprintf('%04d',$word); }
-        if ($charExtraItem=='Maori')       { $word = strtr($word, array('ng'=>'ny','wh'=>'wy')); }  //Expedient to deal with unusual alphabetisation of ng and wh
-        if ($charExtraItem=='lemmatize')   { $word = lemmatize($word,$sl); }
-        if ($charExtraItem=='lod')         { $word = strtoupper($word).'1'; } //Ad-hoc for this one dictionary, which only partially works anyway
-        if ($charExtraItem=='stripMiddot') { $word = strtr($word, array('·'=>'')); }
+        if ($charExtra=='entity')           { $word = toEntities($word); }
+        if ($charExtraItem=='stripAccent')  { setlocale(LC_CTYPE, 'en_GB.utf8');  $word = iconv('UTF-8','US-ASCII//TRANSLIT',$word); }
+        if ($charExtraItem=='urlencode')    { $word = urlencode(iconv('UTF-8',$paramEncoding,$word)); }
+        if ($charExtraItem=='lc')           { $word = strtolower($word); }
+        if ($charExtraItem=='Bosworth')     { $word = strtr($word, array('æ'=>'ae','Æ'=>'ae','ǽ'=>'ae','þ'=>'th','ð'=>'th','ȝ'=>'g'));
+                                              $word = preg_replace('/^th(.*)/',"þ$1",$word,1); }
+        if ($charExtraItem=='PokornyFill')  { $word = 'P'.sprintf('%04d',$word); }
+        if ($charExtraItem=='Maori')        { $word = strtr($word, array('ng'=>'ny','wh'=>'wy')); }  //Expedient to deal with unusual alphabetisation of ng and wh
+        if ($charExtraItem=='lemmatize')    { $word = lemmatize($word,$sl); }
+        if ($charExtraItem=='lod')          { $word = strtoupper($word).'1'; } //Ad-hoc for this one dictionary, which only partially works anyway
+        if ($charExtraItem=='stripMiddot')  { $word = strtr($word, array('·'=>'')); }
+        if ($charExtraItem=='1stLetterDir') { $word = strtoupper(substr($word,0,1)) . "/$word"; error_log("\$word=$word"); }  //Ad-hoc for Corriere dictionaries
         if ( preg_match('%^tr:(.*):(.*)$%u', $charExtraItem, $matches) ) { $word = strtr($word, array($matches[1]=>$matches[2])); }
     }
     if ($sl=='ar') { $word = strtr($word, array(json_decode('"\u0640"')=>'')); }  //Remove tatweel characters from Arabic words
