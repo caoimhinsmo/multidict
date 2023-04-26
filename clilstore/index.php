@@ -654,7 +654,7 @@ ENDtabletopChoices;
     foreach ($columns as $fd) {
         if ($fd=='id') {
             $row1 .= "<td><a href='./?sortCol=id' title='$T_UnitID_title\n$T_Click_to_sort'>$T_UnitID</a></td>";
-            $row2 .= "<td><input name=id $idVal pattern='[0-9]{1,5}' tabindex=10 autofocus style='width:2.5em;text-align:right'></td>";
+            $row2 .= "<td><input name=id $idVal pattern='[0-9]{1,5}' tabindex=10 autofocus style='width:3em;text-align:right'></td>";
             $row3 .= "<td></td>";
             $row4 .= $symbolHtml['id'];
         } elseif ($fd=='views') {
