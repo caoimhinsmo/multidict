@@ -252,6 +252,17 @@ POPUPHTML;
         if ($charExtraItem=='lod')          { $word = strtoupper($word).'1'; } //Ad-hoc for this one dictionary, which only partially works anyway
         if ($charExtraItem=='stripMiddot')  { $word = strtr($word, array('·'=>'')); }
         if ($charExtraItem=='1stLetterDir') { $word = strtoupper(substr($word,0,1)) . "/$word"; error_log("\$word=$word"); }  //Ad-hoc for Corriere dictionaries
+        if ($charExtraItem=='Azkue')        { if( preg_match('%^(x|tt|tx|tz)(.*)$%u',$word,$matches) ) {
+                                                  $initial = $matches[1];
+                                                  $rest    = $matches[2];
+                                              } else {
+                                                  $initial = '';
+                                                  $rest    = $word;
+                                              }
+                                              $initial2 = strtr($initial,['x'=>'szx','tt'=>'tzt','tx'=>'tzx','tz'=>'tzz']);
+                                              $rest2    = strtr($rest,   ['x'=>'s',  'tt'=>'t',  'tx'=>'ts', 'tz'=>'tz'] );
+                                              $word = $initial2.$rest2;
+                                            }
         if ( preg_match('%^tr:(.*):(.*)$%u', $charExtraItem, $matches) ) { $word = strtr($word, array($matches[1]=>$matches[2])); }
     }
     if ($sl=='ar') { $word = strtr($word, array(json_decode('"\u0640"')=>'')); }  //Remove tatweel characters from Arabic words
