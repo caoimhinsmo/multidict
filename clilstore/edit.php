@@ -381,8 +381,9 @@
             $stmt = $DbMultidict->prepare('INSERT INTO csButtons(id,ord,but,wl,new,link) VALUES(?,?,?,?,?,?)');
             $nbuttons = 0;
             foreach ($buttons as $ord=>$b) {
-                if (!empty($b->but) && !empty($b->link))
-                  { $stmt->execute(array($id,$nbuttons++,$b->but,$b->wl,$b->new,$b->link)); } //Store nonempty buttons, ignoring $ord and storing new sequence numbers
+                if (!empty($b->but) && !empty($b->link)) {
+                    //Store nonempty buttons, ignoring $ord and storing new sequence numbers
+                    $stmt->execute( array($id, $nbuttons++, mb_substr($b->but,0,35), $b->wl, $b->new, $b->link) ); }
             }
             $stmt = null;
             $stmt = $DbMultidict->prepare('UPDATE clilstore SET buttons=:buttons WHERE id=:id');
@@ -555,10 +556,10 @@ END_cloneHtml;
             $butInvisible = ( $ord==count($buttons)-1 ? "style='display:none'" : ''); //Make the last row invisible, to act as a template for duplication
             $buttonsHtml  .= <<<EODbutHtml
 <tr $butInvisible>
-<td><input name="but[]"  value="$but" placeholder="$T_You_can_write_here"></td>
+<td><input name="but[]"  value="$but" placeholder="$T_You_can_write_here" maxlength=35></td>
 <td><input type="checkbox" name="wl[]" $wlch value="$ord" title="$T_Whether_to_WL_link\n$T_Whether_to_WL_info"></td>
 <td><input type="checkbox"  name="new[]" $newch value="$ord" title="$T_Whether_to_new_tab"></td>
-<td><input name="link[]" value="$link"></td>
+<td><input name="link[]" value="$link" maxlength=500></td>
 </tr>
 EODbutHtml;
         }
