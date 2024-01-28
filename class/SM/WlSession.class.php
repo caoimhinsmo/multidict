@@ -20,25 +20,19 @@ class SM_WlSession {
       if (isset($_COOKIE['wlUser'])) {
           $uid = $_COOKIE['wlUser'];
       } else {  // No uid so create a new one
-          $stmt = $DbMultidict->prepare("SELECT MAX(uid) AS uidMax FROM wlUser");
-          $stmt->execute();
-          $stmt->bindColumn(1,$uidMax);
-          $stmt->fetch();
-          $stmt = null;
-          $uid = $uidMax+1;
           $crIP = $_SERVER['REMOTE_ADDR'];
           $crTime = time();
           $crHost = gethostbyaddr($crIP);
           $crReferer = ( isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '');
-          $stmt = $DbMultidict->prepare('INSERT INTO wlUser (uid,IP,crIP,utime,crTime,crHost,crReferer)'
-                                     . ' VALUES (:uid,:crIP,:crIP,:crTime,:crTime,:crHost,:crReferer)');
-          $stmt->bindParam(':uid',$uid,PDO::PARAM_INT);
-          $stmt->bindParam(':crIP',$crIP);
-          $stmt->bindParam(':crTime',$crTime,PDO::PARAM_INT);
-          $stmt->bindParam(':crHost',$crHost);
-          $stmt->bindParam(':crReferer',$crReferer);
-          $stmt->execute();
-          $stmt = null;
+          $stmtSELmax = $DbMultidict->prepare("SELECT MAX(uid) FROM wlUser");
+          $stmtINSuid = $DbMultidict->prepare("INSERT INTO wlUser (uid,IP,crIP,utime,crTime,crHost,crReferer)"
+                                      . " VALUES (:uid,:crIP,:crIP,:crTime,:crTime,:crHost,:crReferer)");
+        $DbMultidict->beginTransaction();
+          $stmtSELmax->execute();
+          $uid = $stmtSELmax->fetchColumn() + 1;
+          $stmtINSuid->execute([':uid'=>$uid, ':crIP'=>$crIP, ':crTime'=>$crTime, ':crHost'=>$crHost, 'crReferer'=>$crReferer]);
+        $DbMultidict->commit();
+          $stmtSELmax = $stmtINSuid = null;
       }
       $utime = time();
       $IP = $_SERVER['REMOTE_ADDR'];
