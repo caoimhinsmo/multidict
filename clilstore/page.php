@@ -18,6 +18,7 @@
   $T_Unit_info  = $T->h('Unit_info');
   $T_Edit       = $T->h('Edit');
   $T_Short_url  = $T->h('Short_url');
+  $T_Share_via  = $T->h('Share_via');
   $T_Error_in   = $T->j('Error_in');
   $T_totalj     = $T->j('total');
   $T_Voc_Click_to_enable    = $T->h('Voc_Click_to_enable');
@@ -125,9 +126,9 @@ END_portfolioHtml;
     $sharebuttonFB = "<iframe src='https://www.facebook.com/plugins/share_button.php?href=$serverhome/cs/$id&layout=button&size=small&mobile_iframe=true&width=60&height=20&appId [www.facebook.com]' width='60' height='20' style='border:none;overflow:hidden' scrolling='no' frameborder='0' allowTransparency='true'></iframe>";
     $shareTitle = 'Clilstore unit: ' . urlencode($title);
     $shareURL = urlencode("https://multidict.net/cs/$id");
-    $sharebuttonBS = "<a id=sharebuttonBS class='nowordlink' target=_blank href='https://bsky.app/intent/compose?text=$shareTitle $shareURL' title='Share via Bluesky'><img src='/favicons/bluesky.png'></a>";
-    $sharebuttonTw = "<a id=sharebuttonTw class='nowordlink' target=_blank href='https://twitter.com/intent/tweet?text=$shareTitle&amp;url=$shareURL' title='Share via Twitter'><img src='/favicons/twitter.png'></a>";
-    $sharebuttonWA = "<a id=sharebuttonWA class='nowordlink' target=_blank href='whatsapp://send?text=$shareTitle $shareURL' title='Share via Whatsapp'><img src='/favicons/whatsapp.png' alt='WA'></a>";
+    $sharebuttonBS = "<a id=sharebuttonBS class='nowordlink' target=_blank href='https://bsky.app/intent/compose?text=$shareTitle $shareURL' title='$T_Share_via Bluesky'><img src='/favicons/bluesky.png'></a>";
+    $sharebuttonTw = "<a id=sharebuttonTw class='nowordlink' target=_blank href='https://twitter.com/intent/tweet?text=$shareTitle&amp;url=$shareURL' title='$T_Share_via Twitter'><img src='/favicons/twitter.png'></a>";
+    $sharebuttonWA = "<a id=sharebuttonWA class='nowordlink' target=_blank href='whatsapp://send?text=$shareTitle $shareURL' title='$T_Share_via Whatsapp'><img src='/favicons/whatsapp.png' alt='WA'></a>";
 //    if (stripos('Mobi',$_SERVER['HTTP_USER_AGENT'])===false) { $sharebuttonWA = ''; }
     $navbar1 = <<<EOD_NB1
 <ul class="linkbuts">
@@ -169,6 +170,7 @@ EOD_NB2;
         div.scroll{ width:100%; height:400px; padding:2px 1px 1px 2px; overflow:auto; }
         ul.linkbuts { float:$left; }
         ul.linkbuts li { float:$left; }
+        ul.linkbuts li a { padding-top:5px solid red; }
         ul.linkbuts li.right { float:$right; }
         body { margin:0; padding:0; font-family:Tahoma,Verdana,Ariel,Helvetica,sans-serif; }
         div.body-indent { clear:both; margin:0 0.25%; padding:0 0.25% 0px 0.25%; border-top:1px solid white; }
@@ -182,11 +184,11 @@ EOD_NB2;
         a.csinfo:link    { color:#00f; }
         a.csinfo:visited { color:#909; }
         a.csinfo:hover   { color:#ff0; background-color:blue; text-decoration:underline; }
-        a#sharebuttonBS       { background-color:white; }
+        a#sharebuttonBS       { background-color:white; padding:5px 5px 0 5px; }
         a#sharebuttonBS:hover { background-color:#0ff; }
-        a#sharebuttonTw       { background-color:white; }
+        a#sharebuttonTw       { background-color:white; padding:5px 5px 0 5px; }
         a#sharebuttonTw:hover { background-color:#0ff; }
-        a#sharebuttonWA       { background-color:white; }
+        a#sharebuttonWA       { background-color:white; padding:5px 5px 0 5px; }
         a#sharebuttonWA:hover { background-color:#0ff; }
         span.vocOff img:nth-child(1) { display:inline; }
         span.vocOff img:nth-child(2) { display:none; }
