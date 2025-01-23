@@ -125,6 +125,7 @@ END_portfolioHtml;
     $sharebuttonFB = "<iframe src='https://www.facebook.com/plugins/share_button.php?href=$serverhome/cs/$id&layout=button&size=small&mobile_iframe=true&width=60&height=20&appId [www.facebook.com]' width='60' height='20' style='border:none;overflow:hidden' scrolling='no' frameborder='0' allowTransparency='true'></iframe>";
     $shareTitle = 'Clilstore unit: ' . urlencode($title);
     $shareURL = urlencode("https://multidict.net/cs/$id");
+    $sharebuttonBS = "<a id=sharebuttonBS class='nowordlink' target=_blank href='https://bsky.app/intent/compose?text=$shareTitle $shareURL' title='Share via Bluesky'><img src='/favicons/bluesky.png'></a>";
     $sharebuttonTw = "<a id=sharebuttonTw class='nowordlink' target=_blank href='https://twitter.com/intent/tweet?text=$shareTitle&amp;url=$shareURL' title='Share via Twitter'><img src='/favicons/twitter.png'></a>";
     $sharebuttonWA = "<a id=sharebuttonWA class='nowordlink' target=_blank href='whatsapp://send?text=$shareTitle $shareURL' title='Share via Whatsapp'><img src='/favicons/whatsapp.png' alt='WA'></a>";
 //    if (stripos('Mobi',$_SERVER['HTTP_USER_AGENT'])===false) { $sharebuttonWA = ''; }
@@ -132,6 +133,7 @@ END_portfolioHtml;
 <ul class="linkbuts">
 <li><a href="./" class="nowordlink" target="_top" title="$T_Clilstore_index_page">Clilstore</a></li>
 <li>$sharebuttonFB
+<li>$sharebuttonBS
 <li>$sharebuttonTw
 <li>$sharebuttonWA
 $likeHtml
@@ -180,6 +182,8 @@ EOD_NB2;
         a.csinfo:link    { color:#00f; }
         a.csinfo:visited { color:#909; }
         a.csinfo:hover   { color:#ff0; background-color:blue; text-decoration:underline; }
+        a#sharebuttonBS       { background-color:white; }
+        a#sharebuttonBS:hover { background-color:#0ff; }
         a#sharebuttonTw       { background-color:white; }
         a#sharebuttonTw:hover { background-color:#0ff; }
         a#sharebuttonWA       { background-color:white; }
