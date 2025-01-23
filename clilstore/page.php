@@ -127,7 +127,7 @@ END_portfolioHtml;
     $shareTitle = 'Clilstore unit: ' . urlencode($title);
     $shareURL = urlencode("https://multidict.net/cs/$id");
     $sharebuttonBS = "<a id=sharebuttonBS class='nowordlink' target=_blank href='https://bsky.app/intent/compose?text=$shareTitle $shareURL' title='$T_Share_via Bluesky'><img src='/favicons/bluesky.png'></a>";
-    $sharebuttonTw = "<a id=sharebuttonTw class='nowordlink' target=_blank href='https://twitter.com/intent/tweet?text=$shareTitle&amp;url=$shareURL' title='$T_Share_via Twitter'><img src='/favicons/twitter.png'></a>";
+//    $sharebuttonTw = "<a id=sharebuttonTw class='nowordlink' target=_blank href='https://twitter.com/intent/tweet?text=$shareTitle&amp;url=$shareURL' title='$T_Share_via Twitter'><img src='/favicons/twitter.png'></a>";
     $sharebuttonWA = "<a id=sharebuttonWA class='nowordlink' target=_blank href='whatsapp://send?text=$shareTitle $shareURL' title='$T_Share_via Whatsapp'><img src='/favicons/whatsapp.png' alt='WA'></a>";
 //    if (stripos('Mobi',$_SERVER['HTTP_USER_AGENT'])===false) { $sharebuttonWA = ''; }
     $navbar1 = <<<EOD_NB1
@@ -135,12 +135,11 @@ END_portfolioHtml;
 <li><a href="./" class="nowordlink" target="_top" title="$T_Clilstore_index_page">Clilstore</a></li>
 <li>$sharebuttonFB
 <li>$sharebuttonBS
-<li>$sharebuttonTw
 <li>$sharebuttonWA
 $likeHtml
 <li class="right"><a href="unitinfo.php?id=$id" class="nowordlink" target="_top"
     title="$T_Unit_info_title">$T_Unit_info</a></li>
-<li class="right"><a href="https://clilstore.eu/cs/$id" target="_top" data-nowordlink title="$T_Alt_interface_at clilstore.eu"><img src="/icons-smo/COOL.png" alt=""></a>
+<li class="right"><a href="https://clilstore.eu/cs/$id" target="_top" data-nowordlink title="$T_Alt_interface_at clilstore.eu" style="padding:7px 3px 0 3px"><img src="/icons-smo/COOL.png" alt=""></a>
 $buttonedit
 $recordVocHtml
 $portfolioHtml
@@ -170,7 +169,6 @@ EOD_NB2;
         div.scroll{ width:100%; height:400px; padding:2px 1px 1px 2px; overflow:auto; }
         ul.linkbuts { float:$left; }
         ul.linkbuts li { float:$left; }
-        ul.linkbuts li a { padding-top:5px solid red; }
         ul.linkbuts li.right { float:$right; }
         body { margin:0; padding:0; font-family:Tahoma,Verdana,Ariel,Helvetica,sans-serif; }
         div.body-indent { clear:both; margin:0 0.25%; padding:0 0.25% 0px 0.25%; border-top:1px solid white; }
@@ -186,8 +184,10 @@ EOD_NB2;
         a.csinfo:hover   { color:#ff0; background-color:blue; text-decoration:underline; }
         a#sharebuttonBS       { background-color:white; padding:5px 5px 0 5px; }
         a#sharebuttonBS:hover { background-color:#0ff; }
+/* Sguab uaireigin
         a#sharebuttonTw       { background-color:white; padding:5px 5px 0 5px; }
         a#sharebuttonTw:hover { background-color:#0ff; }
+*/
         a#sharebuttonWA       { background-color:white; padding:5px 5px 0 5px; }
         a#sharebuttonWA:hover { background-color:#0ff; }
         span.vocOff img:nth-child(1) { display:inline; }
