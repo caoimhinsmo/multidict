@@ -251,6 +251,7 @@ POPUPHTML;
         if ($charExtraItem=='lemmatize')    { $word = lemmatize($word,$sl); }
         if ($charExtraItem=='lod')          { $word = strtoupper($word).'1'; } //Ad-hoc for this one dictionary, which only partially works anyway
         if ($charExtraItem=='stripMiddot')  { $word = strtr($word, array('·'=>'')); }
+        if ($charExtraItem=='1stLetter')    { $word = strtolower(substr($word,0,1)); }
         if ($charExtraItem=='1stLetterDir') { $word = strtoupper(substr($word,0,1)) . "/$word"; error_log("\$word=$word"); }  //Ad-hoc for Corriere dictionaries
         if ($charExtraItem=='Azkue')        { if( preg_match('%^(x|tt|tx|tz)(.*)$%u',$word,$matches) ) {
                                                   $initial = $matches[1];

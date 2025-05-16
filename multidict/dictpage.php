@@ -13,6 +13,9 @@
     $inst = $_GET['inst'] ?? 1;
     $inc  = $_GET['inc']  ?? 0;
     $inc = intval($inc);
+$logging = 0;
+if ( $dictindex=='GMFFbr' or $dictindex=='Dwelly' ) { $logging = 1; }
+if ($logging) { error_log("dictindex.php: \$word=$word"); }
 
     $DbMultidict = SM_DbMultidictPDO::singleton();
 
@@ -25,6 +28,7 @@
         $url       = $r->url;
         $pparams   = $r->pparams;
         $firstlast = $r->firstlast;
+if ($logging) { error_log("dictindex.php: \$url=$url"); }
     } else { throw new SM_MDexception("No information found for dictionary index:'$dictindex'"); }
     $stmt0 = null;
 
