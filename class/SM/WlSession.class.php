@@ -290,7 +290,7 @@ class SM_WlSession {
     // (The top priority rules are tried first by another function, prialg.)
       $word = $wordform;
       $len = strlen($word);
-      if ($sl=='en' && $len>4) {
+      if (($sl=='en'||$sl=='sco'||$sl=='scz') && $len>3) {
           if (substr($word,-1)=='s'
            && substr($word,-2)<>'ss') { $word = substr($word,0,-1); }
           if ($len>6) { //Try some en-US ~ en-GB spelling conversion
